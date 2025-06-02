@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "noEmit": false,
+    "declaration": true,
+    "declarationDir": "dist/types",
+    "emitDeclarationOnly": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "importHelpers": true
+  },
+  "include": ["src"]
+}
