@@ -5,10 +5,10 @@
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     }
@@ -17,10 +17,16 @@
     "dist"
   ],
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "docs:generate": "typedoc"
+  },
+  "dependencies": {
+    "openapi-fetch": "^0.14.0"
   },
   "devDependencies": {
     "@types/node": "22.15.1",
+    "openapi-typescript": "^7.8.0",
+    "typedoc": "^0.28.5",
     "typescript": "~5.8.3",
     "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.4",
