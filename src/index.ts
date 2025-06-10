@@ -2,6 +2,12 @@ import isIPv4, { IPv4 } from "./utils/isIPv4";
 
 import { initApiClient } from "api/createClient";
 
+import {
+  upload as uploadAssetsApi,
+  deleteAssets as deleteAssetsApi,
+} from "api/assets";
+import type { UploadParams, DeleteParams } from "api/assets";
+
 /**
  * Main library class for interacting with the Busy Bar API.
  *
@@ -31,5 +37,32 @@ export class Busylib {
     console.log(this.ip);
 
     initApiClient(`http://${this.ip}/api/`);
+  }
+
+  /**
+   * Uploads an asset to the device.
+   *
+   * @param {UploadParams} params - Parameters for the upload.
+   * @param {UploadParams['appId']} params.appId - Application ID for organizing assets.
+   * @param {UploadParams['fileName']} params.fileName - Filename for the uploaded asset.
+   * @param {UploadParams['file']} params.file - File data to upload.
+   * @returns {Promise<{ result: string }>} Result of the upload operation.
+   */
+  async uploadAsset(params: UploadParams): Promise<{ result: string }> {
+    // check file
+    // convert file
+
+    return await uploadAssetsApi(params);
+  }
+
+  /**
+   * Deletes all assets for a specific application from the device.
+   *
+   * @param {DeleteParams} params - Parameters for the delete.
+   * @param {DeleteParams['appId']} params.appId - Application ID whose assets should be deleted.
+   * @returns {Promise<{ result: string }>} Result of the delete operation.
+   */
+  async deleteAssets(params: DeleteParams): Promise<{ result: string }> {
+    return await deleteAssetsApi(params);
   }
 }
