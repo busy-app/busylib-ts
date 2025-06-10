@@ -8,6 +8,9 @@ import {
 } from "api/assets";
 import type { UploadParams, DeleteParams } from "api/assets";
 
+import { draw as drawDisplayApi, clear as clearDisplayApi } from "api/display";
+import type { DrawParams } from "api/display";
+
 /**
  * Main library class for interacting with the Busy Bar API.
  *
@@ -64,5 +67,26 @@ export class Busylib {
    */
   async deleteAssets(params: DeleteParams): Promise<{ result: string }> {
     return await deleteAssetsApi(params);
+  }
+
+  /**
+   * Draws elements on the device display.
+   *
+   * @param {DrawParams} params - Parameters for the draw operation.
+   * @param {DrawParams['appId']} params.appId - Application ID for organizing display elements.
+   * @param {DrawParams['elements'][]} params.elements - Array of display elements (text or image).
+   * @returns {Promise<{ result: string }>} Result of the draw operation.
+   */
+  async drawDisplay(params: DrawParams): Promise<{ result: string }> {
+    return await drawDisplayApi(params);
+  }
+
+  /**
+   * Clears the device display and stops the Canvas application if running.
+   *
+   * @returns {Promise<{ result: string }>} Result of the clear operation.
+   */
+  async clearDisplay(): Promise<{ result: string }> {
+    return await clearDisplayApi();
   }
 }
