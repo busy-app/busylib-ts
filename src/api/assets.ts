@@ -13,14 +13,6 @@ async function upload(params: UploadParams) {
     throw new Error("API client is not initialized");
   }
 
-  const body = new FormData();
-  body.append(
-    "file",
-    new Blob([file], {
-      type: "application/octet-binary",
-    })
-  );
-
   const { data, error } = await client.POST("/v0/assets/upload", {
     params: {
       query: {
@@ -28,7 +20,6 @@ async function upload(params: UploadParams) {
         file: fileName,
       },
     },
-    mode: "no-cors",
     headers: {
       "Content-Type": "application/octet-stream",
     },
