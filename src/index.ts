@@ -11,6 +11,9 @@ import type { UploadParams, DeleteParams } from "api/assets";
 import { draw as drawDisplayApi, clear as clearDisplayApi } from "api/display";
 import type { DrawParams } from "api/display";
 
+import { play as playSoundApi, stop as stopSoundApi } from "api/audio";
+import type { AudioParams } from "api/audio";
+
 /**
  * Main library class for interacting with the Busy Bar API.
  *
@@ -88,5 +91,26 @@ export class Busylib {
    */
   async clearDisplay(): Promise<{ result: string }> {
     return await clearDisplayApi();
+  }
+
+  /**
+   * Plays an audio file from the assets directory.
+   *
+   * @param {AudioParams} params - Parameters for the audio playback.
+   * @param {AudioParams['appId']} params.appId - Application ID for organizing assets.
+   * @param {AudioParams['path']} params.path - Path to the audio file within the app's assets directory.
+   * @returns {Promise<{ result: string }>} Result of the play operation.
+   */
+  async playSound(params: AudioParams): Promise<{ result: string }> {
+    return await playSoundApi(params);
+  }
+
+  /**
+   * Stops any currently playing audio on the device.
+   *
+   * @returns {Promise<{ result: string }>} Result of the stop operation.
+   */
+  async stopSound(): Promise<{ result: string }> {
+    return await stopSoundApi();
   }
 }
