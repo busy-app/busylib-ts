@@ -1,7 +1,8 @@
 {
-  "name": "busylib",
-  "private": true,
-  "version": "0.0.0",
+  "name": "busy-lib",
+  "private": false,
+  "description": "A library for interacting with the BUSY Bar API",
+  "version": "0.0.1",
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
