@@ -19,11 +19,11 @@ export default defineConfig({
       formats: ["es", "cjs"],
     },
     rollupOptions: {
-      external: [],
+      external: ["openapi-fetch"],
       output: {
         globals: {},
       },
     },
-    minify: false,
+    minify: true,
   },
 });
