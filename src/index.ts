@@ -19,7 +19,7 @@ import type { AudioParams } from "api/audio";
  *
  * @class
  */
-export class Busylib {
+export class BusyBar {
   /**
    * Device IPv4 address.
    * @type {IPv4}
@@ -28,7 +28,7 @@ export class Busylib {
   public readonly ip: IPv4;
 
   /**
-   * Creates an instance of Busylib.
+   * Creates an instance of BUSY Bar.
    * Initializes the API client with the provided IPv4 address.
    *
    * @param {IPv4} [ip="10.0.4.20"] - The IPv4 address of the device.
