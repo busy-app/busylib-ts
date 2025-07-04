@@ -2,7 +2,7 @@
   "name": "@busy-app/busy-lib",
   "private": false,
   "description": "A library for interacting with the BUSY Bar API",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publishConfig": {
     "access": "public"
   },
