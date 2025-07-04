@@ -3,7 +3,8 @@
     "baseUrl": ".",
     "paths": {
       "src/*": ["src/*"],
-      "BusyBar/*": ["src/BusyBar/*"]
+      "BusyBar/*": ["src/BusyBar/*"],
+      "ScreenStream/*": ["src/ScreenStream/*"]
     },
 
     "target": "ES2020",
