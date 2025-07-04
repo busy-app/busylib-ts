@@ -1,5 +1,5 @@
 import createClient, { Client } from "openapi-fetch";
-import type { paths } from "src/types/APIv0";
+import type { paths } from "BusyBar/types/APIv0";
 
 const bodySerializer = (body: unknown, headers?: HeadersInit) => {
   // FormData

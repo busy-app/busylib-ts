@@ -1,5 +1,5 @@
-import { client } from "api/createClient";
-import type { paths } from "types/APIv0";
+import { client } from "BusyBar/api/createClient";
+import type { paths } from "BusyBar/types/APIv0";
 
 export interface UploadParams {
   appId: paths["/v0/assets/upload"]["post"]["parameters"]["query"]["app_id"];

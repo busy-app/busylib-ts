@@ -1,5 +1,5 @@
-import { client } from "api/createClient";
-import { paths, components } from "types/APIv0";
+import { client } from "BusyBar/api/createClient";
+import { paths, components } from "BusyBar/types/APIv0";
 
 type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 type OptionalFields = "timeout" | "x" | "y" | "display";

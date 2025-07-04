@@ -1,5 +1,5 @@
-import { client } from "api/createClient";
-import { paths } from "types/APIv0";
+import { client } from "BusyBar/api/createClient";
+import { paths } from "BusyBar/types/APIv0";
 
 export interface AudioParams {
   appId: paths["/v0/audio/play"]["post"]["parameters"]["query"]["app_id"];
