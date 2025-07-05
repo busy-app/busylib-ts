@@ -6,7 +6,7 @@ import {
 } from "ScreenStream/utils/bufferUtils";
 
 interface BaseConfig {
-  deviceScreen: Lowercase<keyof typeof DeviceScreen>;
+  deviceScreen: DeviceScreen;
 }
 
 export interface LocalConfig extends BaseConfig {
@@ -41,7 +41,6 @@ export class ScreenStream {
   private errorListeners: ErrorListener[] = [];
 
   private socket: WebSocket | null = null;
-  private deviceScreen: DeviceScreen;
 
   constructor(private config: DeviceConfig) {
     const isBrowser = () =>
@@ -50,11 +49,6 @@ export class ScreenStream {
     if (!isBrowser) {
       throw new Error("not browser");
     }
-
-    this.deviceScreen =
-      DeviceScreen[
-        this.config.deviceScreen.toUpperCase() as keyof typeof DeviceScreen
-      ];
   }
 
   onData(listener: DataListener) {
@@ -110,11 +104,11 @@ export class ScreenStream {
         this.socket.send(
           JSON.stringify({
             token: this.config.token,
-            display: this.deviceScreen,
+            display: this.config.deviceScreen,
           })
         );
       } else if (this.config.mode === "local") {
-        this.socket.send(JSON.stringify({ display: this.deviceScreen }));
+        this.socket.send(JSON.stringify({ display: this.config.deviceScreen }));
       }
       this.connected = true;
     };
@@ -136,14 +130,15 @@ export class ScreenStream {
           let processedData: Uint8Array;
 
           // Front display uses blkSize=3, Back display uses blkSize=2
-          const blkSize = this.deviceScreen === DeviceScreen.FRONT ? 3 : 2;
+          const blkSize =
+            this.config.deviceScreen === DeviceScreen.FRONT ? 3 : 2;
 
           try {
             // First decompress the RLE data
             const decompressedData = rleDecompress(rawData, blkSize);
 
             // If this is the back display, convert from 4-bit to 8-bit
-            if (this.deviceScreen === DeviceScreen.BACK) {
+            if (this.config.deviceScreen === DeviceScreen.BACK) {
               processedData = backConvertB4ToB8(decompressedData);
             } else {
               processedData = decompressedData;
