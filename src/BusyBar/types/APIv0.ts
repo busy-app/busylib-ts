@@ -4,687 +4,1858 @@
  */
 
 export interface paths {
-    "/v0/led": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get LED state
-         * @description Retrieves the current LED state
-         */
-        get: operations["getLedState"];
-        put?: never;
-        /**
-         * Set LED state
-         * @description Sets the LED state via query parameter or JSON body
-         */
-        post: operations["setLedState"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+  "/v0/version": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/v0/version": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get firmware version information
-         * @description Retrieves firmware version, branch, build date, and commit information
-         */
-        get: operations["getVersion"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get firmware version information
+     * @description Retrieves firmware version, branch, build date, and commit information
+     */
+    get: operations["getVersion"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/update": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/v0/assets/upload": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Upload asset file with app ID
-         * @description Uploads a file to a specific app's assets directory
-         */
-        post: operations["uploadAssetWithAppId"];
-        /**
-         * Delete app assets
-         * @description Deletes all assets for a specific app ID
-         */
-        delete: operations["deleteAppAssets"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Update firmware
+     * @description Uploads a firmware update package (TAR file) and initiates the update process.
+     */
+    post: operations["updateFirmware"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/assets/upload": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/v0/display/draw": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Draw on display
-         * @description Sends drawing data to the display.
-         *     Supports JSON-defined display elements.
-         *
-         */
-        post: operations["drawOnDisplay"];
-        /**
-         * Clear display
-         * @description Clears the display and stops the Canvas application if running
-         */
-        delete: operations["clearDisplay"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Upload asset file with app ID
+     * @description Uploads a file to a specific app's assets directory
+     */
+    post: operations["uploadAssetWithAppId"];
+    /**
+     * Delete app assets
+     * @description Deletes all assets for a specific app ID
+     */
+    delete: operations["deleteAppAssets"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/storage/write": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/v0/audio/play": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Play audio file
-         * @description Plays an audio file from the assets directory.
-         *     Supported formats include .snd files.
-         *
-         */
-        post: operations["playAudio"];
-        /**
-         * Stop audio playback
-         * @description Stops any currently playing audio
-         */
-        delete: operations["stopAudio"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Upload file to internal storage
+     * @description Uploads a file to a specified path
+     */
+    post: operations["writeStorageFile"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/storage/read": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/ws_test": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * WebSocket test endpoint
-         * @description WebSocket connection for real-time communication and testing.
-         *     Upgrade from HTTP to WebSocket protocol is required.
-         *
-         */
-        get: operations["connectWebSocket"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Download file from internal storage
+     * @description Downloads a file from a specified path
+     */
+    get: operations["readStorageFile"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/storage/list": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
+    /**
+     * List files on internal storage
+     * @description Downloads a file from a specified path
+     */
+    get: operations["listStorageFiles"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/storage/remove": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /**
+     * Remove a file on internal storage
+     * @description Removes a file with a specified path
+     */
+    delete: operations["removeStorageFile"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/storage/mkdir": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Create a directory on internal storage
+     * @description Creates a new directory with a specified path
+     */
+    post: operations["createStorageDir"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/display/draw": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Draw on display
+     * @description Sends drawing data to the display.
+     *     Supports JSON-defined display elements.
+     *
+     */
+    post: operations["drawOnDisplay"];
+    /**
+     * Clear display
+     * @description Clears the display and stops the Canvas application if running
+     */
+    delete: operations["clearDisplay"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/display/brightness": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get display brightness
+     * @description Get brightness value for displays
+     */
+    get: operations["getDisplayBrightness"];
+    put?: never;
+    /**
+     * Set display brightness
+     * @description Set brightness for one or both displays
+     *
+     */
+    post: operations["setDisplayBrightness"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/audio/play": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Play audio file
+     * @description Plays an audio file from the assets directory.
+     *     Supported formats include .snd files.
+     *
+     */
+    post: operations["playAudio"];
+    /**
+     * Stop audio playback
+     * @description Stops any currently playing audio
+     */
+    delete: operations["stopAudio"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/audio/volume": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get audio volume
+     * @description Get audio volume value
+     */
+    get: operations["getAudioVolume"];
+    put?: never;
+    /**
+     * Set audio volume
+     * @description Get audio volume value
+     */
+    post: operations["setAudioVolume"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/input": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Input evnts streaming
+     * @description Start WebSocket session for input events streaming
+     */
+    get: operations["connectInputWebSocket"];
+    put?: never;
+    /**
+     * Send input event
+     * @description Send single key press event
+     */
+    post: operations["setInputKey"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/status": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get device status
+     * @description Get device status
+     */
+    get: operations["getStatus"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/status/system": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get system status
+     * @description Get system status
+     */
+    get: operations["getStatusSystem"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/status/power": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get power status
+     * @description Get system status
+     */
+    get: operations["getStatusPower"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/wifi/enable": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Enables wifi module */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Wifi enabled */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+        /** @description Wifi already enabled */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["Error"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/wifi/disable": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Disables wifi module */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Wifi disabled */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+        /** @description Not initialized */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["Error"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/wifi/status": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Returns current wifi status */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["StatusResponse"];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/wifi/connect": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Attempts to connect to wifi using config */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["ConnectRequestConfig"];
+        };
+      };
+      responses: {
+        /** @description Network connection established */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+        /** @description Wifi already connected */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["Error"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/wifi/disconnect": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Attempts to connect to wifi using config */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Network connection terminated */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+        /** @description Command issued in an invalid state */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["Error"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/wifi/networks": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Scans environment for available wifi networks */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["NetworkResponse"];
+          };
+        };
+        /** @description Wifi already connected */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["Error"];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/wifi/forget": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Forgets saved Wifi config */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Not implemented */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["Error"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v0/screen": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get single frame for required screen */
+    get: {
+      parameters: {
+        query: {
+          /**
+           * @description Type of the display Front = 0, Back = 1
+           * @example 0
+           */
+          display: number;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "image/bmp": components["schemas"]["ScreenResponse"];
+          };
+        };
+        /** @description Wrong display */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["Error"];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        /** @example {
-         *       "state": 1
-         *     } */
-        LedState: {
-            /**
-             * @description Current LED state (0 for off, 1 for on)
-             * @enum {integer}
-             */
-            state: 0 | 1;
-        };
-        /** @example {
-         *       "state": 1
-         *     } */
-        LedStateRequest: {
-            /**
-             * @description LED state (0 for off, 1 for on)
-             * @enum {integer}
-             */
-            state: 0 | 1;
-        };
-        SuccessResponse: {
-            /**
-             * @description Success status message
-             * @example OK
-             */
-            result: string;
-        };
-        LedStateResponse: components["schemas"]["SuccessResponse"] & {
-            /**
-             * @description Current LED state (0 for off, 1 for on)
-             * @enum {integer}
-             */
-            state: 0 | 1;
-        };
-        /** @example {
-         *       "branch": "main",
-         *       "version": "1.0.0",
-         *       "build_date": "2024-01-01",
-         *       "commit_hash": "abc123def456"
-         *     } */
-        VersionInfo: {
-            /**
-             * @description Git branch name
-             * @example main
-             */
-            branch: string;
-            /**
-             * @description Firmware version
-             * @example 1.0.0
-             */
-            version: string;
-            /**
-             * @description Build date
-             * @example 2024-01-01
-             */
-            build_date: string;
-            /**
-             * @description Git commit hash (may include -dirty suffix)
-             * @example abc123def456-dirty
-             */
-            commit_hash: string;
-        };
-        /**
-         * Format: binary
-         * @description Binary data upload
-         */
-        BinaryUpload: string;
-        FileUpload: {
-            /**
-             * Format: binary
-             * @description File to upload
-             */
-            file: string;
-        };
-        /** @example {
-         *       "error": "Invalid parameter",
-         *       "code": 400
-         *     } */
-        Error: {
-            /** @description Error message */
-            error: string;
-            /** @description Error code */
-            code?: number;
-        };
-        /** @example {
-         *       "app_id": "my_app",
-         *       "elements": [
-         *         {
-         *           "id": "0",
-         *           "timeout": 5,
-         *           "type": "text",
-         *           "text": "Hello, world!",
-         *           "x": 0,
-         *           "y": 0,
-         *           "display": "front"
-         *         },
-         *         {
-         *           "id": "1",
-         *           "timeout": 6,
-         *           "type": "image",
-         *           "path": "data.png",
-         *           "x": 0,
-         *           "y": 0,
-         *           "display": "back"
-         *         }
-         *       ]
-         *     } */
-        DisplayElements: {
-            /**
-             * @description Application ID for organizing assets
-             * @example my_app
-             */
-            app_id: string;
-            /** @description Array of elements to display */
-            elements: components["schemas"]["DisplayElement"][];
-        };
-        DisplayElement: {
-            /** @description Unique identifier for the element */
-            id: string;
-            /** @description Time in seconds the element should be displayed (0 for no timeout) */
-            timeout?: number;
-            /**
-             * @description Type of display element
-             * @enum {string}
-             */
-            type: "text" | "image";
-            /** @description X coordinate for placement on display */
-            x: number;
-            /** @description Y coordinate for placement on display */
-            y: number;
-            /**
-             * @description Which display to show the element on (for dual-display devices)
-             * @default front
-             * @enum {string}
-             */
-            display: "front" | "back";
-        };
-        TextElement: Omit<components["schemas"]["DisplayElement"], "type"> & {
-            /** @description Text content to display */
-            text: string;
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "text";
-        };
-        ImageElement: Omit<components["schemas"]["DisplayElement"], "type"> & {
-            /** @description Path to the image file in the app's assets */
-            path: string;
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "image";
-        };
+  schemas: {
+    SuccessResponse: {
+      /**
+       * @description Success status message
+       * @example OK
+       */
+      result: string;
     };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+    /** @example {
+     *       "error": "Invalid parameter",
+     *       "code": 400
+     *     } */
+    Error: {
+      /** @description Error message */
+      error: string;
+      /** @description Error code */
+      code?: number;
+    };
+    /** @example {
+     *       "branch": "main",
+     *       "version": "1.0.0",
+     *       "build_date": "2024-01-01",
+     *       "commit_hash": "abc123def456"
+     *     } */
+    VersionInfo: {
+      /**
+       * @description Git branch name
+       * @example main
+       */
+      branch: string;
+      /**
+       * @description Firmware version
+       * @example 1.0.0
+       */
+      version: string;
+      /**
+       * @description Build date
+       * @example 2024-01-01
+       */
+      build_date: string;
+      /**
+       * @description Git commit hash (may include -dirty suffix)
+       * @example abc123def456-dirty
+       */
+      commit_hash: string;
+    };
+    /** @example {
+     *       "list": [
+     *         {
+     *           "type": "file",
+     *           "name": "test.png",
+     *           "size": 65535
+     *         },
+     *         {
+     *           "type": "dir",
+     *           "name": "assets"
+     *         }
+     *       ]
+     *     } */
+    StorageList: {
+      /** @description Array of elements to display */
+      list: components["schemas"]["StorageListElement"][];
+    };
+    StorageListElement: {
+      /**
+       * @description Element type
+       * @enum {string}
+       */
+      type: "file" | "dir";
+      /** @description File or directory name */
+      name: string;
+    };
+    StorageFileElement: Omit<
+      components["schemas"]["StorageListElement"],
+      "type"
+    > & {
+      /** @description File size in bytes */
+      size: number;
+    } & {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      type: "file";
+    };
+    StorageDirElement: Omit<
+      components["schemas"]["StorageListElement"],
+      "type"
+    > &
+      Record<string, never> & {
+        /**
+         * @description discriminator enum property added by openapi-typescript
+         * @enum {string}
+         */
+        type: "dir";
+      };
+    /**
+     * Format: binary
+     * @description Binary data upload
+     */
+    BinaryUpload: string;
+    FileUpload: {
+      /**
+       * Format: binary
+       * @description File to upload
+       */
+      file: string;
+    };
+    /** @example {
+     *       "app_id": "my_app",
+     *       "elements": [
+     *         {
+     *           "id": "0",
+     *           "timeout": 5,
+     *           "type": "text",
+     *           "text": "Hello, world!",
+     *           "x": 0,
+     *           "y": 0,
+     *           "display": "front"
+     *         },
+     *         {
+     *           "id": "1",
+     *           "timeout": 6,
+     *           "type": "image",
+     *           "path": "data.png",
+     *           "x": 0,
+     *           "y": 0,
+     *           "display": "back"
+     *         }
+     *       ]
+     *     } */
+    DisplayElements: {
+      /**
+       * @description Application ID for organizing assets
+       * @example my_app
+       */
+      app_id: string;
+      /** @description Array of elements to display */
+      elements: components["schemas"]["DisplayElement"][];
+    };
+    DisplayElement: {
+      /** @description Unique identifier for the element */
+      id: string;
+      /** @description Time in seconds the element should be displayed (0 for no timeout) */
+      timeout?: number;
+      /**
+       * @description Type of display element
+       * @enum {string}
+       */
+      type: "text" | "image";
+      /** @description X coordinate for placement on display */
+      x: number;
+      /** @description Y coordinate for placement on display */
+      y: number;
+      /**
+       * @description Which display to show the element on (for dual-display devices)
+       * @default front
+       * @enum {string}
+       */
+      display: "front" | "back";
+    };
+    TextElement: Omit<components["schemas"]["DisplayElement"], "type"> & {
+      /** @description Text content to display */
+      text: string;
+    } & {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      type: "text";
+    };
+    ImageElement: Omit<components["schemas"]["DisplayElement"], "type"> & {
+      /** @description Path to the image file in the app's assets */
+      path: string;
+    } & {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      type: "image";
+    };
+    DisplayBrightnessInfo: {
+      /**
+       * @description Front display brightness (0-100/auto)
+       * @example auto
+       */
+      front?: string;
+      /**
+       * @description Back display brightness (0-100/auto)
+       * @example 50
+       */
+      back?: string;
+    };
+    AudioVolumeInfo: {
+      /**
+       * @description Audio volume value (0-100)
+       * @example 50
+       */
+      volume?: number;
+    };
+    Status: {
+      system?: components["schemas"]["StatusSystem"];
+      power?: components["schemas"]["StatusPower"];
+    };
+    StatusSystem: {
+      /**
+       * @description Firmware version
+       * @example unknown
+       */
+      version?: string;
+      /**
+       * @description System uptime
+       * @example 00d 00h 04m 13s
+       */
+      uptime?: string;
+    };
+    StatusPower: {
+      /**
+       * @description Power state
+       * @example discharging
+       * @enum {string}
+       */
+      state?: "discharging" | "charging" | "charged";
+      /**
+       * @description Battery charge percent
+       * @example 99
+       */
+      battery_charge?: number;
+      /**
+       * @description Battery voltage in mV
+       * @example 4183
+       */
+      battery_voltage?: number;
+      /**
+       * @description Battery current in mA
+       * @example -180
+       */
+      battery_current?: number;
+      /**
+       * @description USB voltage in mV
+       * @example 4843
+       */
+      usb_voltage?: number;
+    };
+    /**
+     * @example WPA3
+     * @enum {string}
+     */
+    WifiSecurityMethod:
+      | "Open"
+      | "WPA"
+      | "WPA2"
+      | "WEP"
+      | "WPA (Enterprise)"
+      | "WPA2 (Enterprise)"
+      | "WPA/WPA2"
+      | "WPA3"
+      | "WPA2/WPA3"
+      | "WPA3 (Enterprise)"
+      | "WPA2/WPA3 (Enterprise)";
+    /**
+     * @example dhcp
+     * @enum {string}
+     */
+    WifiIpMethod: "dhcp" | "static";
+    /**
+     * @example ipv4
+     * @enum {string}
+     */
+    WifiIpType: "ipv4" | "ipv6";
+    Network: {
+      /** @example 42 */
+      ssid?: string;
+      security?: components["schemas"]["WifiSecurityMethod"];
+      /** @example 58 */
+      rssi?: number;
+    };
+    StatusResponse: {
+      /**
+       * @example enabled
+       * @enum {string}
+       */
+      state?: "disabled" | "enabled" | "connected";
+      /** @example Your_WIFI_SSID */
+      ssid?: string;
+      security?: components["schemas"]["WifiSecurityMethod"];
+      ip_config?: {
+        ip_method?: components["schemas"]["WifiIpMethod"];
+        ip_type?: components["schemas"]["WifiIpType"];
+        /** @example 192.168.50.5 */
+        address?: string;
+      };
+    };
+    ConnectRequestConfig: {
+      /** @example Your_WIFI_SSID */
+      ssid?: string;
+      /** @example Your_WIFI_Pass */
+      password?: string;
+      security?: components["schemas"]["WifiSecurityMethod"];
+      ip_config?: {
+        ip_method?: components["schemas"]["WifiIpMethod"];
+        ip_type?: components["schemas"]["WifiIpType"];
+        /** @example 192.168.50.5 */
+        address?: string;
+        /** @example 255.255.255.0 */
+        mask?: string;
+        /** @example 192.168.50.1 */
+        gateway?: string;
+      };
+    };
+    NetworkResponse: {
+      /** @example 1 */
+      count?: number;
+      networks?: components["schemas"]["Network"][];
+    };
+    /**
+     * Format: base64
+     * @description Frame for requested display encoded in base64
+     */
+    ScreenResponse: string;
+  };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    getLedState: {
-        parameters: {
-            query?: {
-                /** @description LED state (0 for off, 1 for on) - alternative to JSON body */
-                state?: 0 | 1;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description LED state retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LedStateResponse"];
-                };
-            };
-            /** @description Internal server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
+  getVersion: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    setLedState: {
-        parameters: {
-            query?: {
-                /** @description LED state (0 for off, 1 for on) - alternative to JSON body */
-                state?: 0 | 1;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Version information retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        /** @description LED state as JSON (alternative to query parameter) */
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["LedStateRequest"];
-            };
+        content: {
+          "application/json": components["schemas"]["VersionInfo"];
         };
-        responses: {
-            /** @description LED state set successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LedStateResponse"];
-                };
-            };
-            /** @description Invalid state parameter */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
+      };
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
     };
-    getVersion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Version information retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["VersionInfo"];
-                };
-            };
-            /** @description Internal server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
+  };
+  updateFirmware: {
+    parameters: {
+      query?: {
+        /**
+         * @description Name for the update package. The update will be unpacked to /ext/update/<name>.
+         * @example firmware
+         */
+        name?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    uploadAssetWithAppId: {
-        parameters: {
-            query: {
-                /**
-                 * @description Application ID for organizing assets
-                 * @example my_app
-                 */
-                app_id: string;
-                /**
-                 * @description Filename for the uploaded asset
-                 * @example data.png
-                 */
-                file: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/octet-stream": string;
-            };
-        };
-        responses: {
-            /** @description File uploaded successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessResponse"];
-                };
-            };
-            /** @description Invalid parameters or upload failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description File too large */
-            413: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/octet-stream": string;
+      };
     };
-    deleteAppAssets: {
-        parameters: {
-            query: {
-                /**
-                 * @description Application ID whose assets should be deleted
-                 * @example my_app
-                 */
-                app_id: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description Update initiated successfully. The device will reboot. */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Assets deleted successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessResponse"];
-                };
-            };
-            /** @description Invalid app_id or deletion failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
         };
+      };
+      /** @description Invalid parameters, invalid TAR file, or update preparation failed. */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+      /** @description Update package too large. */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+      /** @description Internal server error during update process. */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
     };
-    drawOnDisplay: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["DisplayElements"];
-            };
-        };
-        responses: {
-            /** @description Drawing command executed successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessResponse"];
-                };
-            };
-            /** @description Invalid drawing data */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description Display error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
+  };
+  uploadAssetWithAppId: {
+    parameters: {
+      query: {
+        /**
+         * @description Application ID for organizing assets
+         * @example my_app
+         */
+        app_id: string;
+        /**
+         * @description Filename for the uploaded asset
+         * @example data.png
+         */
+        file: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    clearDisplay: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Display cleared successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessResponse"];
-                };
-            };
-            /** @description Display error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/octet-stream": string;
+      };
     };
-    playAudio: {
-        parameters: {
-            query: {
-                /**
-                 * @description Application ID for organizing assets
-                 * @example my_app
-                 */
-                app_id: string;
-                /**
-                 * @description Path to audio file within app's assets directory
-                 * @example data.snd
-                 */
-                path: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description File uploaded successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Audio playback started successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessResponse"];
-                };
-            };
-            /** @description Invalid file path or file not found */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description Audio system error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
         };
+      };
+      /** @description Invalid parameters or upload failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+      /** @description File too large */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
     };
-    stopAudio: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Audio playback stopped successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessResponse"];
-                };
-            };
-            /** @description Audio system error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
+  };
+  deleteAppAssets: {
+    parameters: {
+      query: {
+        /**
+         * @description Application ID whose assets should be deleted
+         * @example my_app
+         */
+        app_id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    connectWebSocket: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Assets deleted successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description WebSocket connection established */
-            101: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description WebSocket upgrade failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description Upgrade required */
-            426: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
         };
+      };
+      /** @description Invalid app_id or deletion failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
     };
+  };
+  writeStorageFile: {
+    parameters: {
+      query: {
+        /**
+         * @description Path for the uploaded file
+         * @example /ext/test.png
+         */
+        path: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/octet-stream": string;
+      };
+    };
+    responses: {
+      /** @description File uploaded successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Invalid parameters or upload failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+      /** @description File too large */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  readStorageFile: {
+    parameters: {
+      query: {
+        /**
+         * @description Path to the file
+         * @example /ext/test.png
+         */
+        path: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description File uploaded successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/octet-stream": string;
+        };
+      };
+      /** @description Invalid parameters or file not exists */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  listStorageFiles: {
+    parameters: {
+      query: {
+        /**
+         * @description Path to the file
+         * @example /ext
+         */
+        path: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Directory contents read successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["StorageList"];
+        };
+      };
+      /** @description Invalid parameters or directory not exists */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  removeStorageFile: {
+    parameters: {
+      query: {
+        /**
+         * @description Path of a file to remove
+         * @example /ext/test.png
+         */
+        path: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description File deleted successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Invalid path or deletion failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  createStorageDir: {
+    parameters: {
+      query: {
+        /**
+         * @description Path to a new directory
+         * @example /ext/newdir
+         */
+        path: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Directory created successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Invalid path or deletion failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  drawOnDisplay: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["DisplayElements"];
+      };
+    };
+    responses: {
+      /** @description Drawing command executed successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Invalid drawing data */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+      /** @description Display error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  clearDisplay: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Display cleared successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Display error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  getDisplayBrightness: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Information retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["DisplayBrightnessInfo"];
+        };
+      };
+    };
+  };
+  setDisplayBrightness: {
+    parameters: {
+      query?: {
+        /**
+         * @description Front display brightness (0-100/auto)
+         * @example auto
+         */
+        front?: string;
+        /**
+         * @description Back display brightness (0-100/auto)
+         * @example 50
+         */
+        back?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Brightness set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Invalid request data */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  playAudio: {
+    parameters: {
+      query: {
+        /**
+         * @description Application ID for organizing assets
+         * @example my_app
+         */
+        app_id: string;
+        /**
+         * @description Path to audio file within app's assets directory
+         * @example data.snd
+         */
+        path: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Audio playback started successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Invalid file path or file not found */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+      /** @description Audio system error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  stopAudio: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Audio playback stopped successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Audio system error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  getAudioVolume: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Information retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AudioVolumeInfo"];
+        };
+      };
+    };
+  };
+  setAudioVolume: {
+    parameters: {
+      query: {
+        /**
+         * @description Audio volume (0-100)
+         * @example 50
+         */
+        volume: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Volume set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Invalid request data */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  connectInputWebSocket: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description WebSocket connection established */
+      101: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description WebSocket upgrade failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+      /** @description Upgrade required */
+      426: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  setInputKey: {
+    parameters: {
+      query: {
+        /**
+         * @description Key name
+         * @example ok
+         */
+        key:
+          | "up"
+          | "down"
+          | "ok"
+          | "back"
+          | "start"
+          | "busy"
+          | "status"
+          | "off"
+          | "apps"
+          | "settings";
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Input event sent successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Invalid request data */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  getStatus: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Information retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Status"];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  getStatusSystem: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Information retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["StatusSystem"];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  getStatusPower: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Information retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["StatusPower"];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  connectWebSocket: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description WebSocket connection established */
+      101: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Exceed max clients count */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
 }
