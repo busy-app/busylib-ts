@@ -29,6 +29,21 @@ import {
 } from "BusyBar/api/wifi";
 import type { ConnectParams } from "BusyBar/api/wifi";
 
+import {
+  write as writeStorageApi,
+  read as readStorageApi,
+  list as listStorageApi,
+  remove as removeStorageApi,
+  mkdir as mkdirStorageApi,
+} from "BusyBar/api/storage";
+import type {
+  UploadFileParams,
+  DownloadFileParams,
+  ReadDirectoryParams,
+  RemoveParams,
+  CreateDirectoryParams,
+} from "BusyBar/api/storage";
+
 /**
  * Main library class for interacting with the Busy Bar API.
  *
@@ -202,5 +217,70 @@ export class BusyBar {
    */
   async forgetWifi(): Promise<never> {
     return await forgetWifiApi();
+  }
+
+  /**
+   * Uploads a file to the device's internal storage.
+   *
+   * @param {UploadFileParams} params - Upload parameters:
+   *   @param {UploadFileParams['path']} params.path - Path where the file will be saved (e.g., "/ext/test.png").
+   *   @param {UploadFileParams['file']} params.file - File data to upload.
+   * @returns {Promise<components['schemas']['SuccessResponse']>} Result of the upload operation.
+   */
+  async uploadFile(
+    params: UploadFileParams
+  ): Promise<components["schemas"]["SuccessResponse"]> {
+    return await writeStorageApi(params);
+  }
+
+  /**
+   * Downloads a file from the device's internal storage.
+   *
+   * @param {DownloadFileParams} params - Download parameters:
+   *   @param {DownloadFileParams['path']} params.path - Path to the file to download (e.g., "/ext/test.png").
+   *   @param {DownloadFileParams['asArrayBuffer']} [params.asArrayBuffer] - If true, returns data as ArrayBuffer; otherwise, as Blob.
+   * @returns {Promise<ArrayBuffer | Blob>} The file data.
+   */
+  async downloadFile(params: DownloadFileParams): Promise<ArrayBuffer | Blob> {
+    return await readStorageApi(params);
+  }
+
+  /**
+   * Reads the contents of a directory (files and subdirectories) at the specified path.
+   *
+   * @param {ReadDirectoryParams} params - List parameters:
+   *   @param {ReadDirectoryParams['path']} params.path - Path to the directory to list (e.g., "/ext").
+   * @returns {Promise<components["schemas"]["StorageList"]>} List of files and directories.
+   */
+  async readDirectory(
+    params: ReadDirectoryParams
+  ): Promise<components["schemas"]["StorageList"]> {
+    return await listStorageApi(params);
+  }
+
+  /**
+   * Removes a file or a directory from the device's internal storage.
+   *
+   * @param {RemoveParams} params - Remove parameters:
+   *   @param {RemoveParams['path']} params.path - Path of the file to remove (e.g., "/ext/test.png").
+   * @returns {Promise<components['schemas']['SuccessResponse']>} Result of the remove operation.
+   */
+  async removeResource(
+    params: RemoveParams
+  ): Promise<components["schemas"]["SuccessResponse"]> {
+    return await removeStorageApi(params);
+  }
+
+  /**
+   * Creates a new directory in the device's internal storage.
+   *
+   * @param {CreateDirectoryParams} params - Directory creation parameters:
+   *   @param {CreateDirectoryParams['path']} params.path - Path to the new directory (e.g., "/ext/newdir").
+   * @returns {Promise<components['schemas']['SuccessResponse']>} Result of the create operation.
+   */
+  async createDirectory(
+    params: CreateDirectoryParams
+  ): Promise<components["schemas"]["SuccessResponse"]> {
+    return await mkdirStorageApi(params);
   }
 }
