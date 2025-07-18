@@ -1,4 +1,5 @@
 import isIPv4, { IPv4 } from "./utils/isIPv4";
+import type { components } from "BusyBar/types/APIv0";
 
 import { initApiClient } from "BusyBar/api/createClient";
 
@@ -16,6 +17,17 @@ import type { DrawParams } from "BusyBar/api/display";
 
 import { play as playSoundApi, stop as stopSoundApi } from "BusyBar/api/audio";
 import type { AudioParams } from "BusyBar/api/audio";
+
+import {
+  enable as enableWifiApi,
+  disable as disableWifiApi,
+  status as statusWifiApi,
+  connect as connectWifiApi,
+  disconnect as disconnectWifiApi,
+  networks as networksWifiAPi,
+  forget as forgetWifiApi,
+} from "BusyBar/api/wifi";
+import type { ConnectParams } from "BusyBar/api/wifi";
 
 /**
  * Main library class for interacting with the Busy Bar API.
@@ -115,5 +127,80 @@ export class BusyBar {
    */
   async stopSound(): Promise<{ result: string }> {
     return await stopSoundApi();
+  }
+
+  /**
+   * Enables the device's Wi-Fi module.
+   *
+   * @returns {Promise<components['schemas']['SuccessResponse']>} Result of the enable operation.
+   */
+  async enableWifi(): Promise<components["schemas"]["SuccessResponse"]> {
+    return await enableWifiApi();
+  }
+
+  /**
+   * Disables the device's Wi-Fi module.
+   *
+   * @returns {Promise<components['schemas']['SuccessResponse']>} Result of the disable operation.
+   */
+  async disableWifi(): Promise<components["schemas"]["SuccessResponse"]> {
+    return await disableWifiApi();
+  }
+
+  /**
+   * Gets the current status of the Wi-Fi module.
+   *
+   * @returns {Promise<components['schemas']['StatusResponse']>} Current Wi-Fi status.
+   */
+  async statusWifi(): Promise<components["schemas"]["StatusResponse"]> {
+    return await statusWifiApi();
+  }
+
+  /**
+   * Connects the device to a Wi-Fi network with the specified parameters.
+   *
+   * @param {ConnectParams} params - Connection parameters:
+   *   @param {ConnectParams['ssid']} params.ssid - SSID (network name) to connect to.
+   *   @param {ConnectParams['password']} [params.password] - Password for the Wi-Fi network (if required).
+   *   @param {ConnectParams['security']} params.security - Security type (e.g., "open", "wpa2", etc.).
+   *   @param {ConnectParams['ipConfig']} params.ipConfig - IP configuration object:
+   *     @param {ConnectParams['ipConfig']['ipMethod']} params.ipConfig.ipMethod - IP assignment method ("dhcp" or "static").
+   *     @param {ConnectParams['ipConfig']['ipType']} params.ipConfig.ipType - IP type ("ipv4" or "ipv6").
+   *     @param {ConnectParams['ipConfig']['address']} [params.ipConfig.address] - Static IP address (if using "static" method).
+   *     @param {ConnectParams['ipConfig']['mask']} [params.ipConfig.mask] - Subnet mask (if using "static" method).
+   *     @param {ConnectParams['ipConfig']['gateway']} [params.ipConfig.gateway] - Gateway address (if using "static" method).
+   * @returns {Promise<components['schemas']['SuccessResponse']>} Result of the connect operation.
+   */
+  async connectWifi(
+    params: ConnectParams
+  ): Promise<components["schemas"]["SuccessResponse"]> {
+    return await connectWifiApi(params);
+  }
+
+  /**
+   * Disconnects the device from the current Wi-Fi network.
+   *
+   * @returns {Promise<components['schemas']['SuccessResponse']>} Result of the disconnect operation.
+   */
+  async disconnectWifi(): Promise<components["schemas"]["SuccessResponse"]> {
+    return await disconnectWifiApi();
+  }
+
+  /**
+   * Scans for available Wi-Fi networks near your device.
+   *
+   * @returns {Promise<components['schemas']['NetworkResponse']>} List of discovered networks.
+   */
+  async networksWifi(): Promise<components["schemas"]["NetworkResponse"]> {
+    return await networksWifiAPi();
+  }
+
+  /**
+   * Removes the saved Wi-Fi configuration (forgets the network).
+   *
+   * @returns {Promise<never>} Result of the forget operation.
+   */
+  async forgetWifi(): Promise<never> {
+    return await forgetWifiApi();
   }
 }
