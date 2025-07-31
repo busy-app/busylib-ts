@@ -90,7 +90,7 @@ export class ScreenStream {
     if (this.config.mode === "cloud") {
       wsUrl = `${this.config.domain}/bars/${this.config.idDevice}/ws`;
     } else if (this.config.mode === "local") {
-      wsUrl = `${this.config.barUrl}/api/v0/screen/ws`;
+      wsUrl = `${this.config.barUrl}/api/screen/ws`;
     }
 
     this.socket = new WebSocket(wsUrl);
