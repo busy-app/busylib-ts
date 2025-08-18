@@ -1,5 +1,5 @@
 import { client } from "BusyBar/api/createClient";
-import { paths, components } from "BusyBar/types/APIv0";
+import { paths, components } from "BusyBar/types/API";
 
 type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 type OptionalFields = "timeout" | "x" | "y" | "display";
@@ -15,7 +15,7 @@ type CustomImageElement = MakeOptional<
 type CustomElement = CustomTextElement | CustomImageElement;
 
 export interface DrawParams {
-  appId: paths["/v0/display/draw"]["post"]["requestBody"]["content"]["application/json"]["app_id"];
+  appId: paths["/display/draw"]["post"]["requestBody"]["content"]["application/json"]["app_id"];
   elements: CustomElement[];
 }
 
@@ -40,7 +40,7 @@ async function draw(params: DrawParams) {
 
   const normalizedElements = elements.map(withDefaults);
 
-  const { data, error } = await client.POST("/v0/display/draw", {
+  const { data, error } = await client.POST("/display/draw", {
     body: {
       app_id: appId,
       elements: normalizedElements,
@@ -59,7 +59,7 @@ async function clear() {
     throw new Error("API client is not initialized");
   }
 
-  const { data, error } = await client.DELETE("/v0/display/draw");
+  const { data, error } = await client.DELETE("/display/draw");
 
   if (error) {
     throw error;

@@ -1,9 +1,9 @@
 import { client } from "BusyBar/api/createClient";
-import { paths } from "BusyBar/types/APIv0";
+import { paths } from "BusyBar/types/API";
 
 export interface AudioParams {
-  appId: paths["/v0/audio/play"]["post"]["parameters"]["query"]["app_id"];
-  path: paths["/v0/audio/play"]["post"]["parameters"]["query"]["path"];
+  appId: paths["/audio/play"]["post"]["parameters"]["query"]["app_id"];
+  path: paths["/audio/play"]["post"]["parameters"]["query"]["path"];
 }
 
 async function play(params: AudioParams) {
@@ -13,7 +13,7 @@ async function play(params: AudioParams) {
     throw new Error("API client is not initialized");
   }
 
-  const { data, error } = await client.POST("/v0/audio/play", {
+  const { data, error } = await client.POST("/audio/play", {
     params: {
       query: {
         app_id: appId,
@@ -34,7 +34,7 @@ async function stop() {
     throw new Error("API client is not initialized");
   }
 
-  const { data, error } = await client.DELETE("/v0/audio/play");
+  const { data, error } = await client.DELETE("/audio/play");
 
   if (error) {
     throw error;

@@ -1,9 +1,9 @@
 import { client } from "BusyBar/api/createClient";
-import type { paths } from "BusyBar/types/APIv0";
+import type { paths } from "BusyBar/types/API";
 
 export interface UploadParams {
-  appId: paths["/v0/assets/upload"]["post"]["parameters"]["query"]["app_id"];
-  fileName: paths["/v0/assets/upload"]["post"]["parameters"]["query"]["file"];
+  appId: paths["/assets/upload"]["post"]["parameters"]["query"]["app_id"];
+  fileName: paths["/assets/upload"]["post"]["parameters"]["query"]["file"];
   file: Buffer | Blob | File | ArrayBuffer;
 }
 async function upload(params: UploadParams) {
@@ -13,7 +13,7 @@ async function upload(params: UploadParams) {
     throw new Error("API client is not initialized");
   }
 
-  const { data, error } = await client.POST("/v0/assets/upload", {
+  const { data, error } = await client.POST("/assets/upload", {
     params: {
       query: {
         app_id: appId,
@@ -34,7 +34,7 @@ async function upload(params: UploadParams) {
 }
 
 export interface DeleteParams {
-  appId: paths["/v0/assets/upload"]["delete"]["parameters"]["query"]["app_id"];
+  appId: paths["/assets/upload"]["delete"]["parameters"]["query"]["app_id"];
 }
 async function deleteAssets(params: DeleteParams) {
   const { appId } = params;
@@ -43,7 +43,7 @@ async function deleteAssets(params: DeleteParams) {
     throw new Error("API client is not initialized");
   }
 
-  const { data, error } = await client.DELETE("/v0/assets/upload", {
+  const { data, error } = await client.DELETE("/assets/upload", {
     params: {
       query: {
         app_id: appId,

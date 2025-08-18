@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/v0/version": {
+  "/version": {
     parameters: {
       query?: never;
       header?: never;
@@ -12,8 +12,8 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Get firmware version information
-     * @description Retrieves firmware version, branch, build date, and commit information
+     * Get API version information
+     * @description Retrieves api version
      */
     get: operations["getVersion"];
     put?: never;
@@ -24,7 +24,31 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/update": {
+  "/access": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * HTTP API access over Wi-Fi configuration get
+     * @description HTTP API access over Wi-Fi configuration get
+     */
+    get: operations["getHttpAccess"];
+    put?: never;
+    /**
+     * HTTP API access over Wi-Fi configuration set
+     * @description HTTP API access over Wi-Fi configuration set
+     */
+    post: operations["setHttpAccess"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/update": {
     parameters: {
       query?: never;
       header?: never;
@@ -44,7 +68,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/assets/upload": {
+  "/assets/upload": {
     parameters: {
       query?: never;
       header?: never;
@@ -68,7 +92,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/storage/write": {
+  "/storage/write": {
     parameters: {
       query?: never;
       header?: never;
@@ -88,7 +112,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/storage/read": {
+  "/storage/read": {
     parameters: {
       query?: never;
       header?: never;
@@ -108,7 +132,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/storage/list": {
+  "/storage/list": {
     parameters: {
       query?: never;
       header?: never;
@@ -128,7 +152,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/storage/remove": {
+  "/storage/remove": {
     parameters: {
       query?: never;
       header?: never;
@@ -148,7 +172,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/storage/mkdir": {
+  "/storage/mkdir": {
     parameters: {
       query?: never;
       header?: never;
@@ -168,7 +192,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/display/draw": {
+  "/display/draw": {
     parameters: {
       query?: never;
       header?: never;
@@ -194,7 +218,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/display/brightness": {
+  "/display/brightness": {
     parameters: {
       query?: never;
       header?: never;
@@ -219,7 +243,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/audio/play": {
+  "/audio/play": {
     parameters: {
       query?: never;
       header?: never;
@@ -245,7 +269,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/audio/volume": {
+  "/audio/volume": {
     parameters: {
       query?: never;
       header?: never;
@@ -269,7 +293,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/input": {
+  "/input": {
     parameters: {
       query?: never;
       header?: never;
@@ -293,7 +317,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/status": {
+  "/status": {
     parameters: {
       query?: never;
       header?: never;
@@ -313,7 +337,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/status/system": {
+  "/status/system": {
     parameters: {
       query?: never;
       header?: never;
@@ -333,7 +357,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/status/power": {
+  "/status/power": {
     parameters: {
       query?: never;
       header?: never;
@@ -353,7 +377,29 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/wifi/enable": {
+  "/ws_test": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * WebSocket test endpoint
+     * @description WebSocket connection for real-time communication and testing.
+     *     Upgrade from HTTP to WebSocket protocol is required.
+     *
+     */
+    get: operations["connectWebSocket"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/wifi/enable": {
     parameters: {
       query?: never;
       header?: never;
@@ -398,7 +444,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/wifi/disable": {
+  "/wifi/disable": {
     parameters: {
       query?: never;
       header?: never;
@@ -443,7 +489,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/wifi/status": {
+  "/wifi/status": {
     parameters: {
       query?: never;
       header?: never;
@@ -479,7 +525,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/wifi/connect": {
+  "/wifi/connect": {
     parameters: {
       query?: never;
       header?: never;
@@ -528,7 +574,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/wifi/disconnect": {
+  "/wifi/disconnect": {
     parameters: {
       query?: never;
       header?: never;
@@ -573,7 +619,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/wifi/networks": {
+  "/wifi/networks": {
     parameters: {
       query?: never;
       header?: never;
@@ -618,7 +664,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/wifi/forget": {
+  "/wifi/forget": {
     parameters: {
       query?: never;
       header?: never;
@@ -654,7 +700,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v0/screen": {
+  "/screen": {
     parameters: {
       query?: never;
       header?: never;
@@ -705,6 +751,102 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/screen/ws": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Screen streaming WebSocket endpoint
+     * @description WebSocket connection for real-time screen streaming.
+     *     Upgrade from HTTP to WebSocket protocol is required.
+     *     After connection client must send desired display id
+     *     as json {"display": 0}
+     *
+     */
+    get: operations["connectWebSocket"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/ble/enable": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Enables ble module */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Ble enabled */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/ble/disable": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Disables ble module */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Ble disabled */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -727,32 +869,27 @@ export interface components {
       code?: number;
     };
     /** @example {
-     *       "branch": "main",
-     *       "version": "1.0.0",
-     *       "build_date": "2024-01-01",
-     *       "commit_hash": "abc123def456"
+     *       "api_semver": "0.0.0"
      *     } */
     VersionInfo: {
       /**
-       * @description Git branch name
-       * @example main
+       * @description Api SemVer
+       * @example 0.0.0
        */
-      branch: string;
+      api_semver: string;
+    };
+    HttpAccessInfo: {
       /**
-       * @description Firmware version
-       * @example 1.0.0
+       * @description Access mode
+       * @example key
+       * @enum {string}
        */
-      version: string;
+      mode?: "disabled" | "enabled" | "key";
       /**
-       * @description Build date
-       * @example 2024-01-01
+       * @description Access key was set and is valid
+       * @example true
        */
-      build_date: string;
-      /**
-       * @description Git commit hash (may include -dirty suffix)
-       * @example abc123def456-dirty
-       */
-      commit_hash: string;
+      key_valid?: Record<string, never>;
     };
     /** @example {
      *       "list": [
@@ -914,10 +1051,25 @@ export interface components {
     };
     StatusSystem: {
       /**
+       * @description Git branch name
+       * @example main
+       */
+      branch?: string;
+      /**
        * @description Firmware version
-       * @example unknown
+       * @example 1.0.0
        */
       version?: string;
+      /**
+       * @description Build date
+       * @example 2024-01-01
+       */
+      build_date?: string;
+      /**
+       * @description Git commit hash (may include -dirty suffix)
+       * @example abc123def456-dirty
+       */
+      commit_hash?: string;
       /**
        * @description System uptime
        * @example 00d 00h 04m 13s
@@ -1057,6 +1209,66 @@ export interface operations {
       };
       /** @description Internal server error */
       500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  getHttpAccess: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Information retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HttpAccessInfo"];
+        };
+      };
+    };
+  };
+  setHttpAccess: {
+    parameters: {
+      query: {
+        /**
+         * @description Access mode
+         * @example key
+         */
+        mode: "disabled" | "enabled" | "key";
+        /**
+         * @description Access key (4-10 digits len)
+         * @example 12345678
+         */
+        key: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Invalid request data */
+      400: {
         headers: {
           [name: string]: unknown;
         };

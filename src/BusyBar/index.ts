@@ -1,5 +1,5 @@
 import isIPv4, { IPv4 } from "./utils/isIPv4";
-import type { components } from "BusyBar/types/APIv0";
+import type { components } from "BusyBar/types/API";
 
 import { initApiClient } from "BusyBar/api/createClient";
 

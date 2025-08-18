@@ -1,5 +1,5 @@
 import { client } from "BusyBar/api/createClient";
-import type { components } from "BusyBar/types/APIv0";
+import type { components } from "BusyBar/types/API";
 import type { DeepCamelize, RequireKeys } from "BusyBar/types/utils";
 
 async function enable() {
@@ -7,7 +7,7 @@ async function enable() {
     throw new Error("API client is not initialized");
   }
 
-  const { data, error } = await client.POST("/v0/wifi/enable");
+  const { data, error } = await client.POST("/wifi/enable");
 
   if (error) {
     throw error;
@@ -21,7 +21,7 @@ async function disable() {
     throw new Error("API client is not initialized");
   }
 
-  const { data, error } = await client.POST("/v0/wifi/disable");
+  const { data, error } = await client.POST("/wifi/disable");
 
   if (error) {
     throw error;
@@ -35,7 +35,7 @@ async function status() {
     throw new Error("API client is not initialized");
   }
 
-  const { data, error } = await client.GET("/v0/wifi/status");
+  const { data, error } = await client.GET("/wifi/status");
 
   if (error) {
     throw error;
@@ -63,7 +63,7 @@ async function connect(params: ConnectParams) {
     throw new Error("API client is not initialized");
   }
 
-  const { data, error } = await client.POST("/v0/wifi/connect", {
+  const { data, error } = await client.POST("/wifi/connect", {
     body: {
       ssid: params.ssid,
       password: params.password,
@@ -90,7 +90,7 @@ async function disconnect() {
     throw new Error("API client is not initialized");
   }
 
-  const { data, error } = await client.POST("/v0/wifi/disconnect");
+  const { data, error } = await client.POST("/wifi/disconnect");
 
   if (error) {
     throw error;
@@ -106,7 +106,7 @@ async function networks() {
     throw new Error("API client is not initialized");
   }
 
-  const { data, error } = await client.GET("/v0/wifi/networks");
+  const { data, error } = await client.GET("/wifi/networks");
 
   if (error) {
     throw error;
@@ -120,7 +120,7 @@ async function forget() {
     throw new Error("API client is not initialized");
   }
 
-  const { data, error } = await client.POST("/v0/wifi/forget");
+  const { data, error } = await client.POST("/wifi/forget");
 
   if (error) {
     throw error;

@@ -1,5 +1,5 @@
 import { client } from "BusyBar/api/createClient";
-import type { components, operations } from "BusyBar/types/APIv0";
+import type { components, operations } from "BusyBar/types/API";
 
 export interface UploadFileParams {
   path: operations["writeStorageFile"]["parameters"]["query"]["path"];
@@ -13,7 +13,7 @@ async function write(params: UploadFileParams) {
 
   const { path, file } = params;
 
-  const { data, error } = await client.POST("/v0/storage/write", {
+  const { data, error } = await client.POST("/storage/write", {
     params: {
       query: {
         path,
@@ -44,7 +44,7 @@ async function read(params: DownloadFileParams) {
 
   const { path, asArrayBuffer } = params;
 
-  const { data, error } = await client.GET("/v0/storage/read", {
+  const { data, error } = await client.GET("/storage/read", {
     params: {
       query: {
         path,
@@ -72,7 +72,7 @@ async function list(params: ReadDirectoryParams) {
 
   const { path } = params;
 
-  const { data, error } = await client.GET("/v0/storage/list", {
+  const { data, error } = await client.GET("/storage/list", {
     params: {
       query: {
         path,
@@ -98,7 +98,7 @@ async function remove(params: RemoveParams) {
 
   const { path } = params;
 
-  const { data, error } = await client.DELETE("/v0/storage/remove", {
+  const { data, error } = await client.DELETE("/storage/remove", {
     params: {
       query: {
         path,
@@ -124,7 +124,7 @@ async function mkdir(params: CreateDirectoryParams) {
 
   const { path } = params;
 
-  const { data, error } = await client.POST("/v0/storage/mkdir", {
+  const { data, error } = await client.POST("/storage/mkdir", {
     params: {
       query: {
         path,
