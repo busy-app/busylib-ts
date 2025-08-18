@@ -44,6 +44,8 @@ import type {
   CreateDirectoryParams,
 } from "BusyBar/api/storage";
 
+import { version as versionApi } from "BusyBar/api/system";
+
 /**
  * Main library class for interacting with the Busy Bar API.
  *
@@ -56,6 +58,8 @@ export class BusyBar {
    * @readonly
    */
   public readonly ip: IPv4;
+  // @ts-ignore
+  private apiSemver: components["schemas"]["VersionInfo"]["api_semver"];
 
   /**
    * Creates an instance of BUSY Bar.
@@ -69,10 +73,21 @@ export class BusyBar {
       throw new Error(`Incorrect IPv4: ${ip}`);
     }
     this.ip = ip;
+    this.apiSemver = "";
 
-    console.log(this.ip);
+    initApiClient(`http://${this.ip}/api/`, this.getApiVersion.bind(this));
+  }
 
-    initApiClient(`http://${this.ip}/api/`);
+  /**
+   * Retrieves the API semantic version.
+   *
+   * @returns A promise that resolves to an object containing the `api_semver` string.
+   */
+  private async getApiVersion(): Promise<{ api_semver: string }> {
+    const response = await versionApi();
+    this.apiSemver = response.api_semver;
+
+    return response;
   }
 
   /**

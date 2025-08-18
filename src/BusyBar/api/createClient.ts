@@ -1,6 +1,11 @@
-import createClient, { Client } from "openapi-fetch";
-import type { paths } from "BusyBar/types/APIv0";
+import createClient from "openapi-fetch";
+import type { Client, Middleware } from "openapi-fetch";
+import type { paths, components } from "BusyBar/types/API";
 
+/**
+ * Universal body serializer for different body types:
+ * FormData, Buffer, File, Blob, ArrayBuffer, ArrayBufferView, URLSearchParams, JSON
+ */
 const bodySerializer = (body: unknown, headers?: HeadersInit) => {
   // FormData
   if (typeof FormData !== "undefined" && body instanceof FormData) {
@@ -68,12 +73,147 @@ const bodySerializer = (body: unknown, headers?: HeadersInit) => {
   return JSON.stringify(body);
 };
 
+type GetVersionFn = () => Promise<components["schemas"]["VersionInfo"]>;
+/**
+ * Function to fetch API version info (provided during init)
+ */
+let getApiVersionFn: GetVersionFn | undefined = undefined;
+/**
+ * Current cached API semver (X-API-Sem-Ver header value)
+ */
+let apiSemver: string | undefined = undefined;
+
+/**
+ * Custom FetchError with HTTP status and body attached
+ */
+interface FetchError<T = unknown> extends Error {
+  status: number;
+  statusText: string;
+  body: T;
+}
+
+/**
+ * Promise for an ongoing `/version` request ("in flight")
+ * Prevents multiple parallel requests to `/version`
+ */
+let inFlight: Promise<void> | null = null;
+
+/**
+ * Ensure that `apiSemver` is set
+ * If not -> fetch `/version`
+ * Uses `inFlight` to deduplicate concurrent requests
+ */
+async function ensureVersion(): Promise<void> {
+  if (apiSemver) {
+    return;
+  }
+  if (!getApiVersionFn) {
+    throw new Error("getApiVersionFn is not set");
+  }
+
+  if (!inFlight) {
+    inFlight = (async () => {
+      const v = await getApiVersionFn!();
+      if (!v.api_semver) {
+        throw new Error("Empty API version");
+      }
+      apiSemver = v.api_semver;
+    })().finally(() => {
+      inFlight = null;
+    });
+  }
+  await inFlight;
+}
+
+/**
+ * Convert a `Response` into a FetchError with parsed body (json or text)
+ */
+async function toFetchError(res: Response): Promise<FetchError> {
+  const ct = res.headers.get("content-type") || "";
+  const isJson = ct.includes("application/json");
+  const body = isJson ? await res.clone().json() : await res.clone().text();
+  const msg =
+    typeof body === "object" && body !== null
+      ? (body as any).error || (body as any).message
+      : typeof body === "string"
+      ? body
+      : undefined;
+
+  return Object.assign(
+    new Error(msg || `HTTP ${res.status} ${res.statusText}`),
+    {
+      status: res.status,
+      statusText: res.statusText,
+      body,
+    }
+  );
+}
+
+/**
+ * Middleware:
+ *  - Adds `X-API-Sem-Ver` header to all requests except `/version`
+ *  - On 405 (Incompatible API version):
+ *      -> resets version
+ *      -> refetches `/version`
+ *      -> retries the request once with new semver
+ */
+const middleware: Middleware = {
+  async onRequest({ request, schemaPath }) {
+    if (schemaPath !== "/version") {
+      await ensureVersion();
+      if (apiSemver) {
+        return request.headers.set("X-API-Sem-Ver", apiSemver);
+      }
+    }
+
+    return request;
+  },
+  async onResponse({ request, response, options, schemaPath }) {
+    if (response.ok) {
+      return response;
+    }
+
+    if (schemaPath === "/version") {
+      throw await toFetchError(response);
+    }
+
+    if (response.status !== 405) {
+      throw await toFetchError(response);
+    }
+
+    apiSemver = undefined;
+    await ensureVersion();
+
+    if (apiSemver) {
+      request.headers.set("X-API-Sem-Ver", apiSemver);
+    }
+    const retried = await (options.fetch ?? fetch)(request);
+
+    if (retried.ok) {
+      return retried;
+    }
+
+    throw await toFetchError(retried);
+  },
+};
+
+/**
+ * Global API client instance
+ */
 let client: Client<paths, `${string}/${string}`> | null = null;
-function initApiClient(url: string) {
+
+/**
+ * Initialize API client with baseUrl and version fetch function
+ */
+function initApiClient(url: string, getApiVersion: GetVersionFn) {
+  getApiVersionFn = getApiVersion;
+
   client = createClient<paths>({
     baseUrl: url,
     bodySerializer,
   });
+
+  client.use(middleware);
 }
 
 export { initApiClient, client };
