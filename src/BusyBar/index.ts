@@ -53,6 +53,14 @@ import {
 } from "BusyBar/api/system";
 import type { UpdateParams } from "BusyBar/api/system";
 
+import {
+  getDisplayBrightness as getDisplayBrightnessApi,
+  setDisplayBrightness as setDisplayBrightnessApi,
+  getAudioVolume as getAudioVolumeApi,
+  setAudioVolume as setAudioVolumeApi,
+} from "BusyBar/api/settings";
+import type { BrightnessParams, AudioVolumeParams } from "BusyBar/api/settings";
+
 /**
  * Main library class for interacting with the Busy Bar API.
  *
@@ -346,5 +354,54 @@ export class BusyBar {
     params: CreateDirectoryParams
   ): Promise<components["schemas"]["SuccessResponse"]> {
     return await mkdirStorageApi(params);
+  }
+
+  /**
+   * Gets the current display brightness settings for the device.
+   *
+   * @returns {Promise<components["schemas"]["DisplayBrightnessInfo"]>} Current brightness information for front and back panels.
+   */
+  async getDisplayBrightness(): Promise<
+    components["schemas"]["DisplayBrightnessInfo"]
+  > {
+    return await getDisplayBrightnessApi();
+  }
+
+  /**
+   * Sets the display brightness for the device.
+   *
+   * @param {BrightnessParams} params - Brightness parameters:
+   *   @param {BrightnessParams['front']} [params.front] - Brightness for the front panel (0-100 or "auto").
+   *   @param {BrightnessParams['back']} [params.back] - Brightness for the back panel (0-100 or "auto").
+   * @returns {Promise<components["schemas"]["SuccessResponse"]>} Result of the brightness update operation.
+   * @throws {Error} If brightness value is outside the range 0-100 or not "auto".
+   */
+  async setDisplayBrightness(
+    params: BrightnessParams
+  ): Promise<components["schemas"]["SuccessResponse"]> {
+    return await setDisplayBrightnessApi(params);
+  }
+
+  /**
+   * Gets the current audio volume value.
+   *
+   * @returns {Promise<components["schemas"]["AudioVolumeInfo"]>} Current audio volume (0-100).
+   */
+  async getAudioVolume(): Promise<components["schemas"]["AudioVolumeInfo"]> {
+    return await getAudioVolumeApi();
+  }
+
+  /**
+   * Sets the audio volume value.
+   *
+   * @param {AudioVolumeParams} params - Audio volume parameters:
+   *   @param {AudioVolumeParams['volume']} params.volume - Audio volume (number from 0 to 100).
+   * @returns {Promise<components["schemas"]["SuccessResponse"]>} Result of the volume update operation.
+   * @throws {Error} If volume is outside the range 0-100 or request fails.
+   */
+  async setAudioVolume(
+    params: AudioVolumeParams
+  ): Promise<components["schemas"]["SuccessResponse"]> {
+    return await setAudioVolumeApi(params);
   }
 }
