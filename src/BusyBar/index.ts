@@ -1,7 +1,7 @@
 import isIPv4, { IPv4 } from "./utils/isIPv4";
 import type { components } from "BusyBar/types/API";
 
-import { initApiClient } from "BusyBar/api/createClient";
+import { initApiClient, setApiKey } from "BusyBar/api/createClient";
 
 import {
   upload as uploadAssetsApi,
@@ -58,8 +58,14 @@ import {
   setDisplayBrightness as setDisplayBrightnessApi,
   getAudioVolume as getAudioVolumeApi,
   setAudioVolume as setAudioVolumeApi,
+  getHttpAccess as getHttpAccessApi,
+  setHttpAccess as setHttpAccessApi,
 } from "BusyBar/api/settings";
-import type { BrightnessParams, AudioVolumeParams } from "BusyBar/api/settings";
+import type {
+  BrightnessParams,
+  AudioVolumeParams,
+  HttpAccess,
+} from "BusyBar/api/settings";
 
 /**
  * Main library class for interacting with the Busy Bar API.
@@ -403,5 +409,42 @@ export class BusyBar {
     params: AudioVolumeParams
   ): Promise<components["schemas"]["SuccessResponse"]> {
     return await setAudioVolumeApi(params);
+  }
+
+  /**
+   * Gets the current HTTP API access configuration.
+   *
+   * @returns {Promise<components["schemas"]["HttpAccessInfo"]>} Current HTTP access info.
+   */
+  async getHttpAccess(): Promise<components["schemas"]["HttpAccessInfo"]> {
+    return await getHttpAccessApi();
+  }
+
+  /**
+   * Sets the HTTP API access configuration.
+   *
+   * @param {HttpAccess} params - Access parameters:
+   *   @param {HttpAccess['mode']} params.mode - Access mode ("disabled", "enabled", "key").
+   *   @param {HttpAccess['key']} params.key - Access key (4-10 digits).
+   * @returns {Promise<components["schemas"]["SuccessResponse"]>} Result of the set operation.
+   */
+  async setHttpAccess(
+    params: HttpAccess
+  ): Promise<components["schemas"]["SuccessResponse"]> {
+    const result = await setHttpAccessApi(params);
+
+    if (params.mode === "key" && params.key) {
+      this.setApiKey(params.key);
+    }
+
+    return result;
+  }
+
+  /**
+   * Sets API key for all subsequent requests.
+   * @param {string} key - API key to use in "X-API-Key" header.
+   */
+  setApiKey(key: string) {
+    setApiKey(key);
   }
 }

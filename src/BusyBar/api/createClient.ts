@@ -149,6 +149,11 @@ async function toFetchError(res: Response): Promise<FetchError> {
   );
 }
 
+let apiKey: string | undefined = undefined;
+function setApiKey(key: string) {
+  apiKey = key;
+}
+
 /**
  * Middleware:
  *  - Adds `X-API-Sem-Ver` header to all requests except `/version`
@@ -163,6 +168,9 @@ const middleware: Middleware = {
       await ensureVersion();
       if (apiSemver) {
         return request.headers.set("X-API-Sem-Ver", apiSemver);
+      }
+      if (apiKey) {
+        request.headers.set("X-API-Key", apiKey);
       }
     }
 
@@ -216,4 +224,4 @@ function initApiClient(url: string, getApiVersion: GetVersionFn) {
   client.use(middleware);
 }
 
-export { initApiClient, client };
+export { initApiClient, client, setApiKey };

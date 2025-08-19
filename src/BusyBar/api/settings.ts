@@ -103,9 +103,56 @@ async function setAudioVolume(params: AudioVolumeParams) {
   return data;
 }
 
+async function getHttpAccess() {
+  if (!client) {
+    throw new Error("API client is not initialized");
+  }
+
+  const { data, error } = await client.GET("/access");
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export interface HttpAccess {
+  mode: operations["setHttpAccess"]["parameters"]["query"]["mode"];
+  key: operations["setHttpAccess"]["parameters"]["query"]["key"];
+}
+async function setHttpAccess(params: HttpAccess) {
+  if (!client) {
+    throw new Error("API client is not initialized");
+  }
+
+  const { mode, key } = params;
+
+  if (!/^\d{4,10}$/.test(String(key))) {
+    throw new Error("Key must be a string of 4 to 10 digits");
+  }
+
+  const { data, error } = await client.POST("/access", {
+    params: {
+      query: {
+        mode,
+        key,
+      },
+    },
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
 export {
   getDisplayBrightness,
   setDisplayBrightness,
   getAudioVolume,
   setAudioVolume,
+  getHttpAccess,
+  setHttpAccess,
 };
