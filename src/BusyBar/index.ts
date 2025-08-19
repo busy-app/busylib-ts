@@ -44,7 +44,14 @@ import type {
   CreateDirectoryParams,
 } from "BusyBar/api/storage";
 
-import { version as versionApi } from "BusyBar/api/system";
+import {
+  version as versionApi,
+  update as updateApi,
+  status as statusApi,
+  systemStatus as systemStatusApi,
+  powerStatus as powerStatusApi,
+} from "BusyBar/api/system";
+import type { UpdateParams } from "BusyBar/api/system";
 
 /**
  * Main library class for interacting with the Busy Bar API.
@@ -88,6 +95,48 @@ export class BusyBar {
     this.apiSemver = response.api_semver;
 
     return response;
+  }
+
+  /**
+   * Updates the firmware.
+   *
+   * @param {UpdateParams} params - Parameters for the firmware update.
+   * @param {UpdateParams['name']} params.name - Name for the update package.
+   * @param {UpdateParams['file']} params.file - File data to upload.
+   * @returns Result of the update operation.
+   */
+  async updateFirmware(params: UpdateParams): Promise<{ result: string }> {
+    return await updateApi(params);
+  }
+
+  /**
+   * Gets the current status of the device, including system and power information.
+   *
+   * @returns Current status of the device.
+   */
+  async deviceStatus(): Promise<{
+    system?: components["schemas"]["StatusSystem"];
+    power?: components["schemas"]["StatusPower"];
+  }> {
+    return await statusApi();
+  }
+
+  /**
+   * Gets the current system status.
+   *
+   * @returns Current system status.
+   */
+  async systemStatus(): Promise<components["schemas"]["StatusSystem"]> {
+    return await systemStatusApi();
+  }
+
+  /**
+   * Gets the current power status.
+   *
+   * @returns Current power status.
+   */
+  async powerStatus(): Promise<components["schemas"]["StatusPower"]> {
+    return await powerStatusApi();
   }
 
   /**

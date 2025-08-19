@@ -1,10 +1,11 @@
 import { client } from "BusyBar/api/createClient";
 import type { paths } from "BusyBar/types/API";
+import type { BusyFile } from "BusyBar/types/global";
 
 export interface UploadParams {
   appId: paths["/assets/upload"]["post"]["parameters"]["query"]["app_id"];
   fileName: paths["/assets/upload"]["post"]["parameters"]["query"]["file"];
-  file: Buffer | Blob | File | ArrayBuffer;
+  file: BusyFile;
 }
 async function upload(params: UploadParams) {
   const { appId, fileName, file } = params;

@@ -1,9 +1,10 @@
 import { client } from "BusyBar/api/createClient";
 import type { components, operations } from "BusyBar/types/API";
+import type { BusyFile } from "BusyBar/types/global";
 
 export interface UploadFileParams {
   path: operations["writeStorageFile"]["parameters"]["query"]["path"];
-  file: Buffer | Blob | File | ArrayBuffer;
+  file: BusyFile;
 }
 
 async function write(params: UploadFileParams) {
