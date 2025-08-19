@@ -67,6 +67,11 @@ import type {
   HttpAccess,
 } from "BusyBar/api/settings";
 
+import {
+  enable as enableBleApi,
+  disable as disableBleApi,
+} from "BusyBar/api/ble";
+
 /**
  * Main library class for interacting with the Busy Bar API.
  *
@@ -446,5 +451,21 @@ export class BusyBar {
    */
   setApiKey(key: string) {
     setApiKey(key);
+  }
+
+  /**
+   * Enables BLE module.
+   * @returns {Promise<components["schemas"]["SuccessResponse"]>} Result of the enable operation.
+   */
+  async enableBle(): Promise<components["schemas"]["SuccessResponse"]> {
+    return await enableBleApi();
+  }
+
+  /**
+   * Disables BLE module.
+   * @returns {Promise<components["schemas"]["SuccessResponse"]>} Result of the disable operation.
+   */
+  async disableBle(): Promise<components["schemas"]["SuccessResponse"]> {
+    return await disableBleApi();
   }
 }
