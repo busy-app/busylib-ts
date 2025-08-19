@@ -170,7 +170,7 @@ const middleware: Middleware = {
         return request.headers.set("X-API-Sem-Ver", apiSemver);
       }
       if (apiKey) {
-        request.headers.set("X-API-Key", apiKey);
+        request.headers.set("X-API-Token", apiKey);
       }
     }
 
