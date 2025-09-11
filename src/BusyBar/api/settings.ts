@@ -1,5 +1,5 @@
 import { client } from "BusyBar/api/createClient";
-import type { operations } from "BusyBar/types/API";
+import type { operations } from "Global/API";
 
 async function getDisplayBrightness() {
   if (!client) {

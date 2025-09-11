@@ -1,5 +1,5 @@
 import { client } from "BusyBar/api/createClient";
-import type { components } from "BusyBar/types/API";
+import type { components } from "Global/API";
 import type { DeepCamelize, RequireKeys } from "BusyBar/types/utils";
 
 async function enable() {

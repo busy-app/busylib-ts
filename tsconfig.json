@@ -4,7 +4,8 @@
     "paths": {
       "src/*": ["src/*"],
       "BusyBar/*": ["src/BusyBar/*"],
-      "ScreenStream/*": ["src/ScreenStream/*"]
+      "ScreenStream/*": ["src/ScreenStream/*"],
+      "Global/*": ["src/Global/*"]
     },
 
     "target": "ES2020",

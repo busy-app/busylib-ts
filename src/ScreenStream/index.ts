@@ -4,6 +4,12 @@ import {
   rleDecompress,
   backConvertB4ToB8,
 } from "ScreenStream/utils/bufferUtils";
+import type {
+  DataListener,
+  StopListener,
+  ErrorListener,
+  ErrorPayload,
+} from "Global/types";
 
 interface BaseConfig {
   deviceScreen: DeviceScreen;

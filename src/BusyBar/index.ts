@@ -1,5 +1,6 @@
 import isIPv4, { IPv4 } from "./utils/isIPv4";
-import type { components } from "BusyBar/types/API";
+import type { components } from "Global/API";
+import type { ApiSemver } from "Global/types";
 
 import { initApiClient, setApiKey } from "BusyBar/api/createClient";
 
@@ -85,7 +86,7 @@ export class BusyBar {
    */
   public readonly ip: IPv4;
   // @ts-ignore
-  private apiSemver: components["schemas"]["VersionInfo"]["api_semver"];
+  private apiSemver: ApiSemver;
 
   /**
    * Creates an instance of BUSY Bar.

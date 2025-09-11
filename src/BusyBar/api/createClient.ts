@@ -1,6 +1,7 @@
 import createClient from "openapi-fetch";
 import type { Client, Middleware } from "openapi-fetch";
-import type { paths, components } from "BusyBar/types/API";
+import type { paths, components } from "Global/API";
+import type { ApiKey, ApiSemver } from "Global/types";
 
 /**
  * Universal body serializer for different body types:
@@ -81,7 +82,7 @@ let getApiVersionFn: GetVersionFn | undefined = undefined;
 /**
  * Current cached API semver (X-API-Sem-Ver header value)
  */
-let apiSemver: string | undefined = undefined;
+let apiSemver: ApiSemver | undefined = undefined;
 
 /**
  * Custom FetchError with HTTP status and body attached
@@ -149,8 +150,8 @@ async function toFetchError(res: Response): Promise<FetchError> {
   );
 }
 
-let apiKey: string | undefined = undefined;
-function setApiKey(key: string) {
+let apiKey: ApiKey | undefined = undefined;
+function setApiKey(key: ApiKey) {
   apiKey = key;
 }
 
