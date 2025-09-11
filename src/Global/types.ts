@@ -1,4 +1,7 @@
-import { components } from "Global/API";
+import { operations, components } from "Global/API";
+
+export type KeyName = operations["setInputKey"]["parameters"]["query"]["key"];
+export type KeyValue = 1 | 0;
 
 export interface ErrorPayload {
   code: number;

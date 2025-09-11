@@ -73,6 +73,9 @@ import {
   disable as disableBleApi,
 } from "BusyBar/api/ble";
 
+import { setInputKey as setInputKeyApi } from "BusyBar/api/input";
+import type { InputKey } from "BusyBar/api/input";
+
 /**
  * Main library class for interacting with the Busy Bar API.
  *
@@ -468,5 +471,22 @@ export class BusyBar {
    */
   async disableBle(): Promise<components["schemas"]["SuccessResponse"]> {
     return await disableBleApi();
+  }
+
+  /**
+   * Sends a button press.
+   *
+   * @param params - Button press parameters:
+   *   @param {InputKey['keyName']} params.keyName - Button key.
+   *   @example
+   *  {
+   *    keyName: "ok"
+   *  }
+   * @returns {Promise<components["schemas"]["SuccessResponse"]>} Result of pressing the button.
+   */
+  async pressButton(
+    params: InputKey
+  ): Promise<components["schemas"]["SuccessResponse"]> {
+    return await setInputKeyApi(params);
   }
 }

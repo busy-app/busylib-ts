@@ -5,6 +5,7 @@
       "src/*": ["src/*"],
       "BusyBar/*": ["src/BusyBar/*"],
       "ScreenStream/*": ["src/ScreenStream/*"],
+      "Input/*": ["src/Input/*"],
       "Global/*": ["src/Global/*"]
     },
 
