@@ -1,5 +1,5 @@
 import { DeviceScreen } from "ScreenStream/types";
-import { AUTH_CODE, RECONNECT_CODES } from "ScreenStream/config";
+import { AUTH_CODE, RECONNECT_CODES } from "Global/webSocketConfig";
 import {
   rleDecompress,
   backConvertB4ToB8,
@@ -9,10 +9,14 @@ import type {
   StopListener,
   ErrorListener,
   ErrorPayload,
+  ApiKey,
+  ApiSemver,
 } from "Global/types";
 
 interface BaseConfig {
   deviceScreen: DeviceScreen;
+  apiKey?: ApiKey;
+  apiSemver?: ApiSemver;
 }
 
 export interface LocalConfig extends BaseConfig {
@@ -29,18 +33,13 @@ export interface SiteConfig extends BaseConfig {
 
 export type DeviceConfig = LocalConfig | SiteConfig;
 
-export interface ErrorPayload {
-  code: number;
-  message: string;
-  raw: Error | CloseEvent | Event;
-}
-
-export type DataListener = (data: Uint8Array) => void;
-export type StopListener = () => void;
-export type ErrorListener = (payload: ErrorPayload) => void;
-
 export class ScreenStream {
   connected: boolean = false;
+
+  // @ts-ignore
+  private apiKey?: ApiKey;
+  // @ts-ignore
+  private apiSemver?: ApiSemver;
 
   private dataListeners: DataListener[] = [];
   private stopListeners: StopListener[] = [];
@@ -54,6 +53,14 @@ export class ScreenStream {
 
     if (!isBrowser) {
       throw new Error("not browser");
+    }
+
+    if (config.apiKey) {
+      this.apiKey = config.apiKey;
+    }
+
+    if (config.apiSemver) {
+      this.apiSemver = config.apiSemver;
     }
   }
 
@@ -92,11 +99,23 @@ export class ScreenStream {
       await this.closeWebsocket();
     }
 
-    let wsUrl = "";
+    let wsUrl: URL | undefined = undefined;
     if (this.config.mode === "cloud") {
-      wsUrl = `${this.config.domain}/bars/${this.config.idDevice}/ws`;
+      wsUrl = new URL(`${this.config.domain}/bars/${this.config.idDevice}/ws`);
     } else if (this.config.mode === "local") {
-      wsUrl = `${this.config.barUrl}/api/screen/ws`;
+      wsUrl = new URL(`${this.config.barUrl}/api/screen/ws`);
+
+      if (this.apiKey) {
+        wsUrl.searchParams.append("x-api-key", this.apiKey);
+      }
+
+      if (this.apiSemver) {
+        wsUrl.searchParams.append("x-api-sem-ver", this.apiSemver);
+      }
+    }
+
+    if (!wsUrl) {
+      throw new Error("The WebSocket URL is not specified");
     }
 
     this.socket = new WebSocket(wsUrl);
