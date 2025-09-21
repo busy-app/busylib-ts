@@ -106,7 +106,7 @@ export class ScreenStream {
       wsUrl = new URL(`${this.config.barUrl}/api/screen/ws`);
 
       if (this.apiKey) {
-        wsUrl.searchParams.append("x-api-key", this.apiKey);
+        wsUrl.searchParams.append("x-api-token", this.apiKey);
       }
 
       if (this.apiSemver) {

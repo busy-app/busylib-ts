@@ -451,7 +451,7 @@ export class BusyBar {
 
   /**
    * Sets API key for all subsequent requests.
-   * @param {string} key - API key to use in "X-API-Key" header.
+   * @param {string} key - API key to use in "X-API-Token" header.
    */
   setApiKey(key: string) {
     setApiKey(key);

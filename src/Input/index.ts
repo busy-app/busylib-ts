@@ -106,7 +106,7 @@ export class Input {
       wsUrl = new URL(`${this.config.barUrl}/api/input`);
 
       if (this.apiKey) {
-        wsUrl.searchParams.append("x-api-key", this.apiKey);
+        wsUrl.searchParams.append("x-api-token", this.apiKey);
       }
 
       if (this.apiSemver) {
