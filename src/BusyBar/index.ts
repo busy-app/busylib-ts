@@ -1,4 +1,4 @@
-import isIPv4, { IPv4 } from "./utils/isIPv4";
+// import isIPv4, { IPv4 } from "./utils/isIPv4";
 import type {
   ApiSemver,
   SuccessResponse,
@@ -89,6 +89,10 @@ import {
 import { setInputKey as setInputKeyApi } from "BusyBar/api/input";
 import type { InputKey } from "BusyBar/api/input";
 
+export interface BusyBarConfig {
+  host: string;
+}
+
 /**
  * Main library class for interacting with the Busy Bar API.
  *
@@ -96,11 +100,11 @@ import type { InputKey } from "BusyBar/api/input";
  */
 export class BusyBar {
   /**
-   * Device IPv4 address.
-   * @type {IPv4}
+   * Device host address (IP or mDNS).
+   * @type {BusyBarConfig['host']}
    * @readonly
    */
-  public readonly ip: IPv4;
+  public readonly host: BusyBarConfig["host"];
   /**
    * Current API semantic version.
    * @type {ApiSemver}
@@ -109,19 +113,18 @@ export class BusyBar {
 
   /**
    * Creates an instance of BUSY Bar.
-   * Initializes the API client with the provided IPv4 address.
+   * Initializes the API client with the provided host address.
    *
-   * @param {IPv4} [ip="10.0.4.20"] - The IPv4 address of the device.
-   * @throws {Error} If the provided IP is not a valid IPv4 address.
+   * @param {BusyBarConfig} config - The host address of the device (IP or mDNS).
    */
-  constructor(ip: IPv4 = "10.0.4.20") {
-    if (!isIPv4(ip)) {
-      throw new Error(`Incorrect IPv4: ${ip}`);
-    }
-    this.ip = ip;
+  constructor(config: BusyBarConfig) {
+    // if (!isIPv4(ip)) {
+    //   throw new Error(`Incorrect IPv4: ${ip}`);
+    // }
+    this.host = config.host;
     this.apiSemver = "";
 
-    initApiClient(`http://${this.ip}/api/`, this.getApiVersion.bind(this));
+    initApiClient(`http://${this.host}/api/`, this.getApiVersion.bind(this));
   }
 
   /**
