@@ -1,5 +1,5 @@
 import { client } from "BusyBar/api/createClient";
-import type { components, operations } from "Global/API";
+import type { operations } from "Global/API";
 import type { BusyFile } from "BusyBar/types/global";
 
 export interface UploadFileParams {
