@@ -64,7 +64,6 @@ async function read(params: DownloadFileParams) {
 export interface ReadDirectoryParams {
   path: operations["listStorageFiles"]["parameters"]["query"]["path"];
 }
-export type StorageListElement = components["schemas"]["StorageListElement"];
 
 async function list(params: ReadDirectoryParams) {
   if (!client) {

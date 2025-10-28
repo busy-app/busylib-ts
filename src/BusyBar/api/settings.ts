@@ -117,11 +117,11 @@ async function getHttpAccess() {
   return data;
 }
 
-export interface HttpAccess {
+export interface HttpAccessParams {
   mode: operations["setHttpAccess"]["parameters"]["query"]["mode"];
   key: operations["setHttpAccess"]["parameters"]["query"]["key"];
 }
-async function setHttpAccess(params: HttpAccess) {
+async function setHttpAccess(params: HttpAccessParams) {
   if (!client) {
     throw new Error("API client is not initialized");
   }

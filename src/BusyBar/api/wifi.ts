@@ -99,8 +99,6 @@ async function disconnect() {
   return data;
 }
 
-export type Network = components["schemas"]["Network"];
-
 async function networks() {
   if (!client) {
     throw new Error("API client is not initialized");
