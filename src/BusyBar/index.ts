@@ -101,8 +101,11 @@ export class BusyBar {
    * @readonly
    */
   public readonly ip: IPv4;
-  // @ts-ignore
-  private apiSemver: ApiSemver;
+  /**
+   * Current API semantic version.
+   * @type {ApiSemver}
+   */
+  apiSemver: ApiSemver;
 
   /**
    * Creates an instance of BUSY Bar.
@@ -126,7 +129,7 @@ export class BusyBar {
    *
    * @returns {Promise<VersionInfo>} A promise that resolves to an object containing the `api_semver` string.
    */
-  private async getApiVersion(): Promise<VersionInfo> {
+  async getApiVersion(): Promise<VersionInfo> {
     const response = await versionApi();
     this.apiSemver = response.api_semver;
 
