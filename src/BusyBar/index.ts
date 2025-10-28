@@ -1,6 +1,19 @@
-import isIPv4, { IPv4 } from "./utils/isIPv4";
-import type { components } from "Global/API";
-import type { ApiSemver } from "Global/types";
+// import isIPv4, { IPv4 } from "./utils/isIPv4";
+import type {
+  ApiSemver,
+  SuccessResponse,
+  VersionInfo,
+  Status,
+  StatusSystem,
+  StatusPower,
+  WifiNetworkResponse,
+  StorageList,
+  StorageReadResponse,
+  DisplayBrightnessInfo,
+  AudioVolumeInfo,
+  HttpAccessInfo,
+  WifiStatusResponse,
+} from "Global/types";
 
 import { initApiClient, setApiKey } from "BusyBar/api/createClient";
 
@@ -65,7 +78,7 @@ import {
 import type {
   BrightnessParams,
   AudioVolumeParams,
-  HttpAccess,
+  HttpAccessParams,
 } from "BusyBar/api/settings";
 
 import {
@@ -76,6 +89,10 @@ import {
 import { setInputKey as setInputKeyApi } from "BusyBar/api/input";
 import type { InputKey } from "BusyBar/api/input";
 
+export interface BusyBarConfig {
+  host: string;
+}
+
 /**
  * Main library class for interacting with the Busy Bar API.
  *
@@ -83,37 +100,39 @@ import type { InputKey } from "BusyBar/api/input";
  */
 export class BusyBar {
   /**
-   * Device IPv4 address.
-   * @type {IPv4}
+   * Device host address (IP or mDNS).
+   * @type {BusyBarConfig['host']}
    * @readonly
    */
-  public readonly ip: IPv4;
-  // @ts-ignore
-  private apiSemver: ApiSemver;
+  public readonly host: BusyBarConfig["host"];
+  /**
+   * Current API semantic version.
+   * @type {ApiSemver}
+   */
+  apiSemver: ApiSemver;
 
   /**
    * Creates an instance of BUSY Bar.
-   * Initializes the API client with the provided IPv4 address.
+   * Initializes the API client with the provided host address.
    *
-   * @param {IPv4} [ip="10.0.4.20"] - The IPv4 address of the device.
-   * @throws {Error} If the provided IP is not a valid IPv4 address.
+   * @param {BusyBarConfig} config - The host address of the device (IP or mDNS).
    */
-  constructor(ip: IPv4 = "10.0.4.20") {
-    if (!isIPv4(ip)) {
-      throw new Error(`Incorrect IPv4: ${ip}`);
-    }
-    this.ip = ip;
+  constructor(config: BusyBarConfig) {
+    // if (!isIPv4(ip)) {
+    //   throw new Error(`Incorrect IPv4: ${ip}`);
+    // }
+    this.host = config.host;
     this.apiSemver = "";
 
-    initApiClient(`http://${this.ip}/api/`, this.getApiVersion.bind(this));
+    initApiClient(`http://${this.host}/api/`, this.getApiVersion.bind(this));
   }
 
   /**
    * Retrieves the API semantic version.
    *
-   * @returns A promise that resolves to an object containing the `api_semver` string.
+   * @returns {Promise<VersionInfo>} A promise that resolves to an object containing the `api_semver` string.
    */
-  private async getApiVersion(): Promise<{ api_semver: string }> {
+  async getApiVersion(): Promise<VersionInfo> {
     const response = await versionApi();
     this.apiSemver = response.api_semver;
 
@@ -126,39 +145,36 @@ export class BusyBar {
    * @param {UpdateParams} params - Parameters for the firmware update.
    * @param {UpdateParams['name']} params.name - Name for the update package.
    * @param {UpdateParams['file']} params.file - File data to upload.
-   * @returns Result of the update operation.
+   * @returns {Promise<SuccessResponse>} Result of the update operation.
    */
-  async updateFirmware(params: UpdateParams): Promise<{ result: string }> {
+  async updateFirmware(params: UpdateParams): Promise<SuccessResponse> {
     return await updateApi(params);
   }
 
   /**
    * Gets the current status of the device, including system and power information.
    *
-   * @returns Current status of the device.
+   * @returns {Promise<Status>} Current status of the device.
    */
-  async deviceStatus(): Promise<{
-    system?: components["schemas"]["StatusSystem"];
-    power?: components["schemas"]["StatusPower"];
-  }> {
+  async deviceStatus(): Promise<Status> {
     return await statusApi();
   }
 
   /**
    * Gets the current system status.
    *
-   * @returns Current system status.
+   * @returns {Promise<StatusSystem>} Current system status.
    */
-  async systemStatus(): Promise<components["schemas"]["StatusSystem"]> {
+  async systemStatus(): Promise<StatusSystem> {
     return await systemStatusApi();
   }
 
   /**
    * Gets the current power status.
    *
-   * @returns Current power status.
+   * @returns {Promise<StatusPower>} Current power status.
    */
-  async powerStatus(): Promise<components["schemas"]["StatusPower"]> {
+  async powerStatus(): Promise<StatusPower> {
     return await powerStatusApi();
   }
 
@@ -169,9 +185,9 @@ export class BusyBar {
    * @param {UploadParams['appId']} params.appId - Application ID for organizing assets.
    * @param {UploadParams['fileName']} params.fileName - Filename for the uploaded asset.
    * @param {UploadParams['file']} params.file - File data to upload.
-   * @returns {Promise<{ result: string }>} Result of the upload operation.
+   * @returns {Promise<SuccessResponse>} Result of the upload operation.
    */
-  async uploadAsset(params: UploadParams): Promise<{ result: string }> {
+  async uploadAsset(params: UploadParams): Promise<SuccessResponse> {
     // check file
     // convert file
 
@@ -183,9 +199,9 @@ export class BusyBar {
    *
    * @param {DeleteParams} params - Parameters for the delete.
    * @param {DeleteParams['appId']} params.appId - Application ID whose assets should be deleted.
-   * @returns {Promise<{ result: string }>} Result of the delete operation.
+   * @returns {Promise<SuccessResponse>} Result of the delete operation.
    */
-  async deleteAssets(params: DeleteParams): Promise<{ result: string }> {
+  async deleteAssets(params: DeleteParams): Promise<SuccessResponse> {
     return await deleteAssetsApi(params);
   }
 
@@ -195,18 +211,18 @@ export class BusyBar {
    * @param {DrawParams} params - Parameters for the draw operation.
    * @param {DrawParams['appId']} params.appId - Application ID for organizing display elements.
    * @param {DrawParams['elements'][]} params.elements - Array of display elements (text or image).
-   * @returns {Promise<{ result: string }>} Result of the draw operation.
+   * @returns {Promise<SuccessResponse>} Result of the draw operation.
    */
-  async drawDisplay(params: DrawParams): Promise<{ result: string }> {
+  async drawDisplay(params: DrawParams): Promise<SuccessResponse> {
     return await drawDisplayApi(params);
   }
 
   /**
    * Clears the device display and stops the Canvas application if running.
    *
-   * @returns {Promise<{ result: string }>} Result of the clear operation.
+   * @returns {Promise<SuccessResponse>} Result of the clear operation.
    */
-  async clearDisplay(): Promise<{ result: string }> {
+  async clearDisplay(): Promise<SuccessResponse> {
     return await clearDisplayApi();
   }
 
@@ -216,45 +232,45 @@ export class BusyBar {
    * @param {AudioParams} params - Parameters for the audio playback.
    * @param {AudioParams['appId']} params.appId - Application ID for organizing assets.
    * @param {AudioParams['path']} params.path - Path to the audio file within the app's assets directory.
-   * @returns {Promise<{ result: string }>} Result of the play operation.
+   * @returns {Promise<SuccessResponse>} Result of the play operation.
    */
-  async playSound(params: AudioParams): Promise<{ result: string }> {
+  async playSound(params: AudioParams): Promise<SuccessResponse> {
     return await playSoundApi(params);
   }
 
   /**
    * Stops any currently playing audio on the device.
    *
-   * @returns {Promise<{ result: string }>} Result of the stop operation.
+   * @returns {Promise<SuccessResponse>} Result of the stop operation.
    */
-  async stopSound(): Promise<{ result: string }> {
+  async stopSound(): Promise<SuccessResponse> {
     return await stopSoundApi();
   }
 
   /**
    * Enables the device's Wi-Fi module.
    *
-   * @returns {Promise<components['schemas']['SuccessResponse']>} Result of the enable operation.
+   * @returns {Promise<SuccessResponse>} Result of the enable operation.
    */
-  async enableWifi(): Promise<components["schemas"]["SuccessResponse"]> {
+  async enableWifi(): Promise<SuccessResponse> {
     return await enableWifiApi();
   }
 
   /**
    * Disables the device's Wi-Fi module.
    *
-   * @returns {Promise<components['schemas']['SuccessResponse']>} Result of the disable operation.
+   * @returns {Promise<SuccessResponse>} Result of the disable operation.
    */
-  async disableWifi(): Promise<components["schemas"]["SuccessResponse"]> {
+  async disableWifi(): Promise<SuccessResponse> {
     return await disableWifiApi();
   }
 
   /**
    * Gets the current status of the Wi-Fi module.
    *
-   * @returns {Promise<components['schemas']['StatusResponse']>} Current Wi-Fi status.
+   * @returns {Promise<WifiStatusResponse>} Current Wi-Fi status.
    */
-  async statusWifi(): Promise<components["schemas"]["StatusResponse"]> {
+  async statusWifi(): Promise<WifiStatusResponse> {
     return await statusWifiApi();
   }
 
@@ -271,29 +287,27 @@ export class BusyBar {
    *     @param {ConnectParams['ipConfig']['address']} [params.ipConfig.address] - Static IP address (if using "static" method).
    *     @param {ConnectParams['ipConfig']['mask']} [params.ipConfig.mask] - Subnet mask (if using "static" method).
    *     @param {ConnectParams['ipConfig']['gateway']} [params.ipConfig.gateway] - Gateway address (if using "static" method).
-   * @returns {Promise<components['schemas']['SuccessResponse']>} Result of the connect operation.
+   * @returns {Promise<SuccessResponse>} Result of the connect operation.
    */
-  async connectWifi(
-    params: ConnectParams
-  ): Promise<components["schemas"]["SuccessResponse"]> {
+  async connectWifi(params: ConnectParams): Promise<SuccessResponse> {
     return await connectWifiApi(params);
   }
 
   /**
    * Disconnects the device from the current Wi-Fi network.
    *
-   * @returns {Promise<components['schemas']['SuccessResponse']>} Result of the disconnect operation.
+   * @returns {Promise<SuccessResponse>} Result of the disconnect operation.
    */
-  async disconnectWifi(): Promise<components["schemas"]["SuccessResponse"]> {
+  async disconnectWifi(): Promise<SuccessResponse> {
     return await disconnectWifiApi();
   }
 
   /**
    * Scans for available Wi-Fi networks near your device.
    *
-   * @returns {Promise<components['schemas']['NetworkResponse']>} List of discovered networks.
+   * @returns {Promise<WifiNetworkResponse>} List of discovered networks.
    */
-  async networksWifi(): Promise<components["schemas"]["NetworkResponse"]> {
+  async networksWifi(): Promise<WifiNetworkResponse> {
     return await networksWifiAPi();
   }
 
@@ -312,11 +326,9 @@ export class BusyBar {
    * @param {UploadFileParams} params - Upload parameters:
    *   @param {UploadFileParams['path']} params.path - Path where the file will be saved (e.g., "/ext/test.png").
    *   @param {UploadFileParams['file']} params.file - File data to upload.
-   * @returns {Promise<components['schemas']['SuccessResponse']>} Result of the upload operation.
+   * @returns {Promise<SuccessResponse>} Result of the upload operation.
    */
-  async uploadFile(
-    params: UploadFileParams
-  ): Promise<components["schemas"]["SuccessResponse"]> {
+  async uploadFile(params: UploadFileParams): Promise<SuccessResponse> {
     return await writeStorageApi(params);
   }
 
@@ -326,9 +338,9 @@ export class BusyBar {
    * @param {DownloadFileParams} params - Download parameters:
    *   @param {DownloadFileParams['path']} params.path - Path to the file to download (e.g., "/ext/test.png").
    *   @param {DownloadFileParams['asArrayBuffer']} [params.asArrayBuffer] - If true, returns data as ArrayBuffer; otherwise, as Blob.
-   * @returns {Promise<ArrayBuffer | Blob>} The file data.
+   * @returns {Promise<StorageReadResponse>} The file data.
    */
-  async downloadFile(params: DownloadFileParams): Promise<ArrayBuffer | Blob> {
+  async downloadFile(params: DownloadFileParams): Promise<StorageReadResponse> {
     return await readStorageApi(params);
   }
 
@@ -337,11 +349,9 @@ export class BusyBar {
    *
    * @param {ReadDirectoryParams} params - List parameters:
    *   @param {ReadDirectoryParams['path']} params.path - Path to the directory to list (e.g., "/ext").
-   * @returns {Promise<components["schemas"]["StorageList"]>} List of files and directories.
+   * @returns {Promise<StorageList>} List of files and directories.
    */
-  async readDirectory(
-    params: ReadDirectoryParams
-  ): Promise<components["schemas"]["StorageList"]> {
+  async readDirectory(params: ReadDirectoryParams): Promise<StorageList> {
     return await listStorageApi(params);
   }
 
@@ -350,11 +360,9 @@ export class BusyBar {
    *
    * @param {RemoveParams} params - Remove parameters:
    *   @param {RemoveParams['path']} params.path - Path of the file to remove (e.g., "/ext/test.png").
-   * @returns {Promise<components['schemas']['SuccessResponse']>} Result of the remove operation.
+   * @returns {Promise<SuccessResponse>} Result of the remove operation.
    */
-  async removeResource(
-    params: RemoveParams
-  ): Promise<components["schemas"]["SuccessResponse"]> {
+  async removeResource(params: RemoveParams): Promise<SuccessResponse> {
     return await removeStorageApi(params);
   }
 
@@ -363,22 +371,20 @@ export class BusyBar {
    *
    * @param {CreateDirectoryParams} params - Directory creation parameters:
    *   @param {CreateDirectoryParams['path']} params.path - Path to the new directory (e.g., "/ext/newdir").
-   * @returns {Promise<components['schemas']['SuccessResponse']>} Result of the create operation.
+   * @returns {Promise<SuccessResponse>} Result of the create operation.
    */
   async createDirectory(
     params: CreateDirectoryParams
-  ): Promise<components["schemas"]["SuccessResponse"]> {
+  ): Promise<SuccessResponse> {
     return await mkdirStorageApi(params);
   }
 
   /**
    * Gets the current display brightness settings for the device.
    *
-   * @returns {Promise<components["schemas"]["DisplayBrightnessInfo"]>} Current brightness information for front and back panels.
+   * @returns {Promise<DisplayBrightnessInfo>} Current brightness information for front and back panels.
    */
-  async getDisplayBrightness(): Promise<
-    components["schemas"]["DisplayBrightnessInfo"]
-  > {
+  async getDisplayBrightness(): Promise<DisplayBrightnessInfo> {
     return await getDisplayBrightnessApi();
   }
 
@@ -388,21 +394,21 @@ export class BusyBar {
    * @param {BrightnessParams} params - Brightness parameters:
    *   @param {BrightnessParams['front']} [params.front] - Brightness for the front panel (0-100 or "auto").
    *   @param {BrightnessParams['back']} [params.back] - Brightness for the back panel (0-100 or "auto").
-   * @returns {Promise<components["schemas"]["SuccessResponse"]>} Result of the brightness update operation.
+   * @returns {Promise<SuccessResponse>} Result of the brightness update operation.
    * @throws {Error} If brightness value is outside the range 0-100 or not "auto".
    */
   async setDisplayBrightness(
     params: BrightnessParams
-  ): Promise<components["schemas"]["SuccessResponse"]> {
+  ): Promise<SuccessResponse> {
     return await setDisplayBrightnessApi(params);
   }
 
   /**
    * Gets the current audio volume value.
    *
-   * @returns {Promise<components["schemas"]["AudioVolumeInfo"]>} Current audio volume (0-100).
+   * @returns {Promise<AudioVolumeInfo>} Current audio volume (0-100).
    */
-  async getAudioVolume(): Promise<components["schemas"]["AudioVolumeInfo"]> {
+  async getAudioVolume(): Promise<AudioVolumeInfo> {
     return await getAudioVolumeApi();
   }
 
@@ -411,35 +417,31 @@ export class BusyBar {
    *
    * @param {AudioVolumeParams} params - Audio volume parameters:
    *   @param {AudioVolumeParams['volume']} params.volume - Audio volume (number from 0 to 100).
-   * @returns {Promise<components["schemas"]["SuccessResponse"]>} Result of the volume update operation.
+   * @returns {Promise<SuccessResponse>} Result of the volume update operation.
    * @throws {Error} If volume is outside the range 0-100 or request fails.
    */
-  async setAudioVolume(
-    params: AudioVolumeParams
-  ): Promise<components["schemas"]["SuccessResponse"]> {
+  async setAudioVolume(params: AudioVolumeParams): Promise<SuccessResponse> {
     return await setAudioVolumeApi(params);
   }
 
   /**
    * Gets the current HTTP API access configuration.
    *
-   * @returns {Promise<components["schemas"]["HttpAccessInfo"]>} Current HTTP access info.
+   * @returns {Promise<HttpAccessInfo>} Current HTTP access info.
    */
-  async getHttpAccess(): Promise<components["schemas"]["HttpAccessInfo"]> {
+  async getHttpAccess(): Promise<HttpAccessInfo> {
     return await getHttpAccessApi();
   }
 
   /**
    * Sets the HTTP API access configuration.
    *
-   * @param {HttpAccess} params - Access parameters:
-   *   @param {HttpAccess['mode']} params.mode - Access mode ("disabled", "enabled", "key").
-   *   @param {HttpAccess['key']} params.key - Access key (4-10 digits).
-   * @returns {Promise<components["schemas"]["SuccessResponse"]>} Result of the set operation.
+   * @param {HttpAccessParams} params - Access parameters:
+   *   @param {HttpAccessParams['mode']} params.mode - Access mode ("disabled", "enabled", "key").
+   *   @param {HttpAccessParams['key']} params.key - Access key (4-10 digits).
+   * @returns {Promise<SuccessResponse>} Result of the set operation.
    */
-  async setHttpAccess(
-    params: HttpAccess
-  ): Promise<components["schemas"]["SuccessResponse"]> {
+  async setHttpAccess(params: HttpAccessParams): Promise<SuccessResponse> {
     const result = await setHttpAccessApi(params);
 
     if (params.mode === "key" && params.key) {
@@ -459,17 +461,17 @@ export class BusyBar {
 
   /**
    * Enables BLE module.
-   * @returns {Promise<components["schemas"]["SuccessResponse"]>} Result of the enable operation.
+   * @returns {Promise<SuccessResponse>} Result of the enable operation.
    */
-  async enableBle(): Promise<components["schemas"]["SuccessResponse"]> {
+  async enableBle(): Promise<SuccessResponse> {
     return await enableBleApi();
   }
 
   /**
    * Disables BLE module.
-   * @returns {Promise<components["schemas"]["SuccessResponse"]>} Result of the disable operation.
+   * @returns {Promise<SuccessResponse>} Result of the disable operation.
    */
-  async disableBle(): Promise<components["schemas"]["SuccessResponse"]> {
+  async disableBle(): Promise<SuccessResponse> {
     return await disableBleApi();
   }
 
@@ -482,11 +484,9 @@ export class BusyBar {
    *  {
    *    keyName: "ok"
    *  }
-   * @returns {Promise<components["schemas"]["SuccessResponse"]>} Result of pressing the button.
+   * @returns {Promise<SuccessResponse>} Result of pressing the button.
    */
-  async pressButton(
-    params: InputKey
-  ): Promise<components["schemas"]["SuccessResponse"]> {
+  async pressButton(params: InputKey): Promise<SuccessResponse> {
     return await setInputKeyApi(params);
   }
 }
