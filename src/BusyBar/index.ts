@@ -30,7 +30,7 @@ import {
 import type { DrawParams } from "BusyBar/api/display";
 
 import { play as playSoundApi, stop as stopSoundApi } from "BusyBar/api/audio";
-import type { AudioParams } from "BusyBar/api/audio";
+import type { AudioPlayParams } from "BusyBar/api/audio";
 
 import {
   enable as enableWifiApi,
@@ -87,7 +87,7 @@ import {
 } from "BusyBar/api/ble";
 
 import { setInputKey as setInputKeyApi } from "BusyBar/api/input";
-import type { InputKey } from "BusyBar/api/input";
+import type { InputKeyParams } from "BusyBar/api/input";
 
 export interface BusyBarConfig {
   host: string;
@@ -229,12 +229,12 @@ export class BusyBar {
   /**
    * Plays an audio file from the assets directory.
    *
-   * @param {AudioParams} params - Parameters for the audio playback.
-   * @param {AudioParams['appId']} params.appId - Application ID for organizing assets.
-   * @param {AudioParams['path']} params.path - Path to the audio file within the app's assets directory.
+   * @param {AudioPlayParams} params - Parameters for the audio playback.
+   * @param {AudioPlayParams['appId']} params.appId - Application ID for organizing assets.
+   * @param {AudioPlayParams['path']} params.path - Path to the audio file within the app's assets directory.
    * @returns {Promise<SuccessResponse>} Result of the play operation.
    */
-  async playSound(params: AudioParams): Promise<SuccessResponse> {
+  async playSound(params: AudioPlayParams): Promise<SuccessResponse> {
     return await playSoundApi(params);
   }
 
@@ -479,14 +479,14 @@ export class BusyBar {
    * Sends a button press.
    *
    * @param params - Button press parameters:
-   *   @param {InputKey['keyName']} params.keyName - Button key.
+   *   @param {InputKeyParams['keyName']} params.keyName - Button key.
    *   @example
    *  {
    *    keyName: "ok"
    *  }
    * @returns {Promise<SuccessResponse>} Result of pressing the button.
    */
-  async pressButton(params: InputKey): Promise<SuccessResponse> {
+  async pressButton(params: InputKeyParams): Promise<SuccessResponse> {
     return await setInputKeyApi(params);
   }
 }

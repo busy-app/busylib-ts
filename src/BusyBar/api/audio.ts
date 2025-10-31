@@ -1,12 +1,12 @@
 import { client } from "BusyBar/api/createClient";
 import { paths } from "Global/API";
 
-export interface AudioParams {
+export interface AudioPlayParams {
   appId: paths["/audio/play"]["post"]["parameters"]["query"]["app_id"];
   path: paths["/audio/play"]["post"]["parameters"]["query"]["path"];
 }
 
-async function play(params: AudioParams) {
+async function play(params: AudioPlayParams) {
   const { appId, path } = params;
 
   if (!client) {

@@ -1,10 +1,10 @@
 import { client } from "BusyBar/api/createClient";
 import { KeyName } from "Global/types";
 
-export interface InputKey {
+export interface InputKeyParams {
   keyName: KeyName;
 }
-async function setInputKey(params: InputKey) {
+async function setInputKey(params: InputKeyParams) {
   if (!client) {
     throw new Error("API client is not initialized");
   }
