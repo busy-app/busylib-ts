@@ -15,35 +15,33 @@ export type { AudioPlayParams } from "BusyBar/api/audio";
 
 export type { ConnectParams as WifiConnectParams } from "BusyBar/api/wifi";
 
-/**
- * @deprecated Use `StorageUploadFileParams` instead.
- * This type will be removed in a future release.
- */
-export type { UploadFileParams } from "BusyBar/api/storage";
-
-/**
- * @deprecated Use `StorageDownloadFileParams` instead.
- * This type will be removed in a future release.
- */
-export type { DownloadFileParams } from "BusyBar/api/storage";
-
-/**
- * @deprecated Use `StorageReadDirectoryParams` instead.
- * This type will be removed in a future release.
- */
-export type { ReadDirectoryParams } from "BusyBar/api/storage";
-
-/**
- * @deprecated Use `StorageRemoveParams` instead.
- * This type will be removed in a future release.
- */
-export type { RemoveParams } from "BusyBar/api/storage";
-
-/**
- * @deprecated Use `StorageCreateDirectoryParams` instead.
- * This type will be removed in a future release.
- */
-export type { CreateDirectoryParams } from "BusyBar/api/storage";
+export type {
+  /**
+   * @deprecated Use `StorageUploadFileParams` instead.
+   * This type will be removed in a future release.
+   */
+  UploadFileParams,
+  /**
+   * @deprecated Use `StorageDownloadFileParams` instead.
+   * This type will be removed in a future release.
+   */
+  DownloadFileParams,
+  /**
+   * @deprecated Use `StorageReadDirectoryParams` instead.
+   * This type will be removed in a future release.
+   */
+  ReadDirectoryParams,
+  /**
+   * @deprecated Use `StorageRemoveParams` instead.
+   * This type will be removed in a future release.
+   */
+  RemoveParams,
+  /**
+   * @deprecated Use `StorageCreateDirectoryParams` instead.
+   * This type will be removed in a future release.
+   */
+  CreateDirectoryParams,
+} from "BusyBar/api/storage";
 
 export type {
   UploadFileParams as StorageUploadFileParams,
