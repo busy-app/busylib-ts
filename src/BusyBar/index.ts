@@ -1,4 +1,3 @@
-// import isIPv4, { IPv4 } from "./utils/isIPv4";
 import type {
   ApiSemver,
   SuccessResponse,
@@ -118,13 +117,16 @@ export class BusyBar {
    * @param {BusyBarConfig} config - The host address of the device (IP or mDNS).
    */
   constructor(config: BusyBarConfig) {
-    // if (!isIPv4(ip)) {
-    //   throw new Error(`Incorrect IPv4: ${ip}`);
-    // }
-    this.host = config.host;
+    let host = config.host.trim();
+
+    if (!/^https?:\/\//i.test(host)) {
+      host = `http://${host}`;
+    }
+
+    this.host = host;
     this.apiSemver = "";
 
-    initApiClient(`http://${this.host}/api/`, this.getApiVersion.bind(this));
+    initApiClient(`${this.host}/api/`, this.getApiVersion.bind(this));
   }
 
   /**
