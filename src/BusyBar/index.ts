@@ -88,9 +88,14 @@ import {
 import { setInputKey as setInputKeyApi } from "BusyBar/api/input";
 import type { InputKeyParams } from "BusyBar/api/input";
 
-export interface BusyBarConfig {
-  host: string;
-}
+export type BusyBarConfig = {
+  addr?: string;
+  token?: string;
+};
+
+const DEFAULT_DEVICE_URL = "http://10.0.4.20";
+const DEFAULT_PROXY_URL = "https://proxy.busy.app";
+const PROXY_HOST_RE = /^https?:\/\/proxy(?:\.(?:dev|test|stage))?\.busy\.app$/i;
 
 /**
  * Main library class for interacting with the Busy Bar API.
@@ -103,7 +108,7 @@ export class BusyBar {
    * @type {BusyBarConfig['host']}
    * @readonly
    */
-  public readonly host: BusyBarConfig["host"];
+  public readonly addr: BusyBarConfig["addr"];
   /**
    * Current API semantic version.
    * @type {ApiSemver}
@@ -114,19 +119,50 @@ export class BusyBar {
    * Creates an instance of BUSY Bar.
    * Initializes the API client with the provided host address.
    *
-   * @param {BusyBarConfig} config - The host address of the device (IP or mDNS).
+   * @param {BusyBarConfig} config - BUSY Bar connection configuration
+   * @param {BusyBarConfig['addr']} config.addr -
+   * The device address or proxy endpoint.
+   *
+   * Can be:
+   * - An IP address (e.g. `192.168.0.10`)
+   * - An mDNS hostname (e.g. `busybar.local`)
+   * - A domain name
+   * - A full URL (`http://` or `https://`)
+   *
+   * If no protocol is specified, `http://` will be automatically added.
+   *
+   * @param {BusyBarConfig['token']} config.token -
+   * Optional authentication token.
+   *
+   * Must be provided when `addr` points to a secured proxy endpoint
+   * such as `https://proxy.busy.app`.
    */
-  constructor(config: BusyBarConfig) {
-    let host = config.host.trim();
+  constructor(config?: BusyBarConfig) {
+    if (!config || (!config.addr && !config.token)) {
+      this.addr = DEFAULT_DEVICE_URL;
+    } else if (!config.addr) {
+      this.addr = DEFAULT_PROXY_URL;
+    } else {
+      let addr = config.addr.trim();
 
-    if (!/^https?:\/\//i.test(host)) {
-      host = `http://${host}`;
+      if (!/^https?:\/\//i.test(addr)) {
+        addr = `http://${addr}`;
+      }
+
+      if (PROXY_HOST_RE.test(addr) && !config.token) {
+        throw new Error("Token is required. Please provide it.");
+      }
+
+      this.addr = addr;
     }
 
-    this.host = host;
     this.apiSemver = "";
 
-    initApiClient(`${this.host}/api/`, this.getApiVersion.bind(this));
+    initApiClient(
+      `${this.addr}/api/`,
+      this.getApiVersion.bind(this),
+      config?.token
+    );
   }
 
   /**

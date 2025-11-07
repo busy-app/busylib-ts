@@ -2,6 +2,7 @@ import createClient from "openapi-fetch";
 import type { Client, Middleware } from "openapi-fetch";
 import type { paths, components } from "Global/API";
 import type { ApiKey, ApiSemver } from "Global/types";
+import type { BusyBarConfig } from "BusyBar/index";
 
 /**
  * Universal body serializer for different body types:
@@ -155,6 +156,8 @@ function setApiKey(key: ApiKey) {
   apiKey = key;
 }
 
+let bearerToken: string | undefined = undefined;
+
 /**
  * Middleware:
  *  - Adds `X-API-Sem-Ver` header to all requests except `/version`
@@ -165,10 +168,14 @@ function setApiKey(key: ApiKey) {
  */
 const middleware: Middleware = {
   async onRequest({ request, schemaPath }) {
+    if (bearerToken) {
+      request.headers.set("Authorization", `Bearer ${bearerToken}`);
+    }
+
     if (schemaPath !== "/version") {
       await ensureVersion();
       if (apiSemver) {
-        return request.headers.set("X-API-Sem-Ver", apiSemver);
+        request.headers.set("X-API-Sem-Ver", apiSemver);
       }
       if (apiKey) {
         request.headers.set("X-API-Token", apiKey);
@@ -196,6 +203,10 @@ const middleware: Middleware = {
     if (apiSemver) {
       request.headers.set("X-API-Sem-Ver", apiSemver);
     }
+    if (bearerToken) {
+      request.headers.set("Authorization", `Bearer ${bearerToken}`);
+    }
+
     const retried = await (options.fetch ?? fetch)(request);
 
     if (retried.ok) {
@@ -214,8 +225,14 @@ let client: Client<paths, `${string}/${string}`> | null = null;
 /**
  * Initialize API client with baseUrl and version fetch function
  */
-function initApiClient(url: string, getApiVersion: GetVersionFn) {
+function initApiClient(
+  url: string,
+  getApiVersion: GetVersionFn,
+  token: BusyBarConfig["token"]
+) {
   getApiVersionFn = getApiVersion;
+
+  bearerToken = token ?? undefined;
 
   client = createClient<paths>({
     baseUrl: url,
