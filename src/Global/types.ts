@@ -54,6 +54,7 @@ export type VersionInfo = components["schemas"]["VersionInfo"];
 export type Status = components["schemas"]["Status"];
 export type StatusSystem = components["schemas"]["StatusSystem"];
 export type StatusPower = components["schemas"]["StatusPower"];
+export type TimestampInfo = components["schemas"]["TimestampInfo"];
 
 // Wifi
 export type WifiSecurityMethod = components["schemas"]["WifiSecurityMethod"];

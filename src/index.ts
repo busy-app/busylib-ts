@@ -51,7 +51,11 @@ export type {
   CreateDirectoryParams as StorageCreateDirectoryParams,
 } from "BusyBar/api/storage";
 
-export type { UpdateParams as SystemUpdateParams } from "BusyBar/api/system";
+export type {
+  UpdateParams as SystemUpdateParams,
+  SetTimestampParams as SystemTimestampParams,
+  SetTimezoneParams as SystemTimezoneParams,
+} from "BusyBar/api/system";
 
 export type {
   BrightnessParams as DisplayBrightnessParams,
@@ -78,6 +82,7 @@ export type {
   Status,
   StatusSystem,
   StatusPower,
+  TimestampInfo,
   WifiSecurityMethod,
   WifiIpMethod,
   WifiIpType,

@@ -5,6 +5,7 @@ import type {
   Status,
   StatusSystem,
   StatusPower,
+  TimestampInfo,
   WifiNetworkResponse,
   StorageList,
   StorageReadResponse,
@@ -60,8 +61,15 @@ import {
   status as statusApi,
   systemStatus as systemStatusApi,
   powerStatus as powerStatusApi,
+  getTime as getTimeApi,
+  setTimestamp as setTimestampApi,
+  setTimezone as setTimezoneApi,
 } from "BusyBar/api/system";
-import type { UpdateParams } from "BusyBar/api/system";
+import type {
+  UpdateParams,
+  SetTimestampParams,
+  SetTimezoneParams,
+} from "BusyBar/api/system";
 
 import {
   getDisplayBrightness as getDisplayBrightnessApi,
@@ -211,6 +219,37 @@ export class BusyBar {
    */
   async powerStatus(): Promise<StatusPower> {
     return await powerStatusApi();
+  }
+
+  /**
+   * Gets current device timestamp with timezone.
+   *
+   * @returns {Promise<TimestampInfo>} Current device timestamp as an ISO 8601 string.
+   */
+  async getTime(): Promise<TimestampInfo> {
+    return await getTimeApi();
+  }
+
+  /**
+   * Sets the current device timestamp.
+   *
+   * @param {SetTimestampParams} params - The parameters for setting the timestamp.
+   * @param {SetTimestampParams['timestamp']} params.timestamp - The new timestamp (ISO 8601 string).
+   * @returns {Promise<SuccessResponse>} A success response if the timestamp was set.
+   */
+  async setTimestamp(params: SetTimestampParams): Promise<SuccessResponse> {
+    return await setTimestampApi(params);
+  }
+
+  /**
+   * Sets the device timezone.
+   *
+   * @param {SetTimezoneParams} params - The parameters for setting the timezone.
+   * @param {SetTimezoneParams['timezone']} params.timezone - The new timezone identifier (IANA TZ string).
+   * @returns {Promise<SuccessResponse>} A success response if the timezone was set.
+   */
+  async setTimezone(params: SetTimezoneParams): Promise<SuccessResponse> {
+    return await setTimezoneApi(params);
   }
 
   /**

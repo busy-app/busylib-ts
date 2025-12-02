@@ -1,5 +1,6 @@
 import { client } from "BusyBar/api/createClient";
 import type { BusyFile } from "BusyBar/types/global";
+import { operations } from "src/Global/API";
 
 async function version() {
   if (!client) {
@@ -88,4 +89,71 @@ async function powerStatus() {
   return data;
 }
 
-export { version, update, status, systemStatus, powerStatus };
+async function getTime() {
+  if (!client) {
+    throw new Error("API client is not initialized");
+  }
+
+  const { data, error } = await client.GET("/time");
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export interface SetTimestampParams {
+  timestamp: operations["setTimeTimestamp"]["parameters"]["query"]["timestamp"];
+}
+
+async function setTimestamp(params: SetTimestampParams) {
+  if (!client) {
+    throw new Error("API client is not initialized");
+  }
+
+  const { data, error } = await client.POST("/time/timestamp", {
+    params: {
+      query: params,
+    },
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export interface SetTimezoneParams {
+  timezone: operations["setTimeTimezone"]["parameters"]["query"]["timezone"];
+}
+
+async function setTimezone(params: SetTimezoneParams) {
+  if (!client) {
+    throw new Error("API client is not initialized");
+  }
+
+  const { data, error } = await client.POST("/time/timezone", {
+    params: {
+      query: params,
+    },
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export {
+  version,
+  update,
+  status,
+  systemStatus,
+  powerStatus,
+  getTime,
+  setTimestamp,
+  setTimezone,
+};
