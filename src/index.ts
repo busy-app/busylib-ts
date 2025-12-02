@@ -72,6 +72,7 @@ export type {
   SuccessResponse,
   Error,
   HttpAccessInfo,
+  BleStatusResponse,
   DisplayBrightnessInfo,
   AudioVolumeInfo,
   NameInfo,

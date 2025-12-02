@@ -14,6 +14,7 @@ import type {
   HttpAccessInfo,
   NameInfo,
   WifiStatusResponse,
+  BleStatusResponse,
 } from "Global/types";
 
 import { initApiClient, setApiKey } from "BusyBar/api/createClient";
@@ -92,6 +93,8 @@ import type {
 import {
   enable as enableBleApi,
   disable as disableBleApi,
+  pairing as pairingBleApi,
+  status as statusBleApi,
 } from "BusyBar/api/ble";
 
 import { setInputKey as setInputKeyApi } from "BusyBar/api/input";
@@ -595,6 +598,24 @@ export class BusyBar {
    */
   async disableBle(): Promise<SuccessResponse> {
     return await disableBleApi();
+  }
+
+  /**
+   * Removes all BLE pairings from the device.
+   *
+   * @returns {Promise<SuccessResponse>} Result of the BLE pairing removal operation.
+   */
+  async pairingBle(): Promise<SuccessResponse> {
+    return await pairingBleApi();
+  }
+
+  /**
+   * Gets the current BLE module status.
+   *
+   * @returns {Promise<BleStatusResponse>} Current BLE status information.
+   */
+  async statusBle(): Promise<BleStatusResponse> {
+    return await statusBleApi();
   }
 
   /**

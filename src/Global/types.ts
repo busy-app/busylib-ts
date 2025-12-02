@@ -27,6 +27,7 @@ export type FileUpload = {
 // Audio
 
 // BLE
+export type BleStatusResponse = components["schemas"]["BleStatusResponse"];
 
 // Display
 export type DisplayElements = components["schemas"]["DisplayElements"];
