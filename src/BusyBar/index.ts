@@ -15,9 +15,17 @@ import type {
   NameInfo,
   WifiStatusResponse,
   BleStatusResponse,
+  AccountInfo,
+  AccountLink,
 } from "Global/types";
 
 import { initApiClient, setApiKey } from "BusyBar/api/createClient";
+
+import {
+  getMqttStatus as getMqttStatusApi,
+  unlinkDevice as unlinkAccountApi,
+  linkDevice as linkAccountApi,
+} from "BusyBar/api/account";
 
 import {
   upload as uploadAssetsApi,
@@ -257,6 +265,33 @@ export class BusyBar {
    */
   async setTimezone(params: SetTimezoneParams): Promise<SuccessResponse> {
     return await setTimezoneApi(params);
+  }
+
+  /**
+   * Gets the status of the MQTT account linked to the device.
+   *
+   * @returns {Promise<AccountInfo>} Information about the current MQTT account status.
+   */
+  async getMqttStatus(): Promise<AccountInfo> {
+    return await getMqttStatusApi();
+  }
+
+  /**
+   * Unlinks the current account from the device.
+   *
+   * @returns {Promise<SuccessResponse>} Result of the account unlink operation.
+   */
+  async unlinkAccount(): Promise<SuccessResponse> {
+    return await unlinkAccountApi();
+  }
+
+  /**
+   * Links an account to the device.
+   *
+   * @returns {Promise<AccountLink>} Information about the account link operation.
+   */
+  async linkAccount(): Promise<AccountLink> {
+    return await linkAccountApi();
   }
 
   /**

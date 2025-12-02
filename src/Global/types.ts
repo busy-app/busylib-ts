@@ -18,6 +18,10 @@ export type ApiSemver = components["schemas"]["VersionInfo"]["api_semver"];
 export type SuccessResponse = components["schemas"]["SuccessResponse"];
 export type Error = components["schemas"]["Error"];
 
+// Account
+export type AccountInfo = components["schemas"]["AccountInfo"];
+export type AccountLink = components["schemas"]["AccountLink"];
+
 // Assets
 export type BinaryUpload = Buffer | Blob | File | ArrayBuffer;
 export type FileUpload = {
