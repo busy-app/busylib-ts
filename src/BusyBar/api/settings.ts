@@ -1,5 +1,6 @@
 import { client } from "BusyBar/api/createClient";
 import type { operations } from "Global/API";
+import type { NameInfo } from "Global/types";
 
 async function getDisplayBrightness() {
   if (!client) {
@@ -148,6 +149,40 @@ async function setHttpAccess(params: HttpAccessParams) {
   return data;
 }
 
+async function getName() {
+  if (!client) {
+    throw new Error("API client is not initialized");
+  }
+
+  const { data, error } = await client.GET("/name");
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export interface NameParams {
+  name: NameInfo["name"];
+}
+
+async function setName(params: NameParams) {
+  if (!client) {
+    throw new Error("API client is not initialized");
+  }
+
+  const { data, error } = await client.POST("/name", {
+    body: params,
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
 export {
   getDisplayBrightness,
   setDisplayBrightness,
@@ -155,4 +190,6 @@ export {
   setAudioVolume,
   getHttpAccess,
   setHttpAccess,
+  getName,
+  setName,
 };

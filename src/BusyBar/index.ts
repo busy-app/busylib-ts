@@ -12,6 +12,7 @@ import type {
   DisplayBrightnessInfo,
   AudioVolumeInfo,
   HttpAccessInfo,
+  NameInfo,
   WifiStatusResponse,
 } from "Global/types";
 
@@ -78,11 +79,14 @@ import {
   setAudioVolume as setAudioVolumeApi,
   getHttpAccess as getHttpAccessApi,
   setHttpAccess as setHttpAccessApi,
+  setName as setNameApi,
+  getName as getNameApi,
 } from "BusyBar/api/settings";
 import type {
   BrightnessParams,
   AudioVolumeParams,
   HttpAccessParams,
+  NameParams,
 } from "BusyBar/api/settings";
 
 import {
@@ -547,6 +551,26 @@ export class BusyBar {
     }
 
     return result;
+  }
+
+  /**
+   * Gets the current device name.
+   *
+   * @returns {Promise<NameInfo>} The current device name information.
+   */
+  async getName(): Promise<NameInfo> {
+    return await getNameApi();
+  }
+
+  /**
+   * Sets the device name.
+   *
+   * @param {NameParams} params - The parameters for setting the device name.
+   * @param {NameParams['name']} params.name - The new device name.
+   * @returns {Promise<SuccessResponse>} Result of setting the device name.
+   */
+  async setName(params: NameParams): Promise<SuccessResponse> {
+    return await setNameApi(params);
   }
 
   /**

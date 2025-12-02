@@ -41,6 +41,7 @@ export type HttpAccessInfo = components["schemas"]["HttpAccessInfo"];
 export type DisplayBrightnessInfo =
   components["schemas"]["DisplayBrightnessInfo"];
 export type AudioVolumeInfo = components["schemas"]["AudioVolumeInfo"];
+export type NameInfo = components["schemas"]["NameInfo"];
 
 // Storage
 export type StorageList = components["schemas"]["StorageList"];

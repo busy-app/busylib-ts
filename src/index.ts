@@ -61,6 +61,7 @@ export type {
   BrightnessParams as DisplayBrightnessParams,
   AudioVolumeParams,
   HttpAccessParams,
+  NameParams,
 } from "BusyBar/api/settings";
 
 export type { InputKeyParams } from "BusyBar/api/input";
@@ -73,6 +74,7 @@ export type {
   HttpAccessInfo,
   DisplayBrightnessInfo,
   AudioVolumeInfo,
+  NameInfo,
   StorageList,
   StorageListElement,
   StorageFileElement,
