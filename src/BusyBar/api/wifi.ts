@@ -2,34 +2,6 @@ import { client } from "BusyBar/api/createClient";
 import type { components } from "Global/API";
 import type { DeepCamelize, RequireKeys } from "BusyBar/types/utils";
 
-async function enable() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
-
-  const { data, error } = await client.POST("/wifi/enable");
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
-async function disable() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
-
-  const { data, error } = await client.POST("/wifi/disable");
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
 async function status() {
   if (!client) {
     throw new Error("API client is not initialized");
@@ -50,7 +22,7 @@ type CamelizedRequest = DeepCamelize<
 
 type RequiredIpConfig = RequireKeys<
   NonNullable<CamelizedRequest["ipConfig"]>,
-  "ipMethod" | "ipType"
+  "ipMethod"
 >;
 
 export type ConnectParams = RequireKeys<
@@ -70,7 +42,6 @@ async function connect(params: ConnectParams) {
       security: params.security,
       ip_config: {
         ip_method: params.ipConfig.ipMethod,
-        ip_type: params.ipConfig.ipType,
         address: params.ipConfig.address,
         mask: params.ipConfig.mask,
         gateway: params.ipConfig.gateway,
@@ -113,18 +84,4 @@ async function networks() {
   return data;
 }
 
-async function forget() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
-
-  const { data, error } = await client.POST("/wifi/forget");
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
-export { enable, disable, status, connect, disconnect, networks, forget };
+export { status, connect, disconnect, networks };

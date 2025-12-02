@@ -48,6 +48,81 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/name": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get current device name
+     * @description Get current device name
+     */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Information retrieved successfully */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["NameInfo"];
+          };
+        };
+      };
+    };
+    put?: never;
+    /**
+     * Set new device name
+     * @description Set new device name
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["NameInfo"];
+        };
+      };
+      responses: {
+        /** @description New name successfully set */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+        /** @description Invalid name parameter, or failed to store new name */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["Error"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/update": {
     parameters: {
       query?: never;
@@ -139,10 +214,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * List files on internal storage
-     * @description Downloads a file from a specified path
-     */
+    /** List files on internal storage */
     get: operations["listStorageFiles"];
     put?: never;
     post?: never;
@@ -192,6 +264,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/storage/status": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Show storage usage */
+    get: operations["getStorageStatus"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/display/draw": {
     parameters: {
       query?: never;
@@ -205,7 +294,6 @@ export interface paths {
      * Draw on display
      * @description Sends drawing data to the display.
      *     Supports JSON-defined display elements.
-     *
      */
     post: operations["drawOnDisplay"];
     /**
@@ -234,7 +322,6 @@ export interface paths {
     /**
      * Set display brightness
      * @description Set brightness for one or both displays
-     *
      */
     post: operations["setDisplayBrightness"];
     delete?: never;
@@ -256,7 +343,6 @@ export interface paths {
      * Play audio file
      * @description Plays an audio file from the assets directory.
      *     Supported formats include .snd files.
-     *
      */
     post: operations["playAudio"];
     /**
@@ -388,101 +474,10 @@ export interface paths {
      * WebSocket test endpoint
      * @description WebSocket connection for real-time communication and testing.
      *     Upgrade from HTTP to WebSocket protocol is required.
-     *
      */
     get: operations["connectWebSocket"];
     put?: never;
     post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/wifi/enable": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Enables wifi module */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Wifi enabled */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["SuccessResponse"];
-          };
-        };
-        /** @description Wifi already enabled */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/wifi/disable": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Disables wifi module */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Wifi disabled */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["SuccessResponse"];
-          };
-        };
-        /** @description Not initialized */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
     delete?: never;
     options?: never;
     head?: never;
@@ -496,7 +491,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** @description Returns current wifi status */
+    /** @description Returns current Wi-Fi status */
     get: {
       parameters: {
         query?: never;
@@ -534,7 +529,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** @description Attempts to connect to wifi using config */
+    /** @description Attempts to connect to Wi-Fi using config */
     post: {
       parameters: {
         query?: never;
@@ -557,7 +552,7 @@ export interface paths {
             "application/json": components["schemas"]["SuccessResponse"];
           };
         };
-        /** @description Wifi already connected */
+        /** @description Already connected */
         400: {
           headers: {
             [name: string]: unknown;
@@ -583,7 +578,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** @description Attempts to connect to wifi using config */
+    /** @description Attempts to connect to Wi-Fi using config */
     post: {
       parameters: {
         query?: never;
@@ -602,7 +597,7 @@ export interface paths {
             "application/json": components["schemas"]["SuccessResponse"];
           };
         };
-        /** @description Command issued in an invalid state */
+        /** @description Already disconnected */
         400: {
           headers: {
             [name: string]: unknown;
@@ -626,7 +621,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** @description Scans environment for available wifi networks */
+    /** @description Scans environment for available Wi-Fi networks */
     get: {
       parameters: {
         query?: never;
@@ -645,7 +640,7 @@ export interface paths {
             "application/json": components["schemas"]["NetworkResponse"];
           };
         };
-        /** @description Wifi already connected */
+        /** @description Scan not possible when connected */
         400: {
           headers: {
             [name: string]: unknown;
@@ -658,42 +653,6 @@ export interface paths {
     };
     put?: never;
     post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/wifi/forget": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Forgets saved Wifi config */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Not implemented */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
     delete?: never;
     options?: never;
     head?: never;
@@ -764,7 +723,6 @@ export interface paths {
      *     Upgrade from HTTP to WebSocket protocol is required.
      *     After connection client must send desired display id
      *     as json {"display": 0}
-     *
      */
     get: operations["connectWebSocket"];
     put?: never;
@@ -784,7 +742,10 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** @description Enables ble module */
+    /**
+     * Enable BLE
+     * @description Enables BLE module and starts advertising
+     */
     post: {
       parameters: {
         query?: never;
@@ -794,7 +755,7 @@ export interface paths {
       };
       requestBody?: never;
       responses: {
-        /** @description Ble enabled */
+        /** @description BLE enabled */
         200: {
           headers: {
             [name: string]: unknown;
@@ -820,7 +781,10 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** @description Disables ble module */
+    /**
+     * Disable BLE
+     * @description Stop advertising
+     */
     post: {
       parameters: {
         query?: never;
@@ -830,7 +794,7 @@ export interface paths {
       };
       requestBody?: never;
       responses: {
-        /** @description Ble disabled */
+        /** @description BLE disabled */
         200: {
           headers: {
             [name: string]: unknown;
@@ -841,6 +805,196 @@ export interface paths {
         };
       };
     };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/ble/pairing": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /**
+     * Remove pairing
+     * @description Remove pairing with previous device
+     */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Pairing removed, now device is discoverable */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+        /** @description Failed to remove, due to BLE is not initialized, or pairing was already removed before */
+        503: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["Error"];
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/ble/status": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Returns current BLE status */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["BleStatusResponse"];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/time": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get current timestamp with timezone
+     * @description Retrieves the current timestamp from RTC with timezone in ISO 8601 format
+     */
+    get: operations["getTime"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/account": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get MQTT status
+     * @description Retrieves MQTT status and linked account data
+     */
+    get: operations["getAccountInfo"];
+    put?: never;
+    post?: never;
+    /**
+     * Unlink device from account
+     * @description Removes account linking data
+     */
+    delete: operations["unlinkAccount"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/account/link": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Link device to account
+     * @description Requests account link PIN. Works only if device is connected to MQTT and is not linked to account
+     */
+    post: operations["linkAccount"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/time/timestamp": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Set current timestamp
+     * @description Sets the RTC timestamp in ISO 8601 format.
+     *     - Without 'Z': treated as local time
+     *     - With 'Z': treated as UTC and converted to local time using current timezone offset
+     */
+    post: operations["setTimeTimestamp"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/time/timezone": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Set timezone offset
+     * @description Sets the timezone offset in ±HH:MM format
+     */
+    post: operations["setTimeTimezone"];
     delete?: never;
     options?: never;
     head?: never;
@@ -858,25 +1012,41 @@ export interface components {
        */
       result: string;
     };
-    /** @example {
+    /**
+     * @example {
      *       "error": "Invalid parameter",
      *       "code": 400
-     *     } */
+     *     }
+     */
     Error: {
       /** @description Error message */
       error: string;
       /** @description Error code */
       code?: number;
     };
-    /** @example {
+    /**
+     * @example {
      *       "api_semver": "0.0.0"
-     *     } */
+     *     }
+     */
     VersionInfo: {
       /**
        * @description Api SemVer
        * @example 0.0.0
        */
       api_semver: string;
+    };
+    /**
+     * @example {
+     *       "name": "BUSY bar"
+     *     }
+     */
+    NameInfo: {
+      /**
+       * @description Device name
+       * @example BUSY bar
+       */
+      name: string;
     };
     HttpAccessInfo: {
       /**
@@ -891,7 +1061,8 @@ export interface components {
        */
       key_valid?: Record<string, never>;
     };
-    /** @example {
+    /**
+     * @example {
      *       "list": [
      *         {
      *           "type": "file",
@@ -903,10 +1074,22 @@ export interface components {
      *           "name": "assets"
      *         }
      *       ]
-     *     } */
+     *     }
+     */
     StorageList: {
       /** @description Array of elements to display */
       list: components["schemas"]["StorageListElement"][];
+    };
+    StorageStatus: {
+      /** @example 123456 */
+      used_bytes?: number;
+      /** @example 654321 */
+      free_bytes?: number;
+      /**
+       * @description Total size of the parition
+       * @example 777777
+       */
+      total_bytes?: number;
     };
     StorageListElement: {
       /**
@@ -953,20 +1136,38 @@ export interface components {
        */
       file: string;
     };
-    /** @example {
+    /**
+     * @example {
      *       "app_id": "my_app",
      *       "elements": [
      *         {
      *           "id": "0",
-     *           "timeout": 5,
+     *           "timeout": 6,
+     *           "align": "center",
+     *           "x": 36,
+     *           "y": 10,
      *           "type": "text",
-     *           "text": "Hello, world!",
-     *           "x": 0,
-     *           "y": 0,
+     *           "text": "Hello, World! Long text",
+     *           "font": "medium",
+     *           "color": "#FFFFFFFF",
+     *           "width": 72,
+     *           "scroll_rate": 160,
      *           "display": "front"
      *         },
      *         {
      *           "id": "1",
+     *           "timeout": 6,
+     *           "align": "top_mid",
+     *           "x": 36,
+     *           "y": 0,
+     *           "type": "text",
+     *           "text": "top_mid",
+     *           "font": "small",
+     *           "color": "#AAFF00FF",
+     *           "display": "front"
+     *         },
+     *         {
+     *           "id": "2",
      *           "timeout": 6,
      *           "type": "image",
      *           "path": "data.png",
@@ -975,7 +1176,8 @@ export interface components {
      *           "display": "back"
      *         }
      *       ]
-     *     } */
+     *     }
+     */
     DisplayElements: {
       /**
        * @description Application ID for organizing assets
@@ -988,27 +1190,58 @@ export interface components {
     DisplayElement: {
       /** @description Unique identifier for the element */
       id: string;
-      /** @description Time in seconds the element should be displayed (0 for no timeout) */
+      /** @description Time in seconds the element should be displayed (0 for no timeout). Mutually exclusive with display_until. */
       timeout?: number;
+      /** @description The element will be hidden when system time reaches the specified Unix timestamp (in seconds). Mutually exclusive with timeout. */
+      display_until?: string;
       /**
        * @description Type of display element
        * @enum {string}
        */
       type: "text" | "image";
-      /** @description X coordinate for placement on display */
-      x: number;
-      /** @description Y coordinate for placement on display */
-      y: number;
+      /** @description X coordinate of selected anchor point relative to top-left of display */
+      x?: number;
+      /** @description Y coordinate of selected anchor point relative to top-left of display */
+      y?: number;
       /**
        * @description Which display to show the element on (for dual-display devices)
        * @default front
        * @enum {string}
        */
       display: "front" | "back";
+      /**
+       * @description Anchor point of element. Also use `x` and `y` to position element.
+       * @enum {string}
+       */
+      align?:
+        | "top_left"
+        | "top_mid"
+        | "top_right"
+        | "mid_left"
+        | "center"
+        | "mid_right"
+        | "bottom_left"
+        | "bottom_mid"
+        | "bottom_right";
     };
     TextElement: Omit<components["schemas"]["DisplayElement"], "type"> & {
       /** @description Text content to display */
       text: string;
+      /**
+       * @description One of the available fonts to display the text in
+       * @default tiny5_8
+       * @enum {string}
+       */
+      font: "small" | "medium" | "medium_condensed" | "big";
+      /**
+       * @description Color to display the text in, in #RRGGBBAA format
+       * @default #FFFFFFFF
+       */
+      color: string;
+      /** @description Width of the label */
+      width?: number;
+      /** @description Scroll rate in characters per minute */
+      scroll_rate?: number;
     } & {
       /**
        * @description discriminator enum property added by openapi-typescript
@@ -1016,16 +1249,23 @@ export interface components {
        */
       type: "text";
     };
-    ImageElement: Omit<components["schemas"]["DisplayElement"], "type"> & {
-      /** @description Path to the image file in the app's assets */
-      path: string;
-    } & {
-      /**
-       * @description discriminator enum property added by openapi-typescript
-       * @enum {string}
-       */
-      type: "image";
-    };
+    ImageElement: Omit<components["schemas"]["DisplayElement"], "type"> &
+      (
+        | {
+            /** @description Path to the image file in the app's assets */
+            path?: string;
+          }
+        | {
+            /** @description Identifier of builtin image */
+            builtin_image?: string;
+          }
+      ) & {
+        /**
+         * @description discriminator enum property added by openapi-typescript
+         * @enum {string}
+         */
+        type: "image";
+      };
     DisplayBrightnessInfo: {
       /**
        * @description Front display brightness (0-100/auto)
@@ -1044,6 +1284,13 @@ export interface components {
        * @example 50
        */
       volume?: number;
+    };
+    TimestampInfo: {
+      /**
+       * @description ISO 8601 formatted timestamp with timezone
+       * @example 2025-10-02T14:30:45+04:00
+       */
+      timestamp: string;
     };
     Status: {
       system?: components["schemas"]["StatusSystem"];
@@ -1113,13 +1360,9 @@ export interface components {
       | "WPA"
       | "WPA2"
       | "WEP"
-      | "WPA (Enterprise)"
-      | "WPA2 (Enterprise)"
       | "WPA/WPA2"
       | "WPA3"
-      | "WPA2/WPA3"
-      | "WPA3 (Enterprise)"
-      | "WPA2/WPA3 (Enterprise)";
+      | "WPA2/WPA3";
     /**
      * @example dhcp
      * @enum {string}
@@ -1139,12 +1382,23 @@ export interface components {
     };
     StatusResponse: {
       /**
-       * @example enabled
+       * @example disconnected
        * @enum {string}
        */
-      state?: "disabled" | "enabled" | "connected";
+      state?:
+        | "unknown"
+        | "disconnected"
+        | "connected"
+        | "connecting"
+        | "disconnecting";
       /** @example Your_WIFI_SSID */
       ssid?: string;
+      /** @example EC:5A:00:0B:55:1D */
+      bssid?: string;
+      /** @example 3 */
+      channel?: number;
+      /** @example -43 */
+      rssi?: number;
       security?: components["schemas"]["WifiSecurityMethod"];
       ip_config?: {
         ip_method?: components["schemas"]["WifiIpMethod"];
@@ -1161,7 +1415,6 @@ export interface components {
       security?: components["schemas"]["WifiSecurityMethod"];
       ip_config?: {
         ip_method?: components["schemas"]["WifiIpMethod"];
-        ip_type?: components["schemas"]["WifiIpType"];
         /** @example 192.168.50.5 */
         address?: string;
         /** @example 255.255.255.0 */
@@ -1180,6 +1433,27 @@ export interface components {
      * @description Frame for requested display encoded in base64
      */
     ScreenResponse: string;
+    AccountInfo: {
+      /**
+       * @example linked
+       * @enum {string}
+       */
+      state?: "error" | "disconnected" | "not_linked" | "linked";
+      /** @example 12345678-9abc-def0-1234-56789abcdef0 */
+      id?: string;
+      /** @example name@example.com */
+      email?: string;
+    };
+    AccountLink: {
+      /** @example ABCD */
+      code?: string;
+      /** @example 1761060863 */
+      expires_at?: number;
+    };
+    BleStatusResponse: {
+      /** @example connected */
+      state?: string;
+    };
   };
   responses: never;
   parameters: never;
@@ -1611,6 +1885,35 @@ export interface operations {
       };
     };
   };
+  getStorageStatus: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Storage status queried successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["StorageStatus"];
+        };
+      };
+      /** @description Invalid parameters or storage doesn't exist */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
   drawOnDisplay: {
     parameters: {
       query?: never;
@@ -1655,7 +1958,13 @@ export interface operations {
   };
   clearDisplay: {
     parameters: {
-      query?: never;
+      query?: {
+        /**
+         * @description Application identifier
+         * @example my_app
+         */
+        app_id?: string;
+      };
       header?: never;
       path?: never;
       cookie?: never;
@@ -1925,7 +2234,7 @@ export interface operations {
           | "back"
           | "start"
           | "busy"
-          | "status"
+          | "custom"
           | "off"
           | "apps"
           | "settings";
@@ -2060,6 +2369,174 @@ export interface operations {
         content?: never;
       };
       /** @description Exceed max clients count */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  getTime: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Timestamp retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TimestampInfo"];
+        };
+      };
+      /** @description Bad request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  getAccountInfo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Data retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AccountInfo"];
+        };
+      };
+    };
+  };
+  unlinkAccount: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Done successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+    };
+  };
+  linkAccount: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Data retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AccountLink"];
+        };
+      };
+      /** @description Bad request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  setTimeTimestamp: {
+    parameters: {
+      query: {
+        /**
+         * @description ISO 8601 timestamp (e.g., 2025-10-02T14:30:45 for local time or 2025-10-02T14:30:45Z for UTC)
+         * @example 2025-10-02T14:30:45
+         */
+        timestamp: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Timestamp set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Invalid timestamp format or value */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  setTimeTimezone: {
+    parameters: {
+      query: {
+        /**
+         * @description Timezone offset in ±HH:MM format (range -12:00 to +14:00)
+         * @example +04:00
+         */
+        timezone: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Timezone set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Invalid timezone offset */
       400: {
         headers: {
           [name: string]: unknown;

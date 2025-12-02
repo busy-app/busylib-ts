@@ -32,13 +32,10 @@ import { play as playSoundApi, stop as stopSoundApi } from "BusyBar/api/audio";
 import type { AudioPlayParams } from "BusyBar/api/audio";
 
 import {
-  enable as enableWifiApi,
-  disable as disableWifiApi,
   status as statusWifiApi,
   connect as connectWifiApi,
   disconnect as disconnectWifiApi,
   networks as networksWifiAPi,
-  forget as forgetWifiApi,
 } from "BusyBar/api/wifi";
 import type { ConnectParams } from "BusyBar/api/wifi";
 
@@ -286,21 +283,37 @@ export class BusyBar {
   }
 
   /**
-   * Enables the device's Wi-Fi module.
+   * @deprecated since 0.5.0 — will be removed in 0.7.0.
    *
-   * @returns {Promise<SuccessResponse>} Result of the enable operation.
+   * This method is no longer supported and does nothing.
+   *
+   * Works only with BusyLib v0.5.0 and device firmware v0.3.0.
+   *
+   * Always throws an error.
    */
   async enableWifi(): Promise<SuccessResponse> {
-    return await enableWifiApi();
+    throw new Error(
+      "[DEPRECATED] BusyBar.enableWifi: This method is deprecated since v0.5.0 and will be removed in v0.7.0. " +
+        "It is no longer supported and does nothing. " +
+        "Works only with BusyLib v0.5.0 and device firmware v0.3.0."
+    );
   }
 
   /**
-   * Disables the device's Wi-Fi module.
+   * @deprecated since 0.5.0 — will be removed in 0.7.0.
    *
-   * @returns {Promise<SuccessResponse>} Result of the disable operation.
+   * This method is no longer supported and does nothing.
+   *
+   * Works only with BusyLib v0.5.0 and device firmware v0.3.0.
+   *
+   * Always throws an error.
    */
   async disableWifi(): Promise<SuccessResponse> {
-    return await disableWifiApi();
+    throw new Error(
+      "[DEPRECATED] BusyBar.disableWifi: This method is deprecated since v0.5.0 and will be removed in v0.7.0. " +
+        "It is no longer supported and does nothing. " +
+        "Works only with BusyLib v0.5.0 and device firmware v0.3.0."
+    );
   }
 
   /**
@@ -350,12 +363,20 @@ export class BusyBar {
   }
 
   /**
-   * Removes the saved Wi-Fi configuration (forgets the network).
+   * @deprecated since 0.5.0 — will be removed in 0.7.0.
    *
-   * @returns {Promise<never>} Result of the forget operation.
+   * This method is no longer supported and does nothing.
+   *
+   * Works only with BusyLib v0.5.0 and device firmware v0.3.0.
+   *
+   * Always throws an error.
    */
   async forgetWifi(): Promise<never> {
-    return await forgetWifiApi();
+    throw new Error(
+      "[DEPRECATED] BusyBar.forgetWifi: This method is deprecated since v0.5.0 and will be removed in v0.7.0. " +
+        "It is no longer supported and does nothing. " +
+        "Works only with BusyLib v0.5.0 and device firmware v0.3.0."
+    );
   }
 
   /**

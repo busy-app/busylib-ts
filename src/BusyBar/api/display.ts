@@ -1,49 +1,22 @@
 import { client } from "BusyBar/api/createClient";
-import { paths, components } from "Global/API";
-
-type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-type OptionalFields = "timeout" | "x" | "y" | "display";
-
-type CustomTextElement = MakeOptional<
-  components["schemas"]["TextElement"],
-  OptionalFields
->;
-type CustomImageElement = MakeOptional<
-  components["schemas"]["ImageElement"],
-  OptionalFields
->;
-type CustomElement = CustomTextElement | CustomImageElement;
+import { components } from "Global/API";
 
 export interface DrawParams {
-  appId: paths["/display/draw"]["post"]["requestBody"]["content"]["application/json"]["app_id"];
-  elements: CustomElement[];
-}
-
-const DEFAULT_VALUES: Pick<
-  components["schemas"]["DisplayElement"],
-  OptionalFields
-> = { timeout: 5, x: 0, y: 0, display: "front" };
-
-function withDefaults(
-  element: CustomElement
-): Required<Pick<CustomElement, Exclude<OptionalFields, "timeout">>> &
-  CustomElement {
-  return { ...DEFAULT_VALUES, ...element };
+  appId: components["schemas"]["DisplayElements"]["app_id"];
+  elements: components["schemas"]["DisplayElements"]["elements"];
 }
 
 async function draw(params: DrawParams) {
-  const { appId, elements } = params;
-
   if (!client) {
     throw new Error("API client is not initialized");
   }
 
-  const normalizedElements = elements.map(withDefaults);
+  const { appId, elements } = params;
 
   const { data, error } = await client.POST("/display/draw", {
     body: {
       app_id: appId,
-      elements: normalizedElements,
+      elements: elements,
     },
   });
 
