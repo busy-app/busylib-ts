@@ -17,6 +17,7 @@ import type {
   BleStatusResponse,
   AccountInfo,
   AccountLink,
+  StorageStatus,
 } from "Global/types";
 
 import { initApiClient, setApiKey } from "BusyBar/api/createClient";
@@ -56,6 +57,7 @@ import {
   list as listStorageApi,
   remove as removeStorageApi,
   mkdir as mkdirStorageApi,
+  status as statusStorageApi,
 } from "BusyBar/api/storage";
 import type {
   UploadFileParams,
@@ -517,6 +519,15 @@ export class BusyBar {
     params: CreateDirectoryParams
   ): Promise<SuccessResponse> {
     return await mkdirStorageApi(params);
+  }
+
+  /**
+   * Gets the current status of the device's internal storage.
+   *
+   * @returns {Promise<StorageStatus>} Current storage status information.
+   */
+  async statusStorage(): Promise<StorageStatus> {
+    return await statusStorageApi();
   }
 
   /**

@@ -139,4 +139,18 @@ async function mkdir(params: CreateDirectoryParams) {
   return data;
 }
 
-export { write, read, list, remove, mkdir };
+async function status() {
+  if (!client) {
+    throw new Error("API client is not initialized");
+  }
+
+  const { data, error } = await client.GET("/storage/status");
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export { write, read, list, remove, mkdir, status };

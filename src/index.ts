@@ -83,6 +83,7 @@ export type {
   StorageFileElement,
   StorageDirElement,
   StorageReadResponse,
+  StorageStatus,
   VersionInfo,
   Status,
   StatusSystem,

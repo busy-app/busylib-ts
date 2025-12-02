@@ -54,6 +54,7 @@ export type StorageListElement = components["schemas"]["StorageListElement"];
 export type StorageFileElement = components["schemas"]["StorageFileElement"];
 export type StorageDirElement = components["schemas"]["StorageDirElement"];
 export type StorageReadResponse = ArrayBuffer | Blob;
+export type StorageStatus = components["schemas"]["StorageStatus"];
 
 // System
 export type VersionInfo = components["schemas"]["VersionInfo"];
