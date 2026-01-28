@@ -127,9 +127,10 @@ async function setHttpAccess(params: HttpAccessParams) {
     throw new Error("API client is not initialized");
   }
 
-  const { mode, key } = params;
+  let { mode, key } = params;
+  key = key ?? "";
 
-  if (!/^\d{4,10}$/.test(String(key))) {
+  if (String(key).trim() && !/^\d{4,10}$/.test(String(key))) {
     throw new Error("Key must be a string of 4 to 10 digits");
   }
 
