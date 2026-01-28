@@ -242,4 +242,44 @@ function initApiClient(
   client.use(middleware);
 }
 
-export { initApiClient, client, setApiKey };
+/**
+ * Get the initialized API client instance.
+ * @throws {Error} If the client is not initialized.
+ */
+function getClient() {
+  if (!client) {
+    throw new Error("API client is not initialized");
+  }
+  return client;
+}
+
+/**
+ * Wrapper for requests with timeout support
+ * @param requestFn Function that performs the request, accepting a signal
+ * @param timeoutMs Timeout in milliseconds (optional). If 0 or undefined, no timeout is applied.
+ * @returns Promise with the result of the request
+ */
+async function withTimeout<T>(
+  requestFn: (signal?: AbortSignal) => Promise<T>,
+  timeoutMs: number = 3000
+): Promise<T> {
+  if (timeoutMs <= 0) {
+    return await requestFn();
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await requestFn(controller.signal);
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new Error(`Request timed out after ${timeoutMs}ms`);
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+export { initApiClient, client, setApiKey, withTimeout, getClient };

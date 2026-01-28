@@ -18,6 +18,7 @@ import type {
   AccountInfo,
   AccountLink,
   StorageStatus,
+  TimeoutOptions,
 } from "Global/types";
 
 import { initApiClient, setApiKey } from "BusyBar/api/createClient";
@@ -244,10 +245,12 @@ export class BusyBar {
   /**
    * Retrieves the API semantic version.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<VersionInfo>} A promise that resolves to an object containing the `api_semver` string.
    */
-  async getApiVersion(): Promise<VersionInfo> {
-    const response = await versionApi();
+  async getApiVersion(params?: TimeoutOptions): Promise<VersionInfo> {
+    const response = await versionApi(params);
     this.apiSemver = response.api_semver;
 
     return response;
@@ -257,8 +260,9 @@ export class BusyBar {
    * Updates the firmware.
    *
    * @param {UpdateParams} params - Parameters for the firmware update.
-   * @param {UpdateParams['name']} params.name - Name for the update package.
-   * @param {UpdateParams['file']} params.file - File data to upload.
+   *   @param {UpdateParams['name']} params.name - Name for the update package.
+   *   @param {UpdateParams['file']} params.file - File data to upload.
+   *   @param {UpdateParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the update operation.
    */
   async updateFirmware(params: UpdateParams): Promise<SuccessResponse> {
@@ -268,44 +272,53 @@ export class BusyBar {
   /**
    * Gets the current status of the device, including system and power information.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<Status>} Current status of the device.
    */
-  async deviceStatus(): Promise<Status> {
-    return await statusApi();
+  async deviceStatus(params?: TimeoutOptions): Promise<Status> {
+    return await statusApi(params);
   }
 
   /**
    * Gets the current system status.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StatusSystem>} Current system status.
    */
-  async systemStatus(): Promise<StatusSystem> {
-    return await systemStatusApi();
+  async systemStatus(params?: TimeoutOptions): Promise<StatusSystem> {
+    return await systemStatusApi(params);
   }
 
   /**
    * Gets the current power status.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StatusPower>} Current power status.
    */
-  async powerStatus(): Promise<StatusPower> {
-    return await powerStatusApi();
+  async powerStatus(params?: TimeoutOptions): Promise<StatusPower> {
+    return await powerStatusApi(params);
   }
 
   /**
    * Gets current device timestamp with timezone.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<TimestampInfo>} Current device timestamp as an ISO 8601 string.
    */
-  async getTime(): Promise<TimestampInfo> {
-    return await getTimeApi();
+  async getTime(params?: TimeoutOptions): Promise<TimestampInfo> {
+    return await getTimeApi(params);
   }
 
   /**
    * Sets the current device timestamp.
    *
    * @param {SetTimestampParams} params - The parameters for setting the timestamp.
-   * @param {SetTimestampParams['timestamp']} params.timestamp - The new timestamp (ISO 8601 string).
+   *   @param {SetTimestampParams['timestamp']} params.timestamp - The new timestamp (ISO 8601 string).
+   *   @param {SetTimestampParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A success response if the timestamp was set.
    */
   async setTimestamp(params: SetTimestampParams): Promise<SuccessResponse> {
@@ -316,7 +329,8 @@ export class BusyBar {
    * Sets the device timezone.
    *
    * @param {SetTimezoneParams} params - The parameters for setting the timezone.
-   * @param {SetTimezoneParams['timezone']} params.timezone - The new timezone identifier (IANA TZ string).
+   *   @param {SetTimezoneParams['timezone']} params.timezone - The new timezone identifier (IANA TZ string).
+   *   @param {SetTimezoneParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A success response if the timezone was set.
    */
   async setTimezone(params: SetTimezoneParams): Promise<SuccessResponse> {
@@ -326,37 +340,44 @@ export class BusyBar {
   /**
    * Gets the status of the MQTT account linked to the device.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<AccountInfo>} Information about the current MQTT account status.
    */
-  async getMqttStatus(): Promise<AccountInfo> {
-    return await getMqttStatusApi();
+  async getMqttStatus(params?: TimeoutOptions): Promise<AccountInfo> {
+    return await getMqttStatusApi(params);
   }
 
   /**
    * Unlinks the current account from the device.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the account unlink operation.
    */
-  async unlinkAccount(): Promise<SuccessResponse> {
-    return await unlinkAccountApi();
+  async unlinkAccount(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return await unlinkAccountApi(params);
   }
 
   /**
    * Links an account to the device.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<AccountLink>} Information about the account link operation.
    */
-  async linkAccount(): Promise<AccountLink> {
-    return await linkAccountApi();
+  async linkAccount(params?: TimeoutOptions): Promise<AccountLink> {
+    return await linkAccountApi(params);
   }
 
   /**
    * Uploads an asset to the device.
    *
    * @param {UploadParams} params - Parameters for the upload.
-   * @param {UploadParams['appId']} params.appId - Application ID for organizing assets.
-   * @param {UploadParams['fileName']} params.fileName - Filename for the uploaded asset.
-   * @param {UploadParams['file']} params.file - File data to upload.
+   *   @param {UploadParams['appId']} params.appId - Application ID for organizing assets.
+   *   @param {UploadParams['fileName']} params.fileName - Filename for the uploaded asset.
+   *   @param {UploadParams['file']} params.file - File data to upload.
+   *   @param {UploadParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the upload operation.
    */
   async uploadAsset(params: UploadParams): Promise<SuccessResponse> {
@@ -370,7 +391,8 @@ export class BusyBar {
    * Deletes all assets for a specific application from the device.
    *
    * @param {DeleteParams} params - Parameters for the delete.
-   * @param {DeleteParams['appId']} params.appId - Application ID whose assets should be deleted.
+   *   @param {DeleteParams['appId']} params.appId - Application ID whose assets should be deleted.
+   *   @param {DeleteParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the delete operation.
    */
   async deleteAssets(params: DeleteParams): Promise<SuccessResponse> {
@@ -381,8 +403,9 @@ export class BusyBar {
    * Draws elements on the device display.
    *
    * @param {DrawParams} params - Parameters for the draw operation.
-   * @param {DrawParams['appId']} params.appId - Application ID for organizing display elements.
-   * @param {DrawParams['elements'][]} params.elements - Array of display elements (text or image).
+   *   @param {DrawParams['appId']} params.appId - Application ID for organizing display elements.
+   *   @param {DrawParams['elements'][]} params.elements - Array of display elements (text or image).
+   *   @param {DrawParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the draw operation.
    */
   async drawDisplay(params: DrawParams): Promise<SuccessResponse> {
@@ -392,18 +415,21 @@ export class BusyBar {
   /**
    * Clears the device display and stops the Canvas application if running.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the clear operation.
    */
-  async clearDisplay(): Promise<SuccessResponse> {
-    return await clearDisplayApi();
+  async clearDisplay(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return await clearDisplayApi(params);
   }
 
   /**
    * Plays an audio file from the assets directory.
    *
    * @param {AudioPlayParams} params - Parameters for the audio playback.
-   * @param {AudioPlayParams['appId']} params.appId - Application ID for organizing assets.
-   * @param {AudioPlayParams['path']} params.path - Path to the audio file within the app's assets directory.
+   *   @param {AudioPlayParams['appId']} params.appId - Application ID for organizing assets.
+   *   @param {AudioPlayParams['path']} params.path - Path to the audio file within the app's assets directory.
+   *   @param {AudioPlayParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the play operation.
    */
   async playSound(params: AudioPlayParams): Promise<SuccessResponse> {
@@ -413,10 +439,12 @@ export class BusyBar {
   /**
    * Stops any currently playing audio on the device.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the stop operation.
    */
-  async stopSound(): Promise<SuccessResponse> {
-    return await stopSoundApi();
+  async stopSound(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return await stopSoundApi(params);
   }
 
   /**
@@ -456,10 +484,12 @@ export class BusyBar {
   /**
    * Gets the current status of the Wi-Fi module.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<WifiStatusResponse>} Current Wi-Fi status.
    */
-  async statusWifi(): Promise<WifiStatusResponse> {
-    return await statusWifiApi();
+  async statusWifi(params?: TimeoutOptions): Promise<WifiStatusResponse> {
+    return await statusWifiApi(params);
   }
 
   /**
@@ -475,6 +505,7 @@ export class BusyBar {
    *     @param {ConnectParams['ipConfig']['address']} [params.ipConfig.address] - Static IP address (if using "static" method).
    *     @param {ConnectParams['ipConfig']['mask']} [params.ipConfig.mask] - Subnet mask (if using "static" method).
    *     @param {ConnectParams['ipConfig']['gateway']} [params.ipConfig.gateway] - Gateway address (if using "static" method).
+   *   @param {ConnectParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the connect operation.
    */
   async connectWifi(params: ConnectParams): Promise<SuccessResponse> {
@@ -484,19 +515,23 @@ export class BusyBar {
   /**
    * Disconnects the device from the current Wi-Fi network.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the disconnect operation.
    */
-  async disconnectWifi(): Promise<SuccessResponse> {
-    return await disconnectWifiApi();
+  async disconnectWifi(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return await disconnectWifiApi(params);
   }
 
   /**
    * Scans for available Wi-Fi networks near your device.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<WifiNetworkResponse>} List of discovered networks.
    */
-  async networksWifi(): Promise<WifiNetworkResponse> {
-    return await networksWifiAPi();
+  async networksWifi(params?: TimeoutOptions): Promise<WifiNetworkResponse> {
+    return await networksWifiAPi(params);
   }
 
   /**
@@ -522,6 +557,7 @@ export class BusyBar {
    * @param {UploadFileParams} params - Upload parameters:
    *   @param {UploadFileParams['path']} params.path - Path where the file will be saved (e.g., "/ext/test.png").
    *   @param {UploadFileParams['file']} params.file - File data to upload.
+   *   @param {UploadFileParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the upload operation.
    */
   async uploadFile(params: UploadFileParams): Promise<SuccessResponse> {
@@ -534,6 +570,7 @@ export class BusyBar {
    * @param {DownloadFileParams} params - Download parameters:
    *   @param {DownloadFileParams['path']} params.path - Path to the file to download (e.g., "/ext/test.png").
    *   @param {DownloadFileParams['asArrayBuffer']} [params.asArrayBuffer] - If true, returns data as ArrayBuffer; otherwise, as Blob.
+   *   @param {DownloadFileParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StorageReadResponse>} The file data.
    */
   async downloadFile(params: DownloadFileParams): Promise<StorageReadResponse> {
@@ -545,6 +582,7 @@ export class BusyBar {
    *
    * @param {ReadDirectoryParams} params - List parameters:
    *   @param {ReadDirectoryParams['path']} params.path - Path to the directory to list (e.g., "/ext").
+   *   @param {ReadDirectoryParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StorageList>} List of files and directories.
    */
   async readDirectory(params: ReadDirectoryParams): Promise<StorageList> {
@@ -556,6 +594,7 @@ export class BusyBar {
    *
    * @param {RemoveParams} params - Remove parameters:
    *   @param {RemoveParams['path']} params.path - Path of the file to remove (e.g., "/ext/test.png").
+   *   @param {RemoveParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the remove operation.
    */
   async removeResource(params: RemoveParams): Promise<SuccessResponse> {
@@ -567,6 +606,7 @@ export class BusyBar {
    *
    * @param {CreateDirectoryParams} params - Directory creation parameters:
    *   @param {CreateDirectoryParams['path']} params.path - Path to the new directory (e.g., "/ext/newdir").
+   *   @param {CreateDirectoryParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the create operation.
    */
   async createDirectory(
@@ -578,19 +618,25 @@ export class BusyBar {
   /**
    * Gets the current status of the device's internal storage.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StorageStatus>} Current storage status information.
    */
-  async statusStorage(): Promise<StorageStatus> {
-    return await statusStorageApi();
+  async statusStorage(params?: TimeoutOptions): Promise<StorageStatus> {
+    return await statusStorageApi(params);
   }
 
   /**
    * Gets the current display brightness settings for the device.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<DisplayBrightnessInfo>} Current brightness information for front and back panels.
    */
-  async getDisplayBrightness(): Promise<DisplayBrightnessInfo> {
-    return await getDisplayBrightnessApi();
+  async getDisplayBrightness(
+    params?: TimeoutOptions,
+  ): Promise<DisplayBrightnessInfo> {
+    return await getDisplayBrightnessApi(params);
   }
 
   /**
@@ -599,6 +645,7 @@ export class BusyBar {
    * @param {BrightnessParams} params - Brightness parameters:
    *   @param {BrightnessParams['front']} [params.front] - Brightness for the front panel (0-100 or "auto").
    *   @param {BrightnessParams['back']} [params.back] - Brightness for the back panel (0-100 or "auto").
+   *   @param {BrightnessParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the brightness update operation.
    * @throws {Error} If brightness value is outside the range 0-100 or not "auto".
    */
@@ -611,10 +658,12 @@ export class BusyBar {
   /**
    * Gets the current audio volume value.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<AudioVolumeInfo>} Current audio volume (0-100).
    */
-  async getAudioVolume(): Promise<AudioVolumeInfo> {
-    return await getAudioVolumeApi();
+  async getAudioVolume(params?: TimeoutOptions): Promise<AudioVolumeInfo> {
+    return await getAudioVolumeApi(params);
   }
 
   /**
@@ -622,6 +671,7 @@ export class BusyBar {
    *
    * @param {AudioVolumeParams} params - Audio volume parameters:
    *   @param {AudioVolumeParams['volume']} params.volume - Audio volume (number from 0 to 100).
+   *   @param {AudioVolumeParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the volume update operation.
    * @throws {Error} If volume is outside the range 0-100 or request fails.
    */
@@ -632,10 +682,12 @@ export class BusyBar {
   /**
    * Gets the current HTTP API access configuration.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<HttpAccessInfo>} Current HTTP access info.
    */
-  async getHttpAccess(): Promise<HttpAccessInfo> {
-    return await getHttpAccessApi();
+  async getHttpAccess(params?: TimeoutOptions): Promise<HttpAccessInfo> {
+    return await getHttpAccessApi(params);
   }
 
   /**
@@ -644,6 +696,7 @@ export class BusyBar {
    * @param {HttpAccessParams} params - Access parameters:
    *   @param {HttpAccessParams['mode']} params.mode - Access mode ("disabled", "enabled", "key").
    *   @param {HttpAccessParams['key']} params.key - Access key (4-10 digits).
+   *   @param {HttpAccessParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the set operation.
    */
   async setHttpAccess(params: HttpAccessParams): Promise<SuccessResponse> {
@@ -659,17 +712,20 @@ export class BusyBar {
   /**
    * Gets the current device name.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<NameInfo>} The current device name information.
    */
-  async getName(): Promise<NameInfo> {
-    return await getNameApi();
+  async getName(params?: TimeoutOptions): Promise<NameInfo> {
+    return await getNameApi(params);
   }
 
   /**
    * Sets the device name.
    *
    * @param {NameParams} params - The parameters for setting the device name.
-   * @param {NameParams['name']} params.name - The new device name.
+   *   @param {NameParams['name']} params.name - The new device name.
+   *   @param {NameParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of setting the device name.
    */
   async setName(params: NameParams): Promise<SuccessResponse> {
@@ -686,36 +742,44 @@ export class BusyBar {
 
   /**
    * Enables BLE module.
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the enable operation.
    */
-  async enableBle(): Promise<SuccessResponse> {
-    return await enableBleApi();
+  async enableBle(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return await enableBleApi(params);
   }
 
   /**
    * Disables BLE module.
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   * @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the disable operation.
    */
-  async disableBle(): Promise<SuccessResponse> {
-    return await disableBleApi();
+  async disableBle(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return await disableBleApi(params);
   }
 
   /**
    * Removes all BLE pairings from the device.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the BLE pairing removal operation.
    */
-  async pairingBle(): Promise<SuccessResponse> {
-    return await pairingBleApi();
+  async pairingBle(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return await pairingBleApi(params);
   }
 
   /**
    * Gets the current BLE module status.
    *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<BleStatusResponse>} Current BLE status information.
    */
-  async statusBle(): Promise<BleStatusResponse> {
-    return await statusBleApi();
+  async statusBle(params?: TimeoutOptions): Promise<BleStatusResponse> {
+    return await statusBleApi(params);
   }
 
   /**
@@ -723,9 +787,11 @@ export class BusyBar {
    *
    * @param params - Button press parameters:
    *   @param {InputKeyParams['keyName']} params.keyName - Button key.
+   *   @param {InputKeyParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    *   @example
    *  {
-   *    keyName: "ok"
+   *    keyName: "ok",
+   *    timeout: 1000
    *  }
    * @returns {Promise<SuccessResponse>} Result of pressing the button.
    */

@@ -1,13 +1,15 @@
-import { client } from "BusyBar/api/createClient";
+import { getClient, withTimeout } from "BusyBar/api/createClient";
+import type { TimeoutOptions } from "Global/types";
 import type { components } from "Global/API";
 import type { DeepCamelize, RequireKeys } from "BusyBar/types/utils";
 
-async function status() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+async function status(params?: TimeoutOptions) {
+  const client = getClient();
 
-  const { data, error } = await client.GET("/wifi/status");
+  const { data, error } = await withTimeout(
+    (signal) => client.GET("/wifi/status", { signal }),
+    params?.timeout,
+  );
 
   if (error) {
     throw error;
@@ -28,40 +30,30 @@ type RequiredIpConfig = RequireKeys<
 export type ConnectParams = RequireKeys<
   Omit<CamelizedRequest, "ipConfig"> & { ipConfig: RequiredIpConfig },
   "ssid" | "security" | "ipConfig"
->;
+> &
+  TimeoutOptions;
 
 async function connect(params: ConnectParams) {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+  const client = getClient();
 
-  const { data, error } = await client.POST("/wifi/connect", {
-    body: {
-      ssid: params.ssid,
-      password: params.password,
-      security: params.security,
-      ip_config: {
-        ip_method: params.ipConfig.ipMethod,
-        address: params.ipConfig.address,
-        mask: params.ipConfig.mask,
-        gateway: params.ipConfig.gateway,
-      },
-    },
-  });
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
-async function disconnect() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
-
-  const { data, error } = await client.POST("/wifi/disconnect");
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST("/wifi/connect", {
+        body: {
+          ssid: params.ssid,
+          password: params.password,
+          security: params.security,
+          ip_config: {
+            ip_method: params.ipConfig.ipMethod,
+            address: params.ipConfig.address,
+            mask: params.ipConfig.mask,
+            gateway: params.ipConfig.gateway,
+          },
+        },
+        signal,
+      }),
+    params.timeout,
+  );
 
   if (error) {
     throw error;
@@ -70,12 +62,28 @@ async function disconnect() {
   return data;
 }
 
-async function networks() {
-  if (!client) {
-    throw new Error("API client is not initialized");
+async function disconnect(params?: TimeoutOptions) {
+  const client = getClient();
+
+  const { data, error } = await withTimeout(
+    (signal) => client.POST("/wifi/disconnect", { signal }),
+    params?.timeout,
+  );
+
+  if (error) {
+    throw error;
   }
 
-  const { data, error } = await client.GET("/wifi/networks");
+  return data;
+}
+
+async function networks(params?: TimeoutOptions) {
+  const client = getClient();
+
+  const { data, error } = await withTimeout(
+    (signal) => client.GET("/wifi/networks", { signal }),
+    params?.timeout,
+  );
 
   if (error) {
     throw error;

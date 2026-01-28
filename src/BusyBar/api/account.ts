@@ -1,25 +1,13 @@
-import { client } from "BusyBar/api/createClient";
+import { getClient, withTimeout } from "BusyBar/api/createClient";
+import type { TimeoutOptions } from "Global/types";
 
-async function getMqttStatus() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+async function getMqttStatus(params?: TimeoutOptions) {
+  const client = getClient();
 
-  const { data, error } = await client.GET("/account");
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
-async function unlinkDevice() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
-
-  const { data, error } = await client.DELETE("/account");
+  const { data, error } = await withTimeout(
+    (signal) => client.GET("/account", { signal }),
+    params?.timeout
+  );
 
   if (error) {
     throw error;
@@ -28,12 +16,28 @@ async function unlinkDevice() {
   return data;
 }
 
-async function linkDevice() {
-  if (!client) {
-    throw new Error("API client is not initialized");
+async function unlinkDevice(params?: TimeoutOptions) {
+  const client = getClient();
+
+  const { data, error } = await withTimeout(
+    (signal) => client.DELETE("/account", { signal }),
+    params?.timeout
+  );
+
+  if (error) {
+    throw error;
   }
 
-  const { data, error } = await client.POST("/account/link");
+  return data;
+}
+
+async function linkDevice(params?: TimeoutOptions) {
+  const client = getClient();
+
+  const { data, error } = await withTimeout(
+    (signal) => client.POST("/account/link", { signal }),
+    params?.timeout
+  );
 
   if (error) {
     throw error;

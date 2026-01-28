@@ -1,8 +1,9 @@
-import { client } from "BusyBar/api/createClient";
+import { getClient, withTimeout } from "BusyBar/api/createClient";
+import type { TimeoutOptions } from "Global/types";
 import type { paths } from "Global/API";
 import type { BusyFile } from "BusyBar/types/global";
 
-export interface UploadParams {
+export interface UploadParams extends TimeoutOptions {
   appId: paths["/assets/upload"]["post"]["parameters"]["query"]["app_id"];
   fileName: paths["/assets/upload"]["post"]["parameters"]["query"]["file"];
   file: BusyFile;
@@ -10,22 +11,25 @@ export interface UploadParams {
 async function upload(params: UploadParams) {
   const { appId, fileName, file } = params;
 
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+  const client = getClient();
 
-  const { data, error } = await client.POST("/assets/upload", {
-    params: {
-      query: {
-        app_id: appId,
-        file: fileName,
-      },
-    },
-    headers: {
-      "Content-Type": "application/octet-stream",
-    },
-    body: file as unknown as string,
-  });
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST("/assets/upload", {
+        params: {
+          query: {
+            app_id: appId,
+            file: fileName,
+          },
+        },
+        headers: {
+          "Content-Type": "application/octet-stream",
+        },
+        body: file as unknown as string,
+        signal,
+      }),
+    params.timeout,
+  );
 
   if (error) {
     throw error;
@@ -34,23 +38,26 @@ async function upload(params: UploadParams) {
   return data;
 }
 
-export interface DeleteParams {
+export interface DeleteParams extends TimeoutOptions {
   appId: paths["/assets/upload"]["delete"]["parameters"]["query"]["app_id"];
 }
 async function deleteAssets(params: DeleteParams) {
   const { appId } = params;
 
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+  const client = getClient();
 
-  const { data, error } = await client.DELETE("/assets/upload", {
-    params: {
-      query: {
-        app_id: appId,
-      },
-    },
-  });
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.DELETE("/assets/upload", {
+        params: {
+          query: {
+            app_id: appId,
+          },
+        },
+        signal,
+      }),
+    params.timeout,
+  );
 
   if (error) {
     throw error;

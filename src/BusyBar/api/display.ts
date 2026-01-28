@@ -1,24 +1,28 @@
-import { client } from "BusyBar/api/createClient";
+import { getClient, withTimeout } from "BusyBar/api/createClient";
+import type { TimeoutOptions } from "Global/types";
 import { components } from "Global/API";
 
-export interface DrawParams {
+export interface DrawParams extends TimeoutOptions {
   appId: components["schemas"]["DisplayElements"]["app_id"];
   elements: components["schemas"]["DisplayElements"]["elements"];
 }
 
 async function draw(params: DrawParams) {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+  const client = getClient();
 
   const { appId, elements } = params;
 
-  const { data, error } = await client.POST("/display/draw", {
-    body: {
-      app_id: appId,
-      elements: elements,
-    },
-  });
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST("/display/draw", {
+        body: {
+          app_id: appId,
+          elements: elements,
+        },
+        signal,
+      }),
+    params.timeout
+  );
 
   if (error) {
     throw error;
@@ -27,12 +31,13 @@ async function draw(params: DrawParams) {
   return data;
 }
 
-async function clear() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+async function clear(params?: TimeoutOptions) {
+  const client = getClient();
 
-  const { data, error } = await client.DELETE("/display/draw");
+  const { data, error } = await withTimeout(
+    (signal) => client.DELETE("/display/draw", { signal }),
+    params?.timeout
+  );
 
   if (error) {
     throw error;

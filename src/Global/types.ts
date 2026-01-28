@@ -1,5 +1,9 @@
 import { operations, components } from "Global/API";
 
+export interface TimeoutOptions {
+  timeout?: number;
+}
+
 export type KeyName = operations["setInputKey"]["parameters"]["query"]["key"];
 export type KeyValue = 1 | 0;
 

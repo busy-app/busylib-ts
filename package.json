@@ -22,6 +22,7 @@
   ],
   "scripts": {
     "build": "vite build",
+    "typecheck": "tsc --noEmit",
     "docs:generate": "typedoc"
   },
   "dependencies": {

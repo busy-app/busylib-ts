@@ -1,13 +1,15 @@
-import { client } from "BusyBar/api/createClient";
+import { getClient, withTimeout } from "BusyBar/api/createClient";
+import type { TimeoutOptions } from "Global/types";
 import type { operations } from "Global/API";
 import type { NameInfo } from "Global/types";
 
-async function getDisplayBrightness() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+async function getDisplayBrightness(params?: TimeoutOptions) {
+  const client = getClient();
 
-  const { data, error } = await client.GET("/display/brightness");
+  const { data, error } = await withTimeout(
+    (signal) => client.GET("/display/brightness", { signal }),
+    params?.timeout,
+  );
 
   if (error) {
     throw error;
@@ -17,15 +19,13 @@ async function getDisplayBrightness() {
 }
 
 type Brightness = number | "auto";
-export interface BrightnessParams {
+export interface BrightnessParams extends TimeoutOptions {
   front?: Brightness;
   back?: Brightness;
 }
 
 async function setDisplayBrightness(params: BrightnessParams) {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+  const client = getClient();
 
   const { front, back } = params;
 
@@ -45,14 +45,19 @@ async function setDisplayBrightness(params: BrightnessParams) {
   const frontQuery = normalize(front);
   const backQuery = normalize(back);
 
-  const { data, error } = await client.POST("/display/brightness", {
-    params: {
-      query: {
-        front: frontQuery,
-        back: backQuery,
-      },
-    },
-  });
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST("/display/brightness", {
+        params: {
+          query: {
+            front: frontQuery,
+            back: backQuery,
+          },
+        },
+        signal,
+      }),
+    params.timeout,
+  );
 
   if (error) {
     throw error;
@@ -61,12 +66,13 @@ async function setDisplayBrightness(params: BrightnessParams) {
   return data;
 }
 
-async function getAudioVolume() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+async function getAudioVolume(params?: TimeoutOptions) {
+  const client = getClient();
 
-  const { data, error } = await client.GET("/audio/volume");
+  const { data, error } = await withTimeout(
+    (signal) => client.GET("/audio/volume", { signal }),
+    params?.timeout,
+  );
 
   if (error) {
     throw error;
@@ -75,13 +81,11 @@ async function getAudioVolume() {
   return data;
 }
 
-export interface AudioVolumeParams {
+export interface AudioVolumeParams extends TimeoutOptions {
   volume: operations["setAudioVolume"]["parameters"]["query"]["volume"];
 }
 async function setAudioVolume(params: AudioVolumeParams) {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+  const client = getClient();
 
   const { volume } = params;
 
@@ -89,13 +93,18 @@ async function setAudioVolume(params: AudioVolumeParams) {
     throw new Error("Volume must be a number between 0 and 100");
   }
 
-  const { data, error } = await client.POST("/audio/volume", {
-    params: {
-      query: {
-        volume,
-      },
-    },
-  });
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST("/audio/volume", {
+        params: {
+          query: {
+            volume,
+          },
+        },
+        signal,
+      }),
+    params.timeout,
+  );
 
   if (error) {
     throw error;
@@ -104,12 +113,13 @@ async function setAudioVolume(params: AudioVolumeParams) {
   return data;
 }
 
-async function getHttpAccess() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+async function getHttpAccess(params?: TimeoutOptions) {
+  const client = getClient();
 
-  const { data, error } = await client.GET("/access");
+  const { data, error } = await withTimeout(
+    (signal) => client.GET("/access", { signal }),
+    params?.timeout,
+  );
 
   if (error) {
     throw error;
@@ -118,14 +128,12 @@ async function getHttpAccess() {
   return data;
 }
 
-export interface HttpAccessParams {
+export interface HttpAccessParams extends TimeoutOptions {
   mode: operations["setHttpAccess"]["parameters"]["query"]["mode"];
   key: operations["setHttpAccess"]["parameters"]["query"]["key"];
 }
 async function setHttpAccess(params: HttpAccessParams) {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+  const client = getClient();
 
   let { mode, key } = params;
   key = key ?? "";
@@ -134,14 +142,19 @@ async function setHttpAccess(params: HttpAccessParams) {
     throw new Error("Key must be a string of 4 to 10 digits");
   }
 
-  const { data, error } = await client.POST("/access", {
-    params: {
-      query: {
-        mode,
-        key,
-      },
-    },
-  });
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST("/access", {
+        params: {
+          query: {
+            mode,
+            key,
+          },
+        },
+        signal,
+      }),
+    params.timeout,
+  );
 
   if (error) {
     throw error;
@@ -150,12 +163,13 @@ async function setHttpAccess(params: HttpAccessParams) {
   return data;
 }
 
-async function getName() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+async function getName(params?: TimeoutOptions) {
+  const client = getClient();
 
-  const { data, error } = await client.GET("/name");
+  const { data, error } = await withTimeout(
+    (signal) => client.GET("/name", { signal }),
+    params?.timeout,
+  );
 
   if (error) {
     throw error;
@@ -164,18 +178,21 @@ async function getName() {
   return data;
 }
 
-export interface NameParams {
+export interface NameParams extends TimeoutOptions {
   name: NameInfo["name"];
 }
 
 async function setName(params: NameParams) {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+  const client = getClient();
 
-  const { data, error } = await client.POST("/name", {
-    body: params,
-  });
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST("/name", {
+        body: params,
+        signal,
+      }),
+    params.timeout,
+  );
 
   if (error) {
     throw error;

@@ -1,13 +1,15 @@
-import { client } from "BusyBar/api/createClient";
+import { getClient, withTimeout } from "BusyBar/api/createClient";
+import type { TimeoutOptions } from "Global/types";
 import type { BusyFile } from "BusyBar/types/global";
 import { operations } from "src/Global/API";
 
-async function version() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+async function version(params?: TimeoutOptions) {
+  const client = getClient();
 
-  const { data, error } = await client.GET("/version");
+  const { data, error } = await withTimeout(
+    (signal) => client.GET("/version", { signal }),
+    params?.timeout,
+  );
 
   if (error) {
     throw error;
@@ -16,29 +18,32 @@ async function version() {
   return data;
 }
 
-export interface UpdateParams {
+export interface UpdateParams extends TimeoutOptions {
   name?: string;
   file: BusyFile;
 }
 
 async function update(params: UpdateParams) {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+  const client = getClient();
 
   const { name, file } = params;
 
-  const { data, error } = await client.POST("/update", {
-    params: {
-      query: {
-        name,
-      },
-    },
-    headers: {
-      "Content-Type": "application/octet-stream",
-    },
-    body: file as unknown as string,
-  });
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST("/update", {
+        params: {
+          query: {
+            name,
+          },
+        },
+        headers: {
+          "Content-Type": "application/octet-stream",
+        },
+        body: file as unknown as string,
+        signal,
+      }),
+    params.timeout,
+  );
 
   if (error) {
     throw error;
@@ -47,26 +52,13 @@ async function update(params: UpdateParams) {
   return data;
 }
 
-async function status() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+async function status(params?: TimeoutOptions) {
+  const client = getClient();
 
-  const { data, error } = await client.GET("/status");
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
-async function systemStatus() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
-
-  const { data, error } = await client.GET("/status/system");
+  const { data, error } = await withTimeout(
+    (signal) => client.GET("/status", { signal }),
+    params?.timeout,
+  );
 
   if (error) {
     throw error;
@@ -75,26 +67,13 @@ async function systemStatus() {
   return data;
 }
 
-async function powerStatus() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+async function systemStatus(params?: TimeoutOptions) {
+  const client = getClient();
 
-  const { data, error } = await client.GET("/status/power");
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
-async function getTime() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
-
-  const { data, error } = await client.GET("/time");
+  const { data, error } = await withTimeout(
+    (signal) => client.GET("/status/system", { signal }),
+    params?.timeout,
+  );
 
   if (error) {
     throw error;
@@ -103,20 +82,53 @@ async function getTime() {
   return data;
 }
 
-export interface SetTimestampParams {
+async function powerStatus(params?: TimeoutOptions) {
+  const client = getClient();
+
+  const { data, error } = await withTimeout(
+    (signal) => client.GET("/status/power", { signal }),
+    params?.timeout,
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+async function getTime(params?: TimeoutOptions) {
+  const client = getClient();
+
+  const { data, error } = await withTimeout(
+    (signal) => client.GET("/time", { signal }),
+    params?.timeout,
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export interface SetTimestampParams extends TimeoutOptions {
   timestamp: operations["setTimeTimestamp"]["parameters"]["query"]["timestamp"];
 }
 
 async function setTimestamp(params: SetTimestampParams) {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+  const client = getClient();
 
-  const { data, error } = await client.POST("/time/timestamp", {
-    params: {
-      query: params,
-    },
-  });
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST("/time/timestamp", {
+        params: {
+          query: { ...params, timeout: undefined },
+        },
+        signal,
+      }),
+    params.timeout,
+  );
 
   if (error) {
     throw error;
@@ -125,20 +137,23 @@ async function setTimestamp(params: SetTimestampParams) {
   return data;
 }
 
-export interface SetTimezoneParams {
+export interface SetTimezoneParams extends TimeoutOptions {
   timezone: operations["setTimeTimezone"]["parameters"]["query"]["timezone"];
 }
 
 async function setTimezone(params: SetTimezoneParams) {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+  const client = getClient();
 
-  const { data, error } = await client.POST("/time/timezone", {
-    params: {
-      query: params,
-    },
-  });
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST("/time/timezone", {
+        params: {
+          query: { ...params, timeout: undefined },
+        },
+        signal,
+      }),
+    params.timeout,
+  );
 
   if (error) {
     throw error;

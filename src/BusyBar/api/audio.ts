@@ -1,26 +1,30 @@
-import { client } from "BusyBar/api/createClient";
+import { getClient, withTimeout } from "BusyBar/api/createClient";
+import type { TimeoutOptions } from "Global/types";
 import { paths } from "Global/API";
 
-export interface AudioPlayParams {
+export interface AudioPlayParams extends TimeoutOptions {
   appId: paths["/audio/play"]["post"]["parameters"]["query"]["app_id"];
   path: paths["/audio/play"]["post"]["parameters"]["query"]["path"];
 }
 
 async function play(params: AudioPlayParams) {
+  const client = getClient();
+
   const { appId, path } = params;
 
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
-
-  const { data, error } = await client.POST("/audio/play", {
-    params: {
-      query: {
-        app_id: appId,
-        path,
-      },
-    },
-  });
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST("/audio/play", {
+        params: {
+          query: {
+            app_id: appId,
+            path,
+          },
+        },
+        signal,
+      }),
+    params.timeout,
+  );
 
   if (error) {
     throw error;
@@ -29,12 +33,13 @@ async function play(params: AudioPlayParams) {
   return data;
 }
 
-async function stop() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
+async function stop(params?: TimeoutOptions) {
+  const client = getClient();
 
-  const { data, error } = await client.DELETE("/audio/play");
+  const { data, error } = await withTimeout(
+    (signal) => client.DELETE("/audio/play", { signal }),
+    params?.timeout,
+  );
 
   if (error) {
     throw error;
