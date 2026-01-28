@@ -450,40 +450,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated since 0.5.0 — will be removed in 0.7.0.
-   *
-   * This method is no longer supported and does nothing.
-   *
-   * Works only with BusyLib v0.5.0 and device firmware v0.3.0.
-   *
-   * Always throws an error.
-   */
-  async enableWifi(): Promise<SuccessResponse> {
-    throw new Error(
-      "[DEPRECATED] BusyBar.enableWifi: This method is deprecated since v0.5.0 and will be removed in v0.7.0. " +
-        "It is no longer supported and does nothing. " +
-        "Works only with BusyLib v0.5.0 and device firmware v0.3.0.",
-    );
-  }
-
-  /**
-   * @deprecated since 0.5.0 — will be removed in 0.7.0.
-   *
-   * This method is no longer supported and does nothing.
-   *
-   * Works only with BusyLib v0.5.0 and device firmware v0.3.0.
-   *
-   * Always throws an error.
-   */
-  async disableWifi(): Promise<SuccessResponse> {
-    throw new Error(
-      "[DEPRECATED] BusyBar.disableWifi: This method is deprecated since v0.5.0 and will be removed in v0.7.0. " +
-        "It is no longer supported and does nothing. " +
-        "Works only with BusyLib v0.5.0 and device firmware v0.3.0.",
-    );
-  }
-
-  /**
    * Gets the current status of the Wi-Fi module.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
@@ -534,23 +500,6 @@ export class BusyBar {
    */
   async networksWifi(params?: TimeoutOptions): Promise<WifiNetworkResponse> {
     return await networksWifiAPi(params);
-  }
-
-  /**
-   * @deprecated since 0.5.0 — will be removed in 0.7.0.
-   *
-   * This method is no longer supported and does nothing.
-   *
-   * Works only with BusyLib v0.5.0 and device firmware v0.3.0.
-   *
-   * Always throws an error.
-   */
-  async forgetWifi(): Promise<never> {
-    throw new Error(
-      "[DEPRECATED] BusyBar.forgetWifi: This method is deprecated since v0.5.0 and will be removed in v0.7.0. " +
-        "It is no longer supported and does nothing. " +
-        "Works only with BusyLib v0.5.0 and device firmware v0.3.0.",
-    );
   }
 
   /**
