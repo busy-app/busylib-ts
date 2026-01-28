@@ -21,6 +21,10 @@ import type {
 } from "Global/types";
 
 import { initApiClient, setApiKey } from "BusyBar/api/createClient";
+import createClient from "openapi-fetch";
+import type { paths } from "Global/API";
+import { isIPv4 } from "BusyBar/utils/isIPv4";
+import { isMdns } from "BusyBar/utils/isMdns";
 
 import {
   getMqttStatus as getMqttStatusApi,
@@ -130,12 +134,20 @@ export class BusyBar {
    * @type {BusyBarConfig['host']}
    * @readonly
    */
-  public readonly addr: BusyBarConfig["addr"];
+  public readonly addr: string;
   /**
    * Current API semantic version.
    * @type {ApiSemver}
    */
   apiSemver: ApiSemver;
+
+  /**
+   * Detected connection type based on auth requirements.
+   * - "wifi": Device requires authentication (returned 401/403).
+   * - "usb": Device allows access without token (returned 200).
+   * - "unknown": Detection failed or not yet completed.
+   */
+  public connectionType: "usb" | "wifi" | "unknown" = "unknown";
 
   /**
    * Creates an instance of BUSY Bar.
@@ -183,8 +195,50 @@ export class BusyBar {
     initApiClient(
       `${this.addr}/api/`,
       this.getApiVersion.bind(this),
-      config?.token
+      config?.token,
     );
+
+    this.detectConnectionType();
+  }
+
+  /**
+   * Probes the device to determine connection type.
+   * Sends a request without authentication credentials.
+   */
+  private async detectConnectionType() {
+    const hostname = new URL(this.addr).hostname;
+
+    // If not a local address (not IP, not mDNS) -> assume Internet (Proxy)
+    if (!isIPv4(hostname) && !isMdns(hostname)) {
+      this.connectionType = "wifi";
+      return;
+    }
+
+    // Create temporary client WITHOUT auth middleware
+    const probeClient = createClient<paths>({
+      baseUrl: `${this.addr}/api/`,
+    });
+
+    try {
+      // Request an endpoint that requires authorization (e.g. device name)
+      // client.GET does not throw on 4xx/5xx status, but throws on network error
+      const { response } = await probeClient.GET("/name");
+
+      if (response.status === 401 || response.status === 403) {
+        // If auth is requested -> it is WiFi
+        this.connectionType = "wifi";
+      } else if (response.ok) {
+        // If data returned without key -> it is USB (trusted connection)
+        this.connectionType = "usb";
+      } else {
+        // Treat any other status as detection failure
+        throw new Error(
+          `Failed to detect connection type. Status: ${response.status}`,
+        );
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
@@ -378,7 +432,7 @@ export class BusyBar {
     throw new Error(
       "[DEPRECATED] BusyBar.enableWifi: This method is deprecated since v0.5.0 and will be removed in v0.7.0. " +
         "It is no longer supported and does nothing. " +
-        "Works only with BusyLib v0.5.0 and device firmware v0.3.0."
+        "Works only with BusyLib v0.5.0 and device firmware v0.3.0.",
     );
   }
 
@@ -395,7 +449,7 @@ export class BusyBar {
     throw new Error(
       "[DEPRECATED] BusyBar.disableWifi: This method is deprecated since v0.5.0 and will be removed in v0.7.0. " +
         "It is no longer supported and does nothing. " +
-        "Works only with BusyLib v0.5.0 and device firmware v0.3.0."
+        "Works only with BusyLib v0.5.0 and device firmware v0.3.0.",
     );
   }
 
@@ -458,7 +512,7 @@ export class BusyBar {
     throw new Error(
       "[DEPRECATED] BusyBar.forgetWifi: This method is deprecated since v0.5.0 and will be removed in v0.7.0. " +
         "It is no longer supported and does nothing. " +
-        "Works only with BusyLib v0.5.0 and device firmware v0.3.0."
+        "Works only with BusyLib v0.5.0 and device firmware v0.3.0.",
     );
   }
 
@@ -516,7 +570,7 @@ export class BusyBar {
    * @returns {Promise<SuccessResponse>} Result of the create operation.
    */
   async createDirectory(
-    params: CreateDirectoryParams
+    params: CreateDirectoryParams,
   ): Promise<SuccessResponse> {
     return await mkdirStorageApi(params);
   }
@@ -549,7 +603,7 @@ export class BusyBar {
    * @throws {Error} If brightness value is outside the range 0-100 or not "auto".
    */
   async setDisplayBrightness(
-    params: BrightnessParams
+    params: BrightnessParams,
   ): Promise<SuccessResponse> {
     return await setDisplayBrightnessApi(params);
   }

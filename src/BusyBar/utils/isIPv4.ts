@@ -24,5 +24,5 @@ function isIPv4(str: string): str is IPv4 {
   return true;
 }
 
-export default isIPv4;
+export { isIPv4 };
 export type { IPv4 };
