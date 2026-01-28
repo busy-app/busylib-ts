@@ -197,7 +197,7 @@ export class BusyBar {
 
     initApiClient(
       `${this.addr}/api/`,
-      this.getApiVersion.bind(this),
+      this.SystemVersion.bind(this),
       config?.token,
     );
 
@@ -251,11 +251,18 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<VersionInfo>} A promise that resolves to an object containing the `api_semver` string.
    */
-  async getApiVersion(params?: TimeoutOptions): Promise<VersionInfo> {
+  async SystemVersion(params?: TimeoutOptions): Promise<VersionInfo> {
     const response = await versionApi(params);
     this.apiSemver = response.api_semver;
 
     return response;
+  }
+
+  /**
+   * @deprecated Use `SystemVersion` instead. will be removed in the next release.
+   */
+  async getApiVersion(params?: TimeoutOptions): Promise<VersionInfo> {
+    return this.SystemVersion(params);
   }
 
   /**
@@ -267,8 +274,15 @@ export class BusyBar {
    *   @param {UpdateParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the update operation.
    */
-  async updateFirmware(params: UpdateParams): Promise<SuccessResponse> {
+  async SystemUpdate(params: UpdateParams): Promise<SuccessResponse> {
     return await updateApi(params);
+  }
+
+  /**
+   * @deprecated Use `SystemUpdate` instead. will be removed in the next release.
+   */
+  async updateFirmware(params: UpdateParams): Promise<SuccessResponse> {
+    return this.SystemUpdate(params);
   }
 
   /**
@@ -278,8 +292,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<Status>} Current status of the device.
    */
-  async deviceStatus(params?: TimeoutOptions): Promise<Status> {
+  async SystemStatus(params?: TimeoutOptions): Promise<Status> {
     return await statusApi(params);
+  }
+
+  /**
+   * @deprecated Use `SystemStatus` instead. will be removed in the next release.
+   */
+  async deviceStatus(params?: TimeoutOptions): Promise<Status> {
+    return this.SystemStatus(params);
   }
 
   /**
@@ -289,8 +310,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StatusSystem>} Current system status.
    */
-  async systemStatus(params?: TimeoutOptions): Promise<StatusSystem> {
+  async SystemInfo(params?: TimeoutOptions): Promise<StatusSystem> {
     return await systemStatusApi(params);
+  }
+
+  /**
+   * @deprecated Use `SystemInfo` instead. will be removed in the next release.
+   */
+  async systemStatus(params?: TimeoutOptions): Promise<StatusSystem> {
+    return this.SystemInfo(params);
   }
 
   /**
@@ -300,8 +328,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StatusPower>} Current power status.
    */
-  async powerStatus(params?: TimeoutOptions): Promise<StatusPower> {
+  async SystemStatusPower(params?: TimeoutOptions): Promise<StatusPower> {
     return await powerStatusApi(params);
+  }
+
+  /**
+   * @deprecated Use `SystemStatusPower` instead. will be removed in the next release.
+   */
+  async powerStatus(params?: TimeoutOptions): Promise<StatusPower> {
+    return this.SystemStatusPower(params);
   }
 
   /**
@@ -311,8 +346,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<TimestampInfo>} Current device timestamp as an ISO 8601 string.
    */
-  async getTime(params?: TimeoutOptions): Promise<TimestampInfo> {
+  async SystemTime(params?: TimeoutOptions): Promise<TimestampInfo> {
     return await getTimeApi(params);
+  }
+
+  /**
+   * @deprecated Use `SystemTime` instead. will be removed in the next release.
+   */
+  async getTime(params?: TimeoutOptions): Promise<TimestampInfo> {
+    return this.SystemTime(params);
   }
 
   /**
@@ -323,8 +365,17 @@ export class BusyBar {
    *   @param {SetTimestampParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A success response if the timestamp was set.
    */
-  async setTimestamp(params: SetTimestampParams): Promise<SuccessResponse> {
+  async SystemTimeTimestamp(
+    params: SetTimestampParams,
+  ): Promise<SuccessResponse> {
     return await setTimestampApi(params);
+  }
+
+  /**
+   * @deprecated Use `SystemTimeTimestamp` instead. will be removed in the next release.
+   */
+  async setTimestamp(params: SetTimestampParams): Promise<SuccessResponse> {
+    return this.SystemTimeTimestamp(params);
   }
 
   /**
@@ -335,8 +386,17 @@ export class BusyBar {
    *   @param {SetTimezoneParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A success response if the timezone was set.
    */
-  async setTimezone(params: SetTimezoneParams): Promise<SuccessResponse> {
+  async SystemTimeTimezone(
+    params: SetTimezoneParams,
+  ): Promise<SuccessResponse> {
     return await setTimezoneApi(params);
+  }
+
+  /**
+   * @deprecated Use `SystemTimeTimezone` instead. will be removed in the next release.
+   */
+  async setTimezone(params: SetTimezoneParams): Promise<SuccessResponse> {
+    return this.SystemTimeTimezone(params);
   }
 
   /**
@@ -346,8 +406,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<AccountInfo>} Information about the current MQTT account status.
    */
-  async getMqttStatus(params?: TimeoutOptions): Promise<AccountInfo> {
+  async Account(params?: TimeoutOptions): Promise<AccountInfo> {
     return await getMqttStatusApi(params);
+  }
+
+  /**
+   * @deprecated Use `Account` instead. will be removed in the next release.
+   */
+  async getMqttStatus(params?: TimeoutOptions): Promise<AccountInfo> {
+    return this.Account(params);
   }
 
   /**
@@ -357,8 +424,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the account unlink operation.
    */
-  async unlinkAccount(params?: TimeoutOptions): Promise<SuccessResponse> {
+  async AccountUnlink(params?: TimeoutOptions): Promise<SuccessResponse> {
     return await unlinkAccountApi(params);
+  }
+
+  /**
+   * @deprecated Use `AccountUnlink` instead. will be removed in the next release.
+   */
+  async unlinkAccount(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return this.AccountUnlink(params);
   }
 
   /**
@@ -368,8 +442,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<AccountLink>} Information about the account link operation.
    */
-  async linkAccount(params?: TimeoutOptions): Promise<AccountLink> {
+  async AccountLink(params?: TimeoutOptions): Promise<AccountLink> {
     return await linkAccountApi(params);
+  }
+
+  /**
+   * @deprecated Use `AccountLink` instead. will be removed in the next release.
+   */
+  async linkAccount(params?: TimeoutOptions): Promise<AccountLink> {
+    return this.AccountLink(params);
   }
 
   /**
@@ -382,11 +463,18 @@ export class BusyBar {
    *   @param {UploadParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the upload operation.
    */
-  async uploadAsset(params: UploadParams): Promise<SuccessResponse> {
+  async AssetsUpload(params: UploadParams): Promise<SuccessResponse> {
     // check file
     // convert file
 
     return await uploadAssetsApi(params);
+  }
+
+  /**
+   * @deprecated Use `AssetsUpload` instead. will be removed in the next release.
+   */
+  async uploadAsset(params: UploadParams): Promise<SuccessResponse> {
+    return this.AssetsUpload(params);
   }
 
   /**
@@ -397,8 +485,15 @@ export class BusyBar {
    *   @param {DeleteParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the delete operation.
    */
-  async deleteAssets(params: DeleteParams): Promise<SuccessResponse> {
+  async AssetsDelete(params: DeleteParams): Promise<SuccessResponse> {
     return await deleteAssetsApi(params);
+  }
+
+  /**
+   * @deprecated Use `AssetsDelete` instead. will be removed in the next release.
+   */
+  async deleteAssets(params: DeleteParams): Promise<SuccessResponse> {
+    return this.AssetsDelete(params);
   }
 
   /**
@@ -410,8 +505,15 @@ export class BusyBar {
    *   @param {DrawParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the draw operation.
    */
-  async drawDisplay(params: DrawParams): Promise<SuccessResponse> {
+  async DisplayDraw(params: DrawParams): Promise<SuccessResponse> {
     return await drawDisplayApi(params);
+  }
+
+  /**
+   * @deprecated Use `DisplayDraw` instead. will be removed in the next release.
+   */
+  async drawDisplay(params: DrawParams): Promise<SuccessResponse> {
+    return this.DisplayDraw(params);
   }
 
   /**
@@ -421,8 +523,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the clear operation.
    */
-  async clearDisplay(params?: TimeoutOptions): Promise<SuccessResponse> {
+  async DisplayClear(params?: TimeoutOptions): Promise<SuccessResponse> {
     return await clearDisplayApi(params);
+  }
+
+  /**
+   * @deprecated Use `DisplayClear` instead. will be removed in the next release.
+   */
+  async clearDisplay(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return this.DisplayClear(params);
   }
 
   /**
@@ -434,8 +543,15 @@ export class BusyBar {
    *   @param {AudioPlayParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the play operation.
    */
-  async playSound(params: AudioPlayParams): Promise<SuccessResponse> {
+  async AudioPlay(params: AudioPlayParams): Promise<SuccessResponse> {
     return await playSoundApi(params);
+  }
+
+  /**
+   * @deprecated Use `AudioPlay` instead. will be removed in the next release.
+   */
+  async playSound(params: AudioPlayParams): Promise<SuccessResponse> {
+    return this.AudioPlay(params);
   }
 
   /**
@@ -445,8 +561,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the stop operation.
    */
-  async stopSound(params?: TimeoutOptions): Promise<SuccessResponse> {
+  async AudioStop(params?: TimeoutOptions): Promise<SuccessResponse> {
     return await stopSoundApi(params);
+  }
+
+  /**
+   * @deprecated Use `AudioStop` instead. will be removed in the next release.
+   */
+  async stopSound(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return this.AudioStop(params);
   }
 
   /**
@@ -456,8 +579,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<WifiStatusResponse>} Current Wi-Fi status.
    */
-  async statusWifi(params?: TimeoutOptions): Promise<WifiStatusResponse> {
+  async WifiStatus(params?: TimeoutOptions): Promise<WifiStatusResponse> {
     return await statusWifiApi(params);
+  }
+
+  /**
+   * @deprecated Use `WifiStatus` instead. will be removed in the next release.
+   */
+  async statusWifi(params?: TimeoutOptions): Promise<WifiStatusResponse> {
+    return this.WifiStatus(params);
   }
 
   /**
@@ -476,8 +606,15 @@ export class BusyBar {
    *   @param {ConnectParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the connect operation.
    */
-  async connectWifi(params: ConnectParams): Promise<SuccessResponse> {
+  async WifiConnect(params: ConnectParams): Promise<SuccessResponse> {
     return await connectWifiApi(params);
+  }
+
+  /**
+   * @deprecated Use `WifiConnect` instead. will be removed in the next release.
+   */
+  async connectWifi(params: ConnectParams): Promise<SuccessResponse> {
+    return this.WifiConnect(params);
   }
 
   /**
@@ -487,8 +624,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the disconnect operation.
    */
-  async disconnectWifi(params?: TimeoutOptions): Promise<SuccessResponse> {
+  async WifiDisconnect(params?: TimeoutOptions): Promise<SuccessResponse> {
     return await disconnectWifiApi(params);
+  }
+
+  /**
+   * @deprecated Use `WifiDisconnect` instead. will be removed in the next release.
+   */
+  async disconnectWifi(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return this.WifiDisconnect(params);
   }
 
   /**
@@ -498,8 +642,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<WifiNetworkResponse>} List of discovered networks.
    */
-  async networksWifi(params?: TimeoutOptions): Promise<WifiNetworkResponse> {
+  async WifiNetworks(params?: TimeoutOptions): Promise<WifiNetworkResponse> {
     return await networksWifiAPi(params);
+  }
+
+  /**
+   * @deprecated Use `WifiNetworks` instead. will be removed in the next release.
+   */
+  async networksWifi(params?: TimeoutOptions): Promise<WifiNetworkResponse> {
+    return this.WifiNetworks(params);
   }
 
   /**
@@ -511,8 +662,15 @@ export class BusyBar {
    *   @param {UploadFileParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the upload operation.
    */
-  async uploadFile(params: UploadFileParams): Promise<SuccessResponse> {
+  async StorageWrite(params: UploadFileParams): Promise<SuccessResponse> {
     return await writeStorageApi(params);
+  }
+
+  /**
+   * @deprecated Use `StorageWrite` instead. will be removed in the next release.
+   */
+  async uploadFile(params: UploadFileParams): Promise<SuccessResponse> {
+    return this.StorageWrite(params);
   }
 
   /**
@@ -524,8 +682,15 @@ export class BusyBar {
    *   @param {DownloadFileParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StorageReadResponse>} The file data.
    */
-  async downloadFile(params: DownloadFileParams): Promise<StorageReadResponse> {
+  async StorageRead(params: DownloadFileParams): Promise<StorageReadResponse> {
     return await readStorageApi(params);
+  }
+
+  /**
+   * @deprecated Use `StorageRead` instead. will be removed in the next release.
+   */
+  async downloadFile(params: DownloadFileParams): Promise<StorageReadResponse> {
+    return this.StorageRead(params);
   }
 
   /**
@@ -536,8 +701,15 @@ export class BusyBar {
    *   @param {ReadDirectoryParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StorageList>} List of files and directories.
    */
-  async readDirectory(params: ReadDirectoryParams): Promise<StorageList> {
+  async StorageList(params: ReadDirectoryParams): Promise<StorageList> {
     return await listStorageApi(params);
+  }
+
+  /**
+   * @deprecated Use `StorageList` instead. will be removed in the next release.
+   */
+  async readDirectory(params: ReadDirectoryParams): Promise<StorageList> {
+    return this.StorageList(params);
   }
 
   /**
@@ -548,8 +720,15 @@ export class BusyBar {
    *   @param {RemoveParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the remove operation.
    */
-  async removeResource(params: RemoveParams): Promise<SuccessResponse> {
+  async StorageRemove(params: RemoveParams): Promise<SuccessResponse> {
     return await removeStorageApi(params);
+  }
+
+  /**
+   * @deprecated Use `StorageRemove` instead. will be removed in the next release.
+   */
+  async removeResource(params: RemoveParams): Promise<SuccessResponse> {
+    return this.StorageRemove(params);
   }
 
   /**
@@ -560,10 +739,17 @@ export class BusyBar {
    *   @param {CreateDirectoryParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the create operation.
    */
+  async StorageMkdir(params: CreateDirectoryParams): Promise<SuccessResponse> {
+    return await mkdirStorageApi(params);
+  }
+
+  /**
+   * @deprecated Use `StorageMkdir` instead. will be removed in the next release.
+   */
   async createDirectory(
     params: CreateDirectoryParams,
   ): Promise<SuccessResponse> {
-    return await mkdirStorageApi(params);
+    return this.StorageMkdir(params);
   }
 
   /**
@@ -573,8 +759,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StorageStatus>} Current storage status information.
    */
-  async statusStorage(params?: TimeoutOptions): Promise<StorageStatus> {
+  async StorageStatus(params?: TimeoutOptions): Promise<StorageStatus> {
     return await statusStorageApi(params);
+  }
+
+  /**
+   * @deprecated Use `StorageStatus` instead. will be removed in the next release.
+   */
+  async statusStorage(params?: TimeoutOptions): Promise<StorageStatus> {
+    return this.StorageStatus(params);
   }
 
   /**
@@ -584,10 +777,19 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<DisplayBrightnessInfo>} Current brightness information for front and back panels.
    */
-  async getDisplayBrightness(
+  async DisplayBrightness(
     params?: TimeoutOptions,
   ): Promise<DisplayBrightnessInfo> {
     return await getDisplayBrightnessApi(params);
+  }
+
+  /**
+   * @deprecated Use `DisplayBrightness` instead. will be removed in the next release.
+   */
+  async getDisplayBrightness(
+    params?: TimeoutOptions,
+  ): Promise<DisplayBrightnessInfo> {
+    return this.DisplayBrightness(params);
   }
 
   /**
@@ -600,10 +802,19 @@ export class BusyBar {
    * @returns {Promise<SuccessResponse>} Result of the brightness update operation.
    * @throws {Error} If brightness value is outside the range 0-100 or not "auto".
    */
-  async setDisplayBrightness(
+  async DisplayBrightnessSet(
     params: BrightnessParams,
   ): Promise<SuccessResponse> {
     return await setDisplayBrightnessApi(params);
+  }
+
+  /**
+   * @deprecated Use `DisplayBrightnessSet` instead. will be removed in the next release.
+   */
+  async setDisplayBrightness(
+    params: BrightnessParams,
+  ): Promise<SuccessResponse> {
+    return this.DisplayBrightnessSet(params);
   }
 
   /**
@@ -613,8 +824,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<AudioVolumeInfo>} Current audio volume (0-100).
    */
-  async getAudioVolume(params?: TimeoutOptions): Promise<AudioVolumeInfo> {
+  async AudioVolume(params?: TimeoutOptions): Promise<AudioVolumeInfo> {
     return await getAudioVolumeApi(params);
+  }
+
+  /**
+   * @deprecated Use `AudioVolume` instead. will be removed in the next release.
+   */
+  async getAudioVolume(params?: TimeoutOptions): Promise<AudioVolumeInfo> {
+    return this.AudioVolume(params);
   }
 
   /**
@@ -626,8 +844,15 @@ export class BusyBar {
    * @returns {Promise<SuccessResponse>} Result of the volume update operation.
    * @throws {Error} If volume is outside the range 0-100 or request fails.
    */
-  async setAudioVolume(params: AudioVolumeParams): Promise<SuccessResponse> {
+  async AudioVolumeSet(params: AudioVolumeParams): Promise<SuccessResponse> {
     return await setAudioVolumeApi(params);
+  }
+
+  /**
+   * @deprecated Use `AudioVolumeSet` instead. will be removed in the next release.
+   */
+  async setAudioVolume(params: AudioVolumeParams): Promise<SuccessResponse> {
+    return this.AudioVolumeSet(params);
   }
 
   /**
@@ -637,8 +862,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<HttpAccessInfo>} Current HTTP access info.
    */
-  async getHttpAccess(params?: TimeoutOptions): Promise<HttpAccessInfo> {
+  async SettingsAccess(params?: TimeoutOptions): Promise<HttpAccessInfo> {
     return await getHttpAccessApi(params);
+  }
+
+  /**
+   * @deprecated Use `SettingsAccess` instead. will be removed in the next release.
+   */
+  async getHttpAccess(params?: TimeoutOptions): Promise<HttpAccessInfo> {
+    return this.SettingsAccess(params);
   }
 
   /**
@@ -650,7 +882,7 @@ export class BusyBar {
    *   @param {HttpAccessParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the set operation.
    */
-  async setHttpAccess(params: HttpAccessParams): Promise<SuccessResponse> {
+  async SettingsAccessSet(params: HttpAccessParams): Promise<SuccessResponse> {
     const result = await setHttpAccessApi(params);
 
     if (params.mode === "key" && params.key) {
@@ -661,14 +893,28 @@ export class BusyBar {
   }
 
   /**
+   * @deprecated Use `SettingsAccessSet` instead. will be removed in the next release.
+   */
+  async setHttpAccess(params: HttpAccessParams): Promise<SuccessResponse> {
+    return this.SettingsAccessSet(params);
+  }
+
+  /**
    * Gets the current device name.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<NameInfo>} The current device name information.
    */
-  async getName(params?: TimeoutOptions): Promise<NameInfo> {
+  async SettingsName(params?: TimeoutOptions): Promise<NameInfo> {
     return await getNameApi(params);
+  }
+
+  /**
+   * @deprecated Use `SettingsName` instead. will be removed in the next release.
+   */
+  async getName(params?: TimeoutOptions): Promise<NameInfo> {
+    return this.SettingsName(params);
   }
 
   /**
@@ -679,8 +925,15 @@ export class BusyBar {
    *   @param {NameParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of setting the device name.
    */
-  async setName(params: NameParams): Promise<SuccessResponse> {
+  async SettingsNameSet(params: NameParams): Promise<SuccessResponse> {
     return await setNameApi(params);
+  }
+
+  /**
+   * @deprecated Use `SettingsNameSet` instead. will be removed in the next release.
+   */
+  async setName(params: NameParams): Promise<SuccessResponse> {
+    return this.SettingsNameSet(params);
   }
 
   /**
@@ -697,8 +950,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the enable operation.
    */
-  async enableBle(params?: TimeoutOptions): Promise<SuccessResponse> {
+  async BleEnable(params?: TimeoutOptions): Promise<SuccessResponse> {
     return await enableBleApi(params);
+  }
+
+  /**
+   * @deprecated Use `BleEnable` instead. will be removed in the next release.
+   */
+  async enableBle(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return this.BleEnable(params);
   }
 
   /**
@@ -707,8 +967,15 @@ export class BusyBar {
    * @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the disable operation.
    */
-  async disableBle(params?: TimeoutOptions): Promise<SuccessResponse> {
+  async BleDisable(params?: TimeoutOptions): Promise<SuccessResponse> {
     return await disableBleApi(params);
+  }
+
+  /**
+   * @deprecated Use `BleDisable` instead. will be removed in the next release.
+   */
+  async disableBle(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return this.BleDisable(params);
   }
 
   /**
@@ -718,8 +985,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the BLE pairing removal operation.
    */
-  async pairingBle(params?: TimeoutOptions): Promise<SuccessResponse> {
+  async BleUnpair(params?: TimeoutOptions): Promise<SuccessResponse> {
     return await pairingBleApi(params);
+  }
+
+  /**
+   * @deprecated Use `BleUnpair` instead. will be removed in the next release.
+   */
+  async pairingBle(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return this.BleUnpair(params);
   }
 
   /**
@@ -729,8 +1003,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<BleStatusResponse>} Current BLE status information.
    */
-  async statusBle(params?: TimeoutOptions): Promise<BleStatusResponse> {
+  async BleStatus(params?: TimeoutOptions): Promise<BleStatusResponse> {
     return await statusBleApi(params);
+  }
+
+  /**
+   * @deprecated Use `BleStatus` instead. will be removed in the next release.
+   */
+  async statusBle(params?: TimeoutOptions): Promise<BleStatusResponse> {
+    return this.BleStatus(params);
   }
 
   /**
@@ -746,7 +1027,14 @@ export class BusyBar {
    *  }
    * @returns {Promise<SuccessResponse>} Result of pressing the button.
    */
-  async pressButton(params: InputKeyParams): Promise<SuccessResponse> {
+  async InputSend(params: InputKeyParams): Promise<SuccessResponse> {
     return await setInputKeyApi(params);
+  }
+
+  /**
+   * @deprecated Use `InputSend` instead. will be removed in the next release.
+   */
+  async pressButton(params: InputKeyParams): Promise<SuccessResponse> {
+    return this.InputSend(params);
   }
 }
