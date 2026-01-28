@@ -21,11 +21,17 @@ import type {
   TimeoutOptions,
 } from "Global/types";
 
+import {
+  DEFAULT_DEVICE_URL,
+  DEFAULT_PROXY_URL,
+  PROXY_HOST_RE,
+} from "Global/constants";
+
 import { initApiClient, setApiKey } from "BusyBar/api/createClient";
 import createClient from "openapi-fetch";
 import type { paths } from "Global/API";
-import { isIPv4 } from "BusyBar/utils/isIPv4";
-import { isMdns } from "BusyBar/utils/isMdns";
+import { isIPv4 } from "Global/utils/isIPv4";
+import { isMdns } from "Global/utils/isMdns";
 
 import {
   getMqttStatus as getMqttStatusApi,
@@ -119,10 +125,6 @@ export type BusyBarConfig = {
   addr?: string;
   token?: string;
 };
-
-const DEFAULT_DEVICE_URL = "http://10.0.4.20";
-const DEFAULT_PROXY_URL = "https://proxy.busy.app";
-const PROXY_HOST_RE = /^https?:\/\/proxy(?:\.(?:dev|test|stage))?\.busy\.app$/i;
 
 /**
  * Main library class for interacting with the Busy Bar API.

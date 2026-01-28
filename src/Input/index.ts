@@ -10,26 +10,20 @@ import type {
   ApiSemver,
 } from "Global/types";
 
-interface BaseConfig {
+import { DEFAULT_DEVICE_URL } from "Global/constants";
+
+import { isIPv4 } from "Global/utils/isIPv4";
+import { isMdns } from "Global/utils/isMdns";
+import { isBrowser } from "Global/utils/isBrowser";
+
+export interface InputConfig {
+  addr?: string;
   apiKey?: ApiKey;
   apiSemver?: ApiSemver;
 }
 
-export interface LocalConfig extends BaseConfig {
-  mode: "local";
-  barUrl: string;
-}
-
-export interface SiteConfig extends BaseConfig {
-  mode: "cloud";
-  domain: string;
-  token: string;
-  idDevice: string;
-}
-
-export type DeviceConfig = LocalConfig | SiteConfig;
-
 export class Input {
+  public readonly addr: string;
   connected: boolean = false;
 
   // @ts-ignore
@@ -45,20 +39,44 @@ export class Input {
 
   private socket: WebSocket | null = null;
 
-  constructor(private config: DeviceConfig) {
-    const isBrowser = () =>
-      typeof window !== "undefined" && typeof window.document !== "undefined";
-
-    if (!isBrowser) {
+  constructor(config?: InputConfig) {
+    if (!isBrowser()) {
       throw new Error("not browser");
     }
 
-    if (config.apiKey) {
+    if (config?.apiKey) {
       this.apiKey = config.apiKey;
     }
 
-    if (config.apiSemver) {
+    if (config?.apiSemver) {
       this.apiSemver = config.apiSemver;
+    }
+
+    if (!config || !config.addr) {
+      this.addr = DEFAULT_DEVICE_URL;
+    } else {
+      let addr = config.addr.trim();
+
+      if (!/^https?:\/\//i.test(addr)) {
+        addr = `http://${addr}`;
+      }
+
+      try {
+        const url = new URL(addr);
+        const hostname = url.hostname;
+
+        if (!isIPv4(hostname) && !isMdns(hostname)) {
+          throw new Error(
+            `Invalid address: "${config.addr}". Only IP addresses and mDNS names (ending in .local) are supported.`,
+          );
+        }
+      } catch (e) {
+        throw e instanceof Error && e.message.startsWith("Invalid address")
+          ? e
+          : new Error(`Invalid URL format: "${config.addr}"`);
+      }
+
+      this.addr = addr;
     }
 
     this.inputEvent = {};
@@ -99,19 +117,14 @@ export class Input {
       await this.closeWebsocket();
     }
 
-    let wsUrl: URL | undefined = undefined;
-    if (this.config.mode === "cloud") {
-      wsUrl = new URL(`${this.config.domain}/bars/${this.config.idDevice}/ws`);
-    } else if (this.config.mode === "local") {
-      wsUrl = new URL(`${this.config.barUrl}/api/input`);
+    const wsUrl = new URL(`${this.addr}/api/input`);
 
-      if (this.apiKey) {
-        wsUrl.searchParams.append("x-api-token", this.apiKey);
-      }
+    if (this.apiKey) {
+      wsUrl.searchParams.append("x-api-token", this.apiKey);
+    }
 
-      if (this.apiSemver) {
-        wsUrl.searchParams.append("x-api-sem-ver", this.apiSemver);
-      }
+    if (this.apiSemver) {
+      wsUrl.searchParams.append("x-api-sem-ver", this.apiSemver);
     }
 
     if (!wsUrl) {

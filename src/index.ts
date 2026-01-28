@@ -1,6 +1,6 @@
-export { BusyBar } from "BusyBar/index";
-export { ScreenStream } from "ScreenStream/index";
-export { Input } from "Input/index";
+export { BusyBar, type BusyBarConfig } from "BusyBar/index";
+export { ScreenStream, type ScreenStreamConfig } from "ScreenStream/index";
+export { Input, type InputConfig } from "Input/index";
 
 export { DeviceScreen } from "ScreenStream/types";
 
