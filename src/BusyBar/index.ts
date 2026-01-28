@@ -245,7 +245,7 @@ export class BusyBar {
   }
 
   /**
-   * Retrieves the API semantic version.
+   * Get API version information.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -266,7 +266,7 @@ export class BusyBar {
   }
 
   /**
-   * Updates the firmware.
+   * Update firmware. Uploads a firmware update package (TAR file) and initiates the update process.
    *
    * @param {UpdateParams} params - Parameters for the firmware update.
    *   @param {UpdateParams['name']} params.name - Name for the update package.
@@ -286,7 +286,7 @@ export class BusyBar {
   }
 
   /**
-   * Gets the current status of the device, including system and power information.
+   * Get device status.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -304,7 +304,7 @@ export class BusyBar {
   }
 
   /**
-   * Gets the current system status.
+   * Get system status.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -322,7 +322,7 @@ export class BusyBar {
   }
 
   /**
-   * Gets the current power status.
+   * Get power status.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -340,7 +340,7 @@ export class BusyBar {
   }
 
   /**
-   * Gets current device timestamp with timezone.
+   * Get current timestamp with timezone. Retrieves the current timestamp from RTC with timezone in ISO 8601 format.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -358,7 +358,9 @@ export class BusyBar {
   }
 
   /**
-   * Sets the current device timestamp.
+   * Set current timestamp. Sets the RTC timestamp in ISO 8601 format.
+   *   * - Without 'Z': treated as local time
+   *   * - With 'Z': treated as UTC and converted to local time using current timezone offset
    *
    * @param {SetTimestampParams} params - The parameters for setting the timestamp.
    *   @param {SetTimestampParams['timestamp']} params.timestamp - The new timestamp (ISO 8601 string).
@@ -379,7 +381,7 @@ export class BusyBar {
   }
 
   /**
-   * Sets the device timezone.
+   * Set timezone offset. Sets the timezone offset in ±HH:MM format.
    *
    * @param {SetTimezoneParams} params - The parameters for setting the timezone.
    *   @param {SetTimezoneParams['timezone']} params.timezone - The new timezone identifier (IANA TZ string).
@@ -400,7 +402,7 @@ export class BusyBar {
   }
 
   /**
-   * Gets the status of the MQTT account linked to the device.
+   * Get MQTT status info.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -418,7 +420,7 @@ export class BusyBar {
   }
 
   /**
-   * Unlinks the current account from the device.
+   * Unlink device from account. Removes account linking data.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -436,7 +438,7 @@ export class BusyBar {
   }
 
   /**
-   * Links an account to the device.
+   * Link device to account. Requests account link PIN. Works only if device is connected to MQTT and is not linked to account.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -454,7 +456,7 @@ export class BusyBar {
   }
 
   /**
-   * Uploads an asset to the device.
+   * Upload asset file with app ID. Uploads a file to a specific app's assets directory.
    *
    * @param {UploadParams} params - Parameters for the upload.
    *   @param {UploadParams['appId']} params.appId - Application ID for organizing assets.
@@ -478,7 +480,7 @@ export class BusyBar {
   }
 
   /**
-   * Deletes all assets for a specific application from the device.
+   * Delete app assets. Deletes all assets for a specific app ID.
    *
    * @param {DeleteParams} params - Parameters for the delete.
    *   @param {DeleteParams['appId']} params.appId - Application ID whose assets should be deleted.
@@ -497,7 +499,7 @@ export class BusyBar {
   }
 
   /**
-   * Draws elements on the device display.
+   * Draw on display. Sends drawing data to the display. Supports JSON-defined display elements.
    *
    * @param {DrawParams} params - Parameters for the draw operation.
    *   @param {DrawParams['appId']} params.appId - Application ID for organizing display elements.
@@ -517,7 +519,7 @@ export class BusyBar {
   }
 
   /**
-   * Clears the device display and stops the Canvas application if running.
+   * Clear display. Clears the display and stops the Canvas application if running.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -535,7 +537,7 @@ export class BusyBar {
   }
 
   /**
-   * Plays an audio file from the assets directory.
+   * Play audio file. Plays an audio file from the assets directory. Supported formats include .snd files.
    *
    * @param {AudioPlayParams} params - Parameters for the audio playback.
    *   @param {AudioPlayParams['appId']} params.appId - Application ID for organizing assets.
@@ -555,7 +557,7 @@ export class BusyBar {
   }
 
   /**
-   * Stops any currently playing audio on the device.
+   * Stop audio playback. Stops any currently playing audio.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -573,7 +575,7 @@ export class BusyBar {
   }
 
   /**
-   * Gets the current status of the Wi-Fi module.
+   * Returns current Wi-Fi status.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -591,7 +593,7 @@ export class BusyBar {
   }
 
   /**
-   * Connects the device to a Wi-Fi network with the specified parameters.
+   * Attempts to connect to Wi-Fi using config.
    *
    * @param {ConnectParams} params - Connection parameters:
    *   @param {ConnectParams['ssid']} params.ssid - SSID (network name) to connect to.
@@ -618,7 +620,7 @@ export class BusyBar {
   }
 
   /**
-   * Disconnects the device from the current Wi-Fi network.
+   * Disconnects from Wi-Fi.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -636,7 +638,7 @@ export class BusyBar {
   }
 
   /**
-   * Scans for available Wi-Fi networks near your device.
+   * Scans environment for available Wi-Fi networks.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -654,7 +656,7 @@ export class BusyBar {
   }
 
   /**
-   * Uploads a file to the device's internal storage.
+   * Upload file to internal storage. Uploads a file to a specified path.
    *
    * @param {UploadFileParams} params - Upload parameters:
    *   @param {UploadFileParams['path']} params.path - Path where the file will be saved (e.g., "/ext/test.png").
@@ -674,7 +676,7 @@ export class BusyBar {
   }
 
   /**
-   * Downloads a file from the device's internal storage.
+   * Download file from internal storage. Downloads a file from a specified path.
    *
    * @param {DownloadFileParams} params - Download parameters:
    *   @param {DownloadFileParams['path']} params.path - Path to the file to download (e.g., "/ext/test.png").
@@ -694,7 +696,7 @@ export class BusyBar {
   }
 
   /**
-   * Reads the contents of a directory (files and subdirectories) at the specified path.
+   * List files on internal storage.
    *
    * @param {ReadDirectoryParams} params - List parameters:
    *   @param {ReadDirectoryParams['path']} params.path - Path to the directory to list (e.g., "/ext").
@@ -713,7 +715,7 @@ export class BusyBar {
   }
 
   /**
-   * Removes a file or a directory from the device's internal storage.
+   * Remove a file on internal storage. Removes a file with a specified path.
    *
    * @param {RemoveParams} params - Remove parameters:
    *   @param {RemoveParams['path']} params.path - Path of the file to remove (e.g., "/ext/test.png").
@@ -732,7 +734,7 @@ export class BusyBar {
   }
 
   /**
-   * Creates a new directory in the device's internal storage.
+   * Create a directory on internal storage. Creates a new directory with a specified path.
    *
    * @param {CreateDirectoryParams} params - Directory creation parameters:
    *   @param {CreateDirectoryParams['path']} params.path - Path to the new directory (e.g., "/ext/newdir").
@@ -753,7 +755,7 @@ export class BusyBar {
   }
 
   /**
-   * Gets the current status of the device's internal storage.
+   * Show storage usage.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -771,7 +773,7 @@ export class BusyBar {
   }
 
   /**
-   * Gets the current display brightness settings for the device.
+   * Get brightness value for displays.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -793,7 +795,7 @@ export class BusyBar {
   }
 
   /**
-   * Sets the display brightness for the device.
+   * Set display brightness. Set brightness for one or both displays.
    *
    * @param {BrightnessParams} params - Brightness parameters:
    *   @param {BrightnessParams['front']} [params.front] - Brightness for the front panel (0-100 or "auto").
@@ -818,7 +820,7 @@ export class BusyBar {
   }
 
   /**
-   * Gets the current audio volume value.
+   * Get audio volume.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -836,7 +838,7 @@ export class BusyBar {
   }
 
   /**
-   * Sets the audio volume value.
+   * Set audio volume.
    *
    * @param {AudioVolumeParams} params - Audio volume parameters:
    *   @param {AudioVolumeParams['volume']} params.volume - Audio volume (number from 0 to 100).
@@ -856,7 +858,7 @@ export class BusyBar {
   }
 
   /**
-   * Gets the current HTTP API access configuration.
+   * Get HTTP API access over Wi-Fi configuration.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -874,7 +876,7 @@ export class BusyBar {
   }
 
   /**
-   * Sets the HTTP API access configuration.
+   * Set HTTP API access over Wi-Fi configuration.
    *
    * @param {HttpAccessParams} params - Access parameters:
    *   @param {HttpAccessParams['mode']} params.mode - Access mode ("disabled", "enabled", "key").
@@ -900,7 +902,7 @@ export class BusyBar {
   }
 
   /**
-   * Gets the current device name.
+   * Get current device name.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -918,7 +920,7 @@ export class BusyBar {
   }
 
   /**
-   * Sets the device name.
+   * Set new device name.
    *
    * @param {NameParams} params - The parameters for setting the device name.
    *   @param {NameParams['name']} params.name - The new device name.
@@ -945,7 +947,7 @@ export class BusyBar {
   }
 
   /**
-   * Enables BLE module.
+   * Enable BLE. Enables BLE module and starts advertising.
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the enable operation.
@@ -962,7 +964,7 @@ export class BusyBar {
   }
 
   /**
-   * Disables BLE module.
+   * Disable BLE. Stops advertising.
    * @param {TimeoutOptions} [params] - Optional parameters.
    * @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the disable operation.
@@ -979,7 +981,7 @@ export class BusyBar {
   }
 
   /**
-   * Removes all BLE pairings from the device.
+   * Remove pairing. Remove pairing with previous device.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -997,7 +999,7 @@ export class BusyBar {
   }
 
   /**
-   * Gets the current BLE module status.
+   * Returns current BLE status.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -1015,7 +1017,7 @@ export class BusyBar {
   }
 
   /**
-   * Sends a button press.
+   * Send input event. Send single key press event.
    *
    * @param params - Button press parameters:
    *   @param {InputKeyParams['keyName']} params.keyName - Button key.
