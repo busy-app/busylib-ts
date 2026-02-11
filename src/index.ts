@@ -27,7 +27,7 @@ export type {
 } from "BusyBar/api/storage";
 
 export type {
-  UpdateParams as SystemUpdateParams,
+  UpdateParams as UpdateFromFileParams,
   InstallParams as UpdateInstallParams,
   ChangelogParams as UpdateChangelogParams,
 } from "BusyBar/api/update";
