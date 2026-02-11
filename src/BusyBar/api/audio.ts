@@ -1,6 +1,6 @@
 import { getClient, withTimeout } from "BusyBar/api/createClient";
 import type { TimeoutOptions } from "Global/types";
-import { paths } from "Global/API";
+import { paths, operations } from "Global/API";
 
 export interface AudioPlayParams extends TimeoutOptions {
   appId: paths["/audio/play"]["post"]["parameters"]["query"]["app_id"];
@@ -48,4 +48,51 @@ async function stop(params?: TimeoutOptions) {
   return data;
 }
 
-export { play, stop };
+async function getAudioVolume(params?: TimeoutOptions) {
+  const client = getClient();
+
+  const { data, error } = await withTimeout(
+    (signal) => client.GET("/audio/volume", { signal }),
+    params?.timeout,
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export interface AudioVolumeParams extends TimeoutOptions {
+  volume: operations["setAudioVolume"]["parameters"]["query"]["volume"];
+}
+async function setAudioVolume(params: AudioVolumeParams) {
+  const client = getClient();
+
+  const { volume } = params;
+
+  if (typeof volume !== "number" || volume < 0 || volume > 100) {
+    throw new Error("Volume must be a number between 0 and 100");
+  }
+
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST("/audio/volume", {
+        params: {
+          query: {
+            volume,
+          },
+        },
+        signal,
+      }),
+    params.timeout,
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export { play, stop, getAudioVolume, setAudioVolume };

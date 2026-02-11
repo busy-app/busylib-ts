@@ -25,6 +25,8 @@ export type Error = components["schemas"]["Error"];
 // Account
 export type AccountInfo = components["schemas"]["AccountInfo"];
 export type AccountLink = components["schemas"]["AccountLink"];
+export type AccountState = components["schemas"]["AccountState"];
+export type AccountProfile = components["schemas"]["AccountProfile"];
 
 // Assets
 export type BinaryUpload = Buffer | Blob | File | ArrayBuffer;
@@ -33,6 +35,7 @@ export type FileUpload = {
 };
 
 // Audio
+export type AudioVolumeInfo = components["schemas"]["AudioVolumeInfo"];
 
 // BLE
 export type BleStatusResponse = components["schemas"]["BleStatusResponse"];
@@ -42,14 +45,18 @@ export type DisplayElements = components["schemas"]["DisplayElements"];
 export type DisplayElement = components["schemas"]["DisplayElement"];
 export type TextElement = components["schemas"]["TextElement"];
 export type ImageElement = components["schemas"]["ImageElement"];
+export type DisplayBrightnessInfo =
+  components["schemas"]["DisplayBrightnessInfo"];
 
 // Input
 
+// Matter
+export type MatterPairingInfo =
+  components["schemas"]["MatterCommissioningPayload"];
+export type MatterStatus = components["schemas"]["MatterCommissionedFabrics"];
+
 // Settings
 export type HttpAccessInfo = components["schemas"]["HttpAccessInfo"];
-export type DisplayBrightnessInfo =
-  components["schemas"]["DisplayBrightnessInfo"];
-export type AudioVolumeInfo = components["schemas"]["AudioVolumeInfo"];
 export type NameInfo = components["schemas"]["NameInfo"];
 
 // Storage
@@ -66,6 +73,17 @@ export type Status = components["schemas"]["Status"];
 export type StatusSystem = components["schemas"]["StatusSystem"];
 export type StatusPower = components["schemas"]["StatusPower"];
 export type TimestampInfo = components["schemas"]["TimestampInfo"];
+
+// Time
+export type TimezoneInfo = components["schemas"]["TimezoneInfo"];
+export type TimezoneList = components["schemas"]["TimezoneListResponse"];
+export type TimezoneItem =
+  components["schemas"]["TimezoneListResponse"][number];
+
+// Update
+export type UpdateStatus = components["schemas"]["UpdateStatus"];
+export type UpdateChangelog =
+  operations["getUpdateChangelog"]["responses"]["200"]["content"]["application/json"];
 
 // Wifi
 export type WifiSecurityMethod = components["schemas"]["WifiSecurityMethod"];

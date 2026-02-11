@@ -76,4 +76,73 @@ async function getScreenFrame(params: GetScreenFrameParams) {
   return data;
 }
 
-export { draw, clear, getScreenFrame };
+async function getDisplayBrightness(params?: TimeoutOptions) {
+  const client = getClient();
+
+  const { data, error } = await withTimeout(
+    (signal) => client.GET("/display/brightness", { signal }),
+    params?.timeout,
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+type Brightness = number | "auto";
+export interface BrightnessParams extends TimeoutOptions {
+  front?: Brightness;
+  back?: Brightness;
+}
+
+async function setDisplayBrightness(params: BrightnessParams) {
+  const client = getClient();
+
+  const { front, back } = params;
+
+  const normalize = (value?: Brightness): string | undefined => {
+    if (typeof value === "number") {
+      if (value < 0 || value > 100) {
+        throw new Error("Brightness value must be between 0 and 100 or 'auto'");
+      }
+      return String(value);
+    }
+    if (value === "auto") {
+      return "auto";
+    }
+    return undefined;
+  };
+
+  const frontQuery = normalize(front);
+  const backQuery = normalize(back);
+
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST("/display/brightness", {
+        params: {
+          query: {
+            front: frontQuery,
+            back: backQuery,
+          },
+        },
+        signal,
+      }),
+    params.timeout,
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export {
+  draw,
+  clear,
+  getScreenFrame,
+  getDisplayBrightness,
+  setDisplayBrightness,
+};

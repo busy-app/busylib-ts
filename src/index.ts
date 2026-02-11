@@ -9,9 +9,12 @@ export type {
   DeleteParams as AssetsDeleteParams,
 } from "BusyBar/api/assets";
 
-export type { DrawParams as DisplayDrawParams } from "BusyBar/api/display";
+export type {
+  DrawParams as DisplayDrawParams,
+  BrightnessParams as DisplayBrightnessParams,
+} from "BusyBar/api/display";
 
-export type { AudioPlayParams } from "BusyBar/api/audio";
+export type { AudioPlayParams, AudioVolumeParams } from "BusyBar/api/audio";
 
 export type { ConnectParams as WifiConnectParams } from "BusyBar/api/wifi";
 
@@ -34,12 +37,7 @@ export type {
   SetTimezoneParams as TimeTimezoneParams,
 } from "BusyBar/api/time";
 
-export type {
-  BrightnessParams as DisplayBrightnessParams,
-  AudioVolumeParams,
-  HttpAccessParams,
-  NameParams,
-} from "BusyBar/api/settings";
+export type { HttpAccessParams, NameParams } from "BusyBar/api/settings";
 
 export type { InputKeyParams } from "BusyBar/api/input";
 
@@ -78,4 +76,13 @@ export type {
   WifiConnectRequestConfig,
   WifiNetworkResponse,
   TimeoutOptions,
+  UpdateStatus,
+  UpdateChangelog,
+  AccountState,
+  AccountProfile,
+  MatterStatus,
+  MatterPairingInfo,
+  TimezoneInfo,
+  TimezoneList,
+  TimezoneItem,
 } from "Global/types";
