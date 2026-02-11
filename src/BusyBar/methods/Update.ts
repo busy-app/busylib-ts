@@ -1,9 +1,11 @@
 import {
+  update as updateApi,
   check as checkUpdateApi,
   status as statusUpdateApi,
   changelog as changelogUpdateApi,
   install as installUpdateApi,
   abort as abortUpdateApi,
+  UpdateParams,
   ChangelogParams,
   InstallParams,
 } from "BusyBar/api/update";
@@ -16,6 +18,28 @@ import type {
 import { BusyBar } from "BusyBar/index";
 
 export class UpdateMethods {
+  /**
+   * Upload firmware update package.
+   *
+   * @param {UpdateParams} params - Update parameters.
+   *   @param {BusyFile} params.file - Firmware TAR file to upload.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<SuccessResponse>} A promise that resolves when upload is complete.
+   */
+  async UpdateFromFile(
+    this: BusyBar,
+    params: UpdateParams,
+  ): Promise<SuccessResponse> {
+    return await updateApi(params);
+  }
+
+  /**
+   * @deprecated Use `UpdateUpload` instead. will be removed in the next release.
+   */
+  async SystemUpdate(this: BusyBar, params: UpdateParams) {
+    return await this.UpdateFromFile(params);
+  }
+
   /**
    * Start firmware update check.
    *
