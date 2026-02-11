@@ -1,26 +1,11 @@
 import { getClient, withTimeout } from "BusyBar/api/createClient";
 import type { TimeoutOptions } from "Global/types";
 
-async function version(params?: TimeoutOptions) {
-  const client = getClient();
-
-  const { data, error } = await withTimeout(
-    (signal) => client.GET("/version", { signal }),
-    params?.timeout,
-  );
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
 async function status(params?: TimeoutOptions) {
   const client = getClient();
 
   const { data, error } = await withTimeout(
-    (signal) => client.GET("/status", { signal }),
+    (signal) => client.GET("/matter/commissioning", { signal }),
     params?.timeout,
   );
 
@@ -31,11 +16,11 @@ async function status(params?: TimeoutOptions) {
   return data;
 }
 
-async function systemStatus(params?: TimeoutOptions) {
+async function pairDevice(params?: TimeoutOptions) {
   const client = getClient();
 
   const { data, error } = await withTimeout(
-    (signal) => client.GET("/status/system", { signal }),
+    (signal) => client.POST("/matter/commissioning", { signal }),
     params?.timeout,
   );
 
@@ -46,11 +31,11 @@ async function systemStatus(params?: TimeoutOptions) {
   return data;
 }
 
-async function powerStatus(params?: TimeoutOptions) {
+async function eraseDevices(params?: TimeoutOptions) {
   const client = getClient();
 
   const { data, error } = await withTimeout(
-    (signal) => client.GET("/status/power", { signal }),
+    (signal) => client.DELETE("/matter/commissioning", { signal }),
     params?.timeout,
   );
 
@@ -61,4 +46,4 @@ async function powerStatus(params?: TimeoutOptions) {
   return data;
 }
 
-export { version, status, systemStatus, powerStatus };
+export { status, pairDevice, eraseDevices };

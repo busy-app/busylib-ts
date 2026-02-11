@@ -13,7 +13,7 @@ export interface paths {
     };
     /**
      * Get API version information
-     * @description Retrieves api version
+     * @description Retrieves API version
      */
     get: operations["getVersion"];
     put?: never;
@@ -32,14 +32,14 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * HTTP API access over Wi-Fi configuration get
-     * @description HTTP API access over Wi-Fi configuration get
+     * Get HTTP API access over Wi-Fi configuration
+     * @description Get HTTP API access over Wi-Fi configuration
      */
     get: operations["getHttpAccess"];
     put?: never;
     /**
-     * HTTP API access over Wi-Fi configuration set
-     * @description HTTP API access over Wi-Fi configuration set
+     * Set HTTP API access over Wi-Fi configuration
+     * @description Set HTTP API access over Wi-Fi configuration
      */
     post: operations["setHttpAccess"];
     delete?: never;
@@ -137,6 +137,108 @@ export interface paths {
      * @description Uploads a firmware update package (TAR file) and initiates the update process.
      */
     post: operations["updateFirmware"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/update/check": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Start firmware update check
+     * @description Initiates an asynchronous check for available firmware updates.
+     */
+    post: operations["checkFirmwareUpdate"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/update/status": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get firmware update status
+     * @description Returns current update and check status including progress information.
+     */
+    get: operations["getFirmwareUpdateStatus"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/update/changelog": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get update changelog
+     * @description Returns the changelog for a specific firmware version.
+     */
+    get: operations["getUpdateChangelog"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/update/install": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Install firmware update
+     * @description Starts asynchronous firmware installation from a remote URL.
+     *     The update process (download, SHA verification, unpack, prepare, reboot) runs in the background.
+     *     Use /update/status to monitor progress.
+     */
+    post: operations["installFirmwareUpdate"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/update/abort_download": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Abort ongoing firmware download
+     * @description Signals the updater to abort an ongoing download operation.
+     */
+    post: operations["abortFirmwareDownload"];
     delete?: never;
     options?: never;
     head?: never;
@@ -370,7 +472,7 @@ export interface paths {
     put?: never;
     /**
      * Set audio volume
-     * @description Get audio volume value
+     * @description Set audio volume value
      */
     post: operations["setAudioVolume"];
     delete?: never;
@@ -387,7 +489,7 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Input evnts streaming
+     * Input events streaming
      * @description Start WebSocket session for input events streaming
      */
     get: operations["connectInputWebSocket"];
@@ -452,30 +554,9 @@ export interface paths {
     };
     /**
      * Get power status
-     * @description Get system status
+     * @description Get power status
      */
     get: operations["getStatusPower"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/ws_test": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * WebSocket test endpoint
-     * @description WebSocket connection for real-time communication and testing.
-     *     Upgrade from HTTP to WebSocket protocol is required.
-     */
-    get: operations["connectWebSocket"];
     put?: never;
     post?: never;
     delete?: never;
@@ -578,7 +659,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** @description Attempts to connect to Wi-Fi using config */
+    /** @description Disconnects from Wi-Fi */
     post: {
       parameters: {
         query?: never;
@@ -666,7 +747,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Get single frame for required screen */
+    /** Get single frame for requested screen */
     get: {
       parameters: {
         query: {
@@ -721,8 +802,8 @@ export interface paths {
      * Screen streaming WebSocket endpoint
      * @description WebSocket connection for real-time screen streaming.
      *     Upgrade from HTTP to WebSocket protocol is required.
-     *     After connection client must send desired display id
-     *     as json {"display": 0}
+     *     After connection, client must send desired display ID
+     *     as JSON {"display": 0}
      */
     get: operations["connectWebSocket"];
     put?: never;
@@ -783,7 +864,7 @@ export interface paths {
     put?: never;
     /**
      * Disable BLE
-     * @description Stop advertising
+     * @description Stops advertising
      */
     post: {
       parameters: {
@@ -843,7 +924,7 @@ export interface paths {
             "application/json": components["schemas"]["SuccessResponse"];
           };
         };
-        /** @description Failed to remove, due to BLE is not initialized, or pairing was already removed before */
+        /** @description Failed to remove because BLE is not initialized or pairing was already removed */
         503: {
           headers: {
             [name: string]: unknown;
@@ -922,11 +1003,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * Get MQTT status
-     * @description Retrieves MQTT status and linked account data
-     */
-    get: operations["getAccountInfo"];
+    get?: never;
     put?: never;
     post?: never;
     /**
@@ -959,6 +1036,70 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/account/info": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get linked account info
+     * @description Retrieves linked account data
+     */
+    get: operations["getAccountInfo"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/account/status": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get MQTT status info
+     * @description Retrieves MQTT status
+     */
+    get: operations["getAccountState"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/account/profile": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get MQTT profile
+     * @description Retrieves MQTT backend type (dev/prod/local)
+     */
+    get: operations["getAccountProfile"];
+    put?: never;
+    /**
+     * Set MQTT profile
+     * @description Sets MQTT backend type (dev/prod/local)
+     */
+    post: operations["setAccountProfile"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/time/timestamp": {
     parameters: {
       query?: never;
@@ -970,9 +1111,7 @@ export interface paths {
     put?: never;
     /**
      * Set current timestamp
-     * @description Sets the RTC timestamp in ISO 8601 format.
-     *     - Without 'Z': treated as local time
-     *     - With 'Z': treated as UTC and converted to local time using current timezone offset
+     * @description Sets the RTC timestamp in ISO 8601 format. Time zone qualifier (e.g. Z of UTC or +hh:mm for local time) is required.
      */
     post: operations["setTimeTimestamp"];
     delete?: never;
@@ -988,14 +1127,109 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get?: never;
+    /**
+     * Get timezone
+     * @description Get current timezone name
+     */
+    get: operations["getTimeTimezone"];
     put?: never;
     /**
-     * Set timezone offset
-     * @description Sets the timezone offset in ±HH:MM format
+     * Set timezone
+     * @description Sets the timezone name. Use /time/tzlist to get available names list.
      */
     post: operations["setTimeTimezone"];
     delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/time/tzlist": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get list of supported time zones
+     * @description Retrieves the list of time zones accepted by /time/timezone
+     */
+    get: operations["getTimeTzlist"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/busy/snapshot": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get BUSY timer snapshot
+     * @description Gets the current state of the BUSY timer in snapshot form
+     */
+    get: operations["getBusySnapshot"];
+    /**
+     * Set BUSY time snapshot
+     * @description Run the timer starting from the given snapshot
+     */
+    put: operations["setBusySnapshot"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/matter/commissioning": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Smart home commissioning status */
+    get: operations["getMatterCommissioningStatus"];
+    put?: never;
+    /** Link device to a smart home */
+    post: operations["startMatterCommissioning"];
+    /** Erase all smart home links */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successfully erased all Matter commissioning info, device restart is needed */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+        /** @description Internal Matter service is broken */
+        503: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["Error"];
+          };
+        };
+      };
+    };
     options?: never;
     head?: never;
     patch?: never;
@@ -1031,10 +1265,103 @@ export interface components {
      */
     VersionInfo: {
       /**
-       * @description Api SemVer
+       * @description API SemVer
        * @example 0.0.0
        */
       api_semver: string;
+    };
+    /**
+     * @example {
+     *       "install": {
+     *         "is_allowed": true,
+     *         "event": "none",
+     *         "action": "none",
+     *         "status": "ok",
+     *         "detail": "",
+     *         "download": {
+     *           "speed_bytes_per_sec": 0,
+     *           "received_bytes": 0,
+     *           "total_bytes": 0
+     *         }
+     *       },
+     *       "check": {
+     *         "available_version": "1.2.3",
+     *         "event": "stop",
+     *         "result": "available"
+     *       }
+     *     }
+     */
+    UpdateStatus: {
+      install?: {
+        /** @description Whether update installation is allowed (battery check) */
+        is_allowed?: boolean;
+        /**
+         * @description Current update event
+         * @enum {string}
+         */
+        event?:
+          | "session_start"
+          | "session_stop"
+          | "action_begin"
+          | "action_done"
+          | "detail_change"
+          | "action_progress"
+          | "none";
+        /**
+         * @description Current update action
+         * @enum {string}
+         */
+        action?:
+          | "download"
+          | "sha_verification"
+          | "unpack"
+          | "prepare"
+          | "apply"
+          | "none";
+        /**
+         * @description Current or last operation status
+         * @enum {string}
+         */
+        status?:
+          | "ok"
+          | "battery_low"
+          | "busy"
+          | "download_failure"
+          | "download_abort"
+          | "sha_mismatch"
+          | "unpack_staging_dir_failure"
+          | "unpack_archive_open_failure"
+          | "unpack_archive_unpack_failure"
+          | "install_manifest_not_found"
+          | "install_manifest_invalid"
+          | "install_session_config_failure"
+          | "install_pointer_setup_failure"
+          | "unknown_failure";
+        /** @description Optional status detail string */
+        detail?: string;
+        download?: {
+          /** @description Current download speed in bytes per second */
+          speed_bytes_per_sec?: number;
+          /** @description Bytes received so far */
+          received_bytes?: number;
+          /** @description Total download size in bytes */
+          total_bytes?: number;
+        };
+      };
+      check?: {
+        /** @description Version of available update (empty if none) */
+        available_version?: string;
+        /**
+         * @description Current check event
+         * @enum {string}
+         */
+        event?: "start" | "stop" | "none";
+        /**
+         * @description Check result status
+         * @enum {string}
+         */
+        result?: "available" | "not_available" | "failure" | "none";
+      };
     };
     /**
      * @example {
@@ -1059,7 +1386,7 @@ export interface components {
        * @description Access key was set and is valid
        * @example true
        */
-      key_valid?: Record<string, never>;
+      key_valid?: boolean;
     };
     /**
      * @example {
@@ -1086,7 +1413,7 @@ export interface components {
       /** @example 654321 */
       free_bytes?: number;
       /**
-       * @description Total size of the parition
+       * @description Total size of the partition
        * @example 777777
        */
       total_bytes?: number;
@@ -1142,7 +1469,7 @@ export interface components {
      *       "elements": [
      *         {
      *           "id": "0",
-     *           "timeout": 6,
+     *           "timeout": 10,
      *           "align": "center",
      *           "x": 36,
      *           "y": 10,
@@ -1151,7 +1478,7 @@ export interface components {
      *           "font": "medium",
      *           "color": "#FFFFFFFF",
      *           "width": 72,
-     *           "scroll_rate": 160,
+     *           "scroll_rate": 1000,
      *           "display": "front"
      *         },
      *         {
@@ -1198,7 +1525,7 @@ export interface components {
        * @description Type of display element
        * @enum {string}
        */
-      type: "text" | "image";
+      type: "text" | "image" | "anim" | "countdown";
       /** @description X coordinate of selected anchor point relative to top-left of display */
       x?: number;
       /** @description Y coordinate of selected anchor point relative to top-left of display */
@@ -1240,7 +1567,7 @@ export interface components {
       color: string;
       /** @description Width of the label */
       width?: number;
-      /** @description Scroll rate in characters per minute */
+      /** @description Scroll rate in pixels per minute */
       scroll_rate?: number;
     } & {
       /**
@@ -1266,6 +1593,61 @@ export interface components {
          */
         type: "image";
       };
+    AnimElement: Omit<components["schemas"]["DisplayElement"], "type"> &
+      ((
+        | {
+            /** @description Path to the animation file in the app's assets */
+            path?: string;
+          }
+        | {
+            /** @description Identifier of builtin animation */
+            builtin_anim?: string;
+          }
+      ) & {
+        /**
+         * @description Whether to loop the requested part of the animation
+         * @default false
+         */
+        loop: boolean;
+        /**
+         * @description If the element has been created before and this flag is true, the previous range will finish before the requested one starts.
+         * @default false
+         */
+        await_previous_end: boolean;
+        /** @description Name of the section to play back. Specifying \"default\" selects the entire animation. */
+        section_name?: string;
+      }) & {
+        /**
+         * @description discriminator enum property added by openapi-typescript
+         * @enum {string}
+         */
+        type: "anim";
+      };
+    CountdownElement: Omit<components["schemas"]["DisplayElement"], "type"> & {
+      /** @description Seconds-based Unix UTC timestamp to count down or up to. Note: it's a number in a string. */
+      timestamp: string;
+      /**
+       * @description Color to display the text in, in #RRGGBBAA format
+       * @default #FFFFFFFF
+       */
+      color: string;
+      /**
+       * @description Whether to count up or down
+       * @enum {string}
+       */
+      direction: "time_left" | "time_since";
+      /**
+       * @description When to show the hours position
+       * @enum {string}
+       */
+      show_hours: "when_non_zero" | "always";
+    } & {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      type: "countdown";
+    };
     DisplayBrightnessInfo: {
       /**
        * @description Front display brightness (0-100/auto)
@@ -1291,6 +1673,13 @@ export interface components {
        * @example 2025-10-02T14:30:45+04:00
        */
       timestamp: string;
+    };
+    TimezoneInfo: {
+      /**
+       * @description Timezone name
+       * @example Berlin
+       */
+      timezone: string;
     };
     Status: {
       system?: components["schemas"]["StatusSystem"];
@@ -1390,7 +1779,8 @@ export interface components {
         | "disconnected"
         | "connected"
         | "connecting"
-        | "disconnecting";
+        | "disconnecting"
+        | "reconnecting";
       /** @example Your_WIFI_SSID */
       ssid?: string;
       /** @example EC:5A:00:0B:55:1D */
@@ -1434,15 +1824,30 @@ export interface components {
      */
     ScreenResponse: string;
     AccountInfo: {
-      /**
-       * @example linked
-       * @enum {string}
-       */
-      state?: "error" | "disconnected" | "not_linked" | "linked";
+      /** @example true */
+      linked?: boolean;
       /** @example 12345678-9abc-def0-1234-56789abcdef0 */
       id?: string;
       /** @example name@example.com */
       email?: string;
+      /** @example 12345678-9abc-def0-1234-56789abcdef0 */
+      user_id?: string;
+    };
+    AccountState: {
+      /**
+       * @example connected
+       * @enum {string}
+       */
+      state?: "error" | "disconnected" | "connected";
+    };
+    AccountProfile: {
+      /**
+       * @example dev
+       * @enum {string}
+       */
+      state?: "dev" | "prod" | "local" | "custom";
+      /** @example mqtts://mqtt.example.com:8883 */
+      custom_url?: string;
     };
     AccountLink: {
       /** @example ABCD */
@@ -1451,12 +1856,176 @@ export interface components {
       expires_at?: number;
     };
     BleStatusResponse: {
-      /** @example connected */
-      state?: string;
+      /**
+       * @example connected
+       * @enum {string}
+       */
+      state?:
+        | "reset"
+        | "initialization"
+        | "disabled"
+        | "enabled"
+        | "connected"
+        | "internal error";
+      /** @example 50:DA:D6:FE:DD:A9 */
+      address?: string;
+      /**
+       * @example paired
+       * @enum {string}
+       */
+      pairing?: "unknown" | "not paired" | "paired";
+    };
+    BusySnapshot: {
+      snapshot:
+        | components["schemas"]["BusySnapshotNotStarted"]
+        | components["schemas"]["BusySnapshotInfinite"]
+        | components["schemas"]["BusySnapshotSimple"]
+        | components["schemas"]["BusySnapshotInterval"];
+      /** @example 1761582532251 */
+      snapshot_timestamp_ms: number;
+    };
+    BusySnapshotNotStarted: {
+      /**
+       * @example NOT_STARTED
+       * @enum {string}
+       */
+      type: "NOT_STARTED";
+    };
+    BusySnapshotInfinite: {
+      /**
+       * @example INFINITE
+       * @enum {string}
+       */
+      type: "INFINITE";
+      /** @example 00000000-0000-0000-0000-000000000000 */
+      card_id: string;
+      /** @example false */
+      is_paused: boolean;
+    };
+    BusySnapshotSimple: {
+      /**
+       * @example SIMPLE
+       * @enum {string}
+       */
+      type: "SIMPLE";
+      /** @example 00000000-0000-0000-0000-000000000000 */
+      card_id: string;
+      /** @example 9000 */
+      time_left_ms: number;
+      /** @example false */
+      is_paused: boolean;
+    };
+    BusySnapshotInterval: {
+      /**
+       * @example INTERVAL
+       * @enum {string}
+       */
+      type: "INTERVAL";
+      /** @example 00000000-0000-0000-0000-000000000000 */
+      card_id: string;
+      /** @example 1 */
+      current_interval: number;
+      /** @example 60000 */
+      current_interval_time_total_ms: number;
+      /** @example 42690 */
+      current_interval_time_left_ms: number;
+      /** @example false */
+      is_paused: boolean;
+      interval_settings: components["schemas"]["BusySnapshotIntervalSettings"];
+    };
+    BusySnapshotIntervalSettings: {
+      /**
+       * @example INTERVAL
+       * @enum {string}
+       */
+      type?: "INTERVAL";
+      /** @example 120000 */
+      interval_work_ms?: number;
+      /** @example 60000 */
+      interval_rest_ms?: number;
+      /** @example 3 */
+      interval_work_cycles_count?: number;
+      /** @example false */
+      is_autostart_enabled?: boolean;
+    };
+    TimezoneListResponse: {
+      /**
+       * @description Time zone name
+       * @example Bangalore
+       */
+      name?: string;
+      /**
+       * @description Time zone offset from UTC
+       * @example +05:30
+       */
+      offset?: string;
+      /**
+       * @description Time zone abbreviation
+       * @example IST
+       */
+      abbr?: string;
+    }[];
+    MatterCommissionedFabrics: {
+      /**
+       * @description Number of Matter smart homes ("fabrics") that this device is linked with ("commissioned into")
+       * @example 1
+       */
+      fabric_count?: number;
+      latest_commissioning_status?: {
+        /**
+         * @description Latest state of Matter smart home linking ("commissioning") process. Note: "never_started" only refers to the current power cycle of the device; this status is not recorded across reboots.
+         * @example completed_successfully
+         * @enum {string}
+         */
+        value?:
+          | "never_started"
+          | "started"
+          | "completed_successfully"
+          | "failed";
+        /**
+         * @description UTC Unix millisecond timestamp of latest state update. Note: it's a number in a string.
+         * @example 1769436711000
+         */
+        timestamp?: string;
+      };
+    };
+    MatterCommissioningPayload: {
+      /**
+       * @description Linking with ("commissioning into") a Matter smart home using the provided payload is possible before this UTC Unix millisecond timestamp. Note: it's a number in a string.
+       * @example 1769437579000
+       */
+      available_until?: string;
+      /**
+       * @description Payload of the QR code for linking with ("commissioning into") a Matter smart home
+       * @example MT:YNDA0-O913..VV7I000
+       */
+      qr_code?: string;
+      /**
+       * @description Manual code for linking with ("commissioning into") a Matter smart home
+       * @example 1155-360-0377
+       */
+      manual_code?: string;
+    };
+    MatterEndpointState: {
+      /**
+       * @description Type of device emulated by a Matter endpoint. Currently only "switch" is implemented.
+       * @example switch
+       * @enum {string}
+       */
+      type?: "switch";
+      /**
+       * @description State of device emulated by a Matter endpoint. Boolean for "switch" device type.
+       * @example false
+       */
+      state?: boolean;
+      /**
+       * @description For the "switch" device type, specifies the value on startup. Never sent by the server, but can be specified by the client.
+       * @enum {string}
+       */
+      startup?: "off" | "on" | "toggle" | "last";
     };
   };
   responses: never;
-  parameters: never;
   requestBodies: never;
   headers: never;
   pathItems: never;
@@ -1521,7 +2090,7 @@ export interface operations {
          */
         mode: "disabled" | "enabled" | "key";
         /**
-         * @description Access key (4-10 digits len)
+         * @description Access key (4-10 digits length)
          * @example 12345678
          */
         key: string;
@@ -1554,13 +2123,7 @@ export interface operations {
   };
   updateFirmware: {
     parameters: {
-      query?: {
-        /**
-         * @description Name for the update package. The update will be unpacked to /ext/update/<name>.
-         * @example firmware
-         */
-        name?: string;
-      };
+      query?: never;
       header?: never;
       path?: never;
       cookie?: never;
@@ -1605,6 +2168,184 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  checkFirmwareUpdate: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Update check started successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Update check already in progress */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+      /** @description Failed to start update check */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  getFirmwareUpdateStatus: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Status retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UpdateStatus"];
+        };
+      };
+    };
+  };
+  getUpdateChangelog: {
+    parameters: {
+      query: {
+        /**
+         * @description Firmware version to get changelog for
+         * @example 1.2.3
+         */
+        version: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Changelog retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            /** @description Changelog text */
+            changelog?: string;
+          };
+        };
+      };
+      /** @description Version parameter missing, update not available, or version mismatch */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  installFirmwareUpdate: {
+    parameters: {
+      query: {
+        /**
+         * @description Firmware version to install
+         * @example 1.2.3
+         */
+        version: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Update installation started successfully in background */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Version parameter missing, update not available, or version mismatch */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+      /** @description Update already in progress */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+      /** @description Failed to start background installation */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+      /** @description Battery too low for update */
+      503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  abortFirmwareDownload: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Abort signal sent successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
         };
       };
     };
@@ -1760,7 +2501,7 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description File uploaded successfully */
+      /** @description File downloaded successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -1804,7 +2545,7 @@ export interface operations {
           "application/json": components["schemas"]["StorageList"];
         };
       };
-      /** @description Invalid parameters or directory not exists */
+      /** @description Invalid parameters or directory does not exist */
       400: {
         headers: {
           [name: string]: unknown;
@@ -1874,7 +2615,7 @@ export interface operations {
           "application/json": components["schemas"]["SuccessResponse"];
         };
       };
-      /** @description Invalid path or deletion failed */
+      /** @description Invalid path or creation failed */
       400: {
         headers: {
           [name: string]: unknown;
@@ -2408,26 +3149,6 @@ export interface operations {
       };
     };
   };
-  getAccountInfo: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Data retrieved successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AccountInfo"];
-        };
-      };
-    };
-  };
   unlinkAccount: {
     parameters: {
       query?: never;
@@ -2477,12 +3198,105 @@ export interface operations {
       };
     };
   };
+  getAccountInfo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Data retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AccountInfo"];
+        };
+      };
+    };
+  };
+  getAccountState: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Data retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AccountState"];
+        };
+      };
+    };
+  };
+  getAccountProfile: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Data retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AccountProfile"];
+        };
+      };
+    };
+  };
+  setAccountProfile: {
+    parameters: {
+      query: {
+        /** @example dev */
+        profile: "dev" | "prod" | "local" | "custom";
+        custom_url?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Bad request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
   setTimeTimestamp: {
     parameters: {
       query: {
         /**
-         * @description ISO 8601 timestamp (e.g., 2025-10-02T14:30:45 for local time or 2025-10-02T14:30:45Z for UTC)
-         * @example 2025-10-02T14:30:45
+         * @description ISO 8601 timestamp (e.g., 2025-10-02T14:30:45+02:00 for local time or 2025-10-02T14:30:45Z for UTC)
+         * @example 2025-10-02T14:30:45+0100
          */
         timestamp: string;
       };
@@ -2512,12 +3326,41 @@ export interface operations {
       };
     };
   };
+  getTimeTimezone: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Timezone got successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TimezoneInfo"];
+        };
+      };
+      /** @description Invalid timezone offset */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
   setTimeTimezone: {
     parameters: {
       query: {
         /**
-         * @description Timezone offset in ±HH:MM format (range -12:00 to +14:00)
-         * @example +04:00
+         * @description Timezone name
+         * @example Stuttgart
          */
         timezone: string;
       };
@@ -2538,6 +3381,146 @@ export interface operations {
       };
       /** @description Invalid timezone offset */
       400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  getTimeTzlist: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Got the list successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TimezoneListResponse"];
+        };
+      };
+      /** @description Error getting time zone list */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  getBusySnapshot: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Got snapshot successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BusySnapshot"];
+        };
+      };
+      /** @description Error getting snapshot */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  setBusySnapshot: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["BusySnapshot"];
+      };
+    };
+    responses: {
+      /** @description Snapshot successfully set */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SuccessResponse"];
+        };
+      };
+      /** @description Error setting snapshot */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  getMatterCommissioningStatus: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successfully got Matter commissioning status */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MatterCommissionedFabrics"];
+        };
+      };
+    };
+  };
+  startMatterCommissioning: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successfully started Matter commissioning */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MatterCommissioningPayload"];
+        };
+      };
+      /** @description Internal Matter service is broken */
+      503: {
         headers: {
           [name: string]: unknown;
         };

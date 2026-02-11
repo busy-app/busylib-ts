@@ -1,6 +1,6 @@
 import { getClient, withTimeout } from "BusyBar/api/createClient";
 import type { TimeoutOptions } from "Global/types";
-import { components } from "Global/API";
+import type { components, paths } from "Global/API";
 
 export interface DrawParams extends TimeoutOptions {
   appId: components["schemas"]["DisplayElements"]["app_id"];
@@ -21,7 +21,7 @@ async function draw(params: DrawParams) {
         },
         signal,
       }),
-    params.timeout
+    params.timeout,
   );
 
   if (error) {
@@ -36,7 +36,7 @@ async function clear(params?: TimeoutOptions) {
 
   const { data, error } = await withTimeout(
     (signal) => client.DELETE("/display/draw", { signal }),
-    params?.timeout
+    params?.timeout,
   );
 
   if (error) {
@@ -46,4 +46,34 @@ async function clear(params?: TimeoutOptions) {
   return data;
 }
 
-export { draw, clear };
+export interface GetScreenFrameParams extends TimeoutOptions {
+  display: paths["/screen"]["get"]["parameters"]["query"]["display"];
+}
+
+async function getScreenFrame(params: GetScreenFrameParams) {
+  const client = getClient();
+
+  const { display } = params;
+
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.GET("/screen", {
+        params: {
+          query: {
+            display,
+          },
+        },
+        parseAs: "blob",
+        signal,
+      }),
+    params.timeout,
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export { draw, clear, getScreenFrame };

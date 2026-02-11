@@ -27,7 +27,7 @@ async function write(params: UploadFileParams) {
         body: file as unknown as string,
         signal,
       }),
-    params.timeout
+    params.timeout,
   );
 
   if (error) {
@@ -58,7 +58,7 @@ async function read(params: DownloadFileParams) {
         parseAs: asArrayBuffer ? "arrayBuffer" : "blob",
         signal,
       }),
-    params.timeout
+    params.timeout,
   );
 
   if (error) {
@@ -87,7 +87,7 @@ async function list(params: ReadDirectoryParams) {
         },
         signal,
       }),
-    params.timeout
+    params.timeout,
   );
 
   if (error) {
@@ -116,7 +116,7 @@ async function remove(params: RemoveParams) {
         },
         signal,
       }),
-    params.timeout
+    params.timeout,
   );
 
   if (error) {
@@ -145,7 +145,7 @@ async function mkdir(params: CreateDirectoryParams) {
         },
         signal,
       }),
-    params.timeout
+    params.timeout,
   );
 
   if (error) {
@@ -160,7 +160,7 @@ async function status(params?: TimeoutOptions) {
 
   const { data, error } = await withTimeout(
     (signal) => client.GET("/storage/status", { signal }),
-    params?.timeout
+    params?.timeout,
   );
 
   if (error) {

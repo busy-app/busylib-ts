@@ -6,7 +6,7 @@ async function enable(params?: TimeoutOptions) {
 
   const { data, error } = await withTimeout(
     (signal) => client.POST("/ble/enable", { signal }),
-    params?.timeout
+    params?.timeout,
   );
 
   if (error) {
@@ -21,7 +21,7 @@ async function disable(params?: TimeoutOptions) {
 
   const { data, error } = await withTimeout(
     (signal) => client.POST("/ble/disable", { signal }),
-    params?.timeout
+    params?.timeout,
   );
 
   if (error) {
@@ -36,7 +36,7 @@ async function pairing(params?: TimeoutOptions) {
 
   const { data, error } = await withTimeout(
     (signal) => client.DELETE("/ble/pairing", { signal }),
-    params?.timeout
+    params?.timeout,
   );
 
   if (error) {
@@ -51,7 +51,7 @@ async function status(params?: TimeoutOptions) {
 
   const { data, error } = await withTimeout(
     (signal) => client.GET("/ble/status", { signal }),
-    params?.timeout
+    params?.timeout,
   );
 
   if (error) {

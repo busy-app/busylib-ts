@@ -138,8 +138,8 @@ async function toFetchError(res: Response): Promise<FetchError> {
     typeof body === "object" && body !== null
       ? (body as any).error || (body as any).message
       : typeof body === "string"
-      ? body
-      : undefined;
+        ? body
+        : undefined;
 
   return Object.assign(
     new Error(msg || `HTTP ${res.status} ${res.statusText}`),
@@ -147,7 +147,7 @@ async function toFetchError(res: Response): Promise<FetchError> {
       status: res.status,
       statusText: res.statusText,
       body,
-    }
+    },
   );
 }
 
@@ -228,7 +228,7 @@ let client: Client<paths, `${string}/${string}`> | null = null;
 function initApiClient(
   url: string,
   getApiVersion: GetVersionFn,
-  token: BusyBarConfig["token"]
+  token: BusyBarConfig["token"],
 ) {
   getApiVersionFn = getApiVersion;
 
@@ -261,7 +261,7 @@ function getClient() {
  */
 async function withTimeout<T>(
   requestFn: (signal?: AbortSignal) => Promise<T>,
-  timeoutMs: number = 3000
+  timeoutMs: number = 3000,
 ): Promise<T> {
   if (timeoutMs <= 0) {
     return await requestFn();

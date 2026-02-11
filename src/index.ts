@@ -25,9 +25,14 @@ export type {
 
 export type {
   UpdateParams as SystemUpdateParams,
-  SetTimestampParams as SystemTimestampParams,
-  SetTimezoneParams as SystemTimezoneParams,
-} from "BusyBar/api/system";
+  InstallParams as UpdateInstallParams,
+  ChangelogParams as UpdateChangelogParams,
+} from "BusyBar/api/update";
+
+export type {
+  SetTimestampParams as TimeTimestampParams,
+  SetTimezoneParams as TimeTimezoneParams,
+} from "BusyBar/api/time";
 
 export type {
   BrightnessParams as DisplayBrightnessParams,
@@ -37,6 +42,10 @@ export type {
 } from "BusyBar/api/settings";
 
 export type { InputKeyParams } from "BusyBar/api/input";
+
+export type { SetAccountProfileParams as AccountProfileSetParams } from "BusyBar/api/account";
+
+export type { GetScreenFrameParams as ScreenFrameGetParams } from "BusyBar/api/display";
 
 export type {
   KeyName,
@@ -68,4 +77,5 @@ export type {
   WifiStatusResponse,
   WifiConnectRequestConfig,
   WifiNetworkResponse,
+  TimeoutOptions,
 } from "Global/types";

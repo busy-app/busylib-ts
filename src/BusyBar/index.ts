@@ -34,10 +34,14 @@ import { isIPv4 } from "Global/utils/isIPv4";
 import { isMdns } from "Global/utils/isMdns";
 
 import {
-  getMqttStatus as getMqttStatusApi,
+  getAccountState as getAccountStateApi,
+  getAccountInfo as getAccountInfoApi,
+  getAccountProfile as getAccountProfileApi,
+  setAccountProfile as setAccountProfileApi,
   unlinkDevice as unlinkAccountApi,
   linkDevice as linkAccountApi,
 } from "BusyBar/api/account";
+import type { SetAccountProfileParams } from "BusyBar/api/account";
 
 import {
   upload as uploadAssetsApi,
@@ -48,8 +52,9 @@ import type { UploadParams, DeleteParams } from "BusyBar/api/assets";
 import {
   draw as drawDisplayApi,
   clear as clearDisplayApi,
+  getScreenFrame as getScreenFrameApi,
 } from "BusyBar/api/display";
-import type { DrawParams } from "BusyBar/api/display";
+import type { DrawParams, GetScreenFrameParams } from "BusyBar/api/display";
 
 import { play as playSoundApi, stop as stopSoundApi } from "BusyBar/api/audio";
 import type { AudioPlayParams } from "BusyBar/api/audio";
@@ -80,19 +85,39 @@ import type {
 
 import {
   version as versionApi,
-  update as updateApi,
   status as statusApi,
   systemStatus as systemStatusApi,
   powerStatus as powerStatusApi,
-  getTime as getTimeApi,
-  setTimestamp as setTimestampApi,
-  setTimezone as setTimezoneApi,
 } from "BusyBar/api/system";
+
+import {
+  update as updateApi,
+  check as checkUpdateApi,
+  status as statusUpdateApi,
+  changelog as changelogUpdateApi,
+  install as installUpdateApi,
+  abort as abortUpdateApi,
+} from "BusyBar/api/update";
 import type {
   UpdateParams,
-  SetTimestampParams,
-  SetTimezoneParams,
-} from "BusyBar/api/system";
+  InstallParams,
+  ChangelogParams,
+} from "BusyBar/api/update";
+
+import {
+  getTime as getTimeApi,
+  setTimestamp as setTimestampApi,
+  getTimezone as getTimezoneApi,
+  setTimezone as setTimezoneApi,
+  getTzList as getTzListApi,
+} from "BusyBar/api/time";
+import type { SetTimestampParams, SetTimezoneParams } from "BusyBar/api/time";
+
+import {
+  status as statusMatterApi,
+  pairDevice as pairDeviceMatterApi,
+  eraseDevices as eraseDevicesMatterApi,
+} from "BusyBar/api/matter";
 
 import {
   getDisplayBrightness as getDisplayBrightnessApi,
@@ -197,7 +222,7 @@ export class BusyBar {
 
     initApiClient(
       `${this.addr}/api/`,
-      this.SystemVersion.bind(this),
+      this.SystemVersionGet.bind(this),
       config?.token,
     );
 
@@ -251,7 +276,7 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<VersionInfo>} A promise that resolves to an object containing the `api_semver` string.
    */
-  async SystemVersion(params?: TimeoutOptions): Promise<VersionInfo> {
+  async SystemVersionGet(params?: TimeoutOptions): Promise<VersionInfo> {
     const response = await versionApi(params);
     this.apiSemver = response.api_semver;
 
@@ -259,10 +284,10 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `SystemVersion` instead. will be removed in the next release.
+   * @deprecated Use `SystemVersionGet` instead. will be removed in the next release.
    */
-  async getApiVersion(params?: TimeoutOptions): Promise<VersionInfo> {
-    return this.SystemVersion(params);
+  async SystemVersion(params?: TimeoutOptions): Promise<VersionInfo> {
+    return this.SystemVersionGet(params);
   }
 
   /**
@@ -286,21 +311,84 @@ export class BusyBar {
   }
 
   /**
+   * Start firmware update check.
+   *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<Awaited<ReturnType<typeof checkUpdateApi>>>} Result of the check operation.
+   */
+  async SystemUpdateCheckGet(
+    params?: TimeoutOptions,
+  ): Promise<Awaited<ReturnType<typeof checkUpdateApi>>> {
+    return await checkUpdateApi(params);
+  }
+
+  /**
+   * Get firmware update status.
+   *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<Awaited<ReturnType<typeof statusUpdateApi>>>} Current update status.
+   */
+  async SystemUpdateStatusGet(
+    params?: TimeoutOptions,
+  ): Promise<Awaited<ReturnType<typeof statusUpdateApi>>> {
+    return await statusUpdateApi(params);
+  }
+
+  /**
+   * Get update changelog.
+   *
+   * @param {ChangelogParams} params - Parameters for the changelog request.
+   *   @param {ChangelogParams['version']} params.version - The version to get changelog for.
+   *   @param {ChangelogParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<Awaited<ReturnType<typeof changelogUpdateApi>>>} The changelog data.
+   */
+  async SystemUpdateChangelogGet(
+    params: ChangelogParams,
+  ): Promise<Awaited<ReturnType<typeof changelogUpdateApi>>> {
+    return await changelogUpdateApi(params);
+  }
+
+  /**
+   * Install firmware update.
+   *
+   * @param {InstallParams} params - Parameters for the installation.
+   *   @param {InstallParams['version']} params.version - The version to install.
+   *   @param {InstallParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<SuccessResponse>} Result of the install operation.
+   */
+  async SystemUpdateInstall(params: InstallParams): Promise<SuccessResponse> {
+    return await installUpdateApi(params);
+  }
+
+  /**
+   * Abort ongoing firmware download.
+   *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<SuccessResponse>} Result of the abort operation.
+   */
+  async SystemUpdateAbort(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return await abortUpdateApi(params);
+  }
+
+  /**
    * Get device status.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<Status>} Current status of the device.
    */
-  async SystemStatus(params?: TimeoutOptions): Promise<Status> {
+  async SystemStatusGet(params?: TimeoutOptions): Promise<Status> {
     return await statusApi(params);
   }
 
   /**
-   * @deprecated Use `SystemStatus` instead. will be removed in the next release.
+   * @deprecated Use `SystemStatusGet` instead. will be removed in the next release.
    */
-  async deviceStatus(params?: TimeoutOptions): Promise<Status> {
-    return this.SystemStatus(params);
+  async SystemStatus(params?: TimeoutOptions): Promise<Status> {
+    return this.SystemStatusGet(params);
   }
 
   /**
@@ -310,15 +398,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StatusSystem>} Current system status.
    */
-  async SystemInfo(params?: TimeoutOptions): Promise<StatusSystem> {
+  async SystemInfoGet(params?: TimeoutOptions): Promise<StatusSystem> {
     return await systemStatusApi(params);
   }
 
   /**
-   * @deprecated Use `SystemInfo` instead. will be removed in the next release.
+   * @deprecated Use `SystemInfoGet` instead. will be removed in the next release.
    */
-  async systemStatus(params?: TimeoutOptions): Promise<StatusSystem> {
-    return this.SystemInfo(params);
+  async SystemInfo(params?: TimeoutOptions): Promise<StatusSystem> {
+    return this.SystemInfoGet(params);
   }
 
   /**
@@ -328,15 +416,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StatusPower>} Current power status.
    */
-  async SystemStatusPower(params?: TimeoutOptions): Promise<StatusPower> {
+  async SystemStatusPowerGet(params?: TimeoutOptions): Promise<StatusPower> {
     return await powerStatusApi(params);
   }
 
   /**
-   * @deprecated Use `SystemStatusPower` instead. will be removed in the next release.
+   * @deprecated Use `SystemStatusPowerGet` instead. will be removed in the next release.
    */
-  async powerStatus(params?: TimeoutOptions): Promise<StatusPower> {
-    return this.SystemStatusPower(params);
+  async SystemStatusPower(params?: TimeoutOptions): Promise<StatusPower> {
+    return this.SystemStatusPowerGet(params);
   }
 
   /**
@@ -346,15 +434,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<TimestampInfo>} Current device timestamp as an ISO 8601 string.
    */
-  async SystemTime(params?: TimeoutOptions): Promise<TimestampInfo> {
+  async TimeGet(params?: TimeoutOptions): Promise<TimestampInfo> {
     return await getTimeApi(params);
   }
 
   /**
-   * @deprecated Use `SystemTime` instead. will be removed in the next release.
+   * @deprecated Use `TimeGet` instead. will be removed in the next release.
    */
-  async getTime(params?: TimeoutOptions): Promise<TimestampInfo> {
-    return this.SystemTime(params);
+  async SystemTime(params?: TimeoutOptions): Promise<TimestampInfo> {
+    return this.TimeGet(params);
   }
 
   /**
@@ -367,17 +455,17 @@ export class BusyBar {
    *   @param {SetTimestampParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A success response if the timestamp was set.
    */
-  async SystemTimeTimestamp(
-    params: SetTimestampParams,
-  ): Promise<SuccessResponse> {
+  async TimeTimestampSet(params: SetTimestampParams): Promise<SuccessResponse> {
     return await setTimestampApi(params);
   }
 
   /**
-   * @deprecated Use `SystemTimeTimestamp` instead. will be removed in the next release.
+   * @deprecated Use `TimeTimestampSet` instead. will be removed in the next release.
    */
-  async setTimestamp(params: SetTimestampParams): Promise<SuccessResponse> {
-    return this.SystemTimeTimestamp(params);
+  async SystemTimeTimestamp(
+    params: SetTimestampParams,
+  ): Promise<SuccessResponse> {
+    return this.TimeTimestampSet(params);
   }
 
   /**
@@ -388,17 +476,43 @@ export class BusyBar {
    *   @param {SetTimezoneParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A success response if the timezone was set.
    */
-  async SystemTimeTimezone(
-    params: SetTimezoneParams,
-  ): Promise<SuccessResponse> {
+  async TimeTimezoneSet(params: SetTimezoneParams): Promise<SuccessResponse> {
     return await setTimezoneApi(params);
   }
 
   /**
-   * @deprecated Use `SystemTimeTimezone` instead. will be removed in the next release.
+   * @deprecated Use `TimeTimezoneSet` instead. will be removed in the next release.
    */
-  async setTimezone(params: SetTimezoneParams): Promise<SuccessResponse> {
-    return this.SystemTimeTimezone(params);
+  async SystemTimeTimezone(
+    params: SetTimezoneParams,
+  ): Promise<SuccessResponse> {
+    return this.TimeTimezoneSet(params);
+  }
+
+  /**
+   * Get timezone. Get current timezone name.
+   *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<SuccessResponse>} A promise that resolves to an object containing the `timezone` string.
+   */
+  async SystemTimeTimezoneGet(
+    params?: TimeoutOptions,
+  ): Promise<Awaited<ReturnType<typeof getTimezoneApi>>> {
+    return await getTimezoneApi(params);
+  }
+
+  /**
+   * Get list of supported time zones.
+   *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<SuccessResponse>} List of timezones.
+   */
+  async TimeTzListGet(
+    params?: TimeoutOptions,
+  ): Promise<Awaited<ReturnType<typeof getTzListApi>>> {
+    return await getTzListApi(params);
   }
 
   /**
@@ -408,15 +522,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<AccountInfo>} Information about the current MQTT account status.
    */
-  async Account(params?: TimeoutOptions): Promise<AccountInfo> {
-    return await getMqttStatusApi(params);
+  async AccountInfoGet(params?: TimeoutOptions): Promise<AccountInfo> {
+    return await getAccountInfoApi(params);
   }
 
   /**
-   * @deprecated Use `Account` instead. will be removed in the next release.
+   * @deprecated Use `AccountInfoGet` instead. will be removed in the next release.
    */
-  async getMqttStatus(params?: TimeoutOptions): Promise<AccountInfo> {
-    return this.Account(params);
+  async Account(params?: TimeoutOptions): Promise<AccountInfo> {
+    return this.AccountInfoGet(params);
   }
 
   /**
@@ -499,6 +613,46 @@ export class BusyBar {
   }
 
   /**
+   * Get account state.
+   *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<Awaited<ReturnType<typeof getAccountStateApi>>>} Current account state.
+   */
+  async AccountStateGet(
+    params?: TimeoutOptions,
+  ): Promise<Awaited<ReturnType<typeof getAccountStateApi>>> {
+    return await getAccountStateApi(params);
+  }
+
+  /**
+   * Get account profile.
+   *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<Awaited<ReturnType<typeof getAccountProfileApi>>>} Current account profile information.
+   */
+  async AccountProfileGet(
+    params?: TimeoutOptions,
+  ): Promise<Awaited<ReturnType<typeof getAccountProfileApi>>> {
+    return await getAccountProfileApi(params);
+  }
+
+  /**
+   * Set account profile.
+   *
+   * @param {SetAccountProfileParams} params - Parameters for setting the profile.
+   *   @param {SetAccountProfileParams['name']} [params.name] - Account name.
+   *   @param {SetAccountProfileParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<SuccessResponse>} Result of the set operation.
+   */
+  async AccountProfileSet(
+    params: SetAccountProfileParams,
+  ): Promise<SuccessResponse> {
+    return await setAccountProfileApi(params);
+  }
+
+  /**
    * Draw on display. Sends drawing data to the display. Supports JSON-defined display elements.
    *
    * @param {DrawParams} params - Parameters for the draw operation.
@@ -534,6 +688,18 @@ export class BusyBar {
    */
   async clearDisplay(params?: TimeoutOptions): Promise<SuccessResponse> {
     return this.DisplayClear(params);
+  }
+
+  /**
+   * Get single frame for requested screen.
+   *
+   * @param {GetScreenFrameParams} params - Parameters for the frame request.
+   *   @param {GetScreenFrameParams['display']} params.display - Display ID (0 = Front, 1 = Back).
+   *   @param {GetScreenFrameParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<Blob>} The screen frame as a Blob.
+   */
+  async DisplayScreenFrameGet(params: GetScreenFrameParams): Promise<Blob> {
+    return (await getScreenFrameApi(params)) as Blob;
   }
 
   /**
@@ -581,15 +747,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<WifiStatusResponse>} Current Wi-Fi status.
    */
-  async WifiStatus(params?: TimeoutOptions): Promise<WifiStatusResponse> {
+  async WifiStatusGet(params?: TimeoutOptions): Promise<WifiStatusResponse> {
     return await statusWifiApi(params);
   }
 
   /**
-   * @deprecated Use `WifiStatus` instead. will be removed in the next release.
+   * @deprecated Use `WifiStatusGet` instead. will be removed in the next release.
    */
-  async statusWifi(params?: TimeoutOptions): Promise<WifiStatusResponse> {
-    return this.WifiStatus(params);
+  async WifiStatus(params?: TimeoutOptions): Promise<WifiStatusResponse> {
+    return this.WifiStatusGet(params);
   }
 
   /**
@@ -644,15 +810,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<WifiNetworkResponse>} List of discovered networks.
    */
-  async WifiNetworks(params?: TimeoutOptions): Promise<WifiNetworkResponse> {
+  async WifiNetworksGet(params?: TimeoutOptions): Promise<WifiNetworkResponse> {
     return await networksWifiAPi(params);
   }
 
   /**
-   * @deprecated Use `WifiNetworks` instead. will be removed in the next release.
+   * @deprecated Use `WifiNetworksGet` instead. will be removed in the next release.
    */
-  async networksWifi(params?: TimeoutOptions): Promise<WifiNetworkResponse> {
-    return this.WifiNetworks(params);
+  async WifiNetworks(params?: TimeoutOptions): Promise<WifiNetworkResponse> {
+    return this.WifiNetworksGet(params);
   }
 
   /**
@@ -761,15 +927,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StorageStatus>} Current storage status information.
    */
-  async StorageStatus(params?: TimeoutOptions): Promise<StorageStatus> {
+  async StorageStatusGet(params?: TimeoutOptions): Promise<StorageStatus> {
     return await statusStorageApi(params);
   }
 
   /**
-   * @deprecated Use `StorageStatus` instead. will be removed in the next release.
+   * @deprecated Use `StorageStatusGet` instead. will be removed in the next release.
    */
-  async statusStorage(params?: TimeoutOptions): Promise<StorageStatus> {
-    return this.StorageStatus(params);
+  async StorageStatus(params?: TimeoutOptions): Promise<StorageStatus> {
+    return this.StorageStatusGet(params);
   }
 
   /**
@@ -779,19 +945,19 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<DisplayBrightnessInfo>} Current brightness information for front and back panels.
    */
-  async DisplayBrightness(
+  async DisplayBrightnessGet(
     params?: TimeoutOptions,
   ): Promise<DisplayBrightnessInfo> {
     return await getDisplayBrightnessApi(params);
   }
 
   /**
-   * @deprecated Use `DisplayBrightness` instead. will be removed in the next release.
+   * @deprecated Use `DisplayBrightnessGet` instead. will be removed in the next release.
    */
-  async getDisplayBrightness(
+  async DisplayBrightness(
     params?: TimeoutOptions,
   ): Promise<DisplayBrightnessInfo> {
-    return this.DisplayBrightness(params);
+    return this.DisplayBrightnessGet(params);
   }
 
   /**
@@ -826,15 +992,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<AudioVolumeInfo>} Current audio volume (0-100).
    */
-  async AudioVolume(params?: TimeoutOptions): Promise<AudioVolumeInfo> {
+  async AudioVolumeGet(params?: TimeoutOptions): Promise<AudioVolumeInfo> {
     return await getAudioVolumeApi(params);
   }
 
   /**
-   * @deprecated Use `AudioVolume` instead. will be removed in the next release.
+   * @deprecated Use `AudioVolumeGet` instead. will be removed in the next release.
    */
-  async getAudioVolume(params?: TimeoutOptions): Promise<AudioVolumeInfo> {
-    return this.AudioVolume(params);
+  async AudioVolume(params?: TimeoutOptions): Promise<AudioVolumeInfo> {
+    return this.AudioVolumeGet(params);
   }
 
   /**
@@ -864,15 +1030,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<HttpAccessInfo>} Current HTTP access info.
    */
-  async SettingsAccess(params?: TimeoutOptions): Promise<HttpAccessInfo> {
+  async SettingsAccessGet(params?: TimeoutOptions): Promise<HttpAccessInfo> {
     return await getHttpAccessApi(params);
   }
 
   /**
-   * @deprecated Use `SettingsAccess` instead. will be removed in the next release.
+   * @deprecated Use `SettingsAccessGet` instead. will be removed in the next release.
    */
-  async getHttpAccess(params?: TimeoutOptions): Promise<HttpAccessInfo> {
-    return this.SettingsAccess(params);
+  async SettingsAccess(params?: TimeoutOptions): Promise<HttpAccessInfo> {
+    return this.SettingsAccessGet(params);
   }
 
   /**
@@ -908,15 +1074,15 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<NameInfo>} The current device name information.
    */
-  async SettingsName(params?: TimeoutOptions): Promise<NameInfo> {
+  async SettingsNameGet(params?: TimeoutOptions): Promise<NameInfo> {
     return await getNameApi(params);
   }
 
   /**
-   * @deprecated Use `SettingsName` instead. will be removed in the next release.
+   * @deprecated Use `SettingsNameGet` instead. will be removed in the next release.
    */
-  async getName(params?: TimeoutOptions): Promise<NameInfo> {
-    return this.SettingsName(params);
+  async SettingsName(params?: TimeoutOptions): Promise<NameInfo> {
+    return this.SettingsNameGet(params);
   }
 
   /**
@@ -1005,7 +1171,7 @@ export class BusyBar {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<BleStatusResponse>} Current BLE status information.
    */
-  async BleStatus(params?: TimeoutOptions): Promise<BleStatusResponse> {
+  async BleStatusGet(params?: TimeoutOptions): Promise<BleStatusResponse> {
     return await statusBleApi(params);
   }
 
@@ -1013,7 +1179,7 @@ export class BusyBar {
    * @deprecated Use `BleStatus` instead. will be removed in the next release.
    */
   async statusBle(params?: TimeoutOptions): Promise<BleStatusResponse> {
-    return this.BleStatus(params);
+    return this.BleStatusGet(params);
   }
 
   /**
@@ -1038,5 +1204,42 @@ export class BusyBar {
    */
   async pressButton(params: InputKeyParams): Promise<SuccessResponse> {
     return this.InputSend(params);
+  }
+
+  /**
+   * Get Matter status.
+   *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<Awaited<ReturnType<typeof statusMatterApi>>>} Current Matter status.
+   */
+  async MatterStatusGet(
+    params?: TimeoutOptions,
+  ): Promise<Awaited<ReturnType<typeof statusMatterApi>>> {
+    return await statusMatterApi(params);
+  }
+
+  /**
+   * Pair Matter device.
+   *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<Awaited<ReturnType<typeof pairDeviceMatterApi>>>} Pairing result.
+   */
+  async MatterDevicePair(
+    params?: TimeoutOptions,
+  ): Promise<Awaited<ReturnType<typeof pairDeviceMatterApi>>> {
+    return await pairDeviceMatterApi(params);
+  }
+
+  /**
+   * Erase all Matter devices.
+   *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<SuccessResponse>} Result of the erase operation.
+   */
+  async MatterDevicesErase(params?: TimeoutOptions): Promise<SuccessResponse> {
+    return await eraseDevicesMatterApi(params);
   }
 }

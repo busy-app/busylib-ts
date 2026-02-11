@@ -20,7 +20,7 @@ async function setInputKey(params: InputKeyParams) {
         },
         signal,
       }),
-    params.timeout
+    params.timeout,
   );
 
   if (error) {
