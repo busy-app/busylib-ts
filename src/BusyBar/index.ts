@@ -304,13 +304,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `SystemUpdate` instead. will be removed in the next release.
-   */
-  async updateFirmware(params: UpdateParams): Promise<SuccessResponse> {
-    return this.SystemUpdate(params);
-  }
-
-  /**
    * Start firmware update check.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
@@ -545,13 +538,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `AccountUnlink` instead. will be removed in the next release.
-   */
-  async unlinkAccount(params?: TimeoutOptions): Promise<SuccessResponse> {
-    return this.AccountUnlink(params);
-  }
-
-  /**
    * Link device to account. Requests account link PIN. Works only if device is connected to MQTT and is not linked to account.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
@@ -560,13 +546,6 @@ export class BusyBar {
    */
   async AccountLink(params?: TimeoutOptions): Promise<AccountLink> {
     return await linkAccountApi(params);
-  }
-
-  /**
-   * @deprecated Use `AccountLink` instead. will be removed in the next release.
-   */
-  async linkAccount(params?: TimeoutOptions): Promise<AccountLink> {
-    return this.AccountLink(params);
   }
 
   /**
@@ -587,13 +566,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `AssetsUpload` instead. will be removed in the next release.
-   */
-  async uploadAsset(params: UploadParams): Promise<SuccessResponse> {
-    return this.AssetsUpload(params);
-  }
-
-  /**
    * Delete app assets. Deletes all assets for a specific app ID.
    *
    * @param {DeleteParams} params - Parameters for the delete.
@@ -603,13 +575,6 @@ export class BusyBar {
    */
   async AssetsDelete(params: DeleteParams): Promise<SuccessResponse> {
     return await deleteAssetsApi(params);
-  }
-
-  /**
-   * @deprecated Use `AssetsDelete` instead. will be removed in the next release.
-   */
-  async deleteAssets(params: DeleteParams): Promise<SuccessResponse> {
-    return this.AssetsDelete(params);
   }
 
   /**
@@ -666,13 +631,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `DisplayDraw` instead. will be removed in the next release.
-   */
-  async drawDisplay(params: DrawParams): Promise<SuccessResponse> {
-    return this.DisplayDraw(params);
-  }
-
-  /**
    * Clear display. Clears the display and stops the Canvas application if running.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
@@ -681,13 +639,6 @@ export class BusyBar {
    */
   async DisplayClear(params?: TimeoutOptions): Promise<SuccessResponse> {
     return await clearDisplayApi(params);
-  }
-
-  /**
-   * @deprecated Use `DisplayClear` instead. will be removed in the next release.
-   */
-  async clearDisplay(params?: TimeoutOptions): Promise<SuccessResponse> {
-    return this.DisplayClear(params);
   }
 
   /**
@@ -716,13 +667,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `AudioPlay` instead. will be removed in the next release.
-   */
-  async playSound(params: AudioPlayParams): Promise<SuccessResponse> {
-    return this.AudioPlay(params);
-  }
-
-  /**
    * Stop audio playback. Stops any currently playing audio.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
@@ -731,13 +675,6 @@ export class BusyBar {
    */
   async AudioStop(params?: TimeoutOptions): Promise<SuccessResponse> {
     return await stopSoundApi(params);
-  }
-
-  /**
-   * @deprecated Use `AudioStop` instead. will be removed in the next release.
-   */
-  async stopSound(params?: TimeoutOptions): Promise<SuccessResponse> {
-    return this.AudioStop(params);
   }
 
   /**
@@ -779,13 +716,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `WifiConnect` instead. will be removed in the next release.
-   */
-  async connectWifi(params: ConnectParams): Promise<SuccessResponse> {
-    return this.WifiConnect(params);
-  }
-
-  /**
    * Disconnects from Wi-Fi.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
@@ -794,13 +724,6 @@ export class BusyBar {
    */
   async WifiDisconnect(params?: TimeoutOptions): Promise<SuccessResponse> {
     return await disconnectWifiApi(params);
-  }
-
-  /**
-   * @deprecated Use `WifiDisconnect` instead. will be removed in the next release.
-   */
-  async disconnectWifi(params?: TimeoutOptions): Promise<SuccessResponse> {
-    return this.WifiDisconnect(params);
   }
 
   /**
@@ -835,13 +758,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `StorageWrite` instead. will be removed in the next release.
-   */
-  async uploadFile(params: UploadFileParams): Promise<SuccessResponse> {
-    return this.StorageWrite(params);
-  }
-
-  /**
    * Download file from internal storage. Downloads a file from a specified path.
    *
    * @param {DownloadFileParams} params - Download parameters:
@@ -852,13 +768,6 @@ export class BusyBar {
    */
   async StorageRead(params: DownloadFileParams): Promise<StorageReadResponse> {
     return await readStorageApi(params);
-  }
-
-  /**
-   * @deprecated Use `StorageRead` instead. will be removed in the next release.
-   */
-  async downloadFile(params: DownloadFileParams): Promise<StorageReadResponse> {
-    return this.StorageRead(params);
   }
 
   /**
@@ -874,13 +783,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `StorageList` instead. will be removed in the next release.
-   */
-  async readDirectory(params: ReadDirectoryParams): Promise<StorageList> {
-    return this.StorageList(params);
-  }
-
-  /**
    * Remove a file on internal storage. Removes a file with a specified path.
    *
    * @param {RemoveParams} params - Remove parameters:
@@ -893,13 +795,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `StorageRemove` instead. will be removed in the next release.
-   */
-  async removeResource(params: RemoveParams): Promise<SuccessResponse> {
-    return this.StorageRemove(params);
-  }
-
-  /**
    * Create a directory on internal storage. Creates a new directory with a specified path.
    *
    * @param {CreateDirectoryParams} params - Directory creation parameters:
@@ -909,15 +804,6 @@ export class BusyBar {
    */
   async StorageMkdir(params: CreateDirectoryParams): Promise<SuccessResponse> {
     return await mkdirStorageApi(params);
-  }
-
-  /**
-   * @deprecated Use `StorageMkdir` instead. will be removed in the next release.
-   */
-  async createDirectory(
-    params: CreateDirectoryParams,
-  ): Promise<SuccessResponse> {
-    return this.StorageMkdir(params);
   }
 
   /**
@@ -977,15 +863,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `DisplayBrightnessSet` instead. will be removed in the next release.
-   */
-  async setDisplayBrightness(
-    params: BrightnessParams,
-  ): Promise<SuccessResponse> {
-    return this.DisplayBrightnessSet(params);
-  }
-
-  /**
    * Get audio volume.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
@@ -1014,13 +891,6 @@ export class BusyBar {
    */
   async AudioVolumeSet(params: AudioVolumeParams): Promise<SuccessResponse> {
     return await setAudioVolumeApi(params);
-  }
-
-  /**
-   * @deprecated Use `AudioVolumeSet` instead. will be removed in the next release.
-   */
-  async setAudioVolume(params: AudioVolumeParams): Promise<SuccessResponse> {
-    return this.AudioVolumeSet(params);
   }
 
   /**
@@ -1061,13 +931,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `SettingsAccessSet` instead. will be removed in the next release.
-   */
-  async setHttpAccess(params: HttpAccessParams): Promise<SuccessResponse> {
-    return this.SettingsAccessSet(params);
-  }
-
-  /**
    * Get current device name.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
@@ -1098,13 +961,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `SettingsNameSet` instead. will be removed in the next release.
-   */
-  async setName(params: NameParams): Promise<SuccessResponse> {
-    return this.SettingsNameSet(params);
-  }
-
-  /**
    * Sets API key for all subsequent requests.
    * @param {string} key - API key to use in "X-API-Token" header.
    */
@@ -1123,13 +979,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `BleEnable` instead. will be removed in the next release.
-   */
-  async enableBle(params?: TimeoutOptions): Promise<SuccessResponse> {
-    return this.BleEnable(params);
-  }
-
-  /**
    * Disable BLE. Stops advertising.
    * @param {TimeoutOptions} [params] - Optional parameters.
    * @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
@@ -1137,13 +986,6 @@ export class BusyBar {
    */
   async BleDisable(params?: TimeoutOptions): Promise<SuccessResponse> {
     return await disableBleApi(params);
-  }
-
-  /**
-   * @deprecated Use `BleDisable` instead. will be removed in the next release.
-   */
-  async disableBle(params?: TimeoutOptions): Promise<SuccessResponse> {
-    return this.BleDisable(params);
   }
 
   /**
@@ -1158,13 +1000,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use `BleUnpair` instead. will be removed in the next release.
-   */
-  async pairingBle(params?: TimeoutOptions): Promise<SuccessResponse> {
-    return this.BleUnpair(params);
-  }
-
-  /**
    * Returns current BLE status.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
@@ -1173,13 +1008,6 @@ export class BusyBar {
    */
   async BleStatusGet(params?: TimeoutOptions): Promise<BleStatusResponse> {
     return await statusBleApi(params);
-  }
-
-  /**
-   * @deprecated Use `BleStatus` instead. will be removed in the next release.
-   */
-  async statusBle(params?: TimeoutOptions): Promise<BleStatusResponse> {
-    return this.BleStatusGet(params);
   }
 
   /**
@@ -1197,13 +1025,6 @@ export class BusyBar {
    */
   async InputSend(params: InputKeyParams): Promise<SuccessResponse> {
     return await setInputKeyApi(params);
-  }
-
-  /**
-   * @deprecated Use `InputSend` instead. will be removed in the next release.
-   */
-  async pressButton(params: InputKeyParams): Promise<SuccessResponse> {
-    return this.InputSend(params);
   }
 
   /**
