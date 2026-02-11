@@ -52,7 +52,13 @@ export class SettingsMethods {
     this: BusyBar,
     params: HttpAccessParams,
   ): Promise<SuccessResponse> {
-    return await setHttpAccessApi(params);
+    const result = await setHttpAccessApi(params);
+
+    if (params.mode === "key" && params.key) {
+      this.setApiKey(params.key);
+    }
+
+    return result;
   }
 
   /**

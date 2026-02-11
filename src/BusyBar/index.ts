@@ -1,4 +1,4 @@
-import { initApiClient } from "BusyBar/api/createClient";
+import { initApiClient, setApiKey } from "BusyBar/api/createClient";
 
 import { SystemMethods } from "./methods/System";
 import { UpdateMethods } from "./methods/Update";
@@ -162,6 +162,14 @@ export class BusyBar {
     } catch (error) {
       throw error;
     }
+  }
+
+  /**
+   * Sets API key for all subsequent requests.
+   * @param {string} key - API key to use in "X-API-Token" header.
+   */
+  setApiKey(key: string) {
+    setApiKey(key);
   }
 }
 
