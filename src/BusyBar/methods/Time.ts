@@ -1,12 +1,13 @@
 import {
   getTime as getTimeApi,
+  getTimezone as getTimezoneApi,
   getTzList as getTzListApi,
   setTimestamp as setTimestampApi,
   setTimezone as setTimezoneApi,
   SetTimestampParams,
   SetTimezoneParams,
 } from "BusyBar/api/time";
-import type { TimeoutOptions, TimestampInfo, SuccessResponse, TimezoneList } from "Global/types";
+import type { TimeoutOptions, TimestampInfo, SuccessResponse, TimezoneList, TimezoneInfo } from "Global/types";
 import { BusyBar } from "BusyBar/index";
 
 export class TimeMethods {
@@ -54,6 +55,20 @@ export class TimeMethods {
     params: SetTimestampParams,
   ): Promise<SuccessResponse> {
     return await this.TimeTimestampSet(params);
+  }
+
+  /**
+   * Get current timezone.
+   *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<TimezoneInfo>} A promise that resolves to the timezone information.
+   */
+  async TimeTimezoneGet(
+    this: BusyBar,
+    params?: TimeoutOptions,
+  ): Promise<TimezoneInfo> {
+    return await getTimezoneApi(params);
   }
 
   /**
