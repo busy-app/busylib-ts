@@ -1360,7 +1360,7 @@ export interface components {
          * @description Check result status
          * @enum {string}
          */
-        result?: "available" | "not_available" | "failure" | "none";
+        status?: "available" | "not_available" | "failure" | "none";
       };
     };
     /**
