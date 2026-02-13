@@ -18,6 +18,6 @@ export class InputMethods {
     this: BusyBar,
     params: InputKeyParams,
   ): Promise<SuccessResponse> {
-    return await setInputKeyApi(params);
+    return await setInputKeyApi(this.apiClient, params);
   }
 }

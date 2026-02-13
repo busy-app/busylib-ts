@@ -1,4 +1,4 @@
-import { initApiClient, setApiKey } from "BusyBar/api/createClient";
+import { createApiClient, type BusyBarClient } from "BusyBar/api/createClient";
 
 import { SystemMethods } from "./methods/System";
 import { UpdateMethods } from "./methods/Update";
@@ -21,7 +21,7 @@ import {
 import { isIPv4 } from "Global/utils/isIPv4";
 import { isMdns } from "Global/utils/isMdns";
 import type { paths } from "Global/API";
-import type { ApiSemver } from "Global/types";
+import type { ApiSemver, ApiKey } from "Global/types";
 
 import createClient from "openapi-fetch";
 
@@ -63,6 +63,13 @@ export class BusyBar {
    * @type {ApiSemver}
    */
   apiSemver: ApiSemver;
+
+  /**
+   * API Client instance.
+   */
+  public readonly apiClient: BusyBarClient;
+
+  private setApiKeyFn: (key: ApiKey) => void;
 
   /**
    * Detected connection type based on auth requirements.
@@ -115,11 +122,14 @@ export class BusyBar {
 
     this.apiSemver = "";
 
-    initApiClient(
+    const { client, setApiKey } = createApiClient(
       `${this.addr}/api/`,
       this.SystemVersionGet.bind(this),
       config?.token,
     );
+
+    this.apiClient = client;
+    this.setApiKeyFn = setApiKey;
 
     this.detectConnectionType();
   }
@@ -169,7 +179,7 @@ export class BusyBar {
    * @param {string} key - API key to use in "X-API-Token" header.
    */
   setApiKey(key: string) {
-    setApiKey(key);
+    this.setApiKeyFn(key);
   }
 }
 

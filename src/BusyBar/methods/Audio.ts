@@ -27,7 +27,7 @@ export class AudioMethods {
     this: BusyBar,
     params: AudioPlayParams,
   ): Promise<SuccessResponse> {
-    return await playApi(params);
+    return await playApi(this.apiClient, params);
   }
 
   /**
@@ -51,7 +51,7 @@ export class AudioMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<SuccessResponse> {
-    return await stopApi(params);
+    return await stopApi(this.apiClient, params);
   }
 
   /**
@@ -65,7 +65,7 @@ export class AudioMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<AudioVolumeInfo> {
-    return await getAudioVolumeApi(params);
+    return await getAudioVolumeApi(this.apiClient, params);
   }
 
   /**
@@ -90,6 +90,6 @@ export class AudioMethods {
     this: BusyBar,
     params: AudioVolumeParams,
   ): Promise<SuccessResponse> {
-    return await setAudioVolumeApi(params);
+    return await setAudioVolumeApi(this.apiClient, params);
   }
 }

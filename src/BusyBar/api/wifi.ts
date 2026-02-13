@@ -1,11 +1,9 @@
-import { getClient, withTimeout } from "BusyBar/api/createClient";
+import { withTimeout, type BusyBarClient } from "BusyBar/api/createClient";
 import type { TimeoutOptions } from "Global/types";
 import type { components } from "Global/API";
 import type { DeepCamelize, RequireKeys } from "BusyBar/types/utils";
 
-async function status(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function status(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/wifi/status", { signal }),
     params?.timeout,
@@ -33,9 +31,7 @@ export type ConnectParams = RequireKeys<
 > &
   TimeoutOptions;
 
-async function connect(params: ConnectParams) {
-  const client = getClient();
-
+async function connect(client: BusyBarClient, params: ConnectParams) {
   const { data, error } = await withTimeout(
     (signal) =>
       client.POST("/wifi/connect", {
@@ -62,9 +58,7 @@ async function connect(params: ConnectParams) {
   return data;
 }
 
-async function disconnect(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function disconnect(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.POST("/wifi/disconnect", { signal }),
     params?.timeout,
@@ -77,9 +71,7 @@ async function disconnect(params?: TimeoutOptions) {
   return data;
 }
 
-async function networks(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function networks(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/wifi/networks", { signal }),
     params?.timeout,

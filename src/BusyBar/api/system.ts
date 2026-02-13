@@ -1,9 +1,7 @@
-import { getClient, withTimeout } from "BusyBar/api/createClient";
+import { withTimeout, type BusyBarClient } from "BusyBar/api/createClient";
 import type { TimeoutOptions } from "Global/types";
 
-async function version(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function version(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/version", { signal }),
     params?.timeout,
@@ -16,9 +14,7 @@ async function version(params?: TimeoutOptions) {
   return data;
 }
 
-async function status(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function status(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/status", { signal }),
     params?.timeout,
@@ -31,9 +27,7 @@ async function status(params?: TimeoutOptions) {
   return data;
 }
 
-async function systemStatus(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function systemStatus(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/status/system", { signal }),
     params?.timeout,
@@ -46,9 +40,7 @@ async function systemStatus(params?: TimeoutOptions) {
   return data;
 }
 
-async function powerStatus(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function powerStatus(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/status/power", { signal }),
     params?.timeout,

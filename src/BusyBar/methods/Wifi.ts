@@ -25,7 +25,7 @@ export class WifiMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<WifiStatusResponse> {
-    return await statusWifiApi(params);
+    return await statusWifiApi(this.apiClient, params);
   }
 
   /**
@@ -53,7 +53,7 @@ export class WifiMethods {
     this: BusyBar,
     params: ConnectParams,
   ): Promise<SuccessResponse> {
-    return await connectWifiApi(params);
+    return await connectWifiApi(this.apiClient, params);
   }
 
   /**
@@ -67,7 +67,7 @@ export class WifiMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<SuccessResponse> {
-    return await disconnectWifiApi(params);
+    return await disconnectWifiApi(this.apiClient, params);
   }
 
   /**
@@ -81,7 +81,7 @@ export class WifiMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<WifiNetworkResponse> {
-    return await networksWifiAPi(params);
+    return await networksWifiAPi(this.apiClient, params);
   }
 
   /**

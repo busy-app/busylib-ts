@@ -1,4 +1,4 @@
-import { getClient, withTimeout } from "BusyBar/api/createClient";
+import { withTimeout, type BusyBarClient } from "BusyBar/api/createClient";
 import type { TimeoutOptions } from "Global/types";
 import type { BusyFile } from "BusyBar/types/global";
 
@@ -6,9 +6,7 @@ export interface UpdateParams extends TimeoutOptions {
   file: BusyFile;
 }
 
-async function update(params: UpdateParams) {
-  const client = getClient();
-
+async function update(client: BusyBarClient, params: UpdateParams) {
   const { file } = params;
 
   const { data, error } = await withTimeout(
@@ -30,9 +28,7 @@ async function update(params: UpdateParams) {
   return data;
 }
 
-async function check(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function check(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.POST("/update/check", { signal }),
     params?.timeout,
@@ -45,9 +41,7 @@ async function check(params?: TimeoutOptions) {
   return data;
 }
 
-async function status(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function status(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/update/status", { signal }),
     params?.timeout,
@@ -64,9 +58,7 @@ export interface ChangelogParams extends TimeoutOptions {
   version: string;
 }
 
-async function changelog(params: ChangelogParams) {
-  const client = getClient();
-
+async function changelog(client: BusyBarClient, params: ChangelogParams) {
   const { version } = params;
 
   const { data, error } = await withTimeout(
@@ -93,9 +85,7 @@ export interface InstallParams extends TimeoutOptions {
   version: string;
 }
 
-async function install(params: InstallParams) {
-  const client = getClient();
-
+async function install(client: BusyBarClient, params: InstallParams) {
   const { version } = params;
 
   const { data, error } = await withTimeout(
@@ -118,9 +108,7 @@ async function install(params: InstallParams) {
   return data;
 }
 
-async function abort(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function abort(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.POST("/update/abort_download", { signal }),
     params?.timeout,

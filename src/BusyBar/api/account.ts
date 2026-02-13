@@ -1,10 +1,8 @@
-import { getClient, withTimeout } from "BusyBar/api/createClient";
+import { withTimeout, type BusyBarClient } from "BusyBar/api/createClient";
 import type { TimeoutOptions } from "Global/types";
 import type { operations } from "Global/API";
 
-async function getAccountState(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function getAccountState(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/account/status", { signal }),
     params?.timeout,
@@ -17,9 +15,7 @@ async function getAccountState(params?: TimeoutOptions) {
   return data;
 }
 
-async function getAccountInfo(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function getAccountInfo(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/account/info", { signal }),
     params?.timeout,
@@ -32,9 +28,10 @@ async function getAccountInfo(params?: TimeoutOptions) {
   return data;
 }
 
-async function getAccountProfile(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function getAccountProfile(
+  client: BusyBarClient,
+  params?: TimeoutOptions,
+) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/account/profile", { signal }),
     params?.timeout,
@@ -51,9 +48,10 @@ export interface SetAccountProfileParams extends TimeoutOptions {
   profile: operations["setAccountProfile"]["parameters"]["query"]["profile"];
 }
 
-async function setAccountProfile(params: SetAccountProfileParams) {
-  const client = getClient();
-
+async function setAccountProfile(
+  client: BusyBarClient,
+  params: SetAccountProfileParams,
+) {
   const { profile } = params;
 
   const { data, error } = await withTimeout(
@@ -76,9 +74,7 @@ async function setAccountProfile(params: SetAccountProfileParams) {
   return data;
 }
 
-async function unlinkDevice(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function unlinkDevice(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.DELETE("/account", { signal }),
     params?.timeout,
@@ -91,9 +87,7 @@ async function unlinkDevice(params?: TimeoutOptions) {
   return data;
 }
 
-async function linkDevice(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function linkDevice(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.POST("/account/link", { signal }),
     params?.timeout,

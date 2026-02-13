@@ -29,7 +29,7 @@ export class AccountMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<AccountInfo> {
-    return await getAccountInfoApi(params);
+    return await getAccountInfoApi(this.apiClient, params);
   }
 
   /**
@@ -50,7 +50,7 @@ export class AccountMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<AccountState> {
-    return await getAccountStateApi(params);
+    return await getAccountStateApi(this.apiClient, params);
   }
 
   /**
@@ -64,7 +64,7 @@ export class AccountMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<AccountProfile> {
-    return await getAccountProfileApi(params);
+    return await getAccountProfileApi(this.apiClient, params);
   }
 
   /**
@@ -79,7 +79,7 @@ export class AccountMethods {
     this: BusyBar,
     params: SetAccountProfileParams,
   ): Promise<SuccessResponse> {
-    return await setAccountProfileApi(params);
+    return await setAccountProfileApi(this.apiClient, params);
   }
 
   /**
@@ -93,7 +93,7 @@ export class AccountMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<SuccessResponse> {
-    return await unlinkDeviceApi(params);
+    return await unlinkDeviceApi(this.apiClient, params);
   }
 
   /**
@@ -107,6 +107,6 @@ export class AccountMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<AccountLink> {
-    return await linkDeviceApi(params);
+    return await linkDeviceApi(this.apiClient, params);
   }
 }

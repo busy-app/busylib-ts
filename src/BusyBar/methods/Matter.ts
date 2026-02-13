@@ -3,7 +3,12 @@ import {
   pairDevice as pairDeviceMatterApi,
   eraseDevices as eraseDevicesMatterApi,
 } from "BusyBar/api/matter";
-import type { TimeoutOptions, SuccessResponse, MatterStatus, MatterPairingInfo } from "Global/types";
+import type {
+  TimeoutOptions,
+  SuccessResponse,
+  MatterStatus,
+  MatterPairingInfo,
+} from "Global/types";
 import { BusyBar } from "BusyBar/index";
 
 export class MatterMethods {
@@ -18,7 +23,7 @@ export class MatterMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<MatterStatus> {
-    return await statusMatterApi(params);
+    return await statusMatterApi(this.apiClient, params);
   }
 
   /**
@@ -32,7 +37,7 @@ export class MatterMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<MatterPairingInfo> {
-    return await pairDeviceMatterApi(params);
+    return await pairDeviceMatterApi(this.apiClient, params);
   }
 
   /**
@@ -46,6 +51,6 @@ export class MatterMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<SuccessResponse> {
-    return await eraseDevicesMatterApi(params);
+    return await eraseDevicesMatterApi(this.apiClient, params);
   }
 }

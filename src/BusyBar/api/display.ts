@@ -1,4 +1,4 @@
-import { getClient, withTimeout } from "BusyBar/api/createClient";
+import { withTimeout, type BusyBarClient } from "BusyBar/api/createClient";
 import type { TimeoutOptions } from "Global/types";
 import type { components, paths } from "Global/API";
 
@@ -7,9 +7,7 @@ export interface DrawParams extends TimeoutOptions {
   elements: components["schemas"]["DisplayElements"]["elements"];
 }
 
-async function draw(params: DrawParams) {
-  const client = getClient();
-
+async function draw(client: BusyBarClient, params: DrawParams) {
   const { appId, elements } = params;
 
   const { data, error } = await withTimeout(
@@ -31,9 +29,7 @@ async function draw(params: DrawParams) {
   return data;
 }
 
-async function clear(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function clear(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.DELETE("/display/draw", { signal }),
     params?.timeout,
@@ -50,9 +46,10 @@ export interface GetScreenFrameParams extends TimeoutOptions {
   display: paths["/screen"]["get"]["parameters"]["query"]["display"];
 }
 
-async function getScreenFrame(params: GetScreenFrameParams) {
-  const client = getClient();
-
+async function getScreenFrame(
+  client: BusyBarClient,
+  params: GetScreenFrameParams,
+) {
   const { display } = params;
 
   const { data, error } = await withTimeout(
@@ -76,9 +73,10 @@ async function getScreenFrame(params: GetScreenFrameParams) {
   return data;
 }
 
-async function getDisplayBrightness(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function getDisplayBrightness(
+  client: BusyBarClient,
+  params?: TimeoutOptions,
+) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/display/brightness", { signal }),
     params?.timeout,
@@ -97,9 +95,10 @@ export interface BrightnessParams extends TimeoutOptions {
   back?: Brightness;
 }
 
-async function setDisplayBrightness(params: BrightnessParams) {
-  const client = getClient();
-
+async function setDisplayBrightness(
+  client: BusyBarClient,
+  params: BrightnessParams,
+) {
   const { front, back } = params;
 
   const normalize = (value?: Brightness): string | undefined => {

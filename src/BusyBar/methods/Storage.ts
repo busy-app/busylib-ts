@@ -34,7 +34,7 @@ export class StorageMethods {
     this: BusyBar,
     params: UploadFileParams,
   ): Promise<SuccessResponse> {
-    return await writeStorageApi(params);
+    return await writeStorageApi(this.apiClient, params);
   }
 
   /**
@@ -50,7 +50,7 @@ export class StorageMethods {
     this: BusyBar,
     params: DownloadFileParams,
   ): Promise<StorageReadResponse> {
-    return await readStorageApi(params);
+    return await readStorageApi(this.apiClient, params);
   }
 
   /**
@@ -65,7 +65,7 @@ export class StorageMethods {
     this: BusyBar,
     params: ReadDirectoryParams,
   ): Promise<StorageList> {
-    return await listStorageApi(params);
+    return await listStorageApi(this.apiClient, params);
   }
 
   /**
@@ -90,7 +90,7 @@ export class StorageMethods {
     this: BusyBar,
     params: RemoveParams,
   ): Promise<SuccessResponse> {
-    return await removeStorageApi(params);
+    return await removeStorageApi(this.apiClient, params);
   }
 
   /**
@@ -105,7 +105,7 @@ export class StorageMethods {
     this: BusyBar,
     params: CreateDirectoryParams,
   ): Promise<SuccessResponse> {
-    return await mkdirStorageApi(params);
+    return await mkdirStorageApi(this.apiClient, params);
   }
 
   /**
@@ -119,7 +119,7 @@ export class StorageMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<StorageStatus> {
-    return await statusStorageApi(params);
+    return await statusStorageApi(this.apiClient, params);
   }
 
   /**

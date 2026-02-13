@@ -1,10 +1,8 @@
-import { getClient, withTimeout } from "BusyBar/api/createClient";
+import { withTimeout, type BusyBarClient } from "BusyBar/api/createClient";
 import type { TimeoutOptions } from "Global/types";
 import { operations } from "src/Global/API";
 
-async function getTime(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function getTime(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/time", { signal }),
     params?.timeout,
@@ -21,9 +19,7 @@ export interface SetTimestampParams extends TimeoutOptions {
   timestamp: operations["setTimeTimestamp"]["parameters"]["query"]["timestamp"];
 }
 
-async function setTimestamp(params: SetTimestampParams) {
-  const client = getClient();
-
+async function setTimestamp(client: BusyBarClient, params: SetTimestampParams) {
   const { data, error } = await withTimeout(
     (signal) =>
       client.POST("/time/timestamp", {
@@ -42,9 +38,7 @@ async function setTimestamp(params: SetTimestampParams) {
   return data;
 }
 
-async function getTimezone(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function getTimezone(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/time/timezone", { signal }),
     params?.timeout,
@@ -61,9 +55,7 @@ export interface SetTimezoneParams extends TimeoutOptions {
   timezone: operations["setTimeTimezone"]["parameters"]["query"]["timezone"];
 }
 
-async function setTimezone(params: SetTimezoneParams) {
-  const client = getClient();
-
+async function setTimezone(client: BusyBarClient, params: SetTimezoneParams) {
   const { data, error } = await withTimeout(
     (signal) =>
       client.POST("/time/timezone", {
@@ -82,9 +74,7 @@ async function setTimezone(params: SetTimezoneParams) {
   return data;
 }
 
-async function getTzList(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function getTzList(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/time/tzlist", { signal }),
     params?.timeout,

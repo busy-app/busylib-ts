@@ -26,7 +26,7 @@ export class SettingsMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<HttpAccessInfo> {
-    return await getHttpAccessApi(params);
+    return await getHttpAccessApi(this.apiClient, params);
   }
 
   /**
@@ -52,7 +52,7 @@ export class SettingsMethods {
     this: BusyBar,
     params: HttpAccessParams,
   ): Promise<SuccessResponse> {
-    const result = await setHttpAccessApi(params);
+    const result = await setHttpAccessApi(this.apiClient, params);
 
     if (params.mode === "key" && params.key) {
       this.setApiKey(params.key);
@@ -72,7 +72,7 @@ export class SettingsMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<NameInfo> {
-    return await getNameApi(params);
+    return await getNameApi(this.apiClient, params);
   }
 
   /**
@@ -97,6 +97,6 @@ export class SettingsMethods {
     this: BusyBar,
     params: NameParams,
   ): Promise<SuccessResponse> {
-    return await setNameApi(params);
+    return await setNameApi(this.apiClient, params);
   }
 }

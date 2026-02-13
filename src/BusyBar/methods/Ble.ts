@@ -23,7 +23,7 @@ export class BleMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<SuccessResponse> {
-    return await enableBleApi(params);
+    return await enableBleApi(this.apiClient, params);
   }
 
   /**
@@ -37,7 +37,7 @@ export class BleMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<SuccessResponse> {
-    return await disableBleApi(params);
+    return await disableBleApi(this.apiClient, params);
   }
 
   /**
@@ -51,7 +51,7 @@ export class BleMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<SuccessResponse> {
-    return await pairingBleApi(params);
+    return await pairingBleApi(this.apiClient, params);
   }
 
   /**
@@ -65,6 +65,6 @@ export class BleMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<BleStatusResponse> {
-    return await statusBleApi(params);
+    return await statusBleApi(this.apiClient, params);
   }
 }

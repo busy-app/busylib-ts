@@ -30,7 +30,7 @@ export class UpdateMethods {
     this: BusyBar,
     params: UpdateParams,
   ): Promise<SuccessResponse> {
-    return await updateApi(params);
+    return await updateApi(this.apiClient, params);
   }
 
   /**
@@ -51,7 +51,7 @@ export class UpdateMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<SuccessResponse> {
-    return await checkUpdateApi(params);
+    return await checkUpdateApi(this.apiClient, params);
   }
 
   /**
@@ -75,7 +75,7 @@ export class UpdateMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<UpdateStatus> {
-    return await statusUpdateApi(params);
+    return await statusUpdateApi(this.apiClient, params);
   }
 
   /**
@@ -100,7 +100,7 @@ export class UpdateMethods {
     this: BusyBar,
     params: ChangelogParams,
   ): Promise<UpdateChangelog> {
-    return await changelogUpdateApi(params);
+    return await changelogUpdateApi(this.apiClient, params);
   }
 
   /**
@@ -125,7 +125,7 @@ export class UpdateMethods {
     this: BusyBar,
     params: InstallParams,
   ): Promise<SuccessResponse> {
-    return await installUpdateApi(params);
+    return await installUpdateApi(this.apiClient, params);
   }
 
   /**
@@ -139,6 +139,6 @@ export class UpdateMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<SuccessResponse> {
-    return await abortUpdateApi(params);
+    return await abortUpdateApi(this.apiClient, params);
   }
 }

@@ -76,14 +76,6 @@ const bodySerializer = (body: unknown, headers?: HeadersInit) => {
 };
 
 type GetVersionFn = () => Promise<components["schemas"]["VersionInfo"]>;
-/**
- * Function to fetch API version info (provided during init)
- */
-let getApiVersionFn: GetVersionFn | undefined = undefined;
-/**
- * Current cached API semver (X-API-Sem-Ver header value)
- */
-let apiSemver: ApiSemver | undefined = undefined;
 
 /**
  * Custom FetchError with HTTP status and body attached
@@ -92,39 +84,6 @@ interface FetchError<T = unknown> extends Error {
   status: number;
   statusText: string;
   body: T;
-}
-
-/**
- * Promise for an ongoing `/version` request ("in flight")
- * Prevents multiple parallel requests to `/version`
- */
-let inFlight: Promise<void> | null = null;
-
-/**
- * Ensure that `apiSemver` is set
- * If not -> fetch `/version`
- * Uses `inFlight` to deduplicate concurrent requests
- */
-async function ensureVersion(): Promise<void> {
-  if (apiSemver) {
-    return;
-  }
-  if (!getApiVersionFn) {
-    throw new Error("getApiVersionFn is not set");
-  }
-
-  if (!inFlight) {
-    inFlight = (async () => {
-      const v = await getApiVersionFn!();
-      if (!v.api_semver) {
-        throw new Error("Empty API version");
-      }
-      apiSemver = v.api_semver;
-    })().finally(() => {
-      inFlight = null;
-    });
-  }
-  await inFlight;
 }
 
 /**
@@ -149,108 +108,6 @@ async function toFetchError(res: Response): Promise<FetchError> {
       body,
     },
   );
-}
-
-let apiKey: ApiKey | undefined = undefined;
-function setApiKey(key: ApiKey) {
-  apiKey = key;
-}
-
-let bearerToken: string | undefined = undefined;
-
-/**
- * Middleware:
- *  - Adds `X-API-Sem-Ver` header to all requests except `/version`
- *  - On 405 (Incompatible API version):
- *      -> resets version
- *      -> refetches `/version`
- *      -> retries the request once with new semver
- */
-const middleware: Middleware = {
-  async onRequest({ request, schemaPath }) {
-    if (bearerToken) {
-      request.headers.set("Authorization", `Bearer ${bearerToken}`);
-    }
-
-    if (schemaPath !== "/version") {
-      await ensureVersion();
-      if (apiSemver) {
-        request.headers.set("X-API-Sem-Ver", apiSemver);
-      }
-      if (apiKey) {
-        request.headers.set("X-API-Token", apiKey);
-      }
-    }
-
-    return request;
-  },
-  async onResponse({ request, response, options, schemaPath }) {
-    if (response.ok) {
-      return response;
-    }
-
-    if (schemaPath === "/version") {
-      throw await toFetchError(response);
-    }
-
-    if (response.status !== 405) {
-      throw await toFetchError(response);
-    }
-
-    apiSemver = undefined;
-    await ensureVersion();
-
-    if (apiSemver) {
-      request.headers.set("X-API-Sem-Ver", apiSemver);
-    }
-    if (bearerToken) {
-      request.headers.set("Authorization", `Bearer ${bearerToken}`);
-    }
-
-    const retried = await (options.fetch ?? fetch)(request);
-
-    if (retried.ok) {
-      return retried;
-    }
-
-    throw await toFetchError(retried);
-  },
-};
-
-/**
- * Global API client instance
- */
-let client: Client<paths, `${string}/${string}`> | null = null;
-
-/**
- * Initialize API client with baseUrl and version fetch function
- */
-function initApiClient(
-  url: string,
-  getApiVersion: GetVersionFn,
-  token: BusyBarConfig["token"],
-) {
-  getApiVersionFn = getApiVersion;
-
-  bearerToken = token ?? undefined;
-
-  client = createClient<paths>({
-    baseUrl: url,
-    bodySerializer,
-  });
-
-  client.use(middleware);
-}
-
-/**
- * Get the initialized API client instance.
- * @throws {Error} If the client is not initialized.
- */
-function getClient() {
-  if (!client) {
-    throw new Error("API client is not initialized");
-  }
-  return client;
 }
 
 /**
@@ -282,4 +139,109 @@ async function withTimeout<T>(
   }
 }
 
-export { initApiClient, client, setApiKey, withTimeout, getClient };
+export type BusyBarClient = Client<paths, `${string}/${string}`>;
+
+/**
+ * Initialize API client with baseUrl and version fetch function
+ */
+function createApiClient(
+  url: string,
+  getApiVersion: GetVersionFn,
+  token: BusyBarConfig["token"],
+) {
+  let apiSemver: ApiSemver | undefined = undefined;
+  let bearerToken: string | undefined = token ?? undefined;
+  let apiKey: ApiKey | undefined = undefined;
+
+  /**
+   * Promise for an ongoing `/version` request ("in flight")
+   * Prevents multiple parallel requests to `/version`
+   */
+  let inFlight: Promise<void> | null = null;
+
+  const ensureVersion = async (): Promise<void> => {
+    if (apiSemver) {
+      return;
+    }
+
+    if (!inFlight) {
+      inFlight = (async () => {
+        const v = await getApiVersion();
+        if (!v.api_semver) {
+          throw new Error("Empty API version");
+        }
+        apiSemver = v.api_semver;
+      })().finally(() => {
+        inFlight = null;
+      });
+    }
+    await inFlight;
+  };
+
+  const middleware: Middleware = {
+    async onRequest({ request, schemaPath }) {
+      if (bearerToken) {
+        request.headers.set("Authorization", `Bearer ${bearerToken}`);
+      }
+
+      if (schemaPath !== "/version") {
+        await ensureVersion();
+        if (apiSemver) {
+          request.headers.set("X-API-Sem-Ver", apiSemver);
+        }
+        if (apiKey) {
+          request.headers.set("X-API-Token", apiKey);
+        }
+      }
+
+      return request;
+    },
+    async onResponse({ request, response, options, schemaPath }) {
+      if (response.ok) {
+        return response;
+      }
+
+      if (schemaPath === "/version") {
+        throw await toFetchError(response);
+      }
+
+      if (response.status !== 405) {
+        throw await toFetchError(response);
+      }
+
+      apiSemver = undefined;
+      await ensureVersion();
+
+      if (apiSemver) {
+        request.headers.set("X-API-Sem-Ver", apiSemver);
+      }
+      if (bearerToken) {
+        request.headers.set("Authorization", `Bearer ${bearerToken}`);
+      }
+
+      const retried = await (options.fetch ?? fetch)(request);
+
+      if (retried.ok) {
+        return retried;
+      }
+
+      throw await toFetchError(retried);
+    },
+  };
+
+  const client = createClient<paths>({
+    baseUrl: url,
+    bodySerializer,
+  });
+
+  client.use(middleware);
+
+  return {
+    client,
+    setApiKey: (key: ApiKey) => {
+      apiKey = key;
+    },
+  };
+}
+
+export { createApiClient, withTimeout };

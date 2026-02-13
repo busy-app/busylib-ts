@@ -25,7 +25,7 @@ export class SystemMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<VersionInfo> {
-    const response = await versionApi(params);
+    const response = await versionApi(this.apiClient, params);
     this.apiSemver = response.api_semver;
 
     return response;
@@ -48,17 +48,17 @@ export class SystemMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<Status>} Current status of the device.
    */
-  async SystemStatusGet(this: BusyBar, params?: TimeoutOptions): Promise<Status> {
-    return await statusApi(params);
+  async SystemStatusGet(
+    this: BusyBar,
+    params?: TimeoutOptions,
+  ): Promise<Status> {
+    return await statusApi(this.apiClient, params);
   }
 
   /**
    * @deprecated Use `SystemStatusGet` instead. will be removed in the next release.
    */
-  async SystemStatus(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<Status> {
+  async SystemStatus(this: BusyBar, params?: TimeoutOptions): Promise<Status> {
     return this.SystemStatusGet(params);
   }
 
@@ -73,7 +73,7 @@ export class SystemMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<StatusSystem> {
-    return await systemStatusApi(params);
+    return await systemStatusApi(this.apiClient, params);
   }
 
   /**
@@ -97,7 +97,7 @@ export class SystemMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<StatusPower> {
-    return await powerStatusApi(params);
+    return await powerStatusApi(this.apiClient, params);
   }
 
   /**

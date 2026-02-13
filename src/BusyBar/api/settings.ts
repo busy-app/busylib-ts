@@ -1,11 +1,9 @@
-import { getClient, withTimeout } from "BusyBar/api/createClient";
+import { withTimeout, type BusyBarClient } from "BusyBar/api/createClient";
 import type { TimeoutOptions } from "Global/types";
 import type { operations } from "Global/API";
 import type { NameInfo } from "Global/types";
 
-async function getHttpAccess(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function getHttpAccess(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/access", { signal }),
     params?.timeout,
@@ -22,9 +20,7 @@ export interface HttpAccessParams extends TimeoutOptions {
   mode: operations["setHttpAccess"]["parameters"]["query"]["mode"];
   key: operations["setHttpAccess"]["parameters"]["query"]["key"];
 }
-async function setHttpAccess(params: HttpAccessParams) {
-  const client = getClient();
-
+async function setHttpAccess(client: BusyBarClient, params: HttpAccessParams) {
   let { mode, key } = params;
   key = key ?? "";
 
@@ -53,9 +49,7 @@ async function setHttpAccess(params: HttpAccessParams) {
   return data;
 }
 
-async function getName(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function getName(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/name", { signal }),
     params?.timeout,
@@ -72,9 +66,7 @@ export interface NameParams extends TimeoutOptions {
   name: NameInfo["name"];
 }
 
-async function setName(params: NameParams) {
-  const client = getClient();
-
+async function setName(client: BusyBarClient, params: NameParams) {
   const { data, error } = await withTimeout(
     (signal) =>
       client.POST("/name", {

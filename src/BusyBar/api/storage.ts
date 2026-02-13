@@ -1,4 +1,4 @@
-import { getClient, withTimeout } from "BusyBar/api/createClient";
+import { withTimeout, type BusyBarClient } from "BusyBar/api/createClient";
 import type { TimeoutOptions } from "Global/types";
 import type { operations } from "Global/API";
 import type { BusyFile } from "BusyBar/types/global";
@@ -8,9 +8,7 @@ export interface UploadFileParams extends TimeoutOptions {
   file: BusyFile;
 }
 
-async function write(params: UploadFileParams) {
-  const client = getClient();
-
+async function write(client: BusyBarClient, params: UploadFileParams) {
   const { path, file } = params;
 
   const { data, error } = await withTimeout(
@@ -42,9 +40,7 @@ export interface DownloadFileParams extends TimeoutOptions {
   asArrayBuffer?: boolean;
 }
 
-async function read(params: DownloadFileParams) {
-  const client = getClient();
-
+async function read(client: BusyBarClient, params: DownloadFileParams) {
   const { path, asArrayBuffer } = params;
 
   const { data, error } = await withTimeout(
@@ -72,9 +68,7 @@ export interface ReadDirectoryParams extends TimeoutOptions {
   path: operations["listStorageFiles"]["parameters"]["query"]["path"];
 }
 
-async function list(params: ReadDirectoryParams) {
-  const client = getClient();
-
+async function list(client: BusyBarClient, params: ReadDirectoryParams) {
   const { path } = params;
 
   const { data, error } = await withTimeout(
@@ -101,9 +95,7 @@ export interface RemoveParams extends TimeoutOptions {
   path: operations["removeStorageFile"]["parameters"]["query"]["path"];
 }
 
-async function remove(params: RemoveParams) {
-  const client = getClient();
-
+async function remove(client: BusyBarClient, params: RemoveParams) {
   const { path } = params;
 
   const { data, error } = await withTimeout(
@@ -130,9 +122,7 @@ export interface CreateDirectoryParams extends TimeoutOptions {
   path: operations["createStorageDir"]["parameters"]["query"]["path"];
 }
 
-async function mkdir(params: CreateDirectoryParams) {
-  const client = getClient();
-
+async function mkdir(client: BusyBarClient, params: CreateDirectoryParams) {
   const { path } = params;
 
   const { data, error } = await withTimeout(
@@ -155,9 +145,7 @@ async function mkdir(params: CreateDirectoryParams) {
   return data;
 }
 
-async function status(params?: TimeoutOptions) {
-  const client = getClient();
-
+async function status(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout(
     (signal) => client.GET("/storage/status", { signal }),
     params?.timeout,

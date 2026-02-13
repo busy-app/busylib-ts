@@ -7,7 +7,13 @@ import {
   SetTimestampParams,
   SetTimezoneParams,
 } from "BusyBar/api/time";
-import type { TimeoutOptions, TimestampInfo, SuccessResponse, TimezoneList, TimezoneInfo } from "Global/types";
+import type {
+  TimeoutOptions,
+  TimestampInfo,
+  SuccessResponse,
+  TimezoneList,
+  TimezoneInfo,
+} from "Global/types";
 import { BusyBar } from "BusyBar/index";
 
 export class TimeMethods {
@@ -18,8 +24,11 @@ export class TimeMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<TimestampInfo>} A promise that resolves to the timestamp information.
    */
-  async TimeGet(this: BusyBar, params?: TimeoutOptions): Promise<TimestampInfo> {
-    return await getTimeApi(params);
+  async TimeGet(
+    this: BusyBar,
+    params?: TimeoutOptions,
+  ): Promise<TimestampInfo> {
+    return await getTimeApi(this.apiClient, params);
   }
 
   /**
@@ -44,7 +53,7 @@ export class TimeMethods {
     this: BusyBar,
     params: SetTimestampParams,
   ): Promise<SuccessResponse> {
-    return await setTimestampApi(params);
+    return await setTimestampApi(this.apiClient, params);
   }
 
   /**
@@ -68,7 +77,7 @@ export class TimeMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<TimezoneInfo> {
-    return await getTimezoneApi(params);
+    return await getTimezoneApi(this.apiClient, params);
   }
 
   /**
@@ -83,7 +92,7 @@ export class TimeMethods {
     this: BusyBar,
     params: SetTimezoneParams,
   ): Promise<SuccessResponse> {
-    return await setTimezoneApi(params);
+    return await setTimezoneApi(this.apiClient, params);
   }
 
   /**
@@ -107,7 +116,7 @@ export class TimeMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<TimezoneList> {
-    return await getTzListApi(params);
+    return await getTzListApi(this.apiClient, params);
   }
 
   /**

@@ -29,7 +29,7 @@ export class DisplayMethods {
     this: BusyBar,
     params: DrawParams,
   ): Promise<SuccessResponse> {
-    return await drawApi(params);
+    return await drawApi(this.apiClient, params);
   }
 
   /**
@@ -43,7 +43,7 @@ export class DisplayMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<SuccessResponse> {
-    return await clearApi(params);
+    return await clearApi(this.apiClient, params);
   }
 
   /**
@@ -58,7 +58,7 @@ export class DisplayMethods {
     this: BusyBar,
     params: GetScreenFrameParams,
   ): Promise<Blob> {
-    return (await getScreenFrameApi(params)) as Blob;
+    return (await getScreenFrameApi(this.apiClient, params)) as Blob;
   }
 
   /**
@@ -72,7 +72,7 @@ export class DisplayMethods {
     this: BusyBar,
     params?: TimeoutOptions,
   ): Promise<DisplayBrightnessInfo> {
-    return await getDisplayBrightnessApi(params);
+    return await getDisplayBrightnessApi(this.apiClient, params);
   }
 
   /**
@@ -98,6 +98,6 @@ export class DisplayMethods {
     this: BusyBar,
     params: BrightnessParams,
   ): Promise<SuccessResponse> {
-    return await setDisplayBrightnessApi(params);
+    return await setDisplayBrightnessApi(this.apiClient, params);
   }
 }
