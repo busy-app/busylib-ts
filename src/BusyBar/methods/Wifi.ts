@@ -29,16 +29,6 @@ export class WifiMethods {
   }
 
   /**
-   * @deprecated Use `WifiStatusGet` instead. will be removed in the next release.
-   */
-  async WifiStatus(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<WifiStatusResponse> {
-    return this.WifiStatusGet(params);
-  }
-
-  /**
    * Connects to Wi-Fi network.
    *
    * @param {ConnectParams} params - Connection parameters:
@@ -82,15 +72,5 @@ export class WifiMethods {
     params?: TimeoutOptions,
   ): Promise<WifiNetworkResponse> {
     return await networksWifiAPi(this.apiClient, params);
-  }
-
-  /**
-   * @deprecated Use `WifiNetworksGet` instead. will be removed in the next release.
-   */
-  async WifiNetworks(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<WifiNetworkResponse> {
-    return this.WifiNetworksGet(params);
   }
 }

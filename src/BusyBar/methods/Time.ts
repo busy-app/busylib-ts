@@ -32,16 +32,6 @@ export class TimeMethods {
   }
 
   /**
-   * @deprecated Use `TimeGet` instead. will be removed in the next release.
-   */
-  async SystemTime(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<TimestampInfo> {
-    return await this.TimeGet(params);
-  }
-
-  /**
    * Set system timestamp.
    *
    * @param {SetTimestampParams} params - Parameters for setting the timestamp.
@@ -54,16 +44,6 @@ export class TimeMethods {
     params: SetTimestampParams,
   ): Promise<SuccessResponse> {
     return await setTimestampApi(this.apiClient, params);
-  }
-
-  /**
-   * @deprecated Use `TimeTimestampSet` instead. will be removed in the next release.
-   */
-  async SystemTimeTimestamp(
-    this: BusyBar,
-    params: SetTimestampParams,
-  ): Promise<SuccessResponse> {
-    return await this.TimeTimestampSet(params);
   }
 
   /**
@@ -96,16 +76,6 @@ export class TimeMethods {
   }
 
   /**
-   * @deprecated Use `TimeTimezoneSet` instead. will be removed in the next release.
-   */
-  async SystemTimeTimezone(
-    this: BusyBar,
-    params: SetTimezoneParams,
-  ): Promise<SuccessResponse> {
-    return await this.TimeTimezoneSet(params);
-  }
-
-  /**
    * Get list of supported timezones.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
@@ -117,15 +87,5 @@ export class TimeMethods {
     params?: TimeoutOptions,
   ): Promise<TimezoneList> {
     return await getTzListApi(this.apiClient, params);
-  }
-
-  /**
-   * @deprecated Use `TimeTzListGet` instead. will be removed in the next release.
-   */
-  async SystemTimeTzList(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<TimezoneList> {
-    return await this.TimeTzListGet(params);
   }
 }

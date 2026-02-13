@@ -33,13 +33,6 @@ export class AccountMethods {
   }
 
   /**
-   * @deprecated Use `AccountInfoGet` instead. will be removed in the next release.
-   */
-  async Account(this: BusyBar, params?: TimeoutOptions): Promise<AccountInfo> {
-    return this.AccountInfoGet(params);
-  }
-
-  /**
    * Get account state.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.

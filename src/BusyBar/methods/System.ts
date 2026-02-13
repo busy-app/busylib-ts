@@ -32,16 +32,6 @@ export class SystemMethods {
   }
 
   /**
-   * @deprecated Use `SystemVersionGet` instead. will be removed in the next release.
-   */
-  async SystemVersion(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<VersionInfo> {
-    return this.SystemVersionGet(params);
-  }
-
-  /**
    * Get device status.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
@@ -53,13 +43,6 @@ export class SystemMethods {
     params?: TimeoutOptions,
   ): Promise<Status> {
     return await statusApi(this.apiClient, params);
-  }
-
-  /**
-   * @deprecated Use `SystemStatusGet` instead. will be removed in the next release.
-   */
-  async SystemStatus(this: BusyBar, params?: TimeoutOptions): Promise<Status> {
-    return this.SystemStatusGet(params);
   }
 
   /**
@@ -77,16 +60,6 @@ export class SystemMethods {
   }
 
   /**
-   * @deprecated Use `SystemInfoGet` instead. will be removed in the next release.
-   */
-  async SystemInfo(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<StatusSystem> {
-    return this.SystemInfoGet(params);
-  }
-
-  /**
    * Get power status.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
@@ -98,15 +71,5 @@ export class SystemMethods {
     params?: TimeoutOptions,
   ): Promise<StatusPower> {
     return await powerStatusApi(this.apiClient, params);
-  }
-
-  /**
-   * @deprecated Use `SystemStatusPowerGet` instead. will be removed in the next release.
-   */
-  async SystemStatusPower(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<StatusPower> {
-    return this.SystemStatusPowerGet(params);
   }
 }

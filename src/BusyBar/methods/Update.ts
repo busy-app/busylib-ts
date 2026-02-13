@@ -34,13 +34,6 @@ export class UpdateMethods {
   }
 
   /**
-   * @deprecated Use `UpdateUpload` instead. will be removed in the next release.
-   */
-  async SystemUpdate(this: BusyBar, params: UpdateParams) {
-    return await this.UpdateFromFile(params);
-  }
-
-  /**
    * Start firmware update check.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
@@ -52,16 +45,6 @@ export class UpdateMethods {
     params?: TimeoutOptions,
   ): Promise<SuccessResponse> {
     return await checkUpdateApi(this.apiClient, params);
-  }
-
-  /**
-   * @deprecated Use `UpdateCheck` instead. will be removed in the next release.
-   */
-  async SystemUpdateCheck(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<SuccessResponse> {
-    return this.UpdateCheck(params);
   }
 
   /**
@@ -79,16 +62,6 @@ export class UpdateMethods {
   }
 
   /**
-   * @deprecated Use `UpdateStatusGet` instead. will be removed in the next release.
-   */
-  async SystemUpdateStatus(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<UpdateStatus> {
-    return this.UpdateStatusGet(params);
-  }
-
-  /**
    * Get firmware update changelog.
    *
    * @param {ChangelogParams} params - Parameters for the changelog request.
@@ -101,16 +74,6 @@ export class UpdateMethods {
     params: ChangelogParams,
   ): Promise<UpdateChangelog> {
     return await changelogUpdateApi(this.apiClient, params);
-  }
-
-  /**
-   * @deprecated Use `UpdateChangelogGet` instead. will be removed in the next release.
-   */
-  async SystemUpdateChangelog(
-    this: BusyBar,
-    params: ChangelogParams,
-  ): Promise<UpdateChangelog> {
-    return this.UpdateChangelogGet(params);
   }
 
   /**

@@ -69,16 +69,6 @@ export class StorageMethods {
   }
 
   /**
-   * @deprecated Use `StorageListGet` instead. will be removed in the next release.
-   */
-  async StorageList(
-    this: BusyBar,
-    params: ReadDirectoryParams,
-  ): Promise<StorageList> {
-    return this.StorageListGet(params);
-  }
-
-  /**
    * Remove a file on internal storage. Removes a file with a specified path.
    *
    * @param {RemoveParams} params - Remove parameters:
@@ -120,15 +110,5 @@ export class StorageMethods {
     params?: TimeoutOptions,
   ): Promise<StorageStatus> {
     return await statusStorageApi(this.apiClient, params);
-  }
-
-  /**
-   * @deprecated Use `StorageStatusGet` instead. will be removed in the next release.
-   */
-  async StorageStatus(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<StorageStatus> {
-    return this.StorageStatusGet(params);
   }
 }

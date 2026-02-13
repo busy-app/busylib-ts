@@ -31,16 +31,6 @@ export class AudioMethods {
   }
 
   /**
-   * @deprecated Use `AudioPlay` instead. will be removed in the next release.
-   */
-  async Audio(
-    this: BusyBar,
-    params: AudioPlayParams,
-  ): Promise<SuccessResponse> {
-    return this.AudioPlay(params);
-  }
-
-  /**
    * Stop audio playback. Stops any currently playing audio.
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
@@ -66,16 +56,6 @@ export class AudioMethods {
     params?: TimeoutOptions,
   ): Promise<AudioVolumeInfo> {
     return await getAudioVolumeApi(this.apiClient, params);
-  }
-
-  /**
-   * @deprecated Use `AudioVolumeGet` instead. will be removed in the next release.
-   */
-  async AudioVolume(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<AudioVolumeInfo> {
-    return this.AudioVolumeGet(params);
   }
 
   /**

@@ -76,16 +76,6 @@ export class DisplayMethods {
   }
 
   /**
-   * @deprecated Use `DisplayBrightnessGet` instead. will be removed in the next release.
-   */
-  async DisplayBrightness(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<DisplayBrightnessInfo> {
-    return this.DisplayBrightnessGet(params);
-  }
-
-  /**
    * Set display brightness.
    *
    * @param {BrightnessParams} params - Brightness parameters:

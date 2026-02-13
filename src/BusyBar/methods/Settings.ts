@@ -30,16 +30,6 @@ export class SettingsMethods {
   }
 
   /**
-   * @deprecated Use `SettingsAccessGet` instead. will be removed in the next release.
-   */
-  async SettingsAccess(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<HttpAccessInfo> {
-    return this.SettingsAccessGet(params);
-  }
-
-  /**
    * Set HTTP API access over Wi-Fi configuration.
    *
    * @param {HttpAccessParams} params - Access parameters:
@@ -73,16 +63,6 @@ export class SettingsMethods {
     params?: TimeoutOptions,
   ): Promise<NameInfo> {
     return await getNameApi(this.apiClient, params);
-  }
-
-  /**
-   * @deprecated Use `SettingsNameGet` instead. will be removed in the next release.
-   */
-  async SettingsName(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<NameInfo> {
-    return this.SettingsNameGet(params);
   }
 
   /**
