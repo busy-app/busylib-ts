@@ -241,6 +241,9 @@ function createApiClient(
     setApiKey: (key: ApiKey) => {
       apiKey = key;
     },
+    setToken: (token: string) => {
+      bearerToken = token;
+    },
   };
 }
 

@@ -70,6 +70,7 @@ export class BusyBar {
   public readonly apiClient: BusyBarClient;
 
   private setApiKeyFn: (key: ApiKey) => void;
+  private setTokenFn: (token: string) => void;
 
   /**
    * Detected connection type based on auth requirements.
@@ -122,7 +123,7 @@ export class BusyBar {
 
     this.apiSemver = "";
 
-    const { client, setApiKey } = createApiClient(
+    const { client, setApiKey, setToken } = createApiClient(
       `${this.addr}/api/`,
       this.SystemVersionGet.bind(this),
       config?.token,
@@ -130,6 +131,7 @@ export class BusyBar {
 
     this.apiClient = client;
     this.setApiKeyFn = setApiKey;
+    this.setTokenFn = setToken;
 
     this.detectConnectionType();
   }
@@ -180,6 +182,14 @@ export class BusyBar {
    */
   setApiKey(key: string) {
     this.setApiKeyFn(key);
+  }
+
+  /**
+   * Sets Bearer token for all subsequent requests.
+   * @param {string} token - Bearer token to use in "Authorization" header.
+   */
+  setToken(token: string) {
+    this.setTokenFn(token);
   }
 }
 
