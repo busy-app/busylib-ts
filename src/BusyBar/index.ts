@@ -12,6 +12,7 @@ import { SettingsMethods } from "./methods/Settings";
 import { BleMethods } from "./methods/Ble";
 import { InputMethods } from "./methods/Input";
 import { MatterMethods } from "./methods/Matter";
+import { AssetsMethods } from "./methods/Assets";
 
 import {
   DEFAULT_DEVICE_URL,
@@ -39,6 +40,7 @@ export interface BusyBar
     SettingsMethods,
     BleMethods,
     InputMethods,
+    AssetsMethods,
     MatterMethods {}
 
 export type BusyBarConfig = {
@@ -219,4 +221,5 @@ applyMixins(BusyBar, [
   BleMethods,
   InputMethods,
   MatterMethods,
+  AssetsMethods,
 ]);
