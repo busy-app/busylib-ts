@@ -5,16 +5,19 @@ import type { components, paths } from "Global/API";
 export interface DrawParams extends TimeoutOptions {
   appId: components["schemas"]["DisplayElements"]["app_id"];
   elements: components["schemas"]["DisplayElements"]["elements"];
+  /** @default 6 */
+  priority?: components["schemas"]["DisplayElements"]["priority"];
 }
 
 async function draw(client: BusyBarClient, params: DrawParams) {
-  const { appId, elements } = params;
+  const { appId, elements, priority = 6 } = params;
 
   const { data, error } = await withTimeout(
     (signal) =>
       client.POST("/display/draw", {
         body: {
           app_id: appId,
+          priority: priority,
           elements: elements,
         },
         signal,
@@ -91,39 +94,36 @@ async function getDisplayBrightness(
 
 type Brightness = number | "auto";
 export interface BrightnessParams extends TimeoutOptions {
-  front?: Brightness;
-  back?: Brightness;
+  value?: Brightness;
 }
 
 async function setDisplayBrightness(
   client: BusyBarClient,
   params: BrightnessParams,
 ) {
-  const { front, back } = params;
+  const { value } = params;
 
-  const normalize = (value?: Brightness): string | undefined => {
-    if (typeof value === "number") {
-      if (value < 0 || value > 100) {
+  const normalize = (val?: Brightness): string | undefined => {
+    if (typeof val === "number") {
+      if (val < 0 || val > 100) {
         throw new Error("Brightness value must be between 0 and 100 or 'auto'");
       }
-      return String(value);
+      return String(val);
     }
-    if (value === "auto") {
+    if (val === "auto") {
       return "auto";
     }
     return undefined;
   };
 
-  const frontQuery = normalize(front);
-  const backQuery = normalize(back);
+  const valueQuery = normalize(value);
 
   const { data, error } = await withTimeout(
     (signal) =>
       client.POST("/display/brightness", {
         params: {
           query: {
-            front: frontQuery,
-            back: backQuery,
+            value: valueQuery,
           },
         },
         signal,

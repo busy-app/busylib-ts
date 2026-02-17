@@ -1235,6 +1235,84 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/matter/endpoint/1": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Matter endpoint 1 state */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Successfully got Matter endpoint 1 state */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["MatterEndpointState"];
+          };
+        };
+        /** @description Internal Matter service is broken */
+        503: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["Error"];
+          };
+        };
+      };
+    };
+    put?: never;
+    /** Set Matter endpoint 1 state */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["MatterEndpointState"];
+        };
+      };
+      responses: {
+        /** @description Successfully set Matter endpoint 1 state */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+        /** @description Internal Matter service is broken */
+        503: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["Error"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1511,6 +1589,11 @@ export interface components {
        * @example my_app
        */
       app_id: string;
+      /**
+       * @description Draw requests with a lower priority than the currently active draw request will be ignored. Value is 1 through 10, inclusive, higher number means higher priority. Any built-in app is treated as priority level 5.
+       * @default 6
+       */
+      priority: number;
       /** @description Array of elements to display */
       elements: components["schemas"]["DisplayElement"][];
     };
@@ -1650,15 +1733,10 @@ export interface components {
     };
     DisplayBrightnessInfo: {
       /**
-       * @description Front display brightness (0-100/auto)
+       * @description Displays brightness (0-100/auto)
        * @example auto
        */
-      front?: string;
-      /**
-       * @description Back display brightness (0-100/auto)
-       * @example 50
-       */
-      back?: string;
+      value?: string;
     };
     AudioVolumeInfo: {
       /**
@@ -1687,15 +1765,25 @@ export interface components {
     };
     StatusSystem: {
       /**
-       * @description Git branch name
-       * @example main
+       * @description Device serial number
+       * @example 203638485431500400123456
        */
-      branch?: string;
+      serial_number?: string;
+      /**
+       * @description API SemVer
+       * @example 0.0.0
+       */
+      api_semver?: string;
       /**
        * @description Firmware version
        * @example 1.0.0
        */
       version?: string;
+      /**
+       * @description Git branch name
+       * @example main
+       */
+      branch?: string;
       /**
        * @description Build date
        * @example 2024-01-01
@@ -1711,6 +1799,11 @@ export interface components {
        * @example 00d 00h 04m 13s
        */
       uptime?: string;
+      /**
+       * @description System boot timestamp
+       * @example 1767225600
+       */
+      boot_time?: number;
     };
     StatusPower: {
       /**
@@ -1805,6 +1898,11 @@ export interface components {
       security?: components["schemas"]["WifiSecurityMethod"];
       ip_config?: {
         ip_method?: components["schemas"]["WifiIpMethod"];
+        /**
+         * @example ipv4
+         * @enum {string}
+         */
+        ip_type?: "ipv4" | "ipv6";
         /** @example 192.168.50.5 */
         address?: string;
         /** @example 255.255.255.0 */
@@ -2026,6 +2124,7 @@ export interface components {
     };
   };
   responses: never;
+  parameters: never;
   requestBodies: never;
   headers: never;
   pathItems: never;
@@ -2427,8 +2526,17 @@ export interface operations {
           "application/json": components["schemas"]["SuccessResponse"];
         };
       };
-      /** @description Invalid app_id or deletion failed */
+      /** @description Invalid request parameters */
       400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
+      /** @description Delete failed */
+      500: {
         headers: {
           [name: string]: unknown;
         };
@@ -2686,6 +2794,15 @@ export interface operations {
           "application/json": components["schemas"]["Error"];
         };
       };
+      /** @description Requested priority level is below that of currently active app */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
       /** @description Display error */
       500: {
         headers: {
@@ -2756,15 +2873,10 @@ export interface operations {
     parameters: {
       query?: {
         /**
-         * @description Front display brightness (0-100/auto)
-         * @example auto
-         */
-        front?: string;
-        /**
-         * @description Back display brightness (0-100/auto)
+         * @description Displays brightness (0-100/auto)
          * @example 50
          */
-        back?: string;
+        value?: string;
       };
       header?: never;
       path?: never;

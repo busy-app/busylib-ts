@@ -20,8 +20,9 @@ export class DisplayMethods {
    * Draw on display. Starts the Canvas application if not running.
    *
    * @param {DrawParams} params - Parameters for the draw operation.
-   *   @param {string} params.appId - Application ID.
-   *   @param {any} params.elements - Display elements to draw.
+   *   @param {DrawParams['appId']} params.appId - Application ID.
+   *   @param {DrawParams['elements']} params.elements - Display elements to draw.
+   *   @param {DrawParams['priority']} [params.priority=6] - Priority for the draw request (1-10).
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful draw command.
    */
@@ -79,8 +80,7 @@ export class DisplayMethods {
    * Set display brightness.
    *
    * @param {BrightnessParams} params - Brightness parameters:
-   *   @param {number|"auto"} [params.front] - Front brightness (0-100 or "auto").
-   *   @param {number|"auto"} [params.back] - Back brightness (0-100 or "auto").
+   *   @param {BrightnessParams['value']} [params.value] - Brightness (0-100 or "auto").
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
