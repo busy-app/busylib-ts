@@ -217,6 +217,7 @@ export interface paths {
      * @description Starts asynchronous firmware installation from a remote URL.
      *     The update process (download, SHA verification, unpack, prepare, reboot) runs in the background.
      *     Use /update/status to monitor progress.
+     *
      */
     post: operations['installFirmwareUpdate'];
     delete?: never;
@@ -239,6 +240,30 @@ export interface paths {
      * @description Signals the updater to abort an ongoing download operation.
      */
     post: operations['abortFirmwareDownload'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/update/autoupdate': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get autoupdate settings
+     * @description Returns current autoupdate configuration
+     */
+    get: operations['getAutoupdateSettings'];
+    put?: never;
+    /**
+     * Set autoupdate settings
+     * @description Updates autoupdate configuration. All fields are optional - only provided fields are updated.
+     */
+    post: operations['setAutoupdateSettings'];
     delete?: never;
     options?: never;
     head?: never;
@@ -366,6 +391,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/storage/rename': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Rename/move a file
+     * @description Moves a file to a new location
+     */
+    post: operations['RenameStorageFile'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/storage/status': {
     parameters: {
       query?: never;
@@ -396,6 +441,7 @@ export interface paths {
      * Draw on display
      * @description Sends drawing data to the display.
      *     Supports JSON-defined display elements.
+     *
      */
     post: operations['drawOnDisplay'];
     /**
@@ -424,6 +470,7 @@ export interface paths {
     /**
      * Set display brightness
      * @description Set brightness for one or both displays
+     *
      */
     post: operations['setDisplayBrightness'];
     delete?: never;
@@ -445,6 +492,7 @@ export interface paths {
      * Play audio file
      * @description Plays an audio file from the assets directory.
      *     Supported formats include .snd files.
+     *
      */
     post: operations['playAudio'];
     /**
@@ -517,6 +565,46 @@ export interface paths {
      * @description Get device status
      */
     get: operations['getStatus'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/status/device': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get device info
+     * @description Get device info
+     */
+    get: operations['getStatusDevice'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/status/firmware': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get firmware info
+     * @description Get firmware info
+     */
+    get: operations['getStatusFirmware'];
     put?: never;
     post?: never;
     delete?: never;
@@ -804,6 +892,7 @@ export interface paths {
      *     Upgrade from HTTP to WebSocket protocol is required.
      *     After connection, client must send desired display ID
      *     as JSON {"display": 0}
+     *
      */
     get: operations['connectWebSocket'];
     put?: never;
@@ -1112,6 +1201,7 @@ export interface paths {
     /**
      * Set current timestamp
      * @description Sets the RTC timestamp in ISO 8601 format. Time zone qualifier (e.g. Z of UTC or +hh:mm for local time) is required.
+     *
      */
     post: operations['setTimeTimestamp'];
     delete?: never;
@@ -1177,10 +1267,34 @@ export interface paths {
      */
     get: operations['getBusySnapshot'];
     /**
-     * Set BUSY time snapshot
+     * Set BUSY timer snapshot
      * @description Run the timer starting from the given snapshot
      */
     put: operations['setBusySnapshot'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/busy/profiles/{slot}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get BUSY timer profile
+     * @description Gets the BUSY timer profile under specified slot
+     */
+    get: operations['getBusyProfile'];
+    /**
+     * Set BUSY time profile
+     * @description Sets the BUSY timer profile under specified slot
+     */
+    put: operations['setBusyProfile'];
     post?: never;
     delete?: never;
     options?: never;
@@ -1324,23 +1438,19 @@ export interface components {
        */
       result: string;
     };
-    /**
-     * @example {
+    /** @example {
      *       "error": "Invalid parameter",
      *       "code": 400
-     *     }
-     */
+     *     } */
     Error: {
       /** @description Error message */
       error: string;
       /** @description Error code */
       code?: number;
     };
-    /**
-     * @example {
+    /** @example {
      *       "api_semver": "0.0.0"
-     *     }
-     */
+     *     } */
     VersionInfo: {
       /**
        * @description API SemVer
@@ -1348,8 +1458,7 @@ export interface components {
        */
       api_semver: string;
     };
-    /**
-     * @example {
+    /** @example {
      *       "install": {
      *         "is_allowed": true,
      *         "event": "none",
@@ -1365,10 +1474,9 @@ export interface components {
      *       "check": {
      *         "available_version": "1.2.3",
      *         "event": "stop",
-     *         "result": "available"
+     *         "status": "available"
      *       }
-     *     }
-     */
+     *     } */
     UpdateStatus: {
       install?: {
         /** @description Whether update installation is allowed (battery check) */
@@ -1428,11 +1536,27 @@ export interface components {
         status?: 'available' | 'not_available' | 'failure' | 'none';
       };
     };
-    /**
-     * @example {
+    /** @description Autoupdate configuration settings. All fields are optional for POST requests. */
+    AutoupdateSettings: {
+      /**
+       * @description Whether automatic updates are enabled
+       * @example true
+       */
+      is_enabled?: boolean;
+      /**
+       * @description Start of autoupdate window in HH:MM format (e.g., "08:00")
+       * @example 00:00
+       */
+      interval_start?: string;
+      /**
+       * @description End of autoupdate window in HH:MM format (e.g., "23:59")
+       * @example 08:00
+       */
+      interval_end?: string;
+    };
+    /** @example {
      *       "name": "BUSY bar"
-     *     }
-     */
+     *     } */
     NameInfo: {
       /**
        * @description Device name
@@ -1453,8 +1577,7 @@ export interface components {
        */
       key_valid?: boolean;
     };
-    /**
-     * @example {
+    /** @example {
      *       "list": [
      *         {
      *           "type": "file",
@@ -1466,8 +1589,7 @@ export interface components {
      *           "name": "assets"
      *         }
      *       ]
-     *     }
-     */
+     *     } */
     StorageList: {
       /** @description Array of elements to display */
       list: components['schemas']['StorageListElement'][];
@@ -1522,8 +1644,7 @@ export interface components {
        */
       file: string;
     };
-    /**
-     * @example {
+    /** @example {
      *       "app_id": "my_app",
      *       "elements": [
      *         {
@@ -1562,8 +1683,7 @@ export interface components {
      *           "display": "back"
      *         }
      *       ]
-     *     }
-     */
+     *     } */
     DisplayElements: {
       /**
        * @description Application ID for organizing assets
@@ -1576,7 +1696,12 @@ export interface components {
        */
       priority: number;
       /** @description Array of elements to display */
-      elements: components['schemas']['DisplayElement'][];
+      elements: (
+        | components['schemas']['TextElement']
+        | components['schemas']['ImageElement']
+        | components['schemas']['AnimElement']
+        | components['schemas']['CountdownElement']
+      )[];
     };
     DisplayElement: {
       /** @description Unique identifier for the element */
@@ -1732,50 +1857,96 @@ export interface components {
       timezone: string;
     };
     Status: {
+      device?: components['schemas']['StatusDevice'];
+      firmware?: components['schemas']['StatusFirmware'];
       system?: components['schemas']['StatusSystem'];
       power?: components['schemas']['StatusPower'];
     };
-    StatusSystem: {
+    StatusDevice: {
       /**
        * @description Device serial number
        * @example 203638485431500400123456
        */
-      serial_number?: string;
+      serial_number: string;
       /**
-       * @description API SemVer
-       * @example 0.0.0
+       * @description MAC of USB ethernet device
+       * @example 0c:fa:22:21:2a:31
        */
-      api_semver?: string;
+      usb_mac: string;
+      /**
+       * @description WIFI MAC
+       * @example 0c:fa:22:21:2a:31
+       */
+      wifi_mac?: string;
+      /**
+       * @description BLE MAC
+       * @example 0c:fa:22:21:2a:31
+       */
+      ble_mac?: string;
+      /**
+       * @description Is OTP data valid
+       * @example true
+       */
+      otp_valid: boolean;
+      /**
+       * @description Device model code
+       * @example BB.1
+       */
+      otp_model?: string;
+      /**
+       * @description Production timestamp
+       * @example 1767225600
+       */
+      otp_timestamp?: number;
+    };
+    StatusFirmware: {
       /**
        * @description Firmware version
        * @example 1.0.0
        */
-      version?: string;
+      version: string;
+      /**
+       * @description Firmware target code
+       * @example 22
+       */
+      target: number;
       /**
        * @description Git branch name
        * @example main
        */
-      branch?: string;
+      branch: string;
       /**
        * @description Build date
        * @example 2024-01-01
        */
-      build_date?: string;
+      build_date: string;
       /**
        * @description Git commit hash (may include -dirty suffix)
        * @example abc123def456-dirty
        */
-      commit_hash?: string;
+      commit_hash: string;
+      /**
+       * @description Radio firmware version
+       * @example 1711.2.14.5.2.0.7
+       */
+      nwp_version?: string;
+    };
+    StatusSystem: {
+      /**
+       * @description API SemVer
+       * @example 0.0.0
+       */
+      api_semver: string;
       /**
        * @description System uptime
        * @example 00d 00h 04m 13s
        */
-      uptime?: string;
+      uptime: string;
       /**
        * @description System boot timestamp
        * @example 1767225600
        */
-      boot_time?: number;
+      boot_time: number;
     };
     StatusPower: {
       /**
@@ -1783,27 +1954,27 @@ export interface components {
        * @example discharging
        * @enum {string}
        */
-      state?: 'discharging' | 'charging' | 'charged';
+      state: 'discharging' | 'charging' | 'charged';
       /**
        * @description Battery charge percent
        * @example 99
        */
-      battery_charge?: number;
+      battery_charge: number;
       /**
        * @description Battery voltage in mV
        * @example 4183
        */
-      battery_voltage?: number;
+      battery_voltage: number;
       /**
        * @description Battery current in mA
        * @example -180
        */
-      battery_current?: number;
+      battery_current: number;
       /**
        * @description USB voltage in mV
        * @example 4843
        */
-      usb_voltage?: number;
+      usb_voltage: number;
     };
     /**
      * @example WPA3
@@ -1932,34 +2103,32 @@ export interface components {
         | components['schemas']['BusySnapshotInfinite']
         | components['schemas']['BusySnapshotSimple']
         | components['schemas']['BusySnapshotInterval'];
+      busy_bar_settings: components['schemas']['BusyBarSettings'];
       /** @example 1761582532251 */
       snapshot_timestamp_ms: number;
     };
     BusySnapshotNotStarted: {
-      /**
-       * @example NOT_STARTED
-       * @enum {string}
-       */
+      /** @constant */
       type: 'NOT_STARTED';
     };
     BusySnapshotInfinite: {
-      /**
-       * @example INFINITE
-       * @enum {string}
-       */
+      /** @constant */
       type: 'INFINITE';
-      /** @example 00000000-0000-0000-0000-000000000000 */
+      /**
+       * Format: uuid
+       * @example 00000000-0000-0000-0000-000000000000
+       */
       card_id: string;
       /** @example false */
       is_paused: boolean;
     };
     BusySnapshotSimple: {
-      /**
-       * @example SIMPLE
-       * @enum {string}
-       */
+      /** @constant */
       type: 'SIMPLE';
-      /** @example 00000000-0000-0000-0000-000000000000 */
+      /**
+       * Format: uuid
+       * @example 00000000-0000-0000-0000-000000000000
+       */
       card_id: string;
       /** @example 9000 */
       time_left_ms: number;
@@ -1967,12 +2136,12 @@ export interface components {
       is_paused: boolean;
     };
     BusySnapshotInterval: {
-      /**
-       * @example INTERVAL
-       * @enum {string}
-       */
+      /** @constant */
       type: 'INTERVAL';
-      /** @example 00000000-0000-0000-0000-000000000000 */
+      /**
+       * Format: uuid
+       * @example 00000000-0000-0000-0000-000000000000
+       */
       card_id: string;
       /** @example 1 */
       current_interval: number;
@@ -1982,40 +2151,80 @@ export interface components {
       current_interval_time_left_ms: number;
       /** @example false */
       is_paused: boolean;
-      interval_settings: components['schemas']['BusySnapshotIntervalSettings'];
+      interval_settings: components['schemas']['BusyTimerIntervalSettings'];
     };
-    BusySnapshotIntervalSettings: {
+    BusyProfile: {
+      /** @example -1 */
+      sort_order: number;
+      /** @example study */
+      title: string;
       /**
-       * @example INTERVAL
-       * @enum {string}
+       * Format: uuid
+       * @example 00000000-0000-0000-0000-000000000000
        */
-      type?: 'INTERVAL';
+      id: string;
+      timer_settings:
+        | components['schemas']['BusyTimerInfiniteSettings']
+        | components['schemas']['BusyTimerSimpleSettings']
+        | components['schemas']['BusyTimerIntervalSettings'];
+      busy_bar_settings: components['schemas']['BusyBarSettings'];
+      /** @example 1761582532251 */
+      profile_timestamp_ms: number;
+    };
+    /**
+     * @example busy
+     * @enum {string}
+     */
+    BusyProfileSlot: 'busy' | 'custom';
+    BusyTimerInfiniteSettings: {
+      /** @constant */
+      type: 'INFINITE';
+    };
+    BusyTimerSimpleSettings: {
+      /** @constant */
+      type: 'SIMPLE';
+      /** @example 300000 */
+      total_time_ms: number;
+    };
+    BusyTimerIntervalSettings: {
+      /** @constant */
+      type: 'INTERVAL';
       /** @example 120000 */
-      interval_work_ms?: number;
+      interval_work_ms: number;
       /** @example 60000 */
-      interval_rest_ms?: number;
+      interval_rest_ms: number;
       /** @example 3 */
-      interval_work_cycles_count?: number;
+      interval_work_cycles_count: number;
       /** @example false */
-      is_autostart_enabled?: boolean;
+      is_autostart_enabled: boolean;
+    };
+    BusyBarSettings: {
+      /** @example on_air */
+      theme: string;
+      /** @example false */
+      show_work_phase_only: boolean;
+      /** @example true */
+      trigger_smart_home: boolean;
     };
     TimezoneListResponse: {
-      /**
-       * @description Time zone name
-       * @example Bangalore
-       */
-      name?: string;
-      /**
-       * @description Time zone offset from UTC
-       * @example +05:30
-       */
-      offset?: string;
-      /**
-       * @description Time zone abbreviation
-       * @example IST
-       */
-      abbr?: string;
-    }[];
+      list?: {
+        /**
+         * @description Time zone name
+         * @example Bangalore
+         */
+        name?: string;
+        /**
+         * @description Time zone offset from UTC
+         * @example +05:30
+         */
+        offset?: string;
+        /**
+         * @description Time zone abbreviation
+         * @example IST
+         */
+        abbr?: string;
+      }[];
+    };
     MatterCommissionedFabrics: {
       /**
        * @description Number of Matter smart homes ("fabrics") that this device is linked with ("commissioned into")
@@ -2398,6 +2607,77 @@ export interface operations {
       };
     };
   };
+  getAutoupdateSettings: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Settings retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AutoupdateSettings'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  setAutoupdateSettings: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AutoupdateSettings'];
+      };
+    };
+    responses: {
+      /** @description Settings updated successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+      /** @description Invalid time format (expected HH:MM) */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Failed to apply settings */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
   uploadAssetWithAppId: {
     parameters: {
       query: {
@@ -2673,6 +2953,46 @@ export interface operations {
         };
       };
       /** @description Invalid path or creation failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  RenameStorageFile: {
+    parameters: {
+      query: {
+        /**
+         * @description Old location path
+         * @example /ext/old_name.txt
+         */
+        path: string;
+        /**
+         * @description New location path
+         * @example /ext/new_name.txt
+         */
+        new_path: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Renamed successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+      /** @description Invalid path or operation failed */
       400: {
         headers: {
           [name: string]: unknown;
@@ -3073,6 +3393,64 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['Status'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  getStatusDevice: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Information retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StatusDevice'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  getStatusFirmware: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Information retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StatusFirmware'];
         };
       };
       /** @description Internal server error */
@@ -3522,6 +3900,72 @@ export interface operations {
         };
       };
       /** @description Error setting snapshot */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  getBusyProfile: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        slot: components['schemas']['BusyProfileSlot'];
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Got profile successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BusyProfile'];
+        };
+      };
+      /** @description Error getting profile */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  setBusyProfile: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        slot: components['schemas']['BusyProfileSlot'];
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BusyProfile'];
+      };
+    };
+    responses: {
+      /** @description Profile successfully set */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+      /** @description Error setting profile */
       400: {
         headers: {
           [name: string]: unknown;

@@ -41,4 +41,24 @@ async function powerStatus(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-export { version, status, systemStatus, powerStatus };
+async function deviceStatus(client: BusyBarClient, params?: TimeoutOptions) {
+  const { data, error } = await withTimeout((signal) => client.GET('/status/device', { signal }), params?.timeout);
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+async function firmwareStatus(client: BusyBarClient, params?: TimeoutOptions) {
+  const { data, error } = await withTimeout((signal) => client.GET('/status/firmware', { signal }), params?.timeout);
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export { version, status, systemStatus, powerStatus, deviceStatus, firmwareStatus };

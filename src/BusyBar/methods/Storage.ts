@@ -5,11 +5,13 @@ import {
   remove as removeStorageApi,
   mkdir as mkdirStorageApi,
   status as statusStorageApi,
+  rename as renameStorageApi,
   UploadFileParams,
   DownloadFileParams,
   ReadDirectoryParams,
   RemoveParams,
-  CreateDirectoryParams
+  CreateDirectoryParams,
+  RenameParams
 } from 'BusyBar/api/storage';
 import type { TimeoutOptions, SuccessResponse, StorageReadResponse, StorageList, StorageStatus } from 'Global/types';
 import { BusyBar } from 'BusyBar/index';
@@ -86,5 +88,18 @@ export class StorageMethods {
    */
   async StorageStatusGet(this: BusyBar, params?: TimeoutOptions): Promise<StorageStatus> {
     return await statusStorageApi(this.apiClient, params);
+  }
+
+  /**
+   * Rename/move a file. Moves a file to a new location.
+   *
+   * @param {RenameParams} params - Rename parameters:
+   *   @param {RenameParams['path']} params.path - Current path of the file or directory.
+   *   @param {RenameParams['new_path']} params.new_path - New path for the file or directory.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<SuccessResponse>} A promise that resolves on successful rename.
+   */
+  async StorageRename(this: BusyBar, params: RenameParams): Promise<SuccessResponse> {
+    return await renameStorageApi(this.apiClient, params);
   }
 }

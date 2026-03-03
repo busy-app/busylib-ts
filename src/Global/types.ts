@@ -70,16 +70,19 @@ export type VersionInfo = components['schemas']['VersionInfo'];
 export type Status = components['schemas']['Status'];
 export type StatusSystem = components['schemas']['StatusSystem'];
 export type StatusPower = components['schemas']['StatusPower'];
+export type StatusDevice = components['schemas']['StatusDevice'];
+export type StatusFirmware = components['schemas']['StatusFirmware'];
 export type TimestampInfo = components['schemas']['TimestampInfo'];
 
 // Time
 export type TimezoneInfo = components['schemas']['TimezoneInfo'];
 export type TimezoneList = components['schemas']['TimezoneListResponse'];
-export type TimezoneItem = components['schemas']['TimezoneListResponse'][number];
+export type TimezoneItem = NonNullable<TimezoneList['list']>[number];
 
 // Update
 export type UpdateStatus = components['schemas']['UpdateStatus'];
 export type UpdateChangelog = operations['getUpdateChangelog']['responses']['200']['content']['application/json'];
+export type AutoUpdateSettings = components['schemas']['AutoupdateSettings'];
 
 // Wifi
 export type WifiSecurityMethod = components['schemas']['WifiSecurityMethod'];

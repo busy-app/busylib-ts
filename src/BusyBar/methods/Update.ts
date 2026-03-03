@@ -5,11 +5,14 @@ import {
   changelog as changelogUpdateApi,
   install as installUpdateApi,
   abort as abortUpdateApi,
+  getAutoUpdate as getAutoUpdateApi,
+  setAutoUpdate as setAutoUpdateApi,
   UpdateParams,
   ChangelogParams,
-  InstallParams
+  InstallParams,
+  AutoUpdateParams
 } from 'BusyBar/api/update';
-import type { TimeoutOptions, SuccessResponse, UpdateStatus, UpdateChangelog } from 'Global/types';
+import type { TimeoutOptions, SuccessResponse, UpdateStatus, UpdateChangelog, AutoUpdateSettings } from 'Global/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class UpdateMethods {
@@ -80,5 +83,31 @@ export class UpdateMethods {
    */
   async UpdateAbort(this: BusyBar, params?: TimeoutOptions): Promise<SuccessResponse> {
     return await abortUpdateApi(this.apiClient, params);
+  }
+
+
+  /**
+   * Get current auto-update settings.
+   *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<AutoUpdateSettings>} A promise that resolves to the current auto-update settings.
+   */
+  async UpdateAutoUpdateGet(this: BusyBar, params?: TimeoutOptions): Promise<AutoUpdateSettings> {
+    return await getAutoUpdateApi(this.apiClient, params);
+  }
+
+  /**
+   * Set auto-update settings.
+   *
+   * @param {AutoUpdateParams} params - Parameters for auto-update settings.
+   *   @param {AutoUpdateParams['is_enabled']} params.is_enabled - Whether auto-update is enabled.
+   *   @param {AutoUpdateParams['interval_start']} params.interval_start - Auto-update interval start time (HH:mm).
+   *   @param {AutoUpdateParams['interval_end']} params.interval_end - Auto-update interval end time (HH:mm).
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<SuccessResponse>} A promise that resolves on successful update of settings.
+   */
+  async UpdateAutoUpdateSet(this: BusyBar, params: AutoUpdateParams): Promise<SuccessResponse> {
+    return await setAutoUpdateApi(this.apiClient, params);
   }
 }

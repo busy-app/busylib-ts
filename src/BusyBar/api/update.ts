@@ -1,5 +1,5 @@
 import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions } from 'Global/types';
+import type { AutoUpdateSettings, TimeoutOptions } from 'Global/types';
 import type { BusyFile } from 'BusyBar/types/global';
 
 export interface UpdateParams extends TimeoutOptions {
@@ -112,4 +112,35 @@ async function abort(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-export { update, check, status, changelog, install, abort };
+export interface AutoUpdateParams extends TimeoutOptions, AutoUpdateSettings {}
+
+async function getAutoUpdate(client: BusyBarClient, params?: TimeoutOptions) {
+  const { data, error } = await withTimeout((signal) => client.GET('/update/autoupdate', { signal }), params?.timeout);
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+ 
+async function setAutoUpdate(client: BusyBarClient, params: AutoUpdateParams) {
+  const { is_enabled, interval_start, interval_end } = params;
+
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST('/update/autoupdate', {
+        body: { is_enabled, interval_start, interval_end },
+        signal
+      }),
+    params.timeout
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export { update, check, status, changelog, install, abort, getAutoUpdate, setAutoUpdate };

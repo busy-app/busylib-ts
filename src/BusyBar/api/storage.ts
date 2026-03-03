@@ -155,4 +155,31 @@ async function status(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-export { write, read, list, remove, mkdir, status };
+type RenameQuery = operations['RenameStorageFile']['parameters']['query'];
+export interface RenameParams extends TimeoutOptions, RenameQuery {}
+
+async function rename(client: BusyBarClient, params: RenameParams) {
+  const { path, new_path } = params;
+
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.POST('/storage/rename', {
+        params: {
+          query: {
+            path,
+            new_path
+          }
+        },
+        signal
+      }),
+    params.timeout
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export { write, read, list, remove, mkdir, status, rename };

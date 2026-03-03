@@ -17,10 +17,16 @@ export type {
   DownloadFileParams as StorageDownloadFileParams,
   ReadDirectoryParams as StorageReadDirectoryParams,
   RemoveParams as StorageRemoveParams,
-  CreateDirectoryParams as StorageCreateDirectoryParams
+  CreateDirectoryParams as StorageCreateDirectoryParams,
+  RenameParams as StorageRenameParams
 } from 'BusyBar/api/storage';
 
-export type { UpdateParams as UpdateFromFileParams, InstallParams as UpdateInstallParams, ChangelogParams as UpdateChangelogParams } from 'BusyBar/api/update';
+export type {
+  UpdateParams as UpdateFromFileParams,
+  InstallParams as UpdateInstallParams,
+  ChangelogParams as UpdateChangelogParams,
+  AutoUpdateParams as UpdateAutoUpdateParams
+} from 'BusyBar/api/update';
 
 export type { SetTimestampParams as TimeTimestampParams, SetTimezoneParams as TimeTimezoneParams } from 'BusyBar/api/time';
 
@@ -54,6 +60,8 @@ export type {
   Status,
   StatusSystem,
   StatusPower,
+  StatusDevice,
+  StatusFirmware,
   TimestampInfo,
   WifiSecurityMethod,
   WifiIpMethod,
@@ -65,6 +73,7 @@ export type {
   TimeoutOptions,
   UpdateStatus,
   UpdateChangelog,
+  AutoUpdateSettings,
   AccountState,
   AccountProfile,
   MatterStatus,
