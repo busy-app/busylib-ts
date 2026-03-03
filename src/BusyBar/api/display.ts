@@ -1,12 +1,12 @@
-import { withTimeout, type BusyBarClient } from "BusyBar/api/createClient";
-import type { TimeoutOptions } from "Global/types";
-import type { components, paths } from "Global/API";
+import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
+import type { TimeoutOptions } from 'Global/types';
+import type { components, paths } from 'Global/API';
 
 export interface DrawParams extends TimeoutOptions {
-  appId: components["schemas"]["DisplayElements"]["app_id"];
-  elements: components["schemas"]["DisplayElements"]["elements"];
+  appId: components['schemas']['DisplayElements']['app_id'];
+  elements: components['schemas']['DisplayElements']['elements'];
   /** @default 6 */
-  priority?: components["schemas"]["DisplayElements"]["priority"];
+  priority?: components['schemas']['DisplayElements']['priority'];
 }
 
 async function draw(client: BusyBarClient, params: DrawParams) {
@@ -14,15 +14,15 @@ async function draw(client: BusyBarClient, params: DrawParams) {
 
   const { data, error } = await withTimeout(
     (signal) =>
-      client.POST("/display/draw", {
+      client.POST('/display/draw', {
         body: {
           app_id: appId,
           priority: priority,
-          elements: elements,
+          elements: elements
         },
-        signal,
+        signal
       }),
-    params.timeout,
+    params.timeout
   );
 
   if (error) {
@@ -33,10 +33,7 @@ async function draw(client: BusyBarClient, params: DrawParams) {
 }
 
 async function clear(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout(
-    (signal) => client.DELETE("/display/draw", { signal }),
-    params?.timeout,
-  );
+  const { data, error } = await withTimeout((signal) => client.DELETE('/display/draw', { signal }), params?.timeout);
 
   if (error) {
     throw error;
@@ -46,27 +43,24 @@ async function clear(client: BusyBarClient, params?: TimeoutOptions) {
 }
 
 export interface GetScreenFrameParams extends TimeoutOptions {
-  display: paths["/screen"]["get"]["parameters"]["query"]["display"];
+  display: paths['/screen']['get']['parameters']['query']['display'];
 }
 
-async function getScreenFrame(
-  client: BusyBarClient,
-  params: GetScreenFrameParams,
-) {
+async function getScreenFrame(client: BusyBarClient, params: GetScreenFrameParams) {
   const { display } = params;
 
   const { data, error } = await withTimeout(
     (signal) =>
-      client.GET("/screen", {
+      client.GET('/screen', {
         params: {
           query: {
-            display,
-          },
+            display
+          }
         },
-        parseAs: "blob",
-        signal,
+        parseAs: 'blob',
+        signal
       }),
-    params.timeout,
+    params.timeout
   );
 
   if (error) {
@@ -76,14 +70,8 @@ async function getScreenFrame(
   return data;
 }
 
-async function getDisplayBrightness(
-  client: BusyBarClient,
-  params?: TimeoutOptions,
-) {
-  const { data, error } = await withTimeout(
-    (signal) => client.GET("/display/brightness", { signal }),
-    params?.timeout,
-  );
+async function getDisplayBrightness(client: BusyBarClient, params?: TimeoutOptions) {
+  const { data, error } = await withTimeout((signal) => client.GET('/display/brightness', { signal }), params?.timeout);
 
   if (error) {
     throw error;
@@ -92,26 +80,23 @@ async function getDisplayBrightness(
   return data;
 }
 
-type Brightness = number | "auto";
+type Brightness = number | 'auto';
 export interface BrightnessParams extends TimeoutOptions {
   value?: Brightness;
 }
 
-async function setDisplayBrightness(
-  client: BusyBarClient,
-  params: BrightnessParams,
-) {
+async function setDisplayBrightness(client: BusyBarClient, params: BrightnessParams) {
   const { value } = params;
 
   const normalize = (val?: Brightness): string | undefined => {
-    if (typeof val === "number") {
+    if (typeof val === 'number') {
       if (val < 0 || val > 100) {
         throw new Error("Brightness value must be between 0 and 100 or 'auto'");
       }
       return String(val);
     }
-    if (val === "auto") {
-      return "auto";
+    if (val === 'auto') {
+      return 'auto';
     }
     return undefined;
   };
@@ -120,15 +105,15 @@ async function setDisplayBrightness(
 
   const { data, error } = await withTimeout(
     (signal) =>
-      client.POST("/display/brightness", {
+      client.POST('/display/brightness', {
         params: {
           query: {
-            value: valueQuery,
-          },
+            value: valueQuery
+          }
         },
-        signal,
+        signal
       }),
-    params.timeout,
+    params.timeout
   );
 
   if (error) {
@@ -138,10 +123,4 @@ async function setDisplayBrightness(
   return data;
 }
 
-export {
-  draw,
-  clear,
-  getScreenFrame,
-  getDisplayBrightness,
-  setDisplayBrightness,
-};
+export { draw, clear, getScreenFrame, getDisplayBrightness, setDisplayBrightness };

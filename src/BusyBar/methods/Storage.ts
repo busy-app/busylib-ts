@@ -9,16 +9,10 @@ import {
   DownloadFileParams,
   ReadDirectoryParams,
   RemoveParams,
-  CreateDirectoryParams,
-} from "BusyBar/api/storage";
-import type {
-  TimeoutOptions,
-  SuccessResponse,
-  StorageReadResponse,
-  StorageList,
-  StorageStatus,
-} from "Global/types";
-import { BusyBar } from "BusyBar/index";
+  CreateDirectoryParams
+} from 'BusyBar/api/storage';
+import type { TimeoutOptions, SuccessResponse, StorageReadResponse, StorageList, StorageStatus } from 'Global/types';
+import { BusyBar } from 'BusyBar/index';
 
 export class StorageMethods {
   /**
@@ -30,10 +24,7 @@ export class StorageMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful upload.
    */
-  async StorageWrite(
-    this: BusyBar,
-    params: UploadFileParams,
-  ): Promise<SuccessResponse> {
+  async StorageWrite(this: BusyBar, params: UploadFileParams): Promise<SuccessResponse> {
     return await writeStorageApi(this.apiClient, params);
   }
 
@@ -46,10 +37,7 @@ export class StorageMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StorageReadResponse>} A promise that resolves to the file content (Blob or ArrayBuffer).
    */
-  async StorageRead(
-    this: BusyBar,
-    params: DownloadFileParams,
-  ): Promise<StorageReadResponse> {
+  async StorageRead(this: BusyBar, params: DownloadFileParams): Promise<StorageReadResponse> {
     return await readStorageApi(this.apiClient, params);
   }
 
@@ -61,10 +49,7 @@ export class StorageMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StorageList>} A promise that resolves to a list of files and directories.
    */
-  async StorageListGet(
-    this: BusyBar,
-    params: ReadDirectoryParams,
-  ): Promise<StorageList> {
+  async StorageListGet(this: BusyBar, params: ReadDirectoryParams): Promise<StorageList> {
     return await listStorageApi(this.apiClient, params);
   }
 
@@ -76,10 +61,7 @@ export class StorageMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful removal.
    */
-  async StorageRemove(
-    this: BusyBar,
-    params: RemoveParams,
-  ): Promise<SuccessResponse> {
+  async StorageRemove(this: BusyBar, params: RemoveParams): Promise<SuccessResponse> {
     return await removeStorageApi(this.apiClient, params);
   }
 
@@ -91,10 +73,7 @@ export class StorageMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful creation.
    */
-  async StorageMkdir(
-    this: BusyBar,
-    params: CreateDirectoryParams,
-  ): Promise<SuccessResponse> {
+  async StorageMkdir(this: BusyBar, params: CreateDirectoryParams): Promise<SuccessResponse> {
     return await mkdirStorageApi(this.apiClient, params);
   }
 
@@ -105,10 +84,7 @@ export class StorageMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StorageStatus>} A promise that resolves to the storage status.
    */
-  async StorageStatusGet(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<StorageStatus> {
+  async StorageStatusGet(this: BusyBar, params?: TimeoutOptions): Promise<StorageStatus> {
     return await statusStorageApi(this.apiClient, params);
   }
 }

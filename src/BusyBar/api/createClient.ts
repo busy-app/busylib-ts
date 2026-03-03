@@ -1,8 +1,8 @@
-import createClient from "openapi-fetch";
-import type { Client, Middleware } from "openapi-fetch";
-import type { paths, components } from "Global/API";
-import type { ApiKey, ApiSemver } from "Global/types";
-import type { BusyBarConfig } from "BusyBar/index";
+import createClient from 'openapi-fetch';
+import type { Client, Middleware } from 'openapi-fetch';
+import type { paths, components } from 'Global/API';
+import type { ApiKey, ApiSemver } from 'Global/types';
+import type { BusyBarConfig } from 'BusyBar/index';
 
 /**
  * Universal body serializer for different body types:
@@ -10,61 +10,46 @@ import type { BusyBarConfig } from "BusyBar/index";
  */
 const bodySerializer = (body: unknown, headers?: HeadersInit) => {
   // FormData
-  if (typeof FormData !== "undefined" && body instanceof FormData) {
+  if (typeof FormData !== 'undefined' && body instanceof FormData) {
     return body;
   }
 
   // Buffer (Node.js)
-  if (
-    typeof Buffer !== "undefined" &&
-    typeof Buffer.isBuffer === "function" &&
-    Buffer.isBuffer(body)
-  ) {
+  if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer === 'function' && Buffer.isBuffer(body)) {
     return body as Buffer;
   }
 
   // File (inherits from Blob)
-  if (typeof File !== "undefined" && body instanceof File) {
+  if (typeof File !== 'undefined' && body instanceof File) {
     return body;
   }
 
   // Blob
-  if (typeof Blob !== "undefined" && body instanceof Blob) {
+  if (typeof Blob !== 'undefined' && body instanceof Blob) {
     return body;
   }
 
   // ArrayBuffer
-  if (typeof ArrayBuffer !== "undefined" && body instanceof ArrayBuffer) {
+  if (typeof ArrayBuffer !== 'undefined' && body instanceof ArrayBuffer) {
     return body;
   }
 
   // ArrayBufferView (example, Uint8Array)
-  if (
-    typeof ArrayBuffer !== "undefined" &&
-    ArrayBuffer.isView &&
-    ArrayBuffer.isView(body)
-  ) {
+  if (typeof ArrayBuffer !== 'undefined' && ArrayBuffer.isView && ArrayBuffer.isView(body)) {
     return body as ArrayBufferView;
   }
 
   let contentType: string | undefined;
   if (headers) {
     if (headers instanceof Headers) {
-      contentType =
-        headers.get("Content-Type") ?? headers.get("content-type") ?? undefined;
-    } else if (typeof headers === "object") {
-      contentType =
-        (headers as Record<string, string>)["Content-Type"] ??
-        (headers as Record<string, string>)["content-type"];
+      contentType = headers.get('Content-Type') ?? headers.get('content-type') ?? undefined;
+    } else if (typeof headers === 'object') {
+      contentType = (headers as Record<string, string>)['Content-Type'] ?? (headers as Record<string, string>)['content-type'];
     }
 
     // URLSearchParams
-    if (contentType === "application/x-www-form-urlencoded") {
-      if (
-        body &&
-        typeof body === "object" &&
-        !(body instanceof URLSearchParams)
-      ) {
+    if (contentType === 'application/x-www-form-urlencoded') {
+      if (body && typeof body === 'object' && !(body instanceof URLSearchParams)) {
         return new URLSearchParams(body as Record<string, string>).toString();
       }
       return String(body);
@@ -75,7 +60,7 @@ const bodySerializer = (body: unknown, headers?: HeadersInit) => {
   return JSON.stringify(body);
 };
 
-type GetVersionFn = () => Promise<components["schemas"]["VersionInfo"]>;
+type GetVersionFn = () => Promise<components['schemas']['VersionInfo']>;
 
 /**
  * Custom FetchError with HTTP status and body attached
@@ -90,24 +75,16 @@ interface FetchError<T = unknown> extends Error {
  * Convert a `Response` into a FetchError with parsed body (json or text)
  */
 async function toFetchError(res: Response): Promise<FetchError> {
-  const ct = res.headers.get("content-type") || "";
-  const isJson = ct.includes("application/json");
+  const ct = res.headers.get('content-type') || '';
+  const isJson = ct.includes('application/json');
   const body = isJson ? await res.clone().json() : await res.clone().text();
-  const msg =
-    typeof body === "object" && body !== null
-      ? (body as any).error || (body as any).message
-      : typeof body === "string"
-        ? body
-        : undefined;
+  const msg = typeof body === 'object' && body !== null ? (body as any).error || (body as any).message : typeof body === 'string' ? body : undefined;
 
-  return Object.assign(
-    new Error(msg || `HTTP ${res.status} ${res.statusText}`),
-    {
-      status: res.status,
-      statusText: res.statusText,
-      body,
-    },
-  );
+  return Object.assign(new Error(msg || `HTTP ${res.status} ${res.statusText}`), {
+    status: res.status,
+    statusText: res.statusText,
+    body
+  });
 }
 
 /**
@@ -116,10 +93,7 @@ async function toFetchError(res: Response): Promise<FetchError> {
  * @param timeoutMs Timeout in milliseconds (optional). If 0 or undefined, no timeout is applied.
  * @returns Promise with the result of the request
  */
-async function withTimeout<T>(
-  requestFn: (signal?: AbortSignal) => Promise<T>,
-  timeoutMs: number = 3000,
-): Promise<T> {
+async function withTimeout<T>(requestFn: (signal?: AbortSignal) => Promise<T>, timeoutMs: number = 3000): Promise<T> {
   if (timeoutMs <= 0) {
     return await requestFn();
   }
@@ -130,7 +104,7 @@ async function withTimeout<T>(
   try {
     return await requestFn(controller.signal);
   } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError") {
+    if (error instanceof DOMException && error.name === 'AbortError') {
       throw new Error(`Request timed out after ${timeoutMs}ms`);
     }
     throw error;
@@ -144,11 +118,7 @@ export type BusyBarClient = Client<paths, `${string}/${string}`>;
 /**
  * Initialize API client with baseUrl and version fetch function
  */
-function createApiClient(
-  url: string,
-  getApiVersion: GetVersionFn,
-  token: BusyBarConfig["token"],
-) {
+function createApiClient(url: string, getApiVersion: GetVersionFn, token: BusyBarConfig['token']) {
   let apiSemver: ApiSemver | undefined = undefined;
   let bearerToken: string | undefined = token ?? undefined;
   let apiKey: ApiKey | undefined = undefined;
@@ -168,7 +138,7 @@ function createApiClient(
       inFlight = (async () => {
         const v = await getApiVersion();
         if (!v.api_semver) {
-          throw new Error("Empty API version");
+          throw new Error('Empty API version');
         }
         apiSemver = v.api_semver;
       })().finally(() => {
@@ -181,16 +151,16 @@ function createApiClient(
   const middleware: Middleware = {
     async onRequest({ request, schemaPath }) {
       if (bearerToken) {
-        request.headers.set("Authorization", `Bearer ${bearerToken}`);
+        request.headers.set('Authorization', `Bearer ${bearerToken}`);
       }
 
-      if (schemaPath !== "/version") {
+      if (schemaPath !== '/version') {
         await ensureVersion();
         if (apiSemver) {
-          request.headers.set("X-API-Sem-Ver", apiSemver);
+          request.headers.set('X-API-Sem-Ver', apiSemver);
         }
         if (apiKey) {
-          request.headers.set("X-API-Token", apiKey);
+          request.headers.set('X-API-Token', apiKey);
         }
       }
 
@@ -201,7 +171,7 @@ function createApiClient(
         return response;
       }
 
-      if (schemaPath === "/version") {
+      if (schemaPath === '/version') {
         throw await toFetchError(response);
       }
 
@@ -213,10 +183,10 @@ function createApiClient(
       await ensureVersion();
 
       if (apiSemver) {
-        request.headers.set("X-API-Sem-Ver", apiSemver);
+        request.headers.set('X-API-Sem-Ver', apiSemver);
       }
       if (bearerToken) {
-        request.headers.set("Authorization", `Bearer ${bearerToken}`);
+        request.headers.set('Authorization', `Bearer ${bearerToken}`);
       }
 
       const retried = await (options.fetch ?? fetch)(request);
@@ -226,12 +196,12 @@ function createApiClient(
       }
 
       throw await toFetchError(retried);
-    },
+    }
   };
 
   const client = createClient<paths>({
     baseUrl: url,
-    bodySerializer,
+    bodySerializer
   });
 
   client.use(middleware);
@@ -243,7 +213,7 @@ function createApiClient(
     },
     setToken: (token: string) => {
       bearerToken = token;
-    },
+    }
   };
 }
 

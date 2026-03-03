@@ -4,15 +4,10 @@ import {
   getName as getNameApi,
   setName as setNameApi,
   HttpAccessParams,
-  NameParams,
-} from "BusyBar/api/settings";
-import type {
-  TimeoutOptions,
-  SuccessResponse,
-  HttpAccessInfo,
-  NameInfo,
-} from "Global/types";
-import { BusyBar } from "BusyBar/index";
+  NameParams
+} from 'BusyBar/api/settings';
+import type { TimeoutOptions, SuccessResponse, HttpAccessInfo, NameInfo } from 'Global/types';
+import { BusyBar } from 'BusyBar/index';
 
 export class SettingsMethods {
   /**
@@ -22,10 +17,7 @@ export class SettingsMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<HttpAccessInfo>} A promise that resolves to the access configuration.
    */
-  async SettingsAccessGet(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<HttpAccessInfo> {
+  async SettingsAccessGet(this: BusyBar, params?: TimeoutOptions): Promise<HttpAccessInfo> {
     return await getHttpAccessApi(this.apiClient, params);
   }
 
@@ -38,13 +30,10 @@ export class SettingsMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  async SettingsAccessSet(
-    this: BusyBar,
-    params: HttpAccessParams,
-  ): Promise<SuccessResponse> {
+  async SettingsAccessSet(this: BusyBar, params: HttpAccessParams): Promise<SuccessResponse> {
     const result = await setHttpAccessApi(this.apiClient, params);
 
-    if (params.mode === "key" && params.key) {
+    if (params.mode === 'key' && params.key) {
       this.setApiKey(params.key);
     }
 
@@ -58,10 +47,7 @@ export class SettingsMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<NameInfo>} A promise that resolves to the device name.
    */
-  async SettingsNameGet(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<NameInfo> {
+  async SettingsNameGet(this: BusyBar, params?: TimeoutOptions): Promise<NameInfo> {
     return await getNameApi(this.apiClient, params);
   }
 
@@ -73,10 +59,7 @@ export class SettingsMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  async SettingsNameSet(
-    this: BusyBar,
-    params: NameParams,
-  ): Promise<SuccessResponse> {
+  async SettingsNameSet(this: BusyBar, params: NameParams): Promise<SuccessResponse> {
     return await setNameApi(this.apiClient, params);
   }
 }

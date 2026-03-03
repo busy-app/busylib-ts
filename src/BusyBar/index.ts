@@ -1,30 +1,26 @@
-import { createApiClient, type BusyBarClient } from "BusyBar/api/createClient";
+import { createApiClient, type BusyBarClient } from 'BusyBar/api/createClient';
 
-import { SystemMethods } from "./methods/System";
-import { UpdateMethods } from "./methods/Update";
-import { TimeMethods } from "./methods/Time";
-import { AccountMethods } from "./methods/Account";
-import { DisplayMethods } from "./methods/Display";
-import { AudioMethods } from "./methods/Audio";
-import { WifiMethods } from "./methods/Wifi";
-import { StorageMethods } from "./methods/Storage";
-import { SettingsMethods } from "./methods/Settings";
-import { BleMethods } from "./methods/Ble";
-import { InputMethods } from "./methods/Input";
-import { MatterMethods } from "./methods/Matter";
-import { AssetsMethods } from "./methods/Assets";
+import { SystemMethods } from './methods/System';
+import { UpdateMethods } from './methods/Update';
+import { TimeMethods } from './methods/Time';
+import { AccountMethods } from './methods/Account';
+import { DisplayMethods } from './methods/Display';
+import { AudioMethods } from './methods/Audio';
+import { WifiMethods } from './methods/Wifi';
+import { StorageMethods } from './methods/Storage';
+import { SettingsMethods } from './methods/Settings';
+import { BleMethods } from './methods/Ble';
+import { InputMethods } from './methods/Input';
+import { MatterMethods } from './methods/Matter';
+import { AssetsMethods } from './methods/Assets';
 
-import {
-  DEFAULT_DEVICE_URL,
-  DEFAULT_PROXY_URL,
-  PROXY_HOST_RE,
-} from "Global/constants";
-import { isIPv4 } from "Global/utils/isIPv4";
-import { isMdns } from "Global/utils/isMdns";
-import type { paths } from "Global/API";
-import type { ApiSemver, ApiKey } from "Global/types";
+import { DEFAULT_DEVICE_URL, DEFAULT_PROXY_URL, PROXY_HOST_RE } from 'Global/constants';
+import { isIPv4 } from 'Global/utils/isIPv4';
+import { isMdns } from 'Global/utils/isMdns';
+import type { paths } from 'Global/API';
+import type { ApiSemver, ApiKey } from 'Global/types';
 
-import createClient from "openapi-fetch";
+import createClient from 'openapi-fetch';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface BusyBar
@@ -80,7 +76,7 @@ export class BusyBar {
    * - "usb": Device allows access without token (returned 200).
    * - "unknown": Detection failed or not yet completed.
    */
-  public connectionType: "usb" | "wifi" | "unknown" = "unknown";
+  public connectionType: 'usb' | 'wifi' | 'unknown' = 'unknown';
 
   /**
    * Creates an instance of BUSY Bar.
@@ -117,19 +113,15 @@ export class BusyBar {
       }
 
       if (PROXY_HOST_RE.test(addr) && !config.token) {
-        throw new Error("Token is required. Please provide it.");
+        throw new Error('Token is required. Please provide it.');
       }
 
       this.addr = addr;
     }
 
-    this.apiSemver = "";
+    this.apiSemver = '';
 
-    const { client, setApiKey, setToken } = createApiClient(
-      `${this.addr}/api/`,
-      this.SystemVersionGet.bind(this),
-      config?.token,
-    );
+    const { client, setApiKey, setToken } = createApiClient(`${this.addr}/api/`, this.SystemVersionGet.bind(this), config?.token);
 
     this.apiClient = client;
     this.setApiKeyFn = setApiKey;
@@ -147,31 +139,29 @@ export class BusyBar {
 
     // If not a local address (not IP, not mDNS) -> assume Internet (Proxy)
     if (!isIPv4(hostname) && !isMdns(hostname)) {
-      this.connectionType = "wifi";
+      this.connectionType = 'wifi';
       return;
     }
 
     // Create temporary client WITHOUT auth middleware
     const probeClient = createClient<paths>({
-      baseUrl: `${this.addr}/api/`,
+      baseUrl: `${this.addr}/api/`
     });
 
     try {
       // Request an endpoint that requires authorization (e.g. device name)
       // client.GET does not throw on 4xx/5xx status, but throws on network error
-      const { response } = await probeClient.GET("/name");
+      const { response } = await probeClient.GET('/name');
 
       if (response.status === 401 || response.status === 403) {
         // If auth is requested -> it is WiFi
-        this.connectionType = "wifi";
+        this.connectionType = 'wifi';
       } else if (response.ok) {
         // If data returned without key -> it is USB (trusted connection)
-        this.connectionType = "usb";
+        this.connectionType = 'usb';
       } else {
         // Treat any other status as detection failure
-        throw new Error(
-          `Failed to detect connection type. Status: ${response.status}`,
-        );
+        throw new Error(`Failed to detect connection type. Status: ${response.status}`);
       }
     } catch (error) {
       throw error;
@@ -198,12 +188,7 @@ export class BusyBar {
 function applyMixins(derivedCtor: any, constructors: any[]) {
   constructors.forEach((baseCtor) => {
     Object.getOwnPropertyNames(baseCtor.prototype).forEach((name) => {
-      Object.defineProperty(
-        derivedCtor.prototype,
-        name,
-        Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
-          Object.create(null),
-      );
+      Object.defineProperty(derivedCtor.prototype, name, Object.getOwnPropertyDescriptor(baseCtor.prototype, name) || Object.create(null));
     });
   });
 }
@@ -221,5 +206,5 @@ applyMixins(BusyBar, [
   BleMethods,
   InputMethods,
   MatterMethods,
-  AssetsMethods,
+  AssetsMethods
 ]);

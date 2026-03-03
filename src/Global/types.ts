@@ -1,10 +1,10 @@
-import { operations, components } from "Global/API";
+import { operations, components } from 'Global/API';
 
 export interface TimeoutOptions {
   timeout?: number;
 }
 
-export type KeyName = operations["setInputKey"]["parameters"]["query"]["key"];
+export type KeyName = operations['setInputKey']['parameters']['query']['key'];
 export type KeyValue = 1 | 0;
 
 export interface ErrorPayload {
@@ -17,16 +17,16 @@ export type StopListener = () => void;
 export type ErrorListener = (payload: ErrorPayload) => void;
 
 export type ApiKey = string;
-export type ApiSemver = components["schemas"]["VersionInfo"]["api_semver"];
+export type ApiSemver = components['schemas']['VersionInfo']['api_semver'];
 
-export type SuccessResponse = components["schemas"]["SuccessResponse"];
-export type Error = components["schemas"]["Error"];
+export type SuccessResponse = components['schemas']['SuccessResponse'];
+export type Error = components['schemas']['Error'];
 
 // Account
-export type AccountInfo = components["schemas"]["AccountInfo"];
-export type AccountLink = components["schemas"]["AccountLink"];
-export type AccountState = components["schemas"]["AccountState"];
-export type AccountProfile = components["schemas"]["AccountProfile"];
+export type AccountInfo = components['schemas']['AccountInfo'];
+export type AccountLink = components['schemas']['AccountLink'];
+export type AccountState = components['schemas']['AccountState'];
+export type AccountProfile = components['schemas']['AccountProfile'];
 
 // Assets
 export type BinaryUpload = Buffer | Blob | File | ArrayBuffer;
@@ -35,62 +35,57 @@ export type FileUpload = {
 };
 
 // Audio
-export type AudioVolumeInfo = components["schemas"]["AudioVolumeInfo"];
+export type AudioVolumeInfo = components['schemas']['AudioVolumeInfo'];
 
 // BLE
-export type BleStatusResponse = components["schemas"]["BleStatusResponse"];
+export type BleStatusResponse = components['schemas']['BleStatusResponse'];
 
 // Display
-export type DisplayElements = components["schemas"]["DisplayElements"];
-export type DisplayElement = components["schemas"]["DisplayElement"];
-export type TextElement = components["schemas"]["TextElement"];
-export type ImageElement = components["schemas"]["ImageElement"];
-export type DisplayBrightnessInfo =
-  components["schemas"]["DisplayBrightnessInfo"];
+export type DisplayElements = components['schemas']['DisplayElements'];
+export type DisplayElement = components['schemas']['DisplayElement'];
+export type TextElement = components['schemas']['TextElement'];
+export type ImageElement = components['schemas']['ImageElement'];
+export type DisplayBrightnessInfo = components['schemas']['DisplayBrightnessInfo'];
 
 // Input
 
 // Matter
-export type MatterPairingInfo =
-  components["schemas"]["MatterCommissioningPayload"];
-export type MatterStatus = components["schemas"]["MatterCommissionedFabrics"];
+export type MatterPairingInfo = components['schemas']['MatterCommissioningPayload'];
+export type MatterStatus = components['schemas']['MatterCommissionedFabrics'];
 
 // Settings
-export type HttpAccessInfo = components["schemas"]["HttpAccessInfo"];
-export type NameInfo = components["schemas"]["NameInfo"];
+export type HttpAccessInfo = components['schemas']['HttpAccessInfo'];
+export type NameInfo = components['schemas']['NameInfo'];
 
 // Storage
-export type StorageList = components["schemas"]["StorageList"];
-export type StorageListElement = components["schemas"]["StorageListElement"];
-export type StorageFileElement = components["schemas"]["StorageFileElement"];
-export type StorageDirElement = components["schemas"]["StorageDirElement"];
+export type StorageList = components['schemas']['StorageList'];
+export type StorageListElement = components['schemas']['StorageListElement'];
+export type StorageFileElement = components['schemas']['StorageFileElement'];
+export type StorageDirElement = components['schemas']['StorageDirElement'];
 export type StorageReadResponse = ArrayBuffer | Blob;
-export type StorageStatus = components["schemas"]["StorageStatus"];
+export type StorageStatus = components['schemas']['StorageStatus'];
 
 // System
-export type VersionInfo = components["schemas"]["VersionInfo"];
-export type Status = components["schemas"]["Status"];
-export type StatusSystem = components["schemas"]["StatusSystem"];
-export type StatusPower = components["schemas"]["StatusPower"];
-export type TimestampInfo = components["schemas"]["TimestampInfo"];
+export type VersionInfo = components['schemas']['VersionInfo'];
+export type Status = components['schemas']['Status'];
+export type StatusSystem = components['schemas']['StatusSystem'];
+export type StatusPower = components['schemas']['StatusPower'];
+export type TimestampInfo = components['schemas']['TimestampInfo'];
 
 // Time
-export type TimezoneInfo = components["schemas"]["TimezoneInfo"];
-export type TimezoneList = components["schemas"]["TimezoneListResponse"];
-export type TimezoneItem =
-  components["schemas"]["TimezoneListResponse"][number];
+export type TimezoneInfo = components['schemas']['TimezoneInfo'];
+export type TimezoneList = components['schemas']['TimezoneListResponse'];
+export type TimezoneItem = components['schemas']['TimezoneListResponse'][number];
 
 // Update
-export type UpdateStatus = components["schemas"]["UpdateStatus"];
-export type UpdateChangelog =
-  operations["getUpdateChangelog"]["responses"]["200"]["content"]["application/json"];
+export type UpdateStatus = components['schemas']['UpdateStatus'];
+export type UpdateChangelog = operations['getUpdateChangelog']['responses']['200']['content']['application/json'];
 
 // Wifi
-export type WifiSecurityMethod = components["schemas"]["WifiSecurityMethod"];
-export type WifiIpMethod = components["schemas"]["WifiIpMethod"];
-export type WifiIpType = components["schemas"]["WifiIpType"];
-export type WifiNetwork = components["schemas"]["Network"];
-export type WifiStatusResponse = components["schemas"]["StatusResponse"];
-export type WifiConnectRequestConfig =
-  components["schemas"]["ConnectRequestConfig"];
-export type WifiNetworkResponse = components["schemas"]["NetworkResponse"];
+export type WifiSecurityMethod = components['schemas']['WifiSecurityMethod'];
+export type WifiIpMethod = components['schemas']['WifiIpMethod'];
+export type WifiIpType = components['schemas']['WifiIpType'];
+export type WifiNetwork = components['schemas']['Network'];
+export type WifiStatusResponse = components['schemas']['StatusResponse'];
+export type WifiConnectRequestConfig = components['schemas']['ConnectRequestConfig'];
+export type WifiNetworkResponse = components['schemas']['NetworkResponse'];

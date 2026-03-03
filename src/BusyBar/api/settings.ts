@@ -1,13 +1,10 @@
-import { withTimeout, type BusyBarClient } from "BusyBar/api/createClient";
-import type { TimeoutOptions } from "Global/types";
-import type { operations } from "Global/API";
-import type { NameInfo } from "Global/types";
+import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
+import type { TimeoutOptions } from 'Global/types';
+import type { operations } from 'Global/API';
+import type { NameInfo } from 'Global/types';
 
 async function getHttpAccess(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout(
-    (signal) => client.GET("/access", { signal }),
-    params?.timeout,
-  );
+  const { data, error } = await withTimeout((signal) => client.GET('/access', { signal }), params?.timeout);
 
   if (error) {
     throw error;
@@ -17,29 +14,29 @@ async function getHttpAccess(client: BusyBarClient, params?: TimeoutOptions) {
 }
 
 export interface HttpAccessParams extends TimeoutOptions {
-  mode: operations["setHttpAccess"]["parameters"]["query"]["mode"];
-  key: operations["setHttpAccess"]["parameters"]["query"]["key"];
+  mode: operations['setHttpAccess']['parameters']['query']['mode'];
+  key: operations['setHttpAccess']['parameters']['query']['key'];
 }
 async function setHttpAccess(client: BusyBarClient, params: HttpAccessParams) {
   let { mode, key } = params;
-  key = key ?? "";
+  key = key ?? '';
 
   if (String(key).trim() && !/^\d{4,10}$/.test(String(key))) {
-    throw new Error("Key must be a string of 4 to 10 digits");
+    throw new Error('Key must be a string of 4 to 10 digits');
   }
 
   const { data, error } = await withTimeout(
     (signal) =>
-      client.POST("/access", {
+      client.POST('/access', {
         params: {
           query: {
             mode,
-            key,
-          },
+            key
+          }
         },
-        signal,
+        signal
       }),
-    params.timeout,
+    params.timeout
   );
 
   if (error) {
@@ -50,10 +47,7 @@ async function setHttpAccess(client: BusyBarClient, params: HttpAccessParams) {
 }
 
 async function getName(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout(
-    (signal) => client.GET("/name", { signal }),
-    params?.timeout,
-  );
+  const { data, error } = await withTimeout((signal) => client.GET('/name', { signal }), params?.timeout);
 
   if (error) {
     throw error;
@@ -63,17 +57,17 @@ async function getName(client: BusyBarClient, params?: TimeoutOptions) {
 }
 
 export interface NameParams extends TimeoutOptions {
-  name: NameInfo["name"];
+  name: NameInfo['name'];
 }
 
 async function setName(client: BusyBarClient, params: NameParams) {
   const { data, error } = await withTimeout(
     (signal) =>
-      client.POST("/name", {
+      client.POST('/name', {
         body: params,
-        signal,
+        signal
       }),
-    params.timeout,
+    params.timeout
   );
 
   if (error) {

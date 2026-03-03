@@ -1,11 +1,6 @@
-import {
-  upload as uploadAssetsApi,
-  deleteAssets as deleteAssetsApi,
-  UploadParams,
-  DeleteParams,
-} from "BusyBar/api/assets";
-import type { SuccessResponse } from "Global/types";
-import { BusyBar } from "BusyBar/index";
+import { upload as uploadAssetsApi, deleteAssets as deleteAssetsApi, UploadParams, DeleteParams } from 'BusyBar/api/assets';
+import type { SuccessResponse } from 'Global/types';
+import { BusyBar } from 'BusyBar/index';
 
 export class AssetsMethods {
   /**
@@ -18,10 +13,7 @@ export class AssetsMethods {
    *   @param {UploadParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the upload operation.
    */
-  async AssetsUpload(
-    this: BusyBar,
-    params: UploadParams,
-  ): Promise<SuccessResponse> {
+  async AssetsUpload(this: BusyBar, params: UploadParams): Promise<SuccessResponse> {
     return await uploadAssetsApi(this.apiClient, params);
   }
 
@@ -33,10 +25,7 @@ export class AssetsMethods {
    *   @param {DeleteParams['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the delete operation.
    */
-  async AssetsDelete(
-    this: BusyBar,
-    params: DeleteParams,
-  ): Promise<SuccessResponse> {
+  async AssetsDelete(this: BusyBar, params: DeleteParams): Promise<SuccessResponse> {
     return await deleteAssetsApi(this.apiClient, params);
   }
 }

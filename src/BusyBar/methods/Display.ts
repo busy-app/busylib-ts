@@ -6,14 +6,10 @@ import {
   GetScreenFrameParams,
   getDisplayBrightness as getDisplayBrightnessApi,
   setDisplayBrightness as setDisplayBrightnessApi,
-  BrightnessParams,
-} from "BusyBar/api/display";
-import type {
-  TimeoutOptions,
-  SuccessResponse,
-  DisplayBrightnessInfo,
-} from "Global/types";
-import { BusyBar } from "BusyBar/index";
+  BrightnessParams
+} from 'BusyBar/api/display';
+import type { TimeoutOptions, SuccessResponse, DisplayBrightnessInfo } from 'Global/types';
+import { BusyBar } from 'BusyBar/index';
 
 export class DisplayMethods {
   /**
@@ -26,10 +22,7 @@ export class DisplayMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful draw command.
    */
-  async DisplayDraw(
-    this: BusyBar,
-    params: DrawParams,
-  ): Promise<SuccessResponse> {
+  async DisplayDraw(this: BusyBar, params: DrawParams): Promise<SuccessResponse> {
     return await drawApi(this.apiClient, params);
   }
 
@@ -40,10 +33,7 @@ export class DisplayMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful clear command.
    */
-  async DisplayClear(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<SuccessResponse> {
+  async DisplayClear(this: BusyBar, params?: TimeoutOptions): Promise<SuccessResponse> {
     return await clearApi(this.apiClient, params);
   }
 
@@ -55,10 +45,7 @@ export class DisplayMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<Blob>} A promise that resolves to the screen frame as a Blob.
    */
-  async DisplayScreenFrameGet(
-    this: BusyBar,
-    params: GetScreenFrameParams,
-  ): Promise<Blob> {
+  async DisplayScreenFrameGet(this: BusyBar, params: GetScreenFrameParams): Promise<Blob> {
     return (await getScreenFrameApi(this.apiClient, params)) as Blob;
   }
 
@@ -69,10 +56,7 @@ export class DisplayMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<DisplayBrightnessInfo>} A promise that resolves to the brightness information.
    */
-  async DisplayBrightnessGet(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<DisplayBrightnessInfo> {
+  async DisplayBrightnessGet(this: BusyBar, params?: TimeoutOptions): Promise<DisplayBrightnessInfo> {
     return await getDisplayBrightnessApi(this.apiClient, params);
   }
 
@@ -84,10 +68,7 @@ export class DisplayMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  async DisplayBrightnessSet(
-    this: BusyBar,
-    params: BrightnessParams,
-  ): Promise<SuccessResponse> {
+  async DisplayBrightnessSet(this: BusyBar, params: BrightnessParams): Promise<SuccessResponse> {
     return await setDisplayBrightnessApi(this.apiClient, params);
   }
 }

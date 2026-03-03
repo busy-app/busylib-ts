@@ -1,17 +1,13 @@
 type IPv4 = string;
 
 function isIPv4(str: string): str is IPv4 {
-  const parts = str.split(".");
+  const parts = str.split('.');
   if (parts.length !== 4) {
     return false;
   }
 
   for (const part of parts) {
-    if (
-      part.length === 0 ||
-      (part.length > 1 && part[0] === "0") ||
-      !/^\d+$/.test(part)
-    ) {
+    if (part.length === 0 || (part.length > 1 && part[0] === '0') || !/^\d+$/.test(part)) {
       return false;
     }
 

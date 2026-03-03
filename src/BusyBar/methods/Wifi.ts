@@ -3,15 +3,10 @@ import {
   connect as connectWifiApi,
   disconnect as disconnectWifiApi,
   networks as networksWifiAPi,
-  ConnectParams,
-} from "BusyBar/api/wifi";
-import type {
-  TimeoutOptions,
-  WifiStatusResponse,
-  SuccessResponse,
-  WifiNetworkResponse,
-} from "Global/types";
-import { BusyBar } from "BusyBar/index";
+  ConnectParams
+} from 'BusyBar/api/wifi';
+import type { TimeoutOptions, WifiStatusResponse, SuccessResponse, WifiNetworkResponse } from 'Global/types';
+import { BusyBar } from 'BusyBar/index';
 
 export class WifiMethods {
   /**
@@ -21,10 +16,7 @@ export class WifiMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<WifiStatusResponse>} A promise that resolves to the Wi-Fi status.
    */
-  async WifiStatusGet(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<WifiStatusResponse> {
+  async WifiStatusGet(this: BusyBar, params?: TimeoutOptions): Promise<WifiStatusResponse> {
     return await statusWifiApi(this.apiClient, params);
   }
 
@@ -39,10 +31,7 @@ export class WifiMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful connection initiation.
    */
-  async WifiConnect(
-    this: BusyBar,
-    params: ConnectParams,
-  ): Promise<SuccessResponse> {
+  async WifiConnect(this: BusyBar, params: ConnectParams): Promise<SuccessResponse> {
     return await connectWifiApi(this.apiClient, params);
   }
 
@@ -53,10 +42,7 @@ export class WifiMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful disconnection.
    */
-  async WifiDisconnect(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<SuccessResponse> {
+  async WifiDisconnect(this: BusyBar, params?: TimeoutOptions): Promise<SuccessResponse> {
     return await disconnectWifiApi(this.apiClient, params);
   }
 
@@ -67,10 +53,7 @@ export class WifiMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<WifiNetworkResponse>} A promise that resolves to a list of available networks.
    */
-  async WifiNetworksGet(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<WifiNetworkResponse> {
+  async WifiNetworksGet(this: BusyBar, params?: TimeoutOptions): Promise<WifiNetworkResponse> {
     return await networksWifiAPi(this.apiClient, params);
   }
 }

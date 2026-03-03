@@ -7,15 +7,10 @@ import {
   abort as abortUpdateApi,
   UpdateParams,
   ChangelogParams,
-  InstallParams,
-} from "BusyBar/api/update";
-import type {
-  TimeoutOptions,
-  SuccessResponse,
-  UpdateStatus,
-  UpdateChangelog,
-} from "Global/types";
-import { BusyBar } from "BusyBar/index";
+  InstallParams
+} from 'BusyBar/api/update';
+import type { TimeoutOptions, SuccessResponse, UpdateStatus, UpdateChangelog } from 'Global/types';
+import { BusyBar } from 'BusyBar/index';
 
 export class UpdateMethods {
   /**
@@ -26,10 +21,7 @@ export class UpdateMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves when upload is complete.
    */
-  async UpdateFromFile(
-    this: BusyBar,
-    params: UpdateParams,
-  ): Promise<SuccessResponse> {
+  async UpdateFromFile(this: BusyBar, params: UpdateParams): Promise<SuccessResponse> {
     return await updateApi(this.apiClient, params);
   }
 
@@ -40,10 +32,7 @@ export class UpdateMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves to the update check result.
    */
-  async UpdateCheck(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<SuccessResponse> {
+  async UpdateCheck(this: BusyBar, params?: TimeoutOptions): Promise<SuccessResponse> {
     return await checkUpdateApi(this.apiClient, params);
   }
 
@@ -54,10 +43,7 @@ export class UpdateMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<UpdateStatus>} A promise that resolves to the update status.
    */
-  async UpdateStatusGet(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<UpdateStatus> {
+  async UpdateStatusGet(this: BusyBar, params?: TimeoutOptions): Promise<UpdateStatus> {
     return await statusUpdateApi(this.apiClient, params);
   }
 
@@ -69,10 +55,7 @@ export class UpdateMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<UpdateChangelog>} A promise that resolves to the changelog content.
    */
-  async UpdateChangelogGet(
-    this: BusyBar,
-    params: ChangelogParams,
-  ): Promise<UpdateChangelog> {
+  async UpdateChangelogGet(this: BusyBar, params: ChangelogParams): Promise<UpdateChangelog> {
     return await changelogUpdateApi(this.apiClient, params);
   }
 
@@ -84,10 +67,7 @@ export class UpdateMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful initiation.
    */
-  async UpdateInstall(
-    this: BusyBar,
-    params: InstallParams,
-  ): Promise<SuccessResponse> {
+  async UpdateInstall(this: BusyBar, params: InstallParams): Promise<SuccessResponse> {
     return await installUpdateApi(this.apiClient, params);
   }
 
@@ -98,10 +78,7 @@ export class UpdateMethods {
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful abort.
    */
-  async UpdateAbort(
-    this: BusyBar,
-    params?: TimeoutOptions,
-  ): Promise<SuccessResponse> {
+  async UpdateAbort(this: BusyBar, params?: TimeoutOptions): Promise<SuccessResponse> {
     return await abortUpdateApi(this.apiClient, params);
   }
 }

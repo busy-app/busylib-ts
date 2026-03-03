@@ -1,23 +1,13 @@
-import { DeviceScreen } from "ScreenStream/types";
-import { AUTH_CODE, RECONNECT_CODES } from "Global/webSocketConfig";
-import {
-  rleDecompress,
-  backConvertB4ToB8,
-} from "ScreenStream/utils/bufferUtils";
-import type {
-  DataListener,
-  StopListener,
-  ErrorListener,
-  ErrorPayload,
-  ApiKey,
-  ApiSemver,
-} from "Global/types";
+import { DeviceScreen } from 'ScreenStream/types';
+import { AUTH_CODE, RECONNECT_CODES } from 'Global/webSocketConfig';
+import { rleDecompress, backConvertB4ToB8 } from 'ScreenStream/utils/bufferUtils';
+import type { DataListener, StopListener, ErrorListener, ErrorPayload, ApiKey, ApiSemver } from 'Global/types';
 
-import { DEFAULT_DEVICE_URL } from "Global/constants";
+import { DEFAULT_DEVICE_URL } from 'Global/constants';
 
-import { isIPv4 } from "Global/utils/isIPv4";
-import { isMdns } from "Global/utils/isMdns";
-import { isBrowser } from "Global/utils/isBrowser";
+import { isIPv4 } from 'Global/utils/isIPv4';
+import { isMdns } from 'Global/utils/isMdns';
+import { isBrowser } from 'Global/utils/isBrowser';
 
 export interface ScreenStreamConfig {
   deviceScreen: DeviceScreen;
@@ -43,7 +33,7 @@ export class ScreenStream {
 
   constructor(private config: ScreenStreamConfig) {
     if (!isBrowser()) {
-      throw new Error("not browser");
+      throw new Error('not browser');
     }
 
     if (config.apiKey) {
@@ -68,14 +58,10 @@ export class ScreenStream {
         const hostname = url.hostname;
 
         if (!isIPv4(hostname) && !isMdns(hostname)) {
-          throw new Error(
-            `Invalid address: "${config.addr}". Only IP addresses and mDNS names (ending in .local) are supported.`,
-          );
+          throw new Error(`Invalid address: "${config.addr}". Only IP addresses and mDNS names (ending in .local) are supported.`);
         }
       } catch (e) {
-        throw e instanceof Error && e.message.startsWith("Invalid address")
-          ? e
-          : new Error(`Invalid URL format: "${config.addr}"`);
+        throw e instanceof Error && e.message.startsWith('Invalid address') ? e : new Error(`Invalid URL format: "${config.addr}"`);
       }
 
       this.addr = addr;
@@ -120,15 +106,15 @@ export class ScreenStream {
     const wsUrl = new URL(`${this.addr}/api/screen/ws`);
 
     if (this.apiKey) {
-      wsUrl.searchParams.append("x-api-token", this.apiKey);
+      wsUrl.searchParams.append('x-api-token', this.apiKey);
     }
 
     if (this.apiSemver) {
-      wsUrl.searchParams.append("x-api-sem-ver", this.apiSemver);
+      wsUrl.searchParams.append('x-api-sem-ver', this.apiSemver);
     }
 
     if (!wsUrl) {
-      throw new Error("The WebSocket URL is not specified");
+      throw new Error('The WebSocket URL is not specified');
     }
 
     this.socket = new WebSocket(wsUrl);
@@ -143,10 +129,10 @@ export class ScreenStream {
       this.connected = true;
     };
 
-    this.socket.binaryType = "arraybuffer";
+    this.socket.binaryType = 'arraybuffer';
     this.socket.onmessage = (event) => {
       try {
-        if (typeof event.data === "string") {
+        if (typeof event.data === 'string') {
           // console.log("WebSocket message", event);
           return;
         }
@@ -186,8 +172,8 @@ export class ScreenStream {
       this.connected = false;
       this.emitError({
         code: 1006, // Standard «abnormal closure» code per RFC-6455
-        message: "WebSocket error occurred",
-        raw: event,
+        message: 'WebSocket error occurred',
+        raw: event
       });
       this.emitStop();
     };
@@ -201,7 +187,7 @@ export class ScreenStream {
         this.emitError({
           code: event.code,
           message: event.reason,
-          raw: event,
+          raw: event
         });
 
         return;

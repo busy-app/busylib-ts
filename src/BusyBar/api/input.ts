@@ -1,6 +1,6 @@
-import { withTimeout, type BusyBarClient } from "BusyBar/api/createClient";
-import type { TimeoutOptions } from "Global/types";
-import { KeyName } from "Global/types";
+import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
+import type { TimeoutOptions } from 'Global/types';
+import { KeyName } from 'Global/types';
 
 export interface InputKeyParams extends TimeoutOptions {
   keyName: KeyName;
@@ -10,15 +10,15 @@ async function setInputKey(client: BusyBarClient, params: InputKeyParams) {
 
   const { data, error } = await withTimeout(
     (signal) =>
-      client.POST("/input", {
+      client.POST('/input', {
         params: {
           query: {
-            key: keyName,
-          },
+            key: keyName
+          }
         },
-        signal,
+        signal
       }),
-    params.timeout,
+    params.timeout
   );
 
   if (error) {

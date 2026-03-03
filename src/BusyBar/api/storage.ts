@@ -1,10 +1,10 @@
-import { withTimeout, type BusyBarClient } from "BusyBar/api/createClient";
-import type { TimeoutOptions } from "Global/types";
-import type { operations } from "Global/API";
-import type { BusyFile } from "BusyBar/types/global";
+import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
+import type { TimeoutOptions } from 'Global/types';
+import type { operations } from 'Global/API';
+import type { BusyFile } from 'BusyBar/types/global';
 
 export interface UploadFileParams extends TimeoutOptions {
-  path: operations["writeStorageFile"]["parameters"]["query"]["path"];
+  path: operations['writeStorageFile']['parameters']['query']['path'];
   file: BusyFile;
 }
 
@@ -13,19 +13,19 @@ async function write(client: BusyBarClient, params: UploadFileParams) {
 
   const { data, error } = await withTimeout(
     (signal) =>
-      client.POST("/storage/write", {
+      client.POST('/storage/write', {
         params: {
           query: {
-            path,
-          },
+            path
+          }
         },
         headers: {
-          "Content-Type": "application/octet-stream",
+          'Content-Type': 'application/octet-stream'
         },
         body: file as unknown as string,
-        signal,
+        signal
       }),
-    params.timeout,
+    params.timeout
   );
 
   if (error) {
@@ -36,7 +36,7 @@ async function write(client: BusyBarClient, params: UploadFileParams) {
 }
 
 export interface DownloadFileParams extends TimeoutOptions {
-  path: operations["readStorageFile"]["parameters"]["query"]["path"];
+  path: operations['readStorageFile']['parameters']['query']['path'];
   asArrayBuffer?: boolean;
 }
 
@@ -45,16 +45,16 @@ async function read(client: BusyBarClient, params: DownloadFileParams) {
 
   const { data, error } = await withTimeout(
     (signal) =>
-      client.GET("/storage/read", {
+      client.GET('/storage/read', {
         params: {
           query: {
-            path,
-          },
+            path
+          }
         },
-        parseAs: asArrayBuffer ? "arrayBuffer" : "blob",
-        signal,
+        parseAs: asArrayBuffer ? 'arrayBuffer' : 'blob',
+        signal
       }),
-    params.timeout,
+    params.timeout
   );
 
   if (error) {
@@ -65,7 +65,7 @@ async function read(client: BusyBarClient, params: DownloadFileParams) {
 }
 
 export interface ReadDirectoryParams extends TimeoutOptions {
-  path: operations["listStorageFiles"]["parameters"]["query"]["path"];
+  path: operations['listStorageFiles']['parameters']['query']['path'];
 }
 
 async function list(client: BusyBarClient, params: ReadDirectoryParams) {
@@ -73,15 +73,15 @@ async function list(client: BusyBarClient, params: ReadDirectoryParams) {
 
   const { data, error } = await withTimeout(
     (signal) =>
-      client.GET("/storage/list", {
+      client.GET('/storage/list', {
         params: {
           query: {
-            path,
-          },
+            path
+          }
         },
-        signal,
+        signal
       }),
-    params.timeout,
+    params.timeout
   );
 
   if (error) {
@@ -92,7 +92,7 @@ async function list(client: BusyBarClient, params: ReadDirectoryParams) {
 }
 
 export interface RemoveParams extends TimeoutOptions {
-  path: operations["removeStorageFile"]["parameters"]["query"]["path"];
+  path: operations['removeStorageFile']['parameters']['query']['path'];
 }
 
 async function remove(client: BusyBarClient, params: RemoveParams) {
@@ -100,15 +100,15 @@ async function remove(client: BusyBarClient, params: RemoveParams) {
 
   const { data, error } = await withTimeout(
     (signal) =>
-      client.DELETE("/storage/remove", {
+      client.DELETE('/storage/remove', {
         params: {
           query: {
-            path,
-          },
+            path
+          }
         },
-        signal,
+        signal
       }),
-    params.timeout,
+    params.timeout
   );
 
   if (error) {
@@ -119,7 +119,7 @@ async function remove(client: BusyBarClient, params: RemoveParams) {
 }
 
 export interface CreateDirectoryParams extends TimeoutOptions {
-  path: operations["createStorageDir"]["parameters"]["query"]["path"];
+  path: operations['createStorageDir']['parameters']['query']['path'];
 }
 
 async function mkdir(client: BusyBarClient, params: CreateDirectoryParams) {
@@ -127,15 +127,15 @@ async function mkdir(client: BusyBarClient, params: CreateDirectoryParams) {
 
   const { data, error } = await withTimeout(
     (signal) =>
-      client.POST("/storage/mkdir", {
+      client.POST('/storage/mkdir', {
         params: {
           query: {
-            path,
-          },
+            path
+          }
         },
-        signal,
+        signal
       }),
-    params.timeout,
+    params.timeout
   );
 
   if (error) {
@@ -146,10 +146,7 @@ async function mkdir(client: BusyBarClient, params: CreateDirectoryParams) {
 }
 
 async function status(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout(
-    (signal) => client.GET("/storage/status", { signal }),
-    params?.timeout,
-  );
+  const { data, error } = await withTimeout((signal) => client.GET('/storage/status', { signal }), params?.timeout);
 
   if (error) {
     throw error;

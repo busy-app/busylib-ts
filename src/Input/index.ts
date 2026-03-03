@@ -1,20 +1,11 @@
-import { AUTH_CODE, RECONNECT_CODES } from "Global/webSocketConfig";
-import type {
-  KeyName,
-  KeyValue,
-  DataListener,
-  StopListener,
-  ErrorListener,
-  ErrorPayload,
-  ApiKey,
-  ApiSemver,
-} from "Global/types";
+import { AUTH_CODE, RECONNECT_CODES } from 'Global/webSocketConfig';
+import type { KeyName, KeyValue, DataListener, StopListener, ErrorListener, ErrorPayload, ApiKey, ApiSemver } from 'Global/types';
 
-import { DEFAULT_DEVICE_URL } from "Global/constants";
+import { DEFAULT_DEVICE_URL } from 'Global/constants';
 
-import { isIPv4 } from "Global/utils/isIPv4";
-import { isMdns } from "Global/utils/isMdns";
-import { isBrowser } from "Global/utils/isBrowser";
+import { isIPv4 } from 'Global/utils/isIPv4';
+import { isMdns } from 'Global/utils/isMdns';
+import { isBrowser } from 'Global/utils/isBrowser';
 
 export interface InputConfig {
   addr?: string;
@@ -41,7 +32,7 @@ export class Input {
 
   constructor(config?: InputConfig) {
     if (!isBrowser()) {
-      throw new Error("not browser");
+      throw new Error('not browser');
     }
 
     if (config?.apiKey) {
@@ -66,14 +57,10 @@ export class Input {
         const hostname = url.hostname;
 
         if (!isIPv4(hostname) && !isMdns(hostname)) {
-          throw new Error(
-            `Invalid address: "${config.addr}". Only IP addresses and mDNS names (ending in .local) are supported.`,
-          );
+          throw new Error(`Invalid address: "${config.addr}". Only IP addresses and mDNS names (ending in .local) are supported.`);
         }
       } catch (e) {
-        throw e instanceof Error && e.message.startsWith("Invalid address")
-          ? e
-          : new Error(`Invalid URL format: "${config.addr}"`);
+        throw e instanceof Error && e.message.startsWith('Invalid address') ? e : new Error(`Invalid URL format: "${config.addr}"`);
       }
 
       this.addr = addr;
@@ -120,15 +107,15 @@ export class Input {
     const wsUrl = new URL(`${this.addr}/api/input`);
 
     if (this.apiKey) {
-      wsUrl.searchParams.append("x-api-token", this.apiKey);
+      wsUrl.searchParams.append('x-api-token', this.apiKey);
     }
 
     if (this.apiSemver) {
-      wsUrl.searchParams.append("x-api-sem-ver", this.apiSemver);
+      wsUrl.searchParams.append('x-api-sem-ver', this.apiSemver);
     }
 
     if (!wsUrl) {
-      throw new Error("The WebSocket URL is not specified");
+      throw new Error('The WebSocket URL is not specified');
     }
 
     this.socket = new WebSocket(wsUrl);
@@ -140,10 +127,10 @@ export class Input {
       this.connected = true;
     };
 
-    this.socket.binaryType = "arraybuffer";
+    this.socket.binaryType = 'arraybuffer';
     this.socket.onmessage = (event) => {
       try {
-        if (typeof event.data === "string") {
+        if (typeof event.data === 'string') {
           // console.log("WebSocket message", event);
           return;
         }
@@ -163,8 +150,8 @@ export class Input {
       this.connected = false;
       this.emitError({
         code: 1006, // Standard «abnormal closure» code per RFC-6455
-        message: "WebSocket error occurred",
-        raw: event,
+        message: 'WebSocket error occurred',
+        raw: event
       });
       this.emitStop();
     };
@@ -178,7 +165,7 @@ export class Input {
         this.emitError({
           code: event.code,
           message: event.reason,
-          raw: event,
+          raw: event
         });
 
         return;
@@ -190,7 +177,7 @@ export class Input {
 
   sendInput({ keyName, value }: { keyName: KeyName; value: KeyValue }) {
     if (!this.socket || !this.connected) {
-      throw new Error("WebSocket: Not connected");
+      throw new Error('WebSocket: Not connected');
     }
 
     // let inputEvent: Partial<Record<KeyName, KeyValue>> = {};

@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/version": {
+  '/version': {
     parameters: {
       query?: never;
       header?: never;
@@ -15,7 +15,7 @@ export interface paths {
      * Get API version information
      * @description Retrieves API version
      */
-    get: operations["getVersion"];
+    get: operations['getVersion'];
     put?: never;
     post?: never;
     delete?: never;
@@ -24,7 +24,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/access": {
+  '/access': {
     parameters: {
       query?: never;
       header?: never;
@@ -35,20 +35,20 @@ export interface paths {
      * Get HTTP API access over Wi-Fi configuration
      * @description Get HTTP API access over Wi-Fi configuration
      */
-    get: operations["getHttpAccess"];
+    get: operations['getHttpAccess'];
     put?: never;
     /**
      * Set HTTP API access over Wi-Fi configuration
      * @description Set HTTP API access over Wi-Fi configuration
      */
-    post: operations["setHttpAccess"];
+    post: operations['setHttpAccess'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/name": {
+  '/name': {
     parameters: {
       query?: never;
       header?: never;
@@ -74,7 +74,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["NameInfo"];
+            'application/json': components['schemas']['NameInfo'];
           };
         };
       };
@@ -93,7 +93,7 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["NameInfo"];
+          'application/json': components['schemas']['NameInfo'];
         };
       };
       responses: {
@@ -103,7 +103,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["SuccessResponse"];
+            'application/json': components['schemas']['SuccessResponse'];
           };
         };
         /** @description Invalid name parameter, or failed to store new name */
@@ -112,7 +112,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["Error"];
+            'application/json': components['schemas']['Error'];
           };
         };
       };
@@ -123,7 +123,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/update": {
+  '/update': {
     parameters: {
       query?: never;
       header?: never;
@@ -136,14 +136,14 @@ export interface paths {
      * Update firmware
      * @description Uploads a firmware update package (TAR file) and initiates the update process.
      */
-    post: operations["updateFirmware"];
+    post: operations['updateFirmware'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/update/check": {
+  '/update/check': {
     parameters: {
       query?: never;
       header?: never;
@@ -156,14 +156,14 @@ export interface paths {
      * Start firmware update check
      * @description Initiates an asynchronous check for available firmware updates.
      */
-    post: operations["checkFirmwareUpdate"];
+    post: operations['checkFirmwareUpdate'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/update/status": {
+  '/update/status': {
     parameters: {
       query?: never;
       header?: never;
@@ -174,7 +174,7 @@ export interface paths {
      * Get firmware update status
      * @description Returns current update and check status including progress information.
      */
-    get: operations["getFirmwareUpdateStatus"];
+    get: operations['getFirmwareUpdateStatus'];
     put?: never;
     post?: never;
     delete?: never;
@@ -183,7 +183,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/update/changelog": {
+  '/update/changelog': {
     parameters: {
       query?: never;
       header?: never;
@@ -194,7 +194,7 @@ export interface paths {
      * Get update changelog
      * @description Returns the changelog for a specific firmware version.
      */
-    get: operations["getUpdateChangelog"];
+    get: operations['getUpdateChangelog'];
     put?: never;
     post?: never;
     delete?: never;
@@ -203,7 +203,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/update/install": {
+  '/update/install': {
     parameters: {
       query?: never;
       header?: never;
@@ -218,14 +218,14 @@ export interface paths {
      *     The update process (download, SHA verification, unpack, prepare, reboot) runs in the background.
      *     Use /update/status to monitor progress.
      */
-    post: operations["installFirmwareUpdate"];
+    post: operations['installFirmwareUpdate'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/update/abort_download": {
+  '/update/abort_download': {
     parameters: {
       query?: never;
       header?: never;
@@ -238,14 +238,14 @@ export interface paths {
      * Abort ongoing firmware download
      * @description Signals the updater to abort an ongoing download operation.
      */
-    post: operations["abortFirmwareDownload"];
+    post: operations['abortFirmwareDownload'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/assets/upload": {
+  '/assets/upload': {
     parameters: {
       query?: never;
       header?: never;
@@ -258,18 +258,18 @@ export interface paths {
      * Upload asset file with app ID
      * @description Uploads a file to a specific app's assets directory
      */
-    post: operations["uploadAssetWithAppId"];
+    post: operations['uploadAssetWithAppId'];
     /**
      * Delete app assets
      * @description Deletes all assets for a specific app ID
      */
-    delete: operations["deleteAppAssets"];
+    delete: operations['deleteAppAssets'];
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/storage/write": {
+  '/storage/write': {
     parameters: {
       query?: never;
       header?: never;
@@ -282,14 +282,14 @@ export interface paths {
      * Upload file to internal storage
      * @description Uploads a file to a specified path
      */
-    post: operations["writeStorageFile"];
+    post: operations['writeStorageFile'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/storage/read": {
+  '/storage/read': {
     parameters: {
       query?: never;
       header?: never;
@@ -300,7 +300,7 @@ export interface paths {
      * Download file from internal storage
      * @description Downloads a file from a specified path
      */
-    get: operations["readStorageFile"];
+    get: operations['readStorageFile'];
     put?: never;
     post?: never;
     delete?: never;
@@ -309,7 +309,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/storage/list": {
+  '/storage/list': {
     parameters: {
       query?: never;
       header?: never;
@@ -317,7 +317,7 @@ export interface paths {
       cookie?: never;
     };
     /** List files on internal storage */
-    get: operations["listStorageFiles"];
+    get: operations['listStorageFiles'];
     put?: never;
     post?: never;
     delete?: never;
@@ -326,7 +326,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/storage/remove": {
+  '/storage/remove': {
     parameters: {
       query?: never;
       header?: never;
@@ -340,13 +340,13 @@ export interface paths {
      * Remove a file on internal storage
      * @description Removes a file with a specified path
      */
-    delete: operations["removeStorageFile"];
+    delete: operations['removeStorageFile'];
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/storage/mkdir": {
+  '/storage/mkdir': {
     parameters: {
       query?: never;
       header?: never;
@@ -359,14 +359,14 @@ export interface paths {
      * Create a directory on internal storage
      * @description Creates a new directory with a specified path
      */
-    post: operations["createStorageDir"];
+    post: operations['createStorageDir'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/storage/status": {
+  '/storage/status': {
     parameters: {
       query?: never;
       header?: never;
@@ -374,7 +374,7 @@ export interface paths {
       cookie?: never;
     };
     /** Show storage usage */
-    get: operations["getStorageStatus"];
+    get: operations['getStorageStatus'];
     put?: never;
     post?: never;
     delete?: never;
@@ -383,7 +383,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/display/draw": {
+  '/display/draw': {
     parameters: {
       query?: never;
       header?: never;
@@ -397,18 +397,18 @@ export interface paths {
      * @description Sends drawing data to the display.
      *     Supports JSON-defined display elements.
      */
-    post: operations["drawOnDisplay"];
+    post: operations['drawOnDisplay'];
     /**
      * Clear display
      * @description Clears the display and stops the Canvas application if running
      */
-    delete: operations["clearDisplay"];
+    delete: operations['clearDisplay'];
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/display/brightness": {
+  '/display/brightness': {
     parameters: {
       query?: never;
       header?: never;
@@ -419,20 +419,20 @@ export interface paths {
      * Get display brightness
      * @description Get brightness value for displays
      */
-    get: operations["getDisplayBrightness"];
+    get: operations['getDisplayBrightness'];
     put?: never;
     /**
      * Set display brightness
      * @description Set brightness for one or both displays
      */
-    post: operations["setDisplayBrightness"];
+    post: operations['setDisplayBrightness'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/audio/play": {
+  '/audio/play': {
     parameters: {
       query?: never;
       header?: never;
@@ -446,18 +446,18 @@ export interface paths {
      * @description Plays an audio file from the assets directory.
      *     Supported formats include .snd files.
      */
-    post: operations["playAudio"];
+    post: operations['playAudio'];
     /**
      * Stop audio playback
      * @description Stops any currently playing audio
      */
-    delete: operations["stopAudio"];
+    delete: operations['stopAudio'];
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/audio/volume": {
+  '/audio/volume': {
     parameters: {
       query?: never;
       header?: never;
@@ -468,20 +468,20 @@ export interface paths {
      * Get audio volume
      * @description Get audio volume value
      */
-    get: operations["getAudioVolume"];
+    get: operations['getAudioVolume'];
     put?: never;
     /**
      * Set audio volume
      * @description Set audio volume value
      */
-    post: operations["setAudioVolume"];
+    post: operations['setAudioVolume'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/input": {
+  '/input': {
     parameters: {
       query?: never;
       header?: never;
@@ -492,20 +492,20 @@ export interface paths {
      * Input events streaming
      * @description Start WebSocket session for input events streaming
      */
-    get: operations["connectInputWebSocket"];
+    get: operations['connectInputWebSocket'];
     put?: never;
     /**
      * Send input event
      * @description Send single key press event
      */
-    post: operations["setInputKey"];
+    post: operations['setInputKey'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/status": {
+  '/status': {
     parameters: {
       query?: never;
       header?: never;
@@ -516,7 +516,7 @@ export interface paths {
      * Get device status
      * @description Get device status
      */
-    get: operations["getStatus"];
+    get: operations['getStatus'];
     put?: never;
     post?: never;
     delete?: never;
@@ -525,7 +525,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/status/system": {
+  '/status/system': {
     parameters: {
       query?: never;
       header?: never;
@@ -536,7 +536,7 @@ export interface paths {
      * Get system status
      * @description Get system status
      */
-    get: operations["getStatusSystem"];
+    get: operations['getStatusSystem'];
     put?: never;
     post?: never;
     delete?: never;
@@ -545,7 +545,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/status/power": {
+  '/status/power': {
     parameters: {
       query?: never;
       header?: never;
@@ -556,7 +556,7 @@ export interface paths {
      * Get power status
      * @description Get power status
      */
-    get: operations["getStatusPower"];
+    get: operations['getStatusPower'];
     put?: never;
     post?: never;
     delete?: never;
@@ -565,7 +565,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/wifi/status": {
+  '/wifi/status': {
     parameters: {
       query?: never;
       header?: never;
@@ -588,7 +588,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["StatusResponse"];
+            'application/json': components['schemas']['StatusResponse'];
           };
         };
       };
@@ -601,7 +601,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/wifi/connect": {
+  '/wifi/connect': {
     parameters: {
       query?: never;
       header?: never;
@@ -620,7 +620,7 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["ConnectRequestConfig"];
+          'application/json': components['schemas']['ConnectRequestConfig'];
         };
       };
       responses: {
@@ -630,7 +630,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["SuccessResponse"];
+            'application/json': components['schemas']['SuccessResponse'];
           };
         };
         /** @description Already connected */
@@ -639,7 +639,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["Error"];
+            'application/json': components['schemas']['Error'];
           };
         };
       };
@@ -650,7 +650,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/wifi/disconnect": {
+  '/wifi/disconnect': {
     parameters: {
       query?: never;
       header?: never;
@@ -675,7 +675,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["SuccessResponse"];
+            'application/json': components['schemas']['SuccessResponse'];
           };
         };
         /** @description Already disconnected */
@@ -684,7 +684,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["Error"];
+            'application/json': components['schemas']['Error'];
           };
         };
       };
@@ -695,7 +695,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/wifi/networks": {
+  '/wifi/networks': {
     parameters: {
       query?: never;
       header?: never;
@@ -718,7 +718,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["NetworkResponse"];
+            'application/json': components['schemas']['NetworkResponse'];
           };
         };
         /** @description Scan not possible when connected */
@@ -727,7 +727,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["Error"];
+            'application/json': components['schemas']['Error'];
           };
         };
       };
@@ -740,7 +740,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/screen": {
+  '/screen': {
     parameters: {
       query?: never;
       header?: never;
@@ -769,7 +769,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "image/bmp": components["schemas"]["ScreenResponse"];
+            'image/bmp': components['schemas']['ScreenResponse'];
           };
         };
         /** @description Wrong display */
@@ -778,7 +778,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["Error"];
+            'application/json': components['schemas']['Error'];
           };
         };
       };
@@ -791,7 +791,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/screen/ws": {
+  '/screen/ws': {
     parameters: {
       query?: never;
       header?: never;
@@ -805,7 +805,7 @@ export interface paths {
      *     After connection, client must send desired display ID
      *     as JSON {"display": 0}
      */
-    get: operations["connectWebSocket"];
+    get: operations['connectWebSocket'];
     put?: never;
     post?: never;
     delete?: never;
@@ -814,7 +814,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/ble/enable": {
+  '/ble/enable': {
     parameters: {
       query?: never;
       header?: never;
@@ -842,7 +842,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["SuccessResponse"];
+            'application/json': components['schemas']['SuccessResponse'];
           };
         };
       };
@@ -853,7 +853,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/ble/disable": {
+  '/ble/disable': {
     parameters: {
       query?: never;
       header?: never;
@@ -881,7 +881,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["SuccessResponse"];
+            'application/json': components['schemas']['SuccessResponse'];
           };
         };
       };
@@ -892,7 +892,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/ble/pairing": {
+  '/ble/pairing': {
     parameters: {
       query?: never;
       header?: never;
@@ -921,7 +921,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["SuccessResponse"];
+            'application/json': components['schemas']['SuccessResponse'];
           };
         };
         /** @description Failed to remove because BLE is not initialized or pairing was already removed */
@@ -930,7 +930,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["Error"];
+            'application/json': components['schemas']['Error'];
           };
         };
       };
@@ -940,7 +940,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/ble/status": {
+  '/ble/status': {
     parameters: {
       query?: never;
       header?: never;
@@ -963,7 +963,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["BleStatusResponse"];
+            'application/json': components['schemas']['BleStatusResponse'];
           };
         };
       };
@@ -976,7 +976,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/time": {
+  '/time': {
     parameters: {
       query?: never;
       header?: never;
@@ -987,7 +987,7 @@ export interface paths {
      * Get current timestamp with timezone
      * @description Retrieves the current timestamp from RTC with timezone in ISO 8601 format
      */
-    get: operations["getTime"];
+    get: operations['getTime'];
     put?: never;
     post?: never;
     delete?: never;
@@ -996,7 +996,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/account": {
+  '/account': {
     parameters: {
       query?: never;
       header?: never;
@@ -1010,13 +1010,13 @@ export interface paths {
      * Unlink device from account
      * @description Removes account linking data
      */
-    delete: operations["unlinkAccount"];
+    delete: operations['unlinkAccount'];
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/account/link": {
+  '/account/link': {
     parameters: {
       query?: never;
       header?: never;
@@ -1029,14 +1029,14 @@ export interface paths {
      * Link device to account
      * @description Requests account link PIN. Works only if device is connected to MQTT and is not linked to account
      */
-    post: operations["linkAccount"];
+    post: operations['linkAccount'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/account/info": {
+  '/account/info': {
     parameters: {
       query?: never;
       header?: never;
@@ -1047,7 +1047,7 @@ export interface paths {
      * Get linked account info
      * @description Retrieves linked account data
      */
-    get: operations["getAccountInfo"];
+    get: operations['getAccountInfo'];
     put?: never;
     post?: never;
     delete?: never;
@@ -1056,7 +1056,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/account/status": {
+  '/account/status': {
     parameters: {
       query?: never;
       header?: never;
@@ -1067,7 +1067,7 @@ export interface paths {
      * Get MQTT status info
      * @description Retrieves MQTT status
      */
-    get: operations["getAccountState"];
+    get: operations['getAccountState'];
     put?: never;
     post?: never;
     delete?: never;
@@ -1076,7 +1076,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/account/profile": {
+  '/account/profile': {
     parameters: {
       query?: never;
       header?: never;
@@ -1087,20 +1087,20 @@ export interface paths {
      * Get MQTT profile
      * @description Retrieves MQTT backend type (dev/prod/local)
      */
-    get: operations["getAccountProfile"];
+    get: operations['getAccountProfile'];
     put?: never;
     /**
      * Set MQTT profile
      * @description Sets MQTT backend type (dev/prod/local)
      */
-    post: operations["setAccountProfile"];
+    post: operations['setAccountProfile'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/time/timestamp": {
+  '/time/timestamp': {
     parameters: {
       query?: never;
       header?: never;
@@ -1113,14 +1113,14 @@ export interface paths {
      * Set current timestamp
      * @description Sets the RTC timestamp in ISO 8601 format. Time zone qualifier (e.g. Z of UTC or +hh:mm for local time) is required.
      */
-    post: operations["setTimeTimestamp"];
+    post: operations['setTimeTimestamp'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/time/timezone": {
+  '/time/timezone': {
     parameters: {
       query?: never;
       header?: never;
@@ -1131,20 +1131,20 @@ export interface paths {
      * Get timezone
      * @description Get current timezone name
      */
-    get: operations["getTimeTimezone"];
+    get: operations['getTimeTimezone'];
     put?: never;
     /**
      * Set timezone
      * @description Sets the timezone name. Use /time/tzlist to get available names list.
      */
-    post: operations["setTimeTimezone"];
+    post: operations['setTimeTimezone'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/time/tzlist": {
+  '/time/tzlist': {
     parameters: {
       query?: never;
       header?: never;
@@ -1155,7 +1155,7 @@ export interface paths {
      * Get list of supported time zones
      * @description Retrieves the list of time zones accepted by /time/timezone
      */
-    get: operations["getTimeTzlist"];
+    get: operations['getTimeTzlist'];
     put?: never;
     post?: never;
     delete?: never;
@@ -1164,7 +1164,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/busy/snapshot": {
+  '/busy/snapshot': {
     parameters: {
       query?: never;
       header?: never;
@@ -1175,12 +1175,12 @@ export interface paths {
      * Get BUSY timer snapshot
      * @description Gets the current state of the BUSY timer in snapshot form
      */
-    get: operations["getBusySnapshot"];
+    get: operations['getBusySnapshot'];
     /**
      * Set BUSY time snapshot
      * @description Run the timer starting from the given snapshot
      */
-    put: operations["setBusySnapshot"];
+    put: operations['setBusySnapshot'];
     post?: never;
     delete?: never;
     options?: never;
@@ -1188,7 +1188,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/matter/commissioning": {
+  '/matter/commissioning': {
     parameters: {
       query?: never;
       header?: never;
@@ -1196,10 +1196,10 @@ export interface paths {
       cookie?: never;
     };
     /** Smart home commissioning status */
-    get: operations["getMatterCommissioningStatus"];
+    get: operations['getMatterCommissioningStatus'];
     put?: never;
     /** Link device to a smart home */
-    post: operations["startMatterCommissioning"];
+    post: operations['startMatterCommissioning'];
     /** Erase all smart home links */
     delete: {
       parameters: {
@@ -1216,7 +1216,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["SuccessResponse"];
+            'application/json': components['schemas']['SuccessResponse'];
           };
         };
         /** @description Internal Matter service is broken */
@@ -1225,7 +1225,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["Error"];
+            'application/json': components['schemas']['Error'];
           };
         };
       };
@@ -1235,7 +1235,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/matter/endpoint/1": {
+  '/matter/endpoint/1': {
     parameters: {
       query?: never;
       header?: never;
@@ -1258,7 +1258,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["MatterEndpointState"];
+            'application/json': components['schemas']['MatterEndpointState'];
           };
         };
         /** @description Internal Matter service is broken */
@@ -1267,7 +1267,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["Error"];
+            'application/json': components['schemas']['Error'];
           };
         };
       };
@@ -1283,7 +1283,7 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["MatterEndpointState"];
+          'application/json': components['schemas']['MatterEndpointState'];
         };
       };
       responses: {
@@ -1293,7 +1293,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["SuccessResponse"];
+            'application/json': components['schemas']['SuccessResponse'];
           };
         };
         /** @description Internal Matter service is broken */
@@ -1302,7 +1302,7 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["Error"];
+            'application/json': components['schemas']['Error'];
           };
         };
       };
@@ -1377,44 +1377,31 @@ export interface components {
          * @description Current update event
          * @enum {string}
          */
-        event?:
-          | "session_start"
-          | "session_stop"
-          | "action_begin"
-          | "action_done"
-          | "detail_change"
-          | "action_progress"
-          | "none";
+        event?: 'session_start' | 'session_stop' | 'action_begin' | 'action_done' | 'detail_change' | 'action_progress' | 'none';
         /**
          * @description Current update action
          * @enum {string}
          */
-        action?:
-          | "download"
-          | "sha_verification"
-          | "unpack"
-          | "prepare"
-          | "apply"
-          | "none";
+        action?: 'download' | 'sha_verification' | 'unpack' | 'prepare' | 'apply' | 'none';
         /**
          * @description Current or last operation status
          * @enum {string}
          */
         status?:
-          | "ok"
-          | "battery_low"
-          | "busy"
-          | "download_failure"
-          | "download_abort"
-          | "sha_mismatch"
-          | "unpack_staging_dir_failure"
-          | "unpack_archive_open_failure"
-          | "unpack_archive_unpack_failure"
-          | "install_manifest_not_found"
-          | "install_manifest_invalid"
-          | "install_session_config_failure"
-          | "install_pointer_setup_failure"
-          | "unknown_failure";
+          | 'ok'
+          | 'battery_low'
+          | 'busy'
+          | 'download_failure'
+          | 'download_abort'
+          | 'sha_mismatch'
+          | 'unpack_staging_dir_failure'
+          | 'unpack_archive_open_failure'
+          | 'unpack_archive_unpack_failure'
+          | 'install_manifest_not_found'
+          | 'install_manifest_invalid'
+          | 'install_session_config_failure'
+          | 'install_pointer_setup_failure'
+          | 'unknown_failure';
         /** @description Optional status detail string */
         detail?: string;
         download?: {
@@ -1433,12 +1420,12 @@ export interface components {
          * @description Current check event
          * @enum {string}
          */
-        event?: "start" | "stop" | "none";
+        event?: 'start' | 'stop' | 'none';
         /**
          * @description Check result status
          * @enum {string}
          */
-        status?: "available" | "not_available" | "failure" | "none";
+        status?: 'available' | 'not_available' | 'failure' | 'none';
       };
     };
     /**
@@ -1459,7 +1446,7 @@ export interface components {
        * @example key
        * @enum {string}
        */
-      mode?: "disabled" | "enabled" | "key";
+      mode?: 'disabled' | 'enabled' | 'key';
       /**
        * @description Access key was set and is valid
        * @example true
@@ -1483,7 +1470,7 @@ export interface components {
      */
     StorageList: {
       /** @description Array of elements to display */
-      list: components["schemas"]["StorageListElement"][];
+      list: components['schemas']['StorageListElement'][];
     };
     StorageStatus: {
       /** @example 123456 */
@@ -1501,14 +1488,11 @@ export interface components {
        * @description Element type
        * @enum {string}
        */
-      type: "file" | "dir";
+      type: 'file' | 'dir';
       /** @description File or directory name */
       name: string;
     };
-    StorageFileElement: Omit<
-      components["schemas"]["StorageListElement"],
-      "type"
-    > & {
+    StorageFileElement: Omit<components['schemas']['StorageListElement'], 'type'> & {
       /** @description File size in bytes */
       size: number;
     } & {
@@ -1516,18 +1500,15 @@ export interface components {
        * @description discriminator enum property added by openapi-typescript
        * @enum {string}
        */
-      type: "file";
+      type: 'file';
     };
-    StorageDirElement: Omit<
-      components["schemas"]["StorageListElement"],
-      "type"
-    > &
+    StorageDirElement: Omit<components['schemas']['StorageListElement'], 'type'> &
       Record<string, never> & {
         /**
          * @description discriminator enum property added by openapi-typescript
          * @enum {string}
          */
-        type: "dir";
+        type: 'dir';
       };
     /**
      * Format: binary
@@ -1595,7 +1576,7 @@ export interface components {
        */
       priority: number;
       /** @description Array of elements to display */
-      elements: components["schemas"]["DisplayElement"][];
+      elements: components['schemas']['DisplayElement'][];
     };
     DisplayElement: {
       /** @description Unique identifier for the element */
@@ -1608,7 +1589,7 @@ export interface components {
        * @description Type of display element
        * @enum {string}
        */
-      type: "text" | "image" | "anim" | "countdown";
+      type: 'text' | 'image' | 'anim' | 'countdown';
       /** @description X coordinate of selected anchor point relative to top-left of display */
       x?: number;
       /** @description Y coordinate of selected anchor point relative to top-left of display */
@@ -1618,23 +1599,14 @@ export interface components {
        * @default front
        * @enum {string}
        */
-      display: "front" | "back";
+      display: 'front' | 'back';
       /**
        * @description Anchor point of element. Also use `x` and `y` to position element.
        * @enum {string}
        */
-      align?:
-        | "top_left"
-        | "top_mid"
-        | "top_right"
-        | "mid_left"
-        | "center"
-        | "mid_right"
-        | "bottom_left"
-        | "bottom_mid"
-        | "bottom_right";
+      align?: 'top_left' | 'top_mid' | 'top_right' | 'mid_left' | 'center' | 'mid_right' | 'bottom_left' | 'bottom_mid' | 'bottom_right';
     };
-    TextElement: Omit<components["schemas"]["DisplayElement"], "type"> & {
+    TextElement: Omit<components['schemas']['DisplayElement'], 'type'> & {
       /** @description Text content to display */
       text: string;
       /**
@@ -1642,7 +1614,7 @@ export interface components {
        * @default tiny5_8
        * @enum {string}
        */
-      font: "small" | "medium" | "medium_condensed" | "big";
+      font: 'small' | 'medium' | 'medium_condensed' | 'big';
       /**
        * @description Color to display the text in, in #RRGGBBAA format
        * @default #FFFFFFFF
@@ -1657,9 +1629,9 @@ export interface components {
        * @description discriminator enum property added by openapi-typescript
        * @enum {string}
        */
-      type: "text";
+      type: 'text';
     };
-    ImageElement: Omit<components["schemas"]["DisplayElement"], "type"> &
+    ImageElement: Omit<components['schemas']['DisplayElement'], 'type'> &
       (
         | {
             /** @description Path to the image file in the app's assets */
@@ -1674,9 +1646,9 @@ export interface components {
          * @description discriminator enum property added by openapi-typescript
          * @enum {string}
          */
-        type: "image";
+        type: 'image';
       };
-    AnimElement: Omit<components["schemas"]["DisplayElement"], "type"> &
+    AnimElement: Omit<components['schemas']['DisplayElement'], 'type'> &
       ((
         | {
             /** @description Path to the animation file in the app's assets */
@@ -1704,9 +1676,9 @@ export interface components {
          * @description discriminator enum property added by openapi-typescript
          * @enum {string}
          */
-        type: "anim";
+        type: 'anim';
       };
-    CountdownElement: Omit<components["schemas"]["DisplayElement"], "type"> & {
+    CountdownElement: Omit<components['schemas']['DisplayElement'], 'type'> & {
       /** @description Seconds-based Unix UTC timestamp to count down or up to. Note: it's a number in a string. */
       timestamp: string;
       /**
@@ -1718,18 +1690,18 @@ export interface components {
        * @description Whether to count up or down
        * @enum {string}
        */
-      direction: "time_left" | "time_since";
+      direction: 'time_left' | 'time_since';
       /**
        * @description When to show the hours position
        * @enum {string}
        */
-      show_hours: "when_non_zero" | "always";
+      show_hours: 'when_non_zero' | 'always';
     } & {
       /**
        * @description discriminator enum property added by openapi-typescript
        * @enum {string}
        */
-      type: "countdown";
+      type: 'countdown';
     };
     DisplayBrightnessInfo: {
       /**
@@ -1760,8 +1732,8 @@ export interface components {
       timezone: string;
     };
     Status: {
-      system?: components["schemas"]["StatusSystem"];
-      power?: components["schemas"]["StatusPower"];
+      system?: components['schemas']['StatusSystem'];
+      power?: components['schemas']['StatusPower'];
     };
     StatusSystem: {
       /**
@@ -1811,7 +1783,7 @@ export interface components {
        * @example discharging
        * @enum {string}
        */
-      state?: "discharging" | "charging" | "charged";
+      state?: 'discharging' | 'charging' | 'charged';
       /**
        * @description Battery charge percent
        * @example 99
@@ -1837,28 +1809,21 @@ export interface components {
      * @example WPA3
      * @enum {string}
      */
-    WifiSecurityMethod:
-      | "Open"
-      | "WPA"
-      | "WPA2"
-      | "WEP"
-      | "WPA/WPA2"
-      | "WPA3"
-      | "WPA2/WPA3";
+    WifiSecurityMethod: 'Open' | 'WPA' | 'WPA2' | 'WEP' | 'WPA/WPA2' | 'WPA3' | 'WPA2/WPA3';
     /**
      * @example dhcp
      * @enum {string}
      */
-    WifiIpMethod: "dhcp" | "static";
+    WifiIpMethod: 'dhcp' | 'static';
     /**
      * @example ipv4
      * @enum {string}
      */
-    WifiIpType: "ipv4" | "ipv6";
+    WifiIpType: 'ipv4' | 'ipv6';
     Network: {
       /** @example 42 */
       ssid?: string;
-      security?: components["schemas"]["WifiSecurityMethod"];
+      security?: components['schemas']['WifiSecurityMethod'];
       /** @example 58 */
       rssi?: number;
     };
@@ -1867,13 +1832,7 @@ export interface components {
        * @example disconnected
        * @enum {string}
        */
-      state?:
-        | "unknown"
-        | "disconnected"
-        | "connected"
-        | "connecting"
-        | "disconnecting"
-        | "reconnecting";
+      state?: 'unknown' | 'disconnected' | 'connected' | 'connecting' | 'disconnecting' | 'reconnecting';
       /** @example Your_WIFI_SSID */
       ssid?: string;
       /** @example EC:5A:00:0B:55:1D */
@@ -1882,10 +1841,10 @@ export interface components {
       channel?: number;
       /** @example -43 */
       rssi?: number;
-      security?: components["schemas"]["WifiSecurityMethod"];
+      security?: components['schemas']['WifiSecurityMethod'];
       ip_config?: {
-        ip_method?: components["schemas"]["WifiIpMethod"];
-        ip_type?: components["schemas"]["WifiIpType"];
+        ip_method?: components['schemas']['WifiIpMethod'];
+        ip_type?: components['schemas']['WifiIpType'];
         /** @example 192.168.50.5 */
         address?: string;
       };
@@ -1895,14 +1854,14 @@ export interface components {
       ssid?: string;
       /** @example Your_WIFI_Pass */
       password?: string;
-      security?: components["schemas"]["WifiSecurityMethod"];
+      security?: components['schemas']['WifiSecurityMethod'];
       ip_config?: {
-        ip_method?: components["schemas"]["WifiIpMethod"];
+        ip_method?: components['schemas']['WifiIpMethod'];
         /**
          * @example ipv4
          * @enum {string}
          */
-        ip_type?: "ipv4" | "ipv6";
+        ip_type?: 'ipv4' | 'ipv6';
         /** @example 192.168.50.5 */
         address?: string;
         /** @example 255.255.255.0 */
@@ -1914,7 +1873,7 @@ export interface components {
     NetworkResponse: {
       /** @example 1 */
       count?: number;
-      networks?: components["schemas"]["Network"][];
+      networks?: components['schemas']['Network'][];
     };
     /**
      * Format: base64
@@ -1936,14 +1895,14 @@ export interface components {
        * @example connected
        * @enum {string}
        */
-      state?: "error" | "disconnected" | "connected";
+      state?: 'error' | 'disconnected' | 'connected';
     };
     AccountProfile: {
       /**
        * @example dev
        * @enum {string}
        */
-      state?: "dev" | "prod" | "local" | "custom";
+      state?: 'dev' | 'prod' | 'local' | 'custom';
       /** @example mqtts://mqtt.example.com:8883 */
       custom_url?: string;
     };
@@ -1958,27 +1917,21 @@ export interface components {
        * @example connected
        * @enum {string}
        */
-      state?:
-        | "reset"
-        | "initialization"
-        | "disabled"
-        | "enabled"
-        | "connected"
-        | "internal error";
+      state?: 'reset' | 'initialization' | 'disabled' | 'enabled' | 'connected' | 'internal error';
       /** @example 50:DA:D6:FE:DD:A9 */
       address?: string;
       /**
        * @example paired
        * @enum {string}
        */
-      pairing?: "unknown" | "not paired" | "paired";
+      pairing?: 'unknown' | 'not paired' | 'paired';
     };
     BusySnapshot: {
       snapshot:
-        | components["schemas"]["BusySnapshotNotStarted"]
-        | components["schemas"]["BusySnapshotInfinite"]
-        | components["schemas"]["BusySnapshotSimple"]
-        | components["schemas"]["BusySnapshotInterval"];
+        | components['schemas']['BusySnapshotNotStarted']
+        | components['schemas']['BusySnapshotInfinite']
+        | components['schemas']['BusySnapshotSimple']
+        | components['schemas']['BusySnapshotInterval'];
       /** @example 1761582532251 */
       snapshot_timestamp_ms: number;
     };
@@ -1987,14 +1940,14 @@ export interface components {
        * @example NOT_STARTED
        * @enum {string}
        */
-      type: "NOT_STARTED";
+      type: 'NOT_STARTED';
     };
     BusySnapshotInfinite: {
       /**
        * @example INFINITE
        * @enum {string}
        */
-      type: "INFINITE";
+      type: 'INFINITE';
       /** @example 00000000-0000-0000-0000-000000000000 */
       card_id: string;
       /** @example false */
@@ -2005,7 +1958,7 @@ export interface components {
        * @example SIMPLE
        * @enum {string}
        */
-      type: "SIMPLE";
+      type: 'SIMPLE';
       /** @example 00000000-0000-0000-0000-000000000000 */
       card_id: string;
       /** @example 9000 */
@@ -2018,7 +1971,7 @@ export interface components {
        * @example INTERVAL
        * @enum {string}
        */
-      type: "INTERVAL";
+      type: 'INTERVAL';
       /** @example 00000000-0000-0000-0000-000000000000 */
       card_id: string;
       /** @example 1 */
@@ -2029,14 +1982,14 @@ export interface components {
       current_interval_time_left_ms: number;
       /** @example false */
       is_paused: boolean;
-      interval_settings: components["schemas"]["BusySnapshotIntervalSettings"];
+      interval_settings: components['schemas']['BusySnapshotIntervalSettings'];
     };
     BusySnapshotIntervalSettings: {
       /**
        * @example INTERVAL
        * @enum {string}
        */
-      type?: "INTERVAL";
+      type?: 'INTERVAL';
       /** @example 120000 */
       interval_work_ms?: number;
       /** @example 60000 */
@@ -2075,11 +2028,7 @@ export interface components {
          * @example completed_successfully
          * @enum {string}
          */
-        value?:
-          | "never_started"
-          | "started"
-          | "completed_successfully"
-          | "failed";
+        value?: 'never_started' | 'started' | 'completed_successfully' | 'failed';
         /**
          * @description UTC Unix millisecond timestamp of latest state update. Note: it's a number in a string.
          * @example 1769436711000
@@ -2110,7 +2059,7 @@ export interface components {
        * @example switch
        * @enum {string}
        */
-      type?: "switch";
+      type?: 'switch';
       /**
        * @description State of device emulated by a Matter endpoint. Boolean for "switch" device type.
        * @example false
@@ -2120,7 +2069,7 @@ export interface components {
        * @description For the "switch" device type, specifies the value on startup. Never sent by the server, but can be specified by the client.
        * @enum {string}
        */
-      startup?: "off" | "on" | "toggle" | "last";
+      startup?: 'off' | 'on' | 'toggle' | 'last';
     };
   };
   responses: never;
@@ -2146,7 +2095,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["VersionInfo"];
+          'application/json': components['schemas']['VersionInfo'];
         };
       };
       /** @description Internal server error */
@@ -2155,7 +2104,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2175,7 +2124,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["HttpAccessInfo"];
+          'application/json': components['schemas']['HttpAccessInfo'];
         };
       };
     };
@@ -2187,7 +2136,7 @@ export interface operations {
          * @description Access mode
          * @example key
          */
-        mode: "disabled" | "enabled" | "key";
+        mode: 'disabled' | 'enabled' | 'key';
         /**
          * @description Access key (4-10 digits length)
          * @example 12345678
@@ -2206,7 +2155,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Invalid request data */
@@ -2215,7 +2164,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2229,7 +2178,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/octet-stream": string;
+        'application/octet-stream': string;
       };
     };
     responses: {
@@ -2239,7 +2188,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Invalid parameters, invalid TAR file, or update preparation failed. */
@@ -2248,7 +2197,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
       /** @description Update package too large. */
@@ -2257,7 +2206,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
       /** @description Internal server error during update process. */
@@ -2266,7 +2215,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2286,7 +2235,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Update check already in progress */
@@ -2295,7 +2244,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
       /** @description Failed to start update check */
@@ -2304,7 +2253,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2324,7 +2273,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["UpdateStatus"];
+          'application/json': components['schemas']['UpdateStatus'];
         };
       };
     };
@@ -2350,7 +2299,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": {
+          'application/json': {
             /** @description Changelog text */
             changelog?: string;
           };
@@ -2362,7 +2311,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2388,7 +2337,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Version parameter missing, update not available, or version mismatch */
@@ -2397,7 +2346,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
       /** @description Update already in progress */
@@ -2406,7 +2355,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
       /** @description Failed to start background installation */
@@ -2415,7 +2364,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
       /** @description Battery too low for update */
@@ -2424,7 +2373,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2444,7 +2393,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
     };
@@ -2469,7 +2418,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/octet-stream": string;
+        'application/octet-stream': string;
       };
     };
     responses: {
@@ -2479,7 +2428,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Invalid parameters or upload failed */
@@ -2488,7 +2437,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
       /** @description File too large */
@@ -2497,7 +2446,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2523,7 +2472,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Invalid request parameters */
@@ -2532,7 +2481,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
       /** @description Delete failed */
@@ -2541,7 +2490,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2561,7 +2510,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/octet-stream": string;
+        'application/octet-stream': string;
       };
     };
     responses: {
@@ -2571,7 +2520,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Invalid parameters or upload failed */
@@ -2580,7 +2529,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
       /** @description File too large */
@@ -2589,7 +2538,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2615,7 +2564,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/octet-stream": string;
+          'application/octet-stream': string;
         };
       };
       /** @description Invalid parameters or file not exists */
@@ -2624,7 +2573,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2650,7 +2599,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["StorageList"];
+          'application/json': components['schemas']['StorageList'];
         };
       };
       /** @description Invalid parameters or directory does not exist */
@@ -2659,7 +2608,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2685,7 +2634,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Invalid path or deletion failed */
@@ -2694,7 +2643,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2720,7 +2669,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Invalid path or creation failed */
@@ -2729,7 +2678,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2749,7 +2698,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["StorageStatus"];
+          'application/json': components['schemas']['StorageStatus'];
         };
       };
       /** @description Invalid parameters or storage doesn't exist */
@@ -2758,7 +2707,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2772,7 +2721,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["DisplayElements"];
+        'application/json': components['schemas']['DisplayElements'];
       };
     };
     responses: {
@@ -2782,7 +2731,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Invalid drawing data */
@@ -2791,7 +2740,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
       /** @description Requested priority level is below that of currently active app */
@@ -2800,7 +2749,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
       /** @description Display error */
@@ -2809,7 +2758,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2835,7 +2784,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Display error */
@@ -2844,7 +2793,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2864,7 +2813,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["DisplayBrightnessInfo"];
+          'application/json': components['schemas']['DisplayBrightnessInfo'];
         };
       };
     };
@@ -2890,7 +2839,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Invalid request data */
@@ -2899,7 +2848,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2930,7 +2879,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Invalid file path or file not found */
@@ -2939,7 +2888,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
       /** @description Audio system error */
@@ -2948,7 +2897,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2968,7 +2917,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Audio system error */
@@ -2977,7 +2926,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -2997,7 +2946,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["AudioVolumeInfo"];
+          'application/json': components['schemas']['AudioVolumeInfo'];
         };
       };
     };
@@ -3023,7 +2972,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Invalid request data */
@@ -3032,7 +2981,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3059,7 +3008,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
       /** @description Upgrade required */
@@ -3068,7 +3017,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3080,17 +3029,7 @@ export interface operations {
          * @description Key name
          * @example ok
          */
-        key:
-          | "up"
-          | "down"
-          | "ok"
-          | "back"
-          | "start"
-          | "busy"
-          | "custom"
-          | "off"
-          | "apps"
-          | "settings";
+        key: 'up' | 'down' | 'ok' | 'back' | 'start' | 'busy' | 'custom' | 'off' | 'apps' | 'settings';
       };
       header?: never;
       path?: never;
@@ -3104,7 +3043,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Invalid request data */
@@ -3113,7 +3052,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3133,7 +3072,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Status"];
+          'application/json': components['schemas']['Status'];
         };
       };
       /** @description Internal server error */
@@ -3142,7 +3081,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3162,7 +3101,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["StatusSystem"];
+          'application/json': components['schemas']['StatusSystem'];
         };
       };
       /** @description Internal server error */
@@ -3171,7 +3110,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3191,7 +3130,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["StatusPower"];
+          'application/json': components['schemas']['StatusPower'];
         };
       };
       /** @description Internal server error */
@@ -3200,7 +3139,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3227,7 +3166,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3247,7 +3186,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["TimestampInfo"];
+          'application/json': components['schemas']['TimestampInfo'];
         };
       };
       /** @description Bad request */
@@ -3256,7 +3195,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3276,7 +3215,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
     };
@@ -3296,7 +3235,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["AccountLink"];
+          'application/json': components['schemas']['AccountLink'];
         };
       };
       /** @description Bad request */
@@ -3305,7 +3244,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3325,7 +3264,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["AccountInfo"];
+          'application/json': components['schemas']['AccountInfo'];
         };
       };
     };
@@ -3345,7 +3284,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["AccountState"];
+          'application/json': components['schemas']['AccountState'];
         };
       };
     };
@@ -3365,7 +3304,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["AccountProfile"];
+          'application/json': components['schemas']['AccountProfile'];
         };
       };
     };
@@ -3374,7 +3313,7 @@ export interface operations {
     parameters: {
       query: {
         /** @example dev */
-        profile: "dev" | "prod" | "local" | "custom";
+        profile: 'dev' | 'prod' | 'local' | 'custom';
         custom_url?: string;
       };
       header?: never;
@@ -3389,7 +3328,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Bad request */
@@ -3398,7 +3337,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3424,7 +3363,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Invalid timestamp format or value */
@@ -3433,7 +3372,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3453,7 +3392,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["TimezoneInfo"];
+          'application/json': components['schemas']['TimezoneInfo'];
         };
       };
       /** @description Invalid timezone offset */
@@ -3462,7 +3401,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3488,7 +3427,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Invalid timezone offset */
@@ -3497,7 +3436,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3517,7 +3456,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["TimezoneListResponse"];
+          'application/json': components['schemas']['TimezoneListResponse'];
         };
       };
       /** @description Error getting time zone list */
@@ -3526,7 +3465,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3546,7 +3485,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["BusySnapshot"];
+          'application/json': components['schemas']['BusySnapshot'];
         };
       };
       /** @description Error getting snapshot */
@@ -3555,7 +3494,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3569,7 +3508,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["BusySnapshot"];
+        'application/json': components['schemas']['BusySnapshot'];
       };
     };
     responses: {
@@ -3579,7 +3518,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SuccessResponse"];
+          'application/json': components['schemas']['SuccessResponse'];
         };
       };
       /** @description Error setting snapshot */
@@ -3588,7 +3527,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3608,7 +3547,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["MatterCommissionedFabrics"];
+          'application/json': components['schemas']['MatterCommissionedFabrics'];
         };
       };
     };
@@ -3628,7 +3567,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["MatterCommissioningPayload"];
+          'application/json': components['schemas']['MatterCommissioningPayload'];
         };
       };
       /** @description Internal Matter service is broken */
@@ -3637,7 +3576,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Error"];
+          'application/json': components['schemas']['Error'];
         };
       };
     };
