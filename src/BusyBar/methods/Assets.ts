@@ -7,10 +7,10 @@ export class AssetsMethods {
    * Upload asset file with app ID. Uploads a file to a specific app's assets directory.
    *
    * @param {UploadParams} params - Parameters for the upload.
-   *   @param {UploadParams['appId']} params.appId - Application ID for organizing assets.
-   *   @param {UploadParams['fileName']} params.fileName - Filename for the uploaded asset.
-   *   @param {UploadParams['file']} params.file - File data to upload.
-   *   @param {UploadParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {string} params.application_name - Application name for organizing assets.
+   *   @param {string} params.file - Filename for the uploaded asset.
+   *   @param {BusyFile} params.data - File data to upload.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the upload operation.
    */
   async AssetsUpload(this: BusyBar, params: UploadParams): Promise<SuccessResponse> {
@@ -21,8 +21,8 @@ export class AssetsMethods {
    * Delete app assets. Deletes all assets for a specific app ID.
    *
    * @param {DeleteParams} params - Parameters for the delete.
-   *   @param {DeleteParams['appId']} params.appId - Application ID whose assets should be deleted.
-   *   @param {DeleteParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {string} params.application_name - Application name whose assets should be deleted.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} Result of the delete operation.
    */
   async AssetsDelete(this: BusyBar, params: DeleteParams): Promise<SuccessResponse> {

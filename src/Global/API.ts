@@ -446,7 +446,7 @@ export interface paths {
     post: operations['drawOnDisplay'];
     /**
      * Clear display
-     * @description Clears the display and stops the Canvas application if running
+     * @description Deletes display elements drawn by the Canvas application. If application_name is specified, only elements for that app are removed.
      */
     delete: operations['clearDisplay'];
     options?: never;
@@ -645,6 +645,29 @@ export interface paths {
      * @description Get power status
      */
     get: operations['getStatusPower'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/status/ws': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Device status streaming WebSocket endpoint
+     * @description WebSocket connection for real-time device status and screen streaming.
+     *     Upgrade from HTTP to WebSocket protocol is required.
+     *     After connection, client must enable streaming by sending JSON: {"enable": true}
+     *
+     */
+    get: operations['connectWebSocket'];
     put?: never;
     post?: never;
     delete?: never;
@@ -894,7 +917,7 @@ export interface paths {
      *     as JSON {"display": 0}
      *
      */
-    get: operations['connectWebSocket'];
+    get: operations['connectScreenWebSocket'];
     put?: never;
     post?: never;
     delete?: never;
@@ -934,6 +957,15 @@ export interface paths {
             'application/json': components['schemas']['SuccessResponse'];
           };
         };
+        /** @description Unable to start BLE */
+        503: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['Error'];
+          };
+        };
       };
     };
     delete?: never;
@@ -971,6 +1003,15 @@ export interface paths {
           };
           content: {
             'application/json': components['schemas']['SuccessResponse'];
+          };
+        };
+        /** @description Unable to stop BLE */
+        503: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['Error'];
           };
         };
       };
@@ -1156,7 +1197,7 @@ export interface paths {
      * Get MQTT status info
      * @description Retrieves MQTT status
      */
-    get: operations['getAccountState'];
+    get: operations['getAccountStatus'];
     put?: never;
     post?: never;
     delete?: never;
@@ -1302,7 +1343,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/matter/commissioning': {
+  '/smart_home/pairing': {
     parameters: {
       query?: never;
       header?: never;
@@ -1310,10 +1351,10 @@ export interface paths {
       cookie?: never;
     };
     /** Smart home commissioning status */
-    get: operations['getMatterCommissioningStatus'];
+    get: operations['getSmartHomeCommissioningStatus'];
     put?: never;
     /** Link device to a smart home */
-    post: operations['startMatterCommissioning'];
+    post: operations['startSmartHomePairing'];
     /** Erase all smart home links */
     delete: {
       parameters: {
@@ -1324,7 +1365,7 @@ export interface paths {
       };
       requestBody?: never;
       responses: {
-        /** @description Successfully erased all Matter commissioning info, device restart is needed */
+        /** @description Successfully erased all smart home pairing info, device restart is needed */
         200: {
           headers: {
             [name: string]: unknown;
@@ -1333,7 +1374,7 @@ export interface paths {
             'application/json': components['schemas']['SuccessResponse'];
           };
         };
-        /** @description Internal Matter service is broken */
+        /** @description Internal smart home service is broken */
         503: {
           headers: {
             [name: string]: unknown;
@@ -1349,14 +1390,14 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/matter/endpoint/1': {
+  '/smart_home/switch': {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    /** Get Matter endpoint 1 state */
+    /** Get state of emulated smart home switch */
     get: {
       parameters: {
         query?: never;
@@ -1366,16 +1407,16 @@ export interface paths {
       };
       requestBody?: never;
       responses: {
-        /** @description Successfully got Matter endpoint 1 state */
+        /** @description Successfully got state of emulated smart home switch */
         200: {
           headers: {
             [name: string]: unknown;
           };
           content: {
-            'application/json': components['schemas']['MatterEndpointState'];
+            'application/json': components['schemas']['SmartHomeSwitchState'];
           };
         };
-        /** @description Internal Matter service is broken */
+        /** @description Internal smart home service is broken */
         503: {
           headers: {
             [name: string]: unknown;
@@ -1387,7 +1428,7 @@ export interface paths {
       };
     };
     put?: never;
-    /** Set Matter endpoint 1 state */
+    /** Set state of emulated smart home switch */
     post: {
       parameters: {
         query?: never;
@@ -1397,11 +1438,11 @@ export interface paths {
       };
       requestBody: {
         content: {
-          'application/json': components['schemas']['MatterEndpointState'];
+          'application/json': components['schemas']['SmartHomeSwitchState'];
         };
       };
       responses: {
-        /** @description Successfully set Matter endpoint 1 state */
+        /** @description Successfully set state of emulated smart home switch */
         200: {
           headers: {
             [name: string]: unknown;
@@ -1410,7 +1451,7 @@ export interface paths {
             'application/json': components['schemas']['SuccessResponse'];
           };
         };
-        /** @description Internal Matter service is broken */
+        /** @description Internal smart home service is broken */
         503: {
           headers: {
             [name: string]: unknown;
@@ -1645,7 +1686,7 @@ export interface components {
       file: string;
     };
     /** @example {
-     *       "app_id": "my_app",
+     *       "application_name": "my_app",
      *       "elements": [
      *         {
      *           "id": "0",
@@ -1689,17 +1730,17 @@ export interface components {
        * @description Application ID for organizing assets
        * @example my_app
        */
-      app_id: string;
+      application_name: string;
       /**
-       * @description Draw requests with a lower priority than the currently active draw request will be ignored. Value is 1 through 10, inclusive, higher number means higher priority. Any built-in app is treated as priority level 5.
-       * @default 6
+       * @description Draw priority in the range [1, 100] inclusive. A draw request is accepted when its priority is greater than or equal to (>=) the priority of the currently running system app. Equal-priority requests from a different application_name override whatever is on screen. System app priority levels: stub/poweroff apps = 0 (always preemptable), any standard built-in app = 10, active BUSY/CUSTOM work session = 90. The draw API only accepts values 1–100; 0 is reserved for internal use.
+       * @default 50
        */
       priority: number;
       /** @description Array of elements to display */
       elements: (
         | components['schemas']['TextElement']
         | components['schemas']['ImageElement']
-        | components['schemas']['AnimElement']
+        | components['schemas']['AnimationElement']
         | components['schemas']['CountdownElement']
       )[];
     };
@@ -1714,11 +1755,17 @@ export interface components {
        * @description Type of display element
        * @enum {string}
        */
-      type: 'text' | 'image' | 'anim' | 'countdown';
-      /** @description X coordinate of selected anchor point relative to top-left of display */
-      x?: number;
-      /** @description Y coordinate of selected anchor point relative to top-left of display */
-      y?: number;
+      type: 'text' | 'image' | 'animation' | 'countdown';
+      /**
+       * @description X coordinate of selected anchor point relative to top-left of display
+       * @default 0
+       */
+      x: number;
+      /**
+       * @description Y coordinate of selected anchor point relative to top-left of display
+       * @default 0
+       */
+      y: number;
       /**
        * @description Which display to show the element on (for dual-display devices)
        * @default front
@@ -1736,7 +1783,6 @@ export interface components {
       text: string;
       /**
        * @description One of the available fonts to display the text in
-       * @default tiny5_8
        * @enum {string}
        */
       font: 'small' | 'medium' | 'medium_condensed' | 'big';
@@ -1760,11 +1806,11 @@ export interface components {
       (
         | {
             /** @description Path to the image file in the app's assets */
-            path?: string;
+            path: string;
           }
         | {
-            /** @description Identifier of builtin image */
-            builtin_image?: string;
+            /** @description Stock image file name */
+            stock_path: string;
           }
       ) & {
         /**
@@ -1773,15 +1819,15 @@ export interface components {
          */
         type: 'image';
       };
-    AnimElement: Omit<components['schemas']['DisplayElement'], 'type'> &
+    AnimationElement: Omit<components['schemas']['DisplayElement'], 'type'> &
       ((
         | {
             /** @description Path to the animation file in the app's assets */
             path?: string;
           }
         | {
-            /** @description Identifier of builtin animation */
-            builtin_anim?: string;
+            /** @description Stock animation file name */
+            stock_path?: string;
           }
       ) & {
         /**
@@ -1794,14 +1840,14 @@ export interface components {
          * @default false
          */
         await_previous_end: boolean;
-        /** @description Name of the section to play back. Specifying \"default\" selects the entire animation. */
-        section_name?: string;
+        /** @description Name of the section to play back. Specifying "default" selects the entire animation. */
+        section?: string;
       }) & {
         /**
          * @description discriminator enum property added by openapi-typescript
          * @enum {string}
          */
-        type: 'anim';
+        type: 'animation';
       };
     CountdownElement: Omit<components['schemas']['DisplayElement'], 'type'> & {
       /** @description Seconds-based Unix UTC timestamp to count down or up to. Note: it's a number in a string. */
@@ -1851,10 +1897,20 @@ export interface components {
     };
     TimezoneInfo: {
       /**
-       * @description Timezone name
-       * @example Berlin
+       * @description Time zone name
+       * @example Bangalore
        */
-      timezone: string;
+      name: string;
+      /**
+       * @description Time zone offset from UTC
+       * @example +05:30
+       */
+      offset: string;
+      /**
+       * @description Time zone abbreviation
+       * @example IST
+       */
+      abbr: string;
     };
     Status: {
       device?: components['schemas']['StatusDevice'];
@@ -1980,7 +2036,7 @@ export interface components {
      * @example WPA3
      * @enum {string}
      */
-    WifiSecurityMethod: 'Open' | 'WPA' | 'WPA2' | 'WEP' | 'WPA/WPA2' | 'WPA3' | 'WPA2/WPA3';
+    WifiSecurityMethod: 'Open' | 'WPA' | 'WPA2' | 'WEP' | 'WPA/WPA2' | 'WPA3' | 'WPA2/WPA3' | 'Unsupported';
     /**
      * @example dhcp
      * @enum {string}
@@ -1998,21 +2054,38 @@ export interface components {
       /** @example 58 */
       rssi?: number;
     };
+    /** @description Wi-Fi status. Only `state` is always present.
+     *     Fields `ssid`, `bssid`, `channel`, `rssi`, `security`, and `ip_config` are only included when state is "connected".
+     *      */
     StatusResponse: {
       /**
        * @example disconnected
        * @enum {string}
        */
-      state?: 'unknown' | 'disconnected' | 'connected' | 'connecting' | 'disconnecting' | 'reconnecting';
-      /** @example Your_WIFI_SSID */
+      state: 'unknown' | 'disconnected' | 'connected' | 'connecting' | 'disconnecting' | 'reconnecting';
+      /**
+       * @description Only present when connected
+       * @example Your_WIFI_SSID
+       */
       ssid?: string;
-      /** @example EC:5A:00:0B:55:1D */
+      /**
+       * @description Only present when connected
+       * @example EC:5A:00:0B:55:1D
+       */
       bssid?: string;
-      /** @example 3 */
+      /**
+       * @description Only present when connected
+       * @example 3
+       */
       channel?: number;
-      /** @example -43 */
+      /**
+       * @description Only present when connected
+       * @example -43
+       */
       rssi?: number;
+      /** @description Only present when connected */
       security?: components['schemas']['WifiSecurityMethod'];
+      /** @description Only present when connected */
       ip_config?: {
         ip_method?: components['schemas']['WifiIpMethod'];
         ip_type?: components['schemas']['WifiIpType'];
@@ -2061,20 +2134,23 @@ export interface components {
       /** @example 12345678-9abc-def0-1234-56789abcdef0 */
       user_id?: string;
     };
-    AccountState: {
+    AccountStatus: {
       /**
        * @example connected
        * @enum {string}
        */
-      state?: 'error' | 'disconnected' | 'connected';
+      status?: 'error' | 'disconnected' | 'connected';
     };
     AccountProfile: {
       /**
        * @example dev
        * @enum {string}
        */
-      state?: 'dev' | 'prod' | 'local' | 'custom';
-      /** @example mqtts://mqtt.example.com:8883 */
+      profile: 'dev' | 'prod' | 'local' | 'custom';
+      /**
+       * @description Only present when profile is "custom"
+       * @example mqtts://mqtt.example.com:8883
+       */
       custom_url?: string;
     };
     AccountLink: {
@@ -2088,22 +2164,22 @@ export interface components {
        * @example connected
        * @enum {string}
        */
-      state?: 'reset' | 'initialization' | 'disabled' | 'enabled' | 'connected' | 'internal error';
-      /** @example 50:DA:D6:FE:DD:A9 */
-      address?: string;
+      status: 'reset' | 'initialization' | 'disabled' | 'enabled' | 'connectable' | 'connected' | 'internal error';
       /**
-       * @example paired
-       * @enum {string}
+       * @description Remote device address. Only present when status is "connected".
+       * @example 50:DA:D6:FE:DD:A9
        */
-      pairing?: 'unknown' | 'not paired' | 'paired';
+      address?: string;
     };
     BusySnapshot: {
-      snapshot:
+      snapshot: (
         | components['schemas']['BusySnapshotNotStarted']
         | components['schemas']['BusySnapshotInfinite']
         | components['schemas']['BusySnapshotSimple']
-        | components['schemas']['BusySnapshotInterval'];
-      busy_bar_settings: components['schemas']['BusyBarSettings'];
+        | components['schemas']['BusySnapshotInterval']
+      ) & {
+        busy_bar_settings: components['schemas']['BusyBarSettings'];
+      };
       /** @example 1761582532251 */
       snapshot_timestamp_ms: number;
     };
@@ -2207,75 +2283,54 @@ export interface components {
       trigger_smart_home: boolean;
     };
     TimezoneListResponse: {
-      list?: {
-        /**
-         * @description Time zone name
-         * @example Bangalore
-         */
-        name?: string;
-        /**
-         * @description Time zone offset from UTC
-         * @example +05:30
-         */
-        offset?: string;
-        /**
-         * @description Time zone abbreviation
-         * @example IST
-         */
-        abbr?: string;
-      }[];
+      list?: components['schemas']['TimezoneInfo'][];
     };
-    MatterCommissionedFabrics: {
+    SmartHomePairingInfo: {
       /**
-       * @description Number of Matter smart homes ("fabrics") that this device is linked with ("commissioned into")
+       * @description Number of smart homes (Matter "fabrics") that this device is paired with ("commissioned into")
        * @example 1
        */
       fabric_count?: number;
-      latest_commissioning_status?: {
+      latest_pairing_status?: {
         /**
-         * @description Latest state of Matter smart home linking ("commissioning") process. Note: "never_started" only refers to the current power cycle of the device; this status is not recorded across reboots.
+         * @description Latest state of smart home pairing (Matter "commissioning") process. Note: "never_started" only refers to the current power cycle of the device; this status is not recorded across reboots.
          * @example completed_successfully
          * @enum {string}
          */
         value?: 'never_started' | 'started' | 'completed_successfully' | 'failed';
         /**
-         * @description UTC Unix millisecond timestamp of latest state update. Note: it's a number in a string.
-         * @example 1769436711000
+         * @description UTC Unix second timestamp of latest state update. Only present when a status update has occurred.
+         * @example 1769436711
          */
-        timestamp?: string;
+        timestamp?: number;
       };
     };
-    MatterCommissioningPayload: {
+    /** @description Set of information for pairing with a Matter smart home */
+    SmartHomePairingPayload: {
       /**
-       * @description Linking with ("commissioning into") a Matter smart home using the provided payload is possible before this UTC Unix millisecond timestamp. Note: it's a number in a string.
+       * @description Pairing with ("commissioning into") a Matter smart home using the provided payload is possible before this UTC Unix millisecond timestamp. Note: it's a number in a string.
        * @example 1769437579000
        */
       available_until?: string;
       /**
-       * @description Payload of the QR code for linking with ("commissioning into") a Matter smart home
+       * @description Payload of the QR code for pairing with ("commissioning into") a smart home
        * @example MT:YNDA0-O913..VV7I000
        */
       qr_code?: string;
       /**
-       * @description Manual code for linking with ("commissioning into") a Matter smart home
+       * @description Manual code for pairing with ("commissioning into") a smart home
        * @example 1155-360-0377
        */
       manual_code?: string;
     };
-    MatterEndpointState: {
+    SmartHomeSwitchState: {
       /**
-       * @description Type of device emulated by a Matter endpoint. Currently only "switch" is implemented.
-       * @example switch
-       * @enum {string}
-       */
-      type?: 'switch';
-      /**
-       * @description State of device emulated by a Matter endpoint. Boolean for "switch" device type.
+       * @description State of emulated switch.
        * @example false
        */
       state?: boolean;
       /**
-       * @description For the "switch" device type, specifies the value on startup. Never sent by the server, but can be specified by the client.
+       * @description State of emulated switch on startup. Never sent by the server, but can be specified by the client.
        * @enum {string}
        */
       startup?: 'off' | 'on' | 'toggle' | 'last';
@@ -2347,10 +2402,10 @@ export interface operations {
          */
         mode: 'disabled' | 'enabled' | 'key';
         /**
-         * @description Access key (4-10 digits length)
+         * @description Access key (4-10 digits length). Required when mode is "key".
          * @example 12345678
          */
-        key: string;
+        key?: string;
       };
       header?: never;
       path?: never;
@@ -2685,7 +2740,7 @@ export interface operations {
          * @description Application ID for organizing assets
          * @example my_app
          */
-        app_id: string;
+        application_name: string;
         /**
          * @description Filename for the uploaded asset
          * @example data.png
@@ -2738,7 +2793,7 @@ export interface operations {
          * @description Application ID whose assets should be deleted
          * @example my_app
          */
-        app_id: string;
+        application_name: string;
       };
       header?: never;
       path?: never;
@@ -3072,8 +3127,8 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
-      /** @description Display error */
-      500: {
+      /** @description Failed to load canvas app */
+      503: {
         headers: {
           [name: string]: unknown;
         };
@@ -3090,7 +3145,7 @@ export interface operations {
          * @description Application identifier
          * @example my_app
          */
-        app_id?: string;
+        application_name?: string;
       };
       header?: never;
       path?: never;
@@ -3105,15 +3160,6 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['SuccessResponse'];
-        };
-      };
-      /** @description Display error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3140,12 +3186,12 @@ export interface operations {
   };
   setDisplayBrightness: {
     parameters: {
-      query?: {
+      query: {
         /**
          * @description Displays brightness (0-100/auto)
          * @example 50
          */
-        value?: string;
+        value: string;
       };
       header?: never;
       path?: never;
@@ -3180,7 +3226,7 @@ export interface operations {
          * @description Application ID for organizing assets
          * @example my_app
          */
-        app_id: string;
+        application_name: string;
         /**
          * @description Path to audio file within app's assets directory
          * @example data.snd
@@ -3549,6 +3595,33 @@ export interface operations {
       };
     };
   };
+  connectScreenWebSocket: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description WebSocket connection established */
+      101: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Exceed max clients count */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
   getTime: {
     parameters: {
       query?: never;
@@ -3565,15 +3638,6 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['TimestampInfo'];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3647,7 +3711,7 @@ export interface operations {
       };
     };
   };
-  getAccountState: {
+  getAccountStatus: {
     parameters: {
       query?: never;
       header?: never;
@@ -3662,7 +3726,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AccountState'];
+          'application/json': components['schemas']['AccountStatus'];
         };
       };
     };
@@ -3976,7 +4040,7 @@ export interface operations {
       };
     };
   };
-  getMatterCommissioningStatus: {
+  getSmartHomeCommissioningStatus: {
     parameters: {
       query?: never;
       header?: never;
@@ -3985,18 +4049,18 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Successfully got Matter commissioning status */
+      /** @description Successfully got smart home commissioning status */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['MatterCommissionedFabrics'];
+          'application/json': components['schemas']['SmartHomePairingInfo'];
         };
       };
     };
   };
-  startMatterCommissioning: {
+  startSmartHomePairing: {
     parameters: {
       query?: never;
       header?: never;
@@ -4005,16 +4069,16 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Successfully started Matter commissioning */
+      /** @description Successfully started smart home pairing */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['MatterCommissioningPayload'];
+          'application/json': components['schemas']['SmartHomePairingPayload'];
         };
       };
-      /** @description Internal Matter service is broken */
+      /** @description Internal smart home service is broken */
       503: {
         headers: {
           [name: string]: unknown;

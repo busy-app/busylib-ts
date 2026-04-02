@@ -1,21 +1,17 @@
 import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions } from 'Global/types';
-import { paths, operations } from 'Global/API';
+import type { TimeoutOptions, AudioPlayQuery, AudioVolumeQuery } from 'Global/types';
 
-export interface AudioPlayParams extends TimeoutOptions {
-  appId: paths['/audio/play']['post']['parameters']['query']['app_id'];
-  path: paths['/audio/play']['post']['parameters']['query']['path'];
-}
+export interface AudioPlayParams extends TimeoutOptions, AudioPlayQuery {}
 
 async function play(client: BusyBarClient, params: AudioPlayParams) {
-  const { appId, path } = params;
+  const { application_name, path } = params;
 
   const { data, error } = await withTimeout(
     (signal) =>
       client.POST('/audio/play', {
         params: {
           query: {
-            app_id: appId,
+            application_name,
             path
           }
         },
@@ -51,9 +47,8 @@ async function getAudioVolume(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-export interface AudioVolumeParams extends TimeoutOptions {
-  volume: operations['setAudioVolume']['parameters']['query']['volume'];
-}
+export interface AudioVolumeParams extends TimeoutOptions, AudioVolumeQuery {}
+
 async function setAudioVolume(client: BusyBarClient, params: AudioVolumeParams) {
   const { volume } = params;
 

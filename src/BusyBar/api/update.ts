@@ -1,5 +1,5 @@
 import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
-import type { AutoUpdateSettings, TimeoutOptions } from 'Global/types';
+import type { AutoUpdateSettings, TimeoutOptions, UpdateChangelogQuery, UpdateInstallQuery } from 'Global/types';
 import type { BusyFile } from 'BusyBar/types/global';
 
 export interface UpdateParams extends TimeoutOptions {
@@ -48,9 +48,7 @@ async function status(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-export interface ChangelogParams extends TimeoutOptions {
-  version: string;
-}
+export interface ChangelogParams extends TimeoutOptions, UpdateChangelogQuery {}
 
 async function changelog(client: BusyBarClient, params: ChangelogParams) {
   const { version } = params;
@@ -75,9 +73,7 @@ async function changelog(client: BusyBarClient, params: ChangelogParams) {
   return data;
 }
 
-export interface InstallParams extends TimeoutOptions {
-  version: string;
-}
+export interface InstallParams extends TimeoutOptions, UpdateInstallQuery {}
 
 async function install(client: BusyBarClient, params: InstallParams) {
   const { version } = params;

@@ -1,7 +1,5 @@
 import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions } from 'Global/types';
-import type { operations } from 'Global/API';
-import type { NameInfo } from 'Global/types';
+import type { TimeoutOptions, HttpAccessQuery, NameInfo } from 'Global/types';
 
 async function getHttpAccess(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout((signal) => client.GET('/access', { signal }), params?.timeout);
@@ -13,15 +11,13 @@ async function getHttpAccess(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-export interface HttpAccessParams extends TimeoutOptions {
-  mode: operations['setHttpAccess']['parameters']['query']['mode'];
-  key: operations['setHttpAccess']['parameters']['query']['key'];
-}
-async function setHttpAccess(client: BusyBarClient, params: HttpAccessParams) {
-  let { mode, key } = params;
-  key = key ?? '';
+export interface HttpAccessParams extends TimeoutOptions, HttpAccessQuery {}
 
-  if (String(key).trim() && !/^\d{4,10}$/.test(String(key))) {
+async function setHttpAccess(client: BusyBarClient, params: HttpAccessParams) {
+  const { mode, key } = params;
+  const keyValue = key ?? '';
+
+  if (String(keyValue).trim() && !/^\d{4,10}$/.test(String(keyValue))) {
     throw new Error('Key must be a string of 4 to 10 digits');
   }
 
@@ -31,7 +27,7 @@ async function setHttpAccess(client: BusyBarClient, params: HttpAccessParams) {
         params: {
           query: {
             mode,
-            key
+            key: keyValue
           }
         },
         signal
@@ -56,15 +52,15 @@ async function getName(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-export interface NameParams extends TimeoutOptions {
-  name: NameInfo['name'];
-}
+export interface NameParams extends TimeoutOptions, NameInfo {}
 
 async function setName(client: BusyBarClient, params: NameParams) {
+  const { name } = params;
+
   const { data, error } = await withTimeout(
     (signal) =>
       client.POST('/name', {
-        body: params,
+        body: { name },
         signal
       }),
     params.timeout

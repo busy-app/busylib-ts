@@ -35,7 +35,7 @@ export class StorageMethods {
    *
    * @param {DownloadFileParams} params - Download parameters:
    *   @param {string} params.path - Path to the file.
-   *   @param {boolean} [params.asArrayBuffer] - Whether to return ArrayBuffer instead of Blob.
+   *   @param {boolean} [params.as_array_buffer] - Whether to return ArrayBuffer instead of Blob.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<StorageReadResponse>} A promise that resolves to the file content (Blob or ArrayBuffer).
    */

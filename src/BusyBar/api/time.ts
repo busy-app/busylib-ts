@@ -1,6 +1,5 @@
 import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions } from 'Global/types';
-import { operations } from 'src/Global/API';
+import type { TimeoutOptions, TimestampInfo, SetTimezoneQuery } from 'Global/types';
 
 async function getTime(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout((signal) => client.GET('/time', { signal }), params?.timeout);
@@ -12,16 +11,16 @@ async function getTime(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-export interface SetTimestampParams extends TimeoutOptions {
-  timestamp: operations['setTimeTimestamp']['parameters']['query']['timestamp'];
-}
+export interface SetTimestampParams extends TimeoutOptions, TimestampInfo {}
 
 async function setTimestamp(client: BusyBarClient, params: SetTimestampParams) {
+  const { timestamp } = params;
+
   const { data, error } = await withTimeout(
     (signal) =>
       client.POST('/time/timestamp', {
         params: {
-          query: { ...params, timeout: undefined }
+          query: { timestamp }
         },
         signal
       }),
@@ -45,16 +44,16 @@ async function getTimezone(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-export interface SetTimezoneParams extends TimeoutOptions {
-  timezone: operations['setTimeTimezone']['parameters']['query']['timezone'];
-}
+export interface SetTimezoneParams extends TimeoutOptions, SetTimezoneQuery {}
 
 async function setTimezone(client: BusyBarClient, params: SetTimezoneParams) {
+  const { timezone } = params;
+
   const { data, error } = await withTimeout(
     (signal) =>
       client.POST('/time/timezone', {
         params: {
-          query: { ...params, timeout: undefined }
+          query: { timezone }
         },
         signal
       }),

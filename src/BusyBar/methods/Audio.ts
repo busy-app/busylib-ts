@@ -14,7 +14,7 @@ export class AudioMethods {
    * Play audio file. Plays a file from internal storage.
    *
    * @param {AudioPlayParams} params - Parameters for audio playback.
-   *   @param {string} params.appId - Application ID.
+   *   @param {string} params.application_name - Application name.
    *   @param {string} params.path - Path to the audio file.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful play command.

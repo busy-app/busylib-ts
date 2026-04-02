@@ -26,7 +26,7 @@ export class SettingsMethods {
    *
    * @param {HttpAccessParams} params - Access parameters:
    *   @param {boolean} params.mode - Enable/disable access.
-   *   @param {string} params.key - Access key (4-10 digits).
+   *   @param {string} [params.key] - Access key (4-10 digits).
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */

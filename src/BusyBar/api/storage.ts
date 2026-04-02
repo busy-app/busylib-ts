@@ -1,10 +1,16 @@
 import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions } from 'Global/types';
-import type { operations } from 'Global/API';
+import type {
+  TimeoutOptions,
+  StorageWriteQuery,
+  StorageReadQuery,
+  StorageListQuery,
+  StorageRemoveQuery,
+  StorageCreateDirQuery,
+  StorageRenameQuery
+} from 'Global/types';
 import type { BusyFile } from 'BusyBar/types/global';
 
-export interface UploadFileParams extends TimeoutOptions {
-  path: operations['writeStorageFile']['parameters']['query']['path'];
+export interface UploadFileParams extends TimeoutOptions, StorageWriteQuery {
   file: BusyFile;
 }
 
@@ -35,13 +41,12 @@ async function write(client: BusyBarClient, params: UploadFileParams) {
   return data;
 }
 
-export interface DownloadFileParams extends TimeoutOptions {
-  path: operations['readStorageFile']['parameters']['query']['path'];
-  asArrayBuffer?: boolean;
+export interface DownloadFileParams extends TimeoutOptions, StorageReadQuery {
+  as_array_buffer?: boolean;
 }
 
 async function read(client: BusyBarClient, params: DownloadFileParams) {
-  const { path, asArrayBuffer } = params;
+  const { path, as_array_buffer } = params;
 
   const { data, error } = await withTimeout(
     (signal) =>
@@ -51,7 +56,7 @@ async function read(client: BusyBarClient, params: DownloadFileParams) {
             path
           }
         },
-        parseAs: asArrayBuffer ? 'arrayBuffer' : 'blob',
+        parseAs: as_array_buffer ? 'arrayBuffer' : 'blob',
         signal
       }),
     params.timeout
@@ -64,9 +69,7 @@ async function read(client: BusyBarClient, params: DownloadFileParams) {
   return data;
 }
 
-export interface ReadDirectoryParams extends TimeoutOptions {
-  path: operations['listStorageFiles']['parameters']['query']['path'];
-}
+export interface ReadDirectoryParams extends TimeoutOptions, StorageListQuery {}
 
 async function list(client: BusyBarClient, params: ReadDirectoryParams) {
   const { path } = params;
@@ -91,9 +94,7 @@ async function list(client: BusyBarClient, params: ReadDirectoryParams) {
   return data;
 }
 
-export interface RemoveParams extends TimeoutOptions {
-  path: operations['removeStorageFile']['parameters']['query']['path'];
-}
+export interface RemoveParams extends TimeoutOptions, StorageRemoveQuery {}
 
 async function remove(client: BusyBarClient, params: RemoveParams) {
   const { path } = params;
@@ -118,9 +119,7 @@ async function remove(client: BusyBarClient, params: RemoveParams) {
   return data;
 }
 
-export interface CreateDirectoryParams extends TimeoutOptions {
-  path: operations['createStorageDir']['parameters']['query']['path'];
-}
+export interface CreateDirectoryParams extends TimeoutOptions, StorageCreateDirQuery {}
 
 async function mkdir(client: BusyBarClient, params: CreateDirectoryParams) {
   const { path } = params;
@@ -155,8 +154,7 @@ async function status(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-type RenameQuery = operations['RenameStorageFile']['parameters']['query'];
-export interface RenameParams extends TimeoutOptions, RenameQuery {}
+export interface RenameParams extends TimeoutOptions, StorageRenameQuery {}
 
 async function rename(client: BusyBarClient, params: RenameParams) {
   const { path, new_path } = params;

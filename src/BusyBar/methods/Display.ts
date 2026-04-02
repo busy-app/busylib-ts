@@ -3,6 +3,7 @@ import {
   clear as clearApi,
   getScreenFrame as getScreenFrameApi,
   DrawParams,
+  ClearParams,
   GetScreenFrameParams,
   getDisplayBrightness as getDisplayBrightnessApi,
   setDisplayBrightness as setDisplayBrightnessApi,
@@ -13,12 +14,12 @@ import { BusyBar } from 'BusyBar/index';
 
 export class DisplayMethods {
   /**
-   * Draw on display. Starts the Canvas application if not running.
+   * Draw on display. Sends drawing data to the display. Supports JSON-defined display elements.
    *
    * @param {DrawParams} params - Parameters for the draw operation.
-   *   @param {DrawParams['appId']} params.appId - Application ID.
-   *   @param {DrawParams['elements']} params.elements - Display elements to draw.
-   *   @param {DrawParams['priority']} [params.priority=6] - Priority for the draw request (1-10).
+   *   @param {string} params.application_name - Application ID for organizing assets.
+   *   @param {Array} params.elements - Display elements to draw.
+   *   @param {number} [params.priority=50] - Draw priority in the range [1, 100].
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful draw command.
    */
@@ -27,13 +28,15 @@ export class DisplayMethods {
   }
 
   /**
-   * Clear display. Clears the display and stops the Canvas application if running.
+   * Clear display. Deletes display elements drawn by the Canvas application.
+   * If application_name is specified, only elements for that app are removed.
    *
-   * @param {TimeoutOptions} [params] - Optional parameters.
+   * @param {ClearParams} [params] - Optional parameters.
+   *   @param {string} [params.application_name] - Application identifier.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful clear command.
    */
-  async DisplayClear(this: BusyBar, params?: TimeoutOptions): Promise<SuccessResponse> {
+  async DisplayClear(this: BusyBar, params?: ClearParams): Promise<SuccessResponse> {
     return await clearApi(this.apiClient, params);
   }
 
@@ -41,7 +44,7 @@ export class DisplayMethods {
    * Get single frame for requested screen.
    *
    * @param {GetScreenFrameParams} params - Parameters for the frame request.
-   *   @param {string} params.display - Display identifier.
+   *   @param {number} params.display - Type of the display (Front = 0, Back = 1).
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<Blob>} A promise that resolves to the screen frame as a Blob.
    */
@@ -63,8 +66,8 @@ export class DisplayMethods {
   /**
    * Set display brightness.
    *
-   * @param {BrightnessParams} params - Brightness parameters:
-   *   @param {BrightnessParams['value']} [params.value] - Brightness (0-100 or "auto").
+   * @param {BrightnessParams} params - Brightness parameters.
+   *   @param {number | 'auto'} params.value - Brightness (0-100 or "auto").
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */

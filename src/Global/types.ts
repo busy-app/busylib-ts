@@ -1,4 +1,4 @@
-import { operations, components } from 'Global/API';
+import { operations, components, paths } from 'Global/API';
 
 export interface TimeoutOptions {
   timeout?: number;
@@ -22,20 +22,22 @@ export type ApiSemver = components['schemas']['VersionInfo']['api_semver'];
 export type SuccessResponse = components['schemas']['SuccessResponse'];
 export type Error = components['schemas']['Error'];
 
+export type BusyFile = Buffer | Blob | File | ArrayBuffer;
+
 // Account
 export type AccountInfo = components['schemas']['AccountInfo'];
 export type AccountLink = components['schemas']['AccountLink'];
-export type AccountState = components['schemas']['AccountState'];
+export type AccountStatus = components['schemas']['AccountStatus'];
 export type AccountProfile = components['schemas']['AccountProfile'];
 
 // Assets
-export type BinaryUpload = Buffer | Blob | File | ArrayBuffer;
-export type FileUpload = {
-  file: BinaryUpload;
-};
+export type AssetsUploadQuery = operations['uploadAssetWithAppId']['parameters']['query'];
+export type AssetsDeleteQuery = operations['deleteAppAssets']['parameters']['query'];
 
 // Audio
 export type AudioVolumeInfo = components['schemas']['AudioVolumeInfo'];
+export type AudioPlayQuery = operations['playAudio']['parameters']['query'];
+export type AudioVolumeQuery = operations['setAudioVolume']['parameters']['query'];
 
 // BLE
 export type BleStatusResponse = components['schemas']['BleStatusResponse'];
@@ -46,15 +48,23 @@ export type DisplayElement = components['schemas']['DisplayElement'];
 export type TextElement = components['schemas']['TextElement'];
 export type ImageElement = components['schemas']['ImageElement'];
 export type DisplayBrightnessInfo = components['schemas']['DisplayBrightnessInfo'];
+export type AnimationElement = components['schemas']['AnimationElement'];
+export type CountdownElement = components['schemas']['CountdownElement'];
+export type ScreenResponse = components['schemas']['ScreenResponse'];
+export type ClearDisplayQuery = NonNullable<operations['clearDisplay']['parameters']['query']>;
+export type ScreenQuery = paths['/screen']['get']['parameters']['query'];
 
 // Input
+export type InputKeyQuery = operations['setInputKey']['parameters']['query'];
 
-// Matter
-export type MatterPairingInfo = components['schemas']['MatterCommissioningPayload'];
-export type MatterStatus = components['schemas']['MatterCommissionedFabrics'];
+// SmartHome
+export type SmartHomePairingPayload = components['schemas']['SmartHomePairingPayload'];
+export type SmartHomePairingInfo = components['schemas']['SmartHomePairingInfo'];
+export type SmartHomeSwitchState = components['schemas']['SmartHomeSwitchState'];
 
 // Settings
 export type HttpAccessInfo = components['schemas']['HttpAccessInfo'];
+export type HttpAccessQuery = operations['setHttpAccess']['parameters']['query'];
 export type NameInfo = components['schemas']['NameInfo'];
 
 // Storage
@@ -64,6 +74,12 @@ export type StorageFileElement = components['schemas']['StorageFileElement'];
 export type StorageDirElement = components['schemas']['StorageDirElement'];
 export type StorageReadResponse = ArrayBuffer | Blob;
 export type StorageStatus = components['schemas']['StorageStatus'];
+export type StorageWriteQuery = operations['writeStorageFile']['parameters']['query'];
+export type StorageReadQuery = operations['readStorageFile']['parameters']['query'];
+export type StorageListQuery = operations['listStorageFiles']['parameters']['query'];
+export type StorageRemoveQuery = operations['removeStorageFile']['parameters']['query'];
+export type StorageCreateDirQuery = operations['createStorageDir']['parameters']['query'];
+export type StorageRenameQuery = operations['RenameStorageFile']['parameters']['query'];
 
 // System
 export type VersionInfo = components['schemas']['VersionInfo'];
@@ -78,11 +94,14 @@ export type TimestampInfo = components['schemas']['TimestampInfo'];
 export type TimezoneInfo = components['schemas']['TimezoneInfo'];
 export type TimezoneList = components['schemas']['TimezoneListResponse'];
 export type TimezoneItem = NonNullable<TimezoneList['list']>[number];
+export type SetTimezoneQuery = operations['setTimeTimezone']['parameters']['query'];
 
 // Update
 export type UpdateStatus = components['schemas']['UpdateStatus'];
 export type UpdateChangelog = operations['getUpdateChangelog']['responses']['200']['content']['application/json'];
 export type AutoUpdateSettings = components['schemas']['AutoupdateSettings'];
+export type UpdateChangelogQuery = operations['getUpdateChangelog']['parameters']['query'];
+export type UpdateInstallQuery = operations['installFirmwareUpdate']['parameters']['query'];
 
 // Wifi
 export type WifiSecurityMethod = components['schemas']['WifiSecurityMethod'];

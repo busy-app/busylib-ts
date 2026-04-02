@@ -1,28 +1,31 @@
 import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions } from 'Global/types';
-import type { components, paths } from 'Global/API';
+import type { TimeoutOptions, DisplayElements, ClearDisplayQuery, ScreenQuery } from 'Global/types';
 
-export interface DrawParams extends TimeoutOptions {
-  appId: components['schemas']['DisplayElements']['app_id'];
-  elements: components['schemas']['DisplayElements']['elements'];
-  /** @default 6 */
-  priority?: components['schemas']['DisplayElements']['priority'];
+export interface DrawParams extends TimeoutOptions, DisplayElements {}
+
+export interface ClearParams extends TimeoutOptions, Partial<ClearDisplayQuery> {}
+
+export interface GetScreenFrameParams extends TimeoutOptions, ScreenQuery {}
+
+type Brightness = number | 'auto';
+export interface BrightnessParams extends TimeoutOptions {
+  value: Brightness;
 }
 
 async function draw(client: BusyBarClient, params: DrawParams) {
-  const { appId, elements, priority = 6 } = params;
+  const { application_name, elements, priority = 50, timeout } = params;
 
   const { data, error } = await withTimeout(
     (signal) =>
       client.POST('/display/draw', {
         body: {
-          app_id: appId,
-          priority: priority,
-          elements: elements
+          application_name,
+          priority,
+          elements
         },
         signal
       }),
-    params.timeout
+    timeout
   );
 
   if (error) {
@@ -32,8 +35,19 @@ async function draw(client: BusyBarClient, params: DrawParams) {
   return data;
 }
 
-async function clear(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout((signal) => client.DELETE('/display/draw', { signal }), params?.timeout);
+async function clear(client: BusyBarClient, params?: ClearParams) {
+  const { data, error } = await withTimeout(
+    (signal) =>
+      client.DELETE('/display/draw', {
+        params: {
+          query: {
+            application_name: params?.application_name
+          }
+        },
+        signal
+      }),
+    params?.timeout
+  );
 
   if (error) {
     throw error;
@@ -42,12 +56,8 @@ async function clear(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-export interface GetScreenFrameParams extends TimeoutOptions {
-  display: paths['/screen']['get']['parameters']['query']['display'];
-}
-
 async function getScreenFrame(client: BusyBarClient, params: GetScreenFrameParams) {
-  const { display } = params;
+  const { display, timeout } = params;
 
   const { data, error } = await withTimeout(
     (signal) =>
@@ -60,7 +70,7 @@ async function getScreenFrame(client: BusyBarClient, params: GetScreenFrameParam
         parseAs: 'blob',
         signal
       }),
-    params.timeout
+    timeout
   );
 
   if (error) {
@@ -80,15 +90,10 @@ async function getDisplayBrightness(client: BusyBarClient, params?: TimeoutOptio
   return data;
 }
 
-type Brightness = number | 'auto';
-export interface BrightnessParams extends TimeoutOptions {
-  value?: Brightness;
-}
-
 async function setDisplayBrightness(client: BusyBarClient, params: BrightnessParams) {
   const { value } = params;
 
-  const normalize = (val?: Brightness): string | undefined => {
+  const normalize = (val: Brightness): string => {
     if (typeof val === 'number') {
       if (val < 0 || val > 100) {
         throw new Error("Brightness value must be between 0 and 100 or 'auto'");
@@ -98,7 +103,7 @@ async function setDisplayBrightness(client: BusyBarClient, params: BrightnessPar
     if (val === 'auto') {
       return 'auto';
     }
-    return undefined;
+    return 'auto';
   };
 
   const valueQuery = normalize(value);

@@ -1,29 +1,27 @@
 import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions } from 'Global/types';
-import type { paths } from 'Global/API';
+import type { TimeoutOptions, AssetsUploadQuery, AssetsDeleteQuery } from 'Global/types';
 import type { BusyFile } from 'BusyBar/types/global';
 
-export interface UploadParams extends TimeoutOptions {
-  appId: paths['/assets/upload']['post']['parameters']['query']['app_id'];
-  fileName: paths['/assets/upload']['post']['parameters']['query']['file'];
-  file: BusyFile;
+export interface UploadParams extends TimeoutOptions, AssetsUploadQuery {
+  data: BusyFile;
 }
-async function upload(client: BusyBarClient, params: UploadParams) {
-  const { appId, fileName, file } = params;
 
-  const { data, error } = await withTimeout(
+async function upload(client: BusyBarClient, params: UploadParams) {
+  const { application_name, file, data } = params;
+
+  const { data: responseData, error } = await withTimeout(
     (signal) =>
       client.POST('/assets/upload', {
         params: {
           query: {
-            app_id: appId,
-            file: fileName
+            application_name,
+            file
           }
         },
         headers: {
           'Content-Type': 'application/octet-stream'
         },
-        body: file as unknown as string,
+        body: data as unknown as string,
         signal
       }),
     params.timeout
@@ -33,21 +31,20 @@ async function upload(client: BusyBarClient, params: UploadParams) {
     throw error;
   }
 
-  return data;
+  return responseData;
 }
 
-export interface DeleteParams extends TimeoutOptions {
-  appId: paths['/assets/upload']['delete']['parameters']['query']['app_id'];
-}
+export interface DeleteParams extends TimeoutOptions, AssetsDeleteQuery {}
+
 async function deleteAssets(client: BusyBarClient, params: DeleteParams) {
-  const { appId } = params;
+  const { application_name } = params;
 
   const { data, error } = await withTimeout(
     (signal) =>
       client.DELETE('/assets/upload', {
         params: {
           query: {
-            app_id: appId
+            application_name
           }
         },
         signal

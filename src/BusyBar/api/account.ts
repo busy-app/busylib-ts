@@ -1,6 +1,5 @@
 import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions } from 'Global/types';
-import type { operations } from 'Global/API';
+import type { TimeoutOptions, AccountProfile } from 'Global/types';
 
 async function getAccountState(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await withTimeout((signal) => client.GET('/account/status', { signal }), params?.timeout);
@@ -32,19 +31,18 @@ async function getAccountProfile(client: BusyBarClient, params?: TimeoutOptions)
   return data;
 }
 
-export interface SetAccountProfileParams extends TimeoutOptions {
-  profile: operations['setAccountProfile']['parameters']['query']['profile'];
-}
+export interface SetAccountProfileParams extends TimeoutOptions, AccountProfile {}
 
 async function setAccountProfile(client: BusyBarClient, params: SetAccountProfileParams) {
-  const { profile } = params;
+  const { profile, custom_url } = params;
 
   const { data, error } = await withTimeout(
     (signal) =>
       client.POST('/account/profile', {
         params: {
           query: {
-            profile
+            profile,
+            custom_url
           }
         },
         signal

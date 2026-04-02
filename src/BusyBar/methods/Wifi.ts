@@ -27,7 +27,7 @@ export class WifiMethods {
    *   @param {string} params.ssid - Network SSID.
    *   @param {string} params.password - Network password.
    *   @param {WifiSecurityMethod} params.security - Security method.
-   *   @param {object} params.ipConfig - IP configuration.
+   *   @param {object} [params.ip_config] - IP configuration.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful connection initiation.
    */

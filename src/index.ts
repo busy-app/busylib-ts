@@ -6,7 +6,12 @@ export { DeviceScreen } from 'ScreenStream/types';
 
 export type { UploadParams as AssetsUploadParams, DeleteParams as AssetsDeleteParams } from 'BusyBar/api/assets';
 
-export type { DrawParams as DisplayDrawParams, BrightnessParams as DisplayBrightnessParams } from 'BusyBar/api/display';
+export type {
+  DrawParams as DisplayDrawParams,
+  ClearParams as DisplayClearParams,
+  BrightnessParams as DisplayBrightnessParams,
+  GetScreenFrameParams as ScreenFrameGetParams
+} from 'BusyBar/api/display';
 
 export type { AudioPlayParams, AudioVolumeParams } from 'BusyBar/api/audio';
 
@@ -36,18 +41,26 @@ export type { InputKeyParams } from 'BusyBar/api/input';
 
 export type { SetAccountProfileParams as AccountProfileSetParams } from 'BusyBar/api/account';
 
-export type { GetScreenFrameParams as ScreenFrameGetParams } from 'BusyBar/api/display';
-
 export type {
   KeyName,
   KeyValue,
   SuccessResponse,
   Error,
   HttpAccessInfo,
+  BusyFile,
   AccountInfo,
   AccountLink,
+  AccountStatus,
+  AccountProfile,
   BleStatusResponse,
   DisplayBrightnessInfo,
+  DisplayElements,
+  DisplayElement,
+  TextElement,
+  ImageElement,
+  AnimationElement,
+  CountdownElement,
+  ScreenResponse,
   AudioVolumeInfo,
   NameInfo,
   StorageList,
@@ -74,10 +87,9 @@ export type {
   UpdateStatus,
   UpdateChangelog,
   AutoUpdateSettings,
-  AccountState,
-  AccountProfile,
-  MatterStatus,
-  MatterPairingInfo,
+  SmartHomePairingInfo,
+  SmartHomePairingPayload,
+  SmartHomeSwitchState,
   TimezoneInfo,
   TimezoneList,
   TimezoneItem

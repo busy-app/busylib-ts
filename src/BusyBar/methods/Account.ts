@@ -7,7 +7,7 @@ import {
   linkDevice as linkDeviceApi,
   SetAccountProfileParams
 } from 'BusyBar/api/account';
-import type { TimeoutOptions, AccountInfo, SuccessResponse, AccountLink, AccountState, AccountProfile } from 'Global/types';
+import type { TimeoutOptions, AccountInfo, SuccessResponse, AccountLink, AccountStatus, AccountProfile } from 'Global/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class AccountMethods {
@@ -27,9 +27,9 @@ export class AccountMethods {
    *
    * @param {TimeoutOptions} [params] - Optional parameters.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
-   * @returns {Promise<AccountState>} A promise that resolves to the account state.
+   * @returns {Promise<AccountStatus>} A promise that resolves to the account state.
    */
-  async AccountStateGet(this: BusyBar, params?: TimeoutOptions): Promise<AccountState> {
+  async AccountStateGet(this: BusyBar, params?: TimeoutOptions): Promise<AccountStatus> {
     return await getAccountStateApi(this.apiClient, params);
   }
 
@@ -48,7 +48,8 @@ export class AccountMethods {
    * Set account profile.
    *
    * @param {SetAccountProfileParams} params - Parameters for setting the account profile.
-   *   @param {string} params.profile - Profile data string.
+   *   @param {string} params.profile - Profile name.
+   *   @param {string} [params.custom_url] - Custom profile URL.
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
