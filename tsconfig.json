@@ -5,6 +5,8 @@
       "src/*": ["src/*"],
       "BusyBar/*": ["src/BusyBar/*"],
       "ScreenStream/*": ["src/ScreenStream/*"],
+      "StateStream/*": ["src/StateStream/*"],
+      "LedRenderer/*": ["src/LedRenderer/*"],
       "Input/*": ["src/Input/*"],
       "Global/*": ["src/Global/*"]
     },
@@ -18,7 +20,8 @@
     "declarationDir": "dist/types",
     "emitDeclarationOnly": true,
 
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable", "WebWorker"],
+    "resolveJsonModule": true,
 
     "useDefineForClassFields": true,
     "esModuleInterop": true,

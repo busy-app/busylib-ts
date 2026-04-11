@@ -8,14 +8,17 @@ export default defineConfig({
     dts({
       entryRoot: 'src',
       outDir: 'dist',
-      rollupTypes: true
+      rollupTypes: true,
+      copyDtsFiles: true
     })
   ],
   build: {
     lib: {
-      entry: 'src/index.ts',
+      entry: {
+        index: 'src/index.ts',
+        'index.worker': 'src/StateStream/worker/index.worker.ts'
+      },
       name: 'busylib',
-      fileName: 'index',
       formats: ['es', 'cjs']
     },
     rollupOptions: {
@@ -25,5 +28,9 @@ export default defineConfig({
       }
     },
     minify: true
+  },
+  worker: {
+    format: 'es',
+    plugins: () => [tsconfigPaths()]
   }
 });

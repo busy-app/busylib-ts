@@ -1,0 +1,3 @@
+[submodule "src/StateStream/proto"]
+	path = src/StateStream/proto
+	url = git@github.com:flipperdevices/bsb-protobuf.git

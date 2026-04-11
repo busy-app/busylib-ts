@@ -1,6 +1,8 @@
 export { BusyBar, type BusyBarConfig } from 'BusyBar/index';
 export { ScreenStream, type ScreenStreamConfig } from 'ScreenStream/index';
 export { Input, type InputConfig } from 'Input/index';
+export * from 'StateStream/index';
+export { LEDRendererInstance as LEDRenderer } from 'LedRenderer/index';
 
 export { DeviceScreen } from 'ScreenStream/types';
 
