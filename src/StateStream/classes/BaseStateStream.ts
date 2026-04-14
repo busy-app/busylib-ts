@@ -14,6 +14,9 @@ import {
 import { StreamStatus, StreamLifecycle, ConnectionStatus, AuthStatus, DataStatus, WorkerStatus } from 'StateStream/types/types.status';
 import { WorkerCommand, WorkerEvent, StreamMode, StreamOptions } from 'StateStream/types/types.internal';
 
+import StateWorker from '../worker/index.worker?worker&inline';
+import StateSharedWorker from '../worker/index.worker?sharedworker&inline';
+
 /**
  * Interface to unify SharedWorker and DedicatedWorker handling
  */
@@ -238,15 +241,9 @@ export abstract class BaseStateStream {
     try {
       this.updateStatusComponent('worker', { status: WorkerStatus.INITIALIZING, lastError: undefined });
 
-      /**
-       * In production, Vite will emit 'index.worker.js' in the same folder as 'index.js'.
-       */
-      const workerUrl = new URL(/* @vite-ignore */ './index.worker.js', import.meta.url);
-
       if (window.SharedWorker) {
-        const sw = new SharedWorker(workerUrl, {
-          name: workerName,
-          type: 'module'
+        const sw = new StateSharedWorker({
+          name: workerName
         });
         this.worker = {
           port: sw.port
@@ -257,7 +254,7 @@ export abstract class BaseStateStream {
         sw.port.start();
       } else {
         // Fallback to Dedicated Worker
-        const dw = new Worker(workerUrl, { type: 'module' });
+        const dw = new StateWorker();
         this.worker = {
           port: dw,
           terminate: () => dw.terminate()

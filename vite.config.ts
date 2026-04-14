@@ -15,8 +15,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
-        index: 'src/index.ts',
-        'index.worker': 'src/StateStream/worker/index.worker.ts'
+        index: 'src/index.ts'
       },
       name: 'busylib',
       formats: ['es', 'cjs']
