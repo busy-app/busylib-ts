@@ -1,9 +1,9 @@
-import Long = require("long");
+import Long from "long";
 /** Namespace BSB_State. */
 export namespace BSB_State {
 
     /** Properties of a StateUpdate. */
-    interface StateUpdate {
+    export interface StateUpdate {
 
         /** StateUpdate deviceName */
         deviceName?: (BSB_State.DeviceName|null);
@@ -50,7 +50,7 @@ export namespace BSB_State {
 
 
     /** Properties of a State. */
-    interface State {
+    export interface State {
 
         /** State timestamp */
         timestamp?: (number|Long|null);
@@ -64,7 +64,7 @@ export namespace BSB_State {
 
 
     /** Properties of a DeviceName. */
-    interface DeviceName {
+    export interface DeviceName {
 
         /** DeviceName name */
         name?: (string|null);
@@ -72,12 +72,12 @@ export namespace BSB_State {
 
 
     /** Properties of a BrightnessAutomatic. */
-    interface BrightnessAutomatic {
+    export interface BrightnessAutomatic {
     }
 
 
     /** Properties of a BrightnessManual. */
-    interface BrightnessManual {
+    export interface BrightnessManual {
 
         /** BrightnessManual brightness */
         brightness?: (number|null);
@@ -85,7 +85,7 @@ export namespace BSB_State {
 
 
     /** Properties of a Brightness. */
-    interface Brightness {
+    export interface Brightness {
 
         /** Brightness automatic */
         automatic?: (BSB_State.BrightnessAutomatic|null);
@@ -99,19 +99,19 @@ export namespace BSB_State {
 
 
     /** BatteryStatus enum. */
-    enum BatteryStatus {
+    export enum BatteryStatus {
         DISCHARGING = 0,
         CHARGING = 1,
         CHARGED = 2
     }
 
     /** Properties of an UnknownPowerState. */
-    interface UnknownPowerState {
+    export interface UnknownPowerState {
     }
 
 
     /** Properties of a PowerState. */
-    interface PowerState {
+    export interface PowerState {
 
         /** PowerState batteryStatus */
         batteryStatus?: (BSB_State.BatteryStatus|null);
@@ -131,7 +131,7 @@ export namespace BSB_State {
 
 
     /** Properties of a Power. */
-    interface Power {
+    export interface Power {
 
         /** Power unknown */
         unknown?: (BSB_State.UnknownPowerState|null);
@@ -142,7 +142,7 @@ export namespace BSB_State {
 
 
     /** Properties of an AudioVolume. */
-    interface AudioVolume {
+    export interface AudioVolume {
 
         /** AudioVolume volume */
         volume?: (number|null);
@@ -150,7 +150,7 @@ export namespace BSB_State {
 
 
     /** WifiConnectionStatus enum. */
-    enum WifiConnectionStatus {
+    export enum WifiConnectionStatus {
         CONNECTED = 0,
         CONNECTING = 1,
         DISCONNECTING = 2,
@@ -158,7 +158,7 @@ export namespace BSB_State {
     }
 
     /** WifiSecurity enum. */
-    enum WifiSecurity {
+    export enum WifiSecurity {
         UNKNOWN = 0,
         OPEN = 1,
         WPA = 2,
@@ -170,29 +170,29 @@ export namespace BSB_State {
     }
 
     /** IpConfigurationMethod enum. */
-    enum IpConfigurationMethod {
+    export enum IpConfigurationMethod {
         DHCP = 0,
         STATIC = 1
     }
 
     /** IpProtocol enum. */
-    enum IpProtocol {
+    export enum IpProtocol {
         IPV4 = 0,
         IPV6 = 1
     }
 
     /** Properties of a WifiStateUnknown. */
-    interface WifiStateUnknown {
+    export interface WifiStateUnknown {
     }
 
 
     /** Properties of a WifiStateDisconnected. */
-    interface WifiStateDisconnected {
+    export interface WifiStateDisconnected {
     }
 
 
     /** Properties of a WifiStateConnected. */
-    interface WifiStateConnected {
+    export interface WifiStateConnected {
 
         /** WifiStateConnected status */
         status?: (BSB_State.WifiConnectionStatus|null);
@@ -215,7 +215,7 @@ export namespace BSB_State {
 
 
     /** Properties of an IpAddress. */
-    interface IpAddress {
+    export interface IpAddress {
 
         /** IpAddress protocol */
         protocol?: (BSB_State.IpProtocol|null);
@@ -235,7 +235,7 @@ export namespace BSB_State {
 
 
     /** Properties of a Wifi. */
-    interface Wifi {
+    export interface Wifi {
 
         /** Wifi unknown */
         unknown?: (BSB_State.WifiStateUnknown|null);
@@ -252,7 +252,7 @@ export namespace BSB_State {
 
 
     /** Properties of a Timezone. */
-    interface Timezone {
+    export interface Timezone {
 
         /** Timezone name */
         name?: (string|null);
@@ -266,7 +266,7 @@ export namespace BSB_State {
 
 
     /** MatterCommissioningStatus enum. */
-    enum MatterCommissioningStatus {
+    export enum MatterCommissioningStatus {
         NEVER_STARTED = 0,
         STARTED = 1,
         COMPLETED_SUCCESSFULLY = 2,
@@ -274,7 +274,7 @@ export namespace BSB_State {
     }
 
     /** Properties of a MatterCommissioningState. */
-    interface MatterCommissioningState {
+    export interface MatterCommissioningState {
 
         /** MatterCommissioningState status */
         status?: (BSB_State.MatterCommissioningStatus|null);
@@ -285,7 +285,7 @@ export namespace BSB_State {
 
 
     /** Properties of a Matter. */
-    interface Matter {
+    export interface Matter {
 
         /** Matter fabricCount */
         fabricCount?: (number|null);
@@ -296,10 +296,10 @@ export namespace BSB_State {
 
 
     /** Namespace Ble. */
-    namespace Ble {
+    export namespace Ble {
 
         /** ServiceStatus enum. */
-        enum ServiceStatus {
+        export enum ServiceStatus {
             RESET = 0,
             INITIALIZATION = 1,
             READY = 2,
@@ -310,7 +310,7 @@ export namespace BSB_State {
         }
 
         /** Properties of a Ble. */
-        interface Ble {
+        export interface Ble {
 
             /** Ble status */
             status?: (BSB_State.Ble.ServiceStatus|null);
@@ -326,7 +326,7 @@ export namespace BSB_State {
 export namespace BSB_Update {
 
     /** UpdateEvent enum. */
-    enum UpdateEvent {
+    export enum UpdateEvent {
         SESSION_START = 0,
         SESSION_STOP = 1,
         ACTION_BEGIN = 2,
@@ -337,7 +337,7 @@ export namespace BSB_Update {
     }
 
     /** UpdateAction enum. */
-    enum UpdateAction {
+    export enum UpdateAction {
         DOWNLOAD = 0,
         SHA_VERIFICATION = 1,
         UNPACK = 2,
@@ -347,7 +347,7 @@ export namespace BSB_Update {
     }
 
     /** UpdateStatus enum. */
-    enum UpdateStatus {
+    export enum UpdateStatus {
         OK = 0,
         BATTERY_LOW = 1,
         BUSY = 2,
@@ -365,14 +365,14 @@ export namespace BSB_Update {
     }
 
     /** CheckError enum. */
-    enum CheckError {
+    export enum CheckError {
         NOT_AVAILABLE = 0,
         FAILURE = 1,
         IDLE = 2
     }
 
     /** Properties of an UpdateAvailable. */
-    interface UpdateAvailable {
+    export interface UpdateAvailable {
 
         /** UpdateAvailable version */
         version?: (string|null);
@@ -380,7 +380,7 @@ export namespace BSB_Update {
 
 
     /** Properties of an UpdateUnavailable. */
-    interface UpdateUnavailable {
+    export interface UpdateUnavailable {
 
         /** UpdateUnavailable reason */
         reason?: (BSB_Update.CheckError|null);
@@ -388,7 +388,7 @@ export namespace BSB_Update {
 
 
     /** Properties of an UpdateState. */
-    interface UpdateState {
+    export interface UpdateState {
 
         /** UpdateState event */
         event?: (BSB_Update.UpdateEvent|null);
@@ -402,7 +402,7 @@ export namespace BSB_Update {
 
 
     /** Properties of a CheckState. */
-    interface CheckState {
+    export interface CheckState {
 
         /** CheckState available */
         available?: (BSB_Update.UpdateAvailable|null);
@@ -413,7 +413,7 @@ export namespace BSB_Update {
 
 
     /** Properties of an AutoUpdateInterval. */
-    interface AutoUpdateInterval {
+    export interface AutoUpdateInterval {
 
         /** AutoUpdateInterval start */
         start?: (number|null);
@@ -424,7 +424,7 @@ export namespace BSB_Update {
 
 
     /** Properties of an AutoUpdateState. */
-    interface AutoUpdateState {
+    export interface AutoUpdateState {
 
         /** AutoUpdateState enabled */
         enabled?: (boolean|null);
@@ -439,7 +439,7 @@ export namespace BSB_Update {
 export namespace BSB_Frame {
 
     /** Encoding enum. */
-    enum Encoding {
+    export enum Encoding {
         PLAIN = 0,
         RUN_LENGTH = 1,
         DEFLATE = 2,
@@ -447,20 +447,20 @@ export namespace BSB_Frame {
     }
 
     /** PixelFormat enum. */
-    enum PixelFormat {
+    export enum PixelFormat {
         RGB888 = 0,
         L8 = 1,
         L4 = 2
     }
 
     /** Screen enum. */
-    enum Screen {
+    export enum Screen {
         FRONT = 0,
         BACK = 1
     }
 
     /** Properties of a Frame. */
-    interface Frame {
+    export interface Frame {
 
         /** Frame screen */
         screen?: (BSB_Frame.Screen|null);
@@ -487,7 +487,7 @@ export namespace BSB_Frame {
 export namespace BSB_Timer {
 
     /** Properties of a Timer. */
-    interface Timer {
+    export interface Timer {
 
         /** Timer json */
         json?: (BSB_Util.Json|null);
@@ -499,13 +499,13 @@ export namespace BSB_Timer {
 export namespace BSB_Util {
 
     /** Compression enum. */
-    enum Compression {
+    export enum Compression {
         PLAIN = 0,
         GZIP = 1
     }
 
     /** Properties of a Json. */
-    interface Json {
+    export interface Json {
 
         /** Json compression */
         compression?: (BSB_Util.Compression|null);
@@ -520,20 +520,20 @@ export namespace BSB_Util {
 export namespace BSB_Input {
 
     /** Button enum. */
-    enum Button {
+    export enum Button {
         OK = 0,
         BACK = 1,
         START = 2
     }
 
     /** ButtonAction enum. */
-    enum ButtonAction {
+    export enum ButtonAction {
         PRESS = 0,
         RELEASE = 1
     }
 
     /** SwitchPosition enum. */
-    enum SwitchPosition {
+    export enum SwitchPosition {
         BUSY = 0,
         CUSTOM = 1,
         OFF = 2,
@@ -542,7 +542,7 @@ export namespace BSB_Input {
     }
 
     /** Properties of a ButtonEvent. */
-    interface ButtonEvent {
+    export interface ButtonEvent {
 
         /** ButtonEvent button */
         button?: (BSB_Input.Button|null);
@@ -553,7 +553,7 @@ export namespace BSB_Input {
 
 
     /** Properties of a SwitchEvent. */
-    interface SwitchEvent {
+    export interface SwitchEvent {
 
         /** SwitchEvent position */
         position?: (BSB_Input.SwitchPosition|null);
@@ -561,7 +561,7 @@ export namespace BSB_Input {
 
 
     /** Properties of an EncoderEvent. */
-    interface EncoderEvent {
+    export interface EncoderEvent {
 
         /** EncoderEvent delta */
         delta?: (number|null);
@@ -569,7 +569,7 @@ export namespace BSB_Input {
 
 
     /** Properties of an InputEvent. */
-    interface InputEvent {
+    export interface InputEvent {
 
         /** InputEvent buttonEvent */
         buttonEvent?: (BSB_Input.ButtonEvent|null);
@@ -587,19 +587,19 @@ export namespace BSB_Input {
 export namespace BSB_Error {
 
     /** Cause enum. */
-    enum Cause {
+    export enum Cause {
         RESOURCE_LIMIT = 0
     }
 
     /** Severity enum. */
-    enum Severity {
+    export enum Severity {
         FATAL = 0,
         ERROR = 1,
         WARNING = 2
     }
 
     /** Properties of an Error. */
-    interface Error {
+    export interface Error {
 
         /** Error cause */
         cause?: (BSB_Error.Cause|null);
