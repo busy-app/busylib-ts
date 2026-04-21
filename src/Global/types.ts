@@ -89,6 +89,7 @@ export type StatusPower = components['schemas']['StatusPower'];
 export type StatusDevice = components['schemas']['StatusDevice'];
 export type StatusFirmware = components['schemas']['StatusFirmware'];
 export type TimestampInfo = components['schemas']['TimestampInfo'];
+export type NetworkInterfaceInfo = components['schemas']['NetworkInterfaceInfo'];
 
 // Time
 export type TimezoneInfo = components['schemas']['TimezoneInfo'];

@@ -4,7 +4,8 @@ import {
   systemStatus as systemStatusApi,
   powerStatus as powerStatusApi,
   deviceStatus as deviceStatusApi,
-  firmwareStatus as firmwareStatusApi
+  firmwareStatus as firmwareStatusApi,
+  transport as transportApi
 } from 'BusyBar/api/system';
 import type {
   VersionInfo,
@@ -13,6 +14,7 @@ import type {
   StatusDevice,
   StatusFirmware,
   StatusPower,
+  NetworkInterfaceInfo,
   TimeoutOptions
 } from 'Global/types';
 import { BusyBar } from 'BusyBar/index';
@@ -85,5 +87,16 @@ export class SystemMethods {
    */
   async SystemStatusFirmwareGet(this: BusyBar, params?: TimeoutOptions): Promise<StatusFirmware> {
     return await firmwareStatusApi(this.apiClient, params);
+  }
+
+  /**
+   * Get device transport information.
+   *
+   * @param {TimeoutOptions} [params] - Optional parameters.
+   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @returns {Promise<NetworkInterfaceInfo>} Current transport info (usb/wifi).
+   */
+  async SystemTransportGet(this: BusyBar, params?: TimeoutOptions): Promise<NetworkInterfaceInfo> {
+    return await transportApi(this.apiClient, params);
   }
 }

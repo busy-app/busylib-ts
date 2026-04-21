@@ -50,7 +50,7 @@ async function getAudioVolume(client: BusyBarClient, params?: TimeoutOptions) {
 export interface AudioVolumeParams extends TimeoutOptions, AudioVolumeQuery {}
 
 async function setAudioVolume(client: BusyBarClient, params: AudioVolumeParams) {
-  const { volume } = params;
+  const { volume, silent } = params;
 
   if (typeof volume !== 'number' || volume < 0 || volume > 100) {
     throw new Error('Volume must be a number between 0 and 100');
@@ -61,7 +61,8 @@ async function setAudioVolume(client: BusyBarClient, params: AudioVolumeParams) 
       client.POST('/audio/volume', {
         params: {
           query: {
-            volume
+            volume,
+            silent
           }
         },
         signal

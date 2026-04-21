@@ -24,6 +24,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/transport': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get device network connection info
+     * @description Retrieves device transport type (usb/wifi)
+     */
+    get: operations['getTransport'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/access': {
     parameters: {
       query?: never;
@@ -536,11 +556,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * Input events streaming
-     * @description Start WebSocket session for input events streaming
-     */
-    get: operations['connectInputWebSocket'];
+    get?: never;
     put?: never;
     /**
      * Send input event
@@ -902,30 +918,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/screen/ws': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Screen streaming WebSocket endpoint
-     * @description WebSocket connection for real-time screen streaming.
-     *     Upgrade from HTTP to WebSocket protocol is required.
-     *     After connection, client must send desired display ID
-     *     as JSON {"display": 0}
-     *
-     */
-    get: operations['connectScreenWebSocket'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   '/ble/enable': {
     parameters: {
       query?: never;
@@ -1094,6 +1086,15 @@ export interface paths {
           };
           content: {
             'application/json': components['schemas']['BleStatusResponse'];
+          };
+        };
+        /** @description Failed to get BLE status, because of an error */
+        503: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['Error'];
           };
         };
       };
@@ -1498,6 +1499,17 @@ export interface components {
        * @example 0.0.0
        */
       api_semver: string;
+    };
+    /** @example {
+     *       "type": "usb"
+     *     } */
+    NetworkInterfaceInfo: {
+      /**
+       * @description Connection type
+       * @example usb
+       * @enum {string}
+       */
+      type: 'usb' | 'wifi';
     };
     /** @example {
      *       "install": {
@@ -2003,6 +2015,11 @@ export interface components {
        * @example 1767225600
        */
       boot_time: number;
+      /**
+       * @description Is auto-update enabled
+       * @example true
+       */
+      auto_update_enabled: boolean;
     };
     StatusPower: {
       /**
@@ -2360,6 +2377,35 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['VersionInfo'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  getTransport: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Information retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NetworkInterfaceInfo'];
         };
       };
       /** @description Internal server error */
@@ -3325,6 +3371,11 @@ export interface operations {
          * @example 50
          */
         volume: number;
+        /**
+         * @description Set volume silently (0 - play volume change sound(default), 1 - do not play sound)
+         * @example 1
+         */
+        silent?: 0 | 1;
       };
       header?: never;
       path?: never;
@@ -3343,42 +3394,6 @@ export interface operations {
       };
       /** @description Invalid request data */
       400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['Error'];
-        };
-      };
-    };
-  };
-  connectInputWebSocket: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description WebSocket connection established */
-      101: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description WebSocket upgrade failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['Error'];
-        };
-      };
-      /** @description Upgrade required */
-      426: {
         headers: {
           [name: string]: unknown;
         };
@@ -3569,33 +3584,6 @@ export interface operations {
     };
   };
   connectWebSocket: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description WebSocket connection established */
-      101: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Exceed max clients count */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['Error'];
-        };
-      };
-    };
-  };
-  connectScreenWebSocket: {
     parameters: {
       query?: never;
       header?: never;

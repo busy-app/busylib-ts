@@ -61,4 +61,14 @@ async function firmwareStatus(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-export { version, status, systemStatus, powerStatus, deviceStatus, firmwareStatus };
+async function transport(client: BusyBarClient, params?: TimeoutOptions) {
+  const { data, error } = await withTimeout((signal) => client.GET('/transport', { signal }), params?.timeout);
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export { version, status, systemStatus, powerStatus, deviceStatus, firmwareStatus, transport };
