@@ -7,7 +7,7 @@ import {
   linkDevice as linkDeviceApi,
   SetAccountProfileParams
 } from 'BusyBar/api/account';
-import type { TimeoutOptions, AccountInfo, SuccessResponse, AccountLink, AccountStatus, AccountProfile } from 'Global/types';
+import type { TimeoutOptions, AccountInfo, SuccessResponse, AccountLink, AccountStatus, AccountProfile } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class AccountMethods {

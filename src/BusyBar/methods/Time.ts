@@ -7,7 +7,7 @@ import {
   SetTimestampParams,
   SetTimezoneParams
 } from 'BusyBar/api/time';
-import type { TimeoutOptions, TimestampInfo, SuccessResponse, TimezoneList, TimezoneInfo } from 'Global/types';
+import type { TimeoutOptions, TimestampInfo, SuccessResponse, TimezoneList, TimezoneInfo } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class TimeMethods {

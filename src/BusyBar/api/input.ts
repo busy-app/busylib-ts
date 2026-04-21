@@ -1,5 +1,5 @@
-import type { BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions, InputKeyQuery } from 'Global/types';
+import type { BusyBarClient } from 'BusyBar/types/internal';
+import type { TimeoutOptions, InputKeyQuery } from 'BusyBar/types';
 
 export interface InputKeyParams extends TimeoutOptions, InputKeyQuery {}
 

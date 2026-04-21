@@ -1,5 +1,5 @@
-import type { BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions, AudioPlayQuery, AudioVolumeQuery } from 'Global/types';
+import type { BusyBarClient } from 'BusyBar/types/internal';
+import type { TimeoutOptions, AudioPlayQuery, AudioVolumeQuery } from 'BusyBar/types';
 
 export interface AudioPlayParams extends TimeoutOptions, AudioPlayQuery {}
 

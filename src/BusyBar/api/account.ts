@@ -1,5 +1,5 @@
-import type { BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions, AccountProfile } from 'Global/types';
+import type { BusyBarClient } from 'BusyBar/types/internal';
+import type { TimeoutOptions, AccountProfile } from 'BusyBar/types';
 
 async function getAccountState(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await client.withTimeout((signal) => client.GET('/account/status', { signal }), params?.timeout);

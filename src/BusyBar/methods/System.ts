@@ -7,16 +7,7 @@ import {
   firmwareStatus as firmwareStatusApi,
   transport as transportApi
 } from 'BusyBar/api/system';
-import type {
-  VersionInfo,
-  Status,
-  StatusSystem,
-  StatusDevice,
-  StatusFirmware,
-  StatusPower,
-  NetworkInterfaceInfo,
-  TimeoutOptions
-} from 'Global/types';
+import type { VersionInfo, Status, StatusSystem, StatusDevice, StatusFirmware, StatusPower, NetworkInterfaceInfo, TimeoutOptions } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class SystemMethods {

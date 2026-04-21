@@ -6,7 +6,7 @@ import {
   HttpAccessParams,
   NameParams
 } from 'BusyBar/api/settings';
-import type { TimeoutOptions, SuccessResponse, HttpAccessInfo, NameInfo } from 'Global/types';
+import type { TimeoutOptions, SuccessResponse, HttpAccessInfo, NameInfo } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class SettingsMethods {

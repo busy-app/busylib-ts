@@ -5,7 +5,7 @@ import {
   networks as networksWifiAPi,
   ConnectParams
 } from 'BusyBar/api/wifi';
-import type { TimeoutOptions, WifiStatusResponse, SuccessResponse, WifiNetworkResponse } from 'Global/types';
+import type { TimeoutOptions, WifiStatusResponse, SuccessResponse, WifiNetworkResponse } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class WifiMethods {

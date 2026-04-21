@@ -1,5 +1,5 @@
-import type { BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions, TimestampInfo, SetTimezoneQuery } from 'Global/types';
+import type { BusyBarClient } from 'BusyBar/types/internal';
+import type { TimeoutOptions, TimestampInfo, SetTimezoneQuery } from 'BusyBar/types';
 
 async function getTime(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await client.withTimeout((signal) => client.GET('/time', { signal }), params?.timeout);

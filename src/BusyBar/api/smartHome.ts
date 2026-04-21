@@ -1,5 +1,5 @@
-import type { BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions, SmartHomeSwitchState } from 'Global/types';
+import type { BusyBarClient } from 'BusyBar/types/internal';
+import type { TimeoutOptions, SmartHomeSwitchState } from 'BusyBar/types';
 
 async function pairingInfoGet(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await client.withTimeout((signal) => client.GET('/smart_home/pairing', { signal }), params?.timeout);

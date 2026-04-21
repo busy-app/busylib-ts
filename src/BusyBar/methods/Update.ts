@@ -12,7 +12,7 @@ import {
   InstallParams,
   AutoUpdateParams
 } from 'BusyBar/api/update';
-import type { TimeoutOptions, SuccessResponse, UpdateStatus, UpdateChangelog, AutoUpdateSettings } from 'Global/types';
+import type { TimeoutOptions, SuccessResponse, UpdateStatus, UpdateChangelog, AutoUpdateSettings } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class UpdateMethods {
@@ -84,7 +84,6 @@ export class UpdateMethods {
   async UpdateAbort(this: BusyBar, params?: TimeoutOptions): Promise<SuccessResponse> {
     return await abortUpdateApi(this.apiClient, params);
   }
-
 
   /**
    * Get current auto-update settings.

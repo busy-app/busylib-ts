@@ -1,5 +1,5 @@
 import { enable as enableBleApi, disable as disableBleApi, pairing as pairingBleApi, status as statusBleApi } from 'BusyBar/api/ble';
-import type { TimeoutOptions, SuccessResponse, BleStatusResponse } from 'Global/types';
+import type { TimeoutOptions, SuccessResponse, BleStatusResponse } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class BleMethods {

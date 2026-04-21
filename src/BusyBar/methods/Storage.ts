@@ -13,7 +13,7 @@ import {
   CreateDirectoryParams,
   RenameParams
 } from 'BusyBar/api/storage';
-import type { TimeoutOptions, SuccessResponse, StorageReadResponse, StorageList, StorageStatus } from 'Global/types';
+import type { TimeoutOptions, SuccessResponse, StorageReadResponse, StorageList, StorageStatus } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class StorageMethods {

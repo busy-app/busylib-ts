@@ -1,4 +1,4 @@
-import type { BusyBarClient } from 'BusyBar/api/createClient';
+import type { BusyBarClient } from 'BusyBar/types/internal';
 import type {
   TimeoutOptions,
   StorageWriteQuery,
@@ -6,9 +6,9 @@ import type {
   StorageListQuery,
   StorageRemoveQuery,
   StorageCreateDirQuery,
-  StorageRenameQuery
-} from 'Global/types';
-import type { BusyFile } from 'BusyBar/types/global';
+  StorageRenameQuery,
+  BusyFile
+} from 'BusyBar/types';
 
 export interface UploadFileParams extends TimeoutOptions, StorageWriteQuery {
   file: BusyFile;

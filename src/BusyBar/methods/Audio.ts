@@ -6,7 +6,7 @@ import {
   setAudioVolume as setAudioVolumeApi,
   AudioVolumeParams
 } from 'BusyBar/api/audio';
-import type { TimeoutOptions, SuccessResponse, AudioVolumeInfo } from 'Global/types';
+import type { TimeoutOptions, SuccessResponse, AudioVolumeInfo } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class AudioMethods {

@@ -1,5 +1,5 @@
-import type { BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions, HttpAccessQuery, NameInfo } from 'Global/types';
+import type { BusyBarClient } from 'BusyBar/types/internal';
+import type { TimeoutOptions, HttpAccessQuery, NameInfo } from 'BusyBar/types';
 
 async function getHttpAccess(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await client.withTimeout((signal) => client.GET('/access', { signal }), params?.timeout);

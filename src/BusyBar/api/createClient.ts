@@ -1,8 +1,8 @@
 import createClient from 'openapi-fetch';
 import type { Client, Middleware } from 'openapi-fetch';
 import type { paths, components } from 'Global/API';
-import type { ApiKey, ApiSemver } from 'Global/types';
-import type { BusyBarConfig } from 'BusyBar/index';
+import type { ApiKey, ApiSemver } from 'BusyBar/types/internal';
+import type { BusyBarConfig } from 'BusyBar/types';
 
 /**
  * Universal body serializer for different body types:

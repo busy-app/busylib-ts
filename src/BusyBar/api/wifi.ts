@@ -1,6 +1,6 @@
-import type { BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions, WifiConnectRequestConfig } from 'Global/types';
-import type { RequireKeys } from 'BusyBar/types/utils';
+import type { BusyBarClient } from 'BusyBar/types/internal';
+import type { TimeoutOptions, WifiConnectRequestConfig } from 'BusyBar/types';
+import type { RequireKeys } from 'Global/types.utils';
 
 async function status(client: BusyBarClient, params?: TimeoutOptions) {
   const { data, error } = await client.withTimeout((signal) => client.GET('/wifi/status', { signal }), params?.timeout);

@@ -9,7 +9,7 @@ import {
   setDisplayBrightness as setDisplayBrightnessApi,
   BrightnessParams
 } from 'BusyBar/api/display';
-import type { TimeoutOptions, SuccessResponse, DisplayBrightnessInfo } from 'Global/types';
+import type { TimeoutOptions, SuccessResponse, DisplayBrightnessInfo } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class DisplayMethods {

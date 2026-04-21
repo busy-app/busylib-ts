@@ -5,7 +5,7 @@ import {
   switchStateGet as switchStateGetApi,
   switchStatePost as switchStatePostApi
 } from 'BusyBar/api/smartHome';
-import type { TimeoutOptions, SuccessResponse, SmartHomePairingInfo, SmartHomePairingPayload, SmartHomeSwitchState } from 'Global/types';
+import type { TimeoutOptions, SuccessResponse, SmartHomePairingInfo, SmartHomePairingPayload, SmartHomeSwitchState } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class SmartHomeMethods {

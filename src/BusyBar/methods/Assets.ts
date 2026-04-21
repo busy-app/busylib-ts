@@ -1,5 +1,5 @@
 import { upload as uploadAssetsApi, deleteAssets as deleteAssetsApi, UploadParams, DeleteParams } from 'BusyBar/api/assets';
-import type { SuccessResponse } from 'Global/types';
+import type { SuccessResponse } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class AssetsMethods {

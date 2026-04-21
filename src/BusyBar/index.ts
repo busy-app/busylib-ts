@@ -18,7 +18,7 @@ import { DEFAULT_DEVICE_URL, DEFAULT_PROXY_URL, PROXY_HOST_RE } from 'Global/con
 import { isIPv4 } from 'Global/utils/isIPv4';
 import { isMdns } from 'Global/utils/isMdns';
 import type { paths } from 'Global/API';
-import type { ApiSemver, ApiKey } from 'Global/types';
+import type { ApiSemver, ApiKey } from 'BusyBar/types/internal';
 
 import createClient from 'openapi-fetch';
 

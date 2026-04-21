@@ -1,6 +1,5 @@
-import type { BusyBarClient } from 'BusyBar/api/createClient';
-import type { AutoUpdateSettings, TimeoutOptions, UpdateChangelogQuery, UpdateInstallQuery } from 'Global/types';
-import type { BusyFile } from 'BusyBar/types/global';
+import type { BusyBarClient } from 'BusyBar/types/internal';
+import type { AutoUpdateSettings, TimeoutOptions, UpdateChangelogQuery, UpdateInstallQuery, BusyFile } from 'BusyBar/types';
 
 export interface UpdateParams extends TimeoutOptions {
   file: BusyFile;

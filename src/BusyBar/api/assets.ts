@@ -1,6 +1,5 @@
-import type { BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions, AssetsUploadQuery, AssetsDeleteQuery } from 'Global/types';
-import type { BusyFile } from 'BusyBar/types/global';
+import type { BusyBarClient } from 'BusyBar/types/internal';
+import type { TimeoutOptions, AssetsUploadQuery, AssetsDeleteQuery, BusyFile } from 'BusyBar/types';
 
 export interface UploadParams extends TimeoutOptions, AssetsUploadQuery {
   data: BusyFile;

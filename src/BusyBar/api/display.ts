@@ -1,5 +1,5 @@
-import type { BusyBarClient } from 'BusyBar/api/createClient';
-import type { TimeoutOptions, DisplayElements, ClearDisplayQuery, ScreenQuery } from 'Global/types';
+import type { BusyBarClient } from 'BusyBar/types/internal';
+import type { TimeoutOptions, DisplayElements, ClearDisplayQuery, ScreenQuery } from 'BusyBar/types';
 
 export interface DrawParams extends TimeoutOptions, DisplayElements {}
 
