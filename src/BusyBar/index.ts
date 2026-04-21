@@ -42,6 +42,7 @@ export interface BusyBar
 export type BusyBarConfig = {
   addr?: string;
   token?: string;
+  timeout?: number;
 };
 
 /**
@@ -99,6 +100,11 @@ export class BusyBar {
    *
    * Must be provided when `addr` points to a secured proxy endpoint
    * such as `https://proxy.busy.app`.
+   *
+   * @param {BusyBarConfig['timeout']} config.timeout -
+   * Optional default timeout for all requests in milliseconds.
+   *
+   * Defaults to `3000` if not provided. This value can be overridden in individual method calls.
    */
   constructor(config?: BusyBarConfig) {
     if (!config || (!config.addr && !config.token)) {
@@ -121,7 +127,7 @@ export class BusyBar {
 
     this.apiSemver = '';
 
-    const { client, setApiKey, setToken } = createApiClient(`${this.addr}/api/`, this.SystemVersionGet.bind(this), config?.token);
+    const { client, setApiKey, setToken } = createApiClient(`${this.addr}/api/`, this.SystemVersionGet.bind(this), config?.token, config?.timeout);
 
     this.apiClient = client;
     this.setApiKeyFn = setApiKey;

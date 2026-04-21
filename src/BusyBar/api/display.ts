@@ -1,4 +1,4 @@
-import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
+import type { BusyBarClient } from 'BusyBar/api/createClient';
 import type { TimeoutOptions, DisplayElements, ClearDisplayQuery, ScreenQuery } from 'Global/types';
 
 export interface DrawParams extends TimeoutOptions, DisplayElements {}
@@ -15,7 +15,7 @@ export interface BrightnessParams extends TimeoutOptions {
 async function draw(client: BusyBarClient, params: DrawParams) {
   const { application_name, elements, priority = 50, timeout } = params;
 
-  const { data, error } = await withTimeout(
+  const { data, error } = await client.withTimeout(
     (signal) =>
       client.POST('/display/draw', {
         body: {
@@ -36,7 +36,7 @@ async function draw(client: BusyBarClient, params: DrawParams) {
 }
 
 async function clear(client: BusyBarClient, params?: ClearParams) {
-  const { data, error } = await withTimeout(
+  const { data, error } = await client.withTimeout(
     (signal) =>
       client.DELETE('/display/draw', {
         params: {
@@ -59,7 +59,7 @@ async function clear(client: BusyBarClient, params?: ClearParams) {
 async function getScreenFrame(client: BusyBarClient, params: GetScreenFrameParams) {
   const { display, timeout } = params;
 
-  const { data, error } = await withTimeout(
+  const { data, error } = await client.withTimeout(
     (signal) =>
       client.GET('/screen', {
         params: {
@@ -81,7 +81,7 @@ async function getScreenFrame(client: BusyBarClient, params: GetScreenFrameParam
 }
 
 async function getDisplayBrightness(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout((signal) => client.GET('/display/brightness', { signal }), params?.timeout);
+  const { data, error } = await client.withTimeout((signal) => client.GET('/display/brightness', { signal }), params?.timeout);
 
   if (error) {
     throw error;
@@ -108,7 +108,7 @@ async function setDisplayBrightness(client: BusyBarClient, params: BrightnessPar
 
   const valueQuery = normalize(value);
 
-  const { data, error } = await withTimeout(
+  const { data, error } = await client.withTimeout(
     (signal) =>
       client.POST('/display/brightness', {
         params: {

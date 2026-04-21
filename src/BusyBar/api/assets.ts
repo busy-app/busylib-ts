@@ -1,4 +1,4 @@
-import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
+import type { BusyBarClient } from 'BusyBar/api/createClient';
 import type { TimeoutOptions, AssetsUploadQuery, AssetsDeleteQuery } from 'Global/types';
 import type { BusyFile } from 'BusyBar/types/global';
 
@@ -9,7 +9,7 @@ export interface UploadParams extends TimeoutOptions, AssetsUploadQuery {
 async function upload(client: BusyBarClient, params: UploadParams) {
   const { application_name, file, data } = params;
 
-  const { data: responseData, error } = await withTimeout(
+  const { data: responseData, error } = await client.withTimeout(
     (signal) =>
       client.POST('/assets/upload', {
         params: {
@@ -39,7 +39,7 @@ export interface DeleteParams extends TimeoutOptions, AssetsDeleteQuery {}
 async function deleteAssets(client: BusyBarClient, params: DeleteParams) {
   const { application_name } = params;
 
-  const { data, error } = await withTimeout(
+  const { data, error } = await client.withTimeout(
     (signal) =>
       client.DELETE('/assets/upload', {
         params: {

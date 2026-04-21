@@ -1,4 +1,4 @@
-import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
+import type { BusyBarClient } from 'BusyBar/api/createClient';
 import type {
   TimeoutOptions,
   StorageWriteQuery,
@@ -17,7 +17,7 @@ export interface UploadFileParams extends TimeoutOptions, StorageWriteQuery {
 async function write(client: BusyBarClient, params: UploadFileParams) {
   const { path, file } = params;
 
-  const { data, error } = await withTimeout(
+  const { data, error } = await client.withTimeout(
     (signal) =>
       client.POST('/storage/write', {
         params: {
@@ -48,7 +48,7 @@ export interface DownloadFileParams extends TimeoutOptions, StorageReadQuery {
 async function read(client: BusyBarClient, params: DownloadFileParams) {
   const { path, as_array_buffer } = params;
 
-  const { data, error } = await withTimeout(
+  const { data, error } = await client.withTimeout(
     (signal) =>
       client.GET('/storage/read', {
         params: {
@@ -74,7 +74,7 @@ export interface ReadDirectoryParams extends TimeoutOptions, StorageListQuery {}
 async function list(client: BusyBarClient, params: ReadDirectoryParams) {
   const { path } = params;
 
-  const { data, error } = await withTimeout(
+  const { data, error } = await client.withTimeout(
     (signal) =>
       client.GET('/storage/list', {
         params: {
@@ -99,7 +99,7 @@ export interface RemoveParams extends TimeoutOptions, StorageRemoveQuery {}
 async function remove(client: BusyBarClient, params: RemoveParams) {
   const { path } = params;
 
-  const { data, error } = await withTimeout(
+  const { data, error } = await client.withTimeout(
     (signal) =>
       client.DELETE('/storage/remove', {
         params: {
@@ -124,7 +124,7 @@ export interface CreateDirectoryParams extends TimeoutOptions, StorageCreateDirQ
 async function mkdir(client: BusyBarClient, params: CreateDirectoryParams) {
   const { path } = params;
 
-  const { data, error } = await withTimeout(
+  const { data, error } = await client.withTimeout(
     (signal) =>
       client.POST('/storage/mkdir', {
         params: {
@@ -145,7 +145,7 @@ async function mkdir(client: BusyBarClient, params: CreateDirectoryParams) {
 }
 
 async function status(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout((signal) => client.GET('/storage/status', { signal }), params?.timeout);
+  const { data, error } = await client.withTimeout((signal) => client.GET('/storage/status', { signal }), params?.timeout);
 
   if (error) {
     throw error;
@@ -159,7 +159,7 @@ export interface RenameParams extends TimeoutOptions, StorageRenameQuery {}
 async function rename(client: BusyBarClient, params: RenameParams) {
   const { path, new_path } = params;
 
-  const { data, error } = await withTimeout(
+  const { data, error } = await client.withTimeout(
     (signal) =>
       client.POST('/storage/rename', {
         params: {

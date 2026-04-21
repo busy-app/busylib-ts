@@ -1,8 +1,8 @@
-import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
+import type { BusyBarClient } from 'BusyBar/api/createClient';
 import type { TimeoutOptions } from 'Global/types';
 
 async function enable(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout((signal) => client.POST('/ble/enable', { signal }), params?.timeout);
+  const { data, error } = await client.withTimeout((signal) => client.POST('/ble/enable', { signal }), params?.timeout);
 
   if (error) {
     throw error;
@@ -12,7 +12,7 @@ async function enable(client: BusyBarClient, params?: TimeoutOptions) {
 }
 
 async function disable(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout((signal) => client.POST('/ble/disable', { signal }), params?.timeout);
+  const { data, error } = await client.withTimeout((signal) => client.POST('/ble/disable', { signal }), params?.timeout);
 
   if (error) {
     throw error;
@@ -22,7 +22,7 @@ async function disable(client: BusyBarClient, params?: TimeoutOptions) {
 }
 
 async function pairing(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout((signal) => client.DELETE('/ble/pairing', { signal }), params?.timeout);
+  const { data, error } = await client.withTimeout((signal) => client.DELETE('/ble/pairing', { signal }), params?.timeout);
 
   if (error) {
     throw error;
@@ -32,7 +32,7 @@ async function pairing(client: BusyBarClient, params?: TimeoutOptions) {
 }
 
 async function status(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout((signal) => client.GET('/ble/status', { signal }), params?.timeout);
+  const { data, error } = await client.withTimeout((signal) => client.GET('/ble/status', { signal }), params?.timeout);
 
   if (error) {
     throw error;

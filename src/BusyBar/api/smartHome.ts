@@ -1,8 +1,8 @@
-import { withTimeout, type BusyBarClient } from 'BusyBar/api/createClient';
+import type { BusyBarClient } from 'BusyBar/api/createClient';
 import type { TimeoutOptions, SmartHomeSwitchState } from 'Global/types';
 
 async function pairingInfoGet(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout((signal) => client.GET('/smart_home/pairing', { signal }), params?.timeout);
+  const { data, error } = await client.withTimeout((signal) => client.GET('/smart_home/pairing', { signal }), params?.timeout);
 
   if (error) {
     throw error;
@@ -12,7 +12,7 @@ async function pairingInfoGet(client: BusyBarClient, params?: TimeoutOptions) {
 }
 
 async function pairingPayloadPost(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout((signal) => client.POST('/smart_home/pairing', { signal }), params?.timeout);
+  const { data, error } = await client.withTimeout((signal) => client.POST('/smart_home/pairing', { signal }), params?.timeout);
 
   if (error) {
     throw error;
@@ -22,7 +22,7 @@ async function pairingPayloadPost(client: BusyBarClient, params?: TimeoutOptions
 }
 
 async function pairingDelete(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout((signal) => client.DELETE('/smart_home/pairing', { signal }), params?.timeout);
+  const { data, error } = await client.withTimeout((signal) => client.DELETE('/smart_home/pairing', { signal }), params?.timeout);
 
   if (error) {
     throw error;
@@ -32,7 +32,7 @@ async function pairingDelete(client: BusyBarClient, params?: TimeoutOptions) {
 }
 
 async function switchStateGet(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await withTimeout((signal) => client.GET('/smart_home/switch', { signal }), params?.timeout);
+  const { data, error } = await client.withTimeout((signal) => client.GET('/smart_home/switch', { signal }), params?.timeout);
 
   if (error) {
     throw error;
@@ -43,7 +43,7 @@ async function switchStateGet(client: BusyBarClient, params?: TimeoutOptions) {
 
 async function switchStatePost(client: BusyBarClient, params: SmartHomeSwitchState & TimeoutOptions) {
   const { timeout, ...payload } = params;
-  const { data, error } = await withTimeout((signal) => client.POST('/smart_home/switch', { body: payload, signal }), timeout);
+  const { data, error } = await client.withTimeout((signal) => client.POST('/smart_home/switch', { body: payload, signal }), timeout);
 
   if (error) {
     throw error;

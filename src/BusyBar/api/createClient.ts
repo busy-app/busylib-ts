@@ -87,38 +87,14 @@ async function toFetchError(res: Response): Promise<FetchError> {
   });
 }
 
-/**
- * Wrapper for requests with timeout support
- * @param requestFn Function that performs the request, accepting a signal
- * @param timeoutMs Timeout in milliseconds (optional). If 0 or undefined, no timeout is applied.
- * @returns Promise with the result of the request
- */
-async function withTimeout<T>(requestFn: (signal?: AbortSignal) => Promise<T>, timeoutMs: number = 3000): Promise<T> {
-  if (timeoutMs <= 0) {
-    return await requestFn();
-  }
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-  try {
-    return await requestFn(controller.signal);
-  } catch (error) {
-    if (error instanceof DOMException && error.name === 'AbortError') {
-      throw new Error(`Request timed out after ${timeoutMs}ms`);
-    }
-    throw error;
-  } finally {
-    clearTimeout(timeoutId);
-  }
-}
-
-export type BusyBarClient = Client<paths, `${string}/${string}`>;
+export type BusyBarClient = Client<paths, `${string}/${string}`> & {
+  withTimeout: <T>(requestFn: (signal?: AbortSignal) => Promise<T>, timeoutMs?: number) => Promise<T>;
+};
 
 /**
  * Initialize API client with baseUrl and version fetch function
  */
-function createApiClient(url: string, getApiVersion: GetVersionFn, token: BusyBarConfig['token']) {
+function createApiClient(url: string, getApiVersion: GetVersionFn, token: BusyBarConfig['token'], defaultTimeout: number = 3000) {
   let apiSemver: ApiSemver | undefined = undefined;
   let bearerToken: string | undefined = token ?? undefined;
   let apiKey: ApiKey | undefined = undefined;
@@ -202,7 +178,27 @@ function createApiClient(url: string, getApiVersion: GetVersionFn, token: BusyBa
   const client = createClient<paths>({
     baseUrl: url,
     bodySerializer
-  });
+  }) as BusyBarClient;
+
+  client.withTimeout = async <T>(requestFn: (signal?: AbortSignal) => Promise<T>, timeoutMs: number = defaultTimeout): Promise<T> => {
+    if (timeoutMs <= 0) {
+      return await requestFn();
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      return await requestFn(controller.signal);
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        throw new Error(`Request timed out after ${timeoutMs}ms`);
+      }
+      throw error;
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  };
 
   client.use(middleware);
 
@@ -217,4 +213,4 @@ function createApiClient(url: string, getApiVersion: GetVersionFn, token: BusyBa
   };
 }
 
-export { createApiClient, withTimeout };
+export { createApiClient };
