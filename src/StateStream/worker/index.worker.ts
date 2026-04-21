@@ -204,8 +204,12 @@ function connect(addr: string, token?: string, isBinary: boolean = true, mode: S
                   data: decodedState.error
                 });
 
-                if (severity === severityEnum.values.FATAL || severity === severityEnum.values.ERROR) {
+                if (severity === severityEnum.values.FATAL) {
                   stopAndCleanup();
+                  return;
+                }
+
+                if (severity === severityEnum.values.ERROR) {
                   return;
                 }
               } else {
