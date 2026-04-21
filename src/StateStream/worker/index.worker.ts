@@ -254,7 +254,12 @@ function connect(addr: string, token?: string, isBinary: boolean = true, mode: S
             }
           }
         } catch (e) {
-          broadcast({ type: 'ERROR', code: StateStreamErrorCode.DECODE_ERROR, message: `Decode error: ${String(e)}` });
+          broadcast({
+            type: 'ERROR',
+            code: StateStreamErrorCode.DECODE_ERROR,
+            message: `Decode error: ${String(e)}`,
+            data: event.data
+          });
         }
       })
       .catch(console.error);
