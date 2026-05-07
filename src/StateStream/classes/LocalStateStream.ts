@@ -33,6 +33,7 @@ export class LocalStateStream extends BaseStateStream {
 
   /**
    * Normalizes the address to use ws:// protocol and adds default path if missing.
+   * Adds x-api-token query parameter if token is provided.
    */
   protected normalizeUrl(addr: string): string {
     const fixed = this.resolveProtocol(addr);
@@ -41,6 +42,11 @@ export class LocalStateStream extends BaseStateStream {
     // If no path is provided, use the default local status path
     if (url.pathname === '/' || !url.pathname) {
       url.pathname = '/api/status/ws';
+    }
+
+    // Add x-api-token query parameter if token is available
+    if (this.token) {
+      url.searchParams.set('x-api-token', this.token);
     }
 
     return url.toString();
