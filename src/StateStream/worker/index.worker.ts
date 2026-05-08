@@ -19,7 +19,6 @@ const StateType = root.lookupType('BSB_State.State');
 
 // Advanced Reconnect Constants
 const AUTH_CODE = 3000;
-const RECONNECT_CODES = new Set<number>([1001, 1006, 1012, 1013, 1014, 3008]);
 let maxAuthAttempts = DEFAULT_MAX_AUTH_ATTEMPTS;
 let maxReconnectAttempts = DEFAULT_MAX_RECONNECT_ATTEMPTS;
 let reconnectDelay = DEFAULT_DELAY_RECONNECT;
@@ -307,7 +306,7 @@ function connect(addr: string, token?: string, isBinary: boolean = true, mode: S
       return;
     }
 
-    if (RECONNECT_CODES.has(e.code)) {
+    if (e.code !== 1000) {
       if (retryCount < maxReconnectAttempts) {
         retryCount++;
         let delay = Math.min(1000 * retryCount, 5000);
