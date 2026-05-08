@@ -31,7 +31,6 @@ let currentAddr: string = '';
 let retryCount = 0;
 let authRetryCount = 0;
 let isAuthReported = false;
-let stabilityTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
 
 type ClientPort = MessagePort | DedicatedWorkerGlobalScope;
 const activePorts = new Set<ClientPort>();
@@ -73,17 +72,25 @@ function sendSubscriptions() {
 }
 
 /**
- * Stop and cleanup connection completely
+ * Stop socket
  */
-function stopAndCleanup() {
+function stopSocket() {
   if (socket) {
+    socket.onopen = null;
+    socket.onmessage = null;
+    socket.onerror = null;
+    socket.onclose = null;
+
     socket.close();
     socket = null;
   }
-  if (stabilityTimeout) {
-    clearTimeout(stabilityTimeout);
-    stabilityTimeout = undefined;
-  }
+}
+
+/**
+ * Stop and cleanup connection completely
+ */
+function stopAndCleanup() {
+  stopSocket();
   subscriptions.clear();
   activePorts.clear();
   retryCount = 0;
@@ -95,9 +102,7 @@ function stopAndCleanup() {
  * Connects to the device/proxy
  */
 function connect(addr: string, token?: string, isBinary: boolean = true, mode: StreamMode = 'local') {
-  if (socket) {
-    socket.close();
-  }
+  stopSocket();
 
   broadcast({ type: 'STATUS_UPDATE', connection: ConnectionStatus.CONNECTING });
 
@@ -123,17 +128,10 @@ function connect(addr: string, token?: string, isBinary: boolean = true, mode: S
     // Remote mode handshake (Authentication)
     sendAuth();
 
-    // Clear any existing stability timeout
-    if (stabilityTimeout) {
-      clearTimeout(stabilityTimeout);
-    }
-
-    // Reset retry counts only if the connection stays open for 5 seconds
-    stabilityTimeout = setTimeout(() => {
-      retryCount = 0;
-      authRetryCount = 0;
-      console.log('[Worker] Connection stable. All retry counters reset.');
-    }, 5000);
+    // Reset retry counts
+    retryCount = 0;
+    authRetryCount = 0;
+    console.log('[Worker] Connection stable. All retry counters reset.');
 
     // Restore subscriptions on reconnect for remote mode
     if (currentMode === 'remote' && subscriptions.size > 0) {
@@ -278,11 +276,6 @@ function connect(addr: string, token?: string, isBinary: boolean = true, mode: S
 
   socket.onclose = (e) => {
     console.log('[Worker] Socket closed:', e);
-
-    if (stabilityTimeout) {
-      clearTimeout(stabilityTimeout);
-      stabilityTimeout = undefined;
-    }
 
     if (!socket || activePorts.size === 0) {
       console.log('[Worker] Connection closed or no active ports. No retries.');
