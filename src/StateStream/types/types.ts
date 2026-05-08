@@ -116,6 +116,7 @@ export interface StreamConfig {
   /** Data inactivity timeout in milliseconds. Default: 15000ms */
   dataTimeout?: number;
   maxReconnectAttempts?: number;
+  reconnectDelay?: number;
 }
 
 export interface RemoteStreamConfig extends StreamConfig {

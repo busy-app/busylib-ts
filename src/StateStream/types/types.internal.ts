@@ -8,6 +8,7 @@ export type StreamMode = 'local' | 'remote';
 
 export const DEFAULT_MAX_RECONNECT_ATTEMPTS = 5;
 export const DEFAULT_MAX_AUTH_ATTEMPTS = 5;
+export const DEFAULT_DELAY_RECONNECT = 500;
 
 /**
  * Base internal options for connections
@@ -30,6 +31,7 @@ export type WorkerCommand =
       mode: StreamMode;
       maxReconnectAttempts: number;
       maxAuthAttempts: number;
+      reconnectDelay: number;
     }
   | { type: 'STOP' }
   | { type: 'UPDATE_TOKEN'; token: string }

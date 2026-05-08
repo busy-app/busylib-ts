@@ -18,7 +18,8 @@ import {
   StreamMode,
   StreamOptions,
   DEFAULT_MAX_RECONNECT_ATTEMPTS,
-  DEFAULT_MAX_AUTH_ATTEMPTS
+  DEFAULT_MAX_AUTH_ATTEMPTS,
+  DEFAULT_DELAY_RECONNECT
 } from 'StateStream/types/types.internal';
 
 import StateWorker from '../worker/index.worker?worker&inline';
@@ -44,6 +45,7 @@ export abstract class BaseStateStream {
   protected dataTimeout: number;
   protected maxReconnectAttempts: number;
   protected maxAuthAttempts: number;
+  protected reconnectDelay: number;
   protected abstract streamMode: StreamMode;
 
   private worker: StreamWorker | null = null;
@@ -72,6 +74,7 @@ export abstract class BaseStateStream {
     this.dataTimeout = config?.dataTimeout ?? 15000;
     this.maxReconnectAttempts = config?.maxReconnectAttempts ?? DEFAULT_MAX_RECONNECT_ATTEMPTS;
     this.maxAuthAttempts = DEFAULT_MAX_AUTH_ATTEMPTS;
+    this.reconnectDelay = config?.reconnectDelay ?? DEFAULT_DELAY_RECONNECT;
 
     // Initialize default status
     this._status = {
@@ -159,7 +162,8 @@ export abstract class BaseStateStream {
         isBinary: this.isBinary,
         mode: this.streamMode,
         maxReconnectAttempts: this.maxReconnectAttempts,
-        maxAuthAttempts: this.maxAuthAttempts
+        maxAuthAttempts: this.maxAuthAttempts,
+        reconnectDelay: this.reconnectDelay
       });
 
       // Start connection timeout timer

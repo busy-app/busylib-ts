@@ -1,7 +1,14 @@
 import * as protobuf from 'protobufjs';
 import { ProcessedFrame, ProcessedSchemaState, StateStreamErrorCode } from 'StateStream/types/types';
 import { ConnectionStatus, AuthStatus } from 'StateStream/types/types.status';
-import { WorkerCommand, WorkerEvent, StreamMode, DEFAULT_MAX_RECONNECT_ATTEMPTS, DEFAULT_MAX_AUTH_ATTEMPTS } from 'StateStream/types/types.internal';
+import {
+  WorkerCommand,
+  WorkerEvent,
+  StreamMode,
+  DEFAULT_MAX_RECONNECT_ATTEMPTS,
+  DEFAULT_MAX_AUTH_ATTEMPTS,
+  DEFAULT_DELAY_RECONNECT
+} from 'StateStream/types/types.internal';
 import type { BSB_Frame } from 'StateStream/types/schema';
 import bundle from 'StateStream/types/bundle.json';
 import { processFrame } from 'StateStream/utils/frame';
@@ -15,6 +22,7 @@ const AUTH_CODE = 3000;
 const RECONNECT_CODES = new Set<number>([1001, 1006, 1012, 1013, 1014, 3008]);
 let maxAuthAttempts = DEFAULT_MAX_AUTH_ATTEMPTS;
 let maxReconnectAttempts = DEFAULT_MAX_RECONNECT_ATTEMPTS;
+let reconnectDelay = DEFAULT_DELAY_RECONNECT;
 
 let socket: WebSocket | null = null;
 let isBinaryMode = true;
@@ -302,7 +310,11 @@ function connect(addr: string, token?: string, isBinary: boolean = true, mode: S
     if (RECONNECT_CODES.has(e.code)) {
       if (retryCount < maxReconnectAttempts) {
         retryCount++;
-        const delay = Math.min(1000 * retryCount, 5000);
+        let delay = Math.min(1000 * retryCount, 5000);
+
+        if (reconnectDelay) {
+          delay = reconnectDelay;
+        }
 
         console.log(`[Worker] Reconnecting (network code: ${e.code}) in ${delay}ms... (Attempt ${retryCount}/${maxReconnectAttempts})`);
 
@@ -340,6 +352,7 @@ function handleCommand(cmd: WorkerCommand, port: ClientPort) {
     case 'START':
       maxAuthAttempts = cmd.maxAuthAttempts ?? DEFAULT_MAX_AUTH_ATTEMPTS;
       maxReconnectAttempts = cmd.maxReconnectAttempts ?? DEFAULT_MAX_RECONNECT_ATTEMPTS;
+      reconnectDelay = cmd.reconnectDelay ?? DEFAULT_DELAY_RECONNECT;
 
       activePorts.add(port);
       if (socket && socket.readyState === WebSocket.OPEN && currentAddr === cmd.addr) {
