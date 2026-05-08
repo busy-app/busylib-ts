@@ -8,6 +8,14 @@ export interface StatusComponent<E> {
   lastError?: StateStreamError;
 }
 
+export interface ConnectionStatusComponent extends StatusComponent<ConnectionStatus> {
+  attempts?: number;
+}
+
+export interface AuthStatusComponent extends StatusComponent<AuthStatus> {
+  attempts?: number;
+}
+
 /**
  * High-level lifecycle of the StateStream class instance
  */
@@ -36,6 +44,7 @@ export enum AuthStatus {
   UNAUTHENTICATED = 'UNAUTHENTICATED',
   AUTHENTICATING = 'AUTHENTICATING',
   AUTHENTICATED = 'AUTHENTICATED',
+  REAUTHENTICATING = 'REAUTHENTICATING',
   FAILED = 'FAILED'
 }
 
@@ -63,8 +72,8 @@ export enum WorkerStatus {
  */
 export interface StreamStatus {
   main: StatusComponent<StreamLifecycle>;
-  connection: StatusComponent<ConnectionStatus>;
-  auth: StatusComponent<AuthStatus>;
+  connection: ConnectionStatusComponent;
+  auth: AuthStatusComponent;
   data: StatusComponent<DataStatus> & { lastActivity?: number };
   worker: StatusComponent<WorkerStatus>;
 }

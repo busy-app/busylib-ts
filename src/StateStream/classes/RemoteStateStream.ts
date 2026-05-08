@@ -1,6 +1,6 @@
-import { RemoteStreamOptions, StateStreamError, StateStreamErrorCode, StreamConfig } from 'StateStream/types/types';
+import { RemoteStreamOptions, StateStreamError, StateStreamErrorCode, RemoteStreamConfig } from 'StateStream/types/types';
 import { BaseStateStream } from 'StateStream/classes/BaseStateStream';
-import { StreamMode } from 'StateStream/types/types.internal';
+import { StreamMode, DEFAULT_MAX_AUTH_ATTEMPTS } from 'StateStream/types/types.internal';
 
 /**
  * Connection for remote BUSY Bar devices via Remote.
@@ -9,8 +9,9 @@ import { StreamMode } from 'StateStream/types/types.internal';
 export class RemoteStateStream extends BaseStateStream {
   protected streamMode: StreamMode = 'remote';
   private tokenProvider?: () => Promise<string>;
+  protected maxAuthAttempts: number;
 
-  constructor(options: RemoteStreamOptions, config?: StreamConfig) {
+  constructor(options: RemoteStreamOptions, config?: RemoteStreamConfig) {
     super(
       {
         isBinary: false, // Default for remote is JSON
@@ -19,6 +20,7 @@ export class RemoteStateStream extends BaseStateStream {
       config
     );
     this.tokenProvider = options.tokenProvider;
+    this.maxAuthAttempts = config?.maxAuthAttempts ?? DEFAULT_MAX_AUTH_ATTEMPTS;
   }
 
   /**

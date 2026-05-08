@@ -12,7 +12,14 @@ import {
   StreamConfig
 } from 'StateStream/types/types';
 import { StreamStatus, StreamLifecycle, ConnectionStatus, AuthStatus, DataStatus, WorkerStatus } from 'StateStream/types/types.status';
-import { WorkerCommand, WorkerEvent, StreamMode, StreamOptions } from 'StateStream/types/types.internal';
+import {
+  WorkerCommand,
+  WorkerEvent,
+  StreamMode,
+  StreamOptions,
+  DEFAULT_MAX_RECONNECT_ATTEMPTS,
+  DEFAULT_MAX_AUTH_ATTEMPTS
+} from 'StateStream/types/types.internal';
 
 import StateWorker from '../worker/index.worker?worker&inline';
 import StateSharedWorker from '../worker/index.worker?sharedworker&inline';
@@ -35,6 +42,8 @@ export abstract class BaseStateStream {
   protected isBinary: boolean;
   protected connectTimeout: number;
   protected dataTimeout: number;
+  protected maxReconnectAttempts: number;
+  protected maxAuthAttempts: number;
   protected abstract streamMode: StreamMode;
 
   private worker: StreamWorker | null = null;
@@ -61,6 +70,8 @@ export abstract class BaseStateStream {
     this.isBinary = options.isBinary ?? true;
     this.connectTimeout = config?.timeout ?? 5000;
     this.dataTimeout = config?.dataTimeout ?? 15000;
+    this.maxReconnectAttempts = config?.maxReconnectAttempts ?? DEFAULT_MAX_RECONNECT_ATTEMPTS;
+    this.maxAuthAttempts = DEFAULT_MAX_AUTH_ATTEMPTS;
 
     // Initialize default status
     this._status = {
@@ -146,7 +157,9 @@ export abstract class BaseStateStream {
         addr: this.normalizeUrl(this.addr),
         token: this.token,
         isBinary: this.isBinary,
-        mode: this.streamMode
+        mode: this.streamMode,
+        maxReconnectAttempts: this.maxReconnectAttempts,
+        maxAuthAttempts: this.maxAuthAttempts
       });
 
       // Start connection timeout timer
@@ -301,10 +314,18 @@ export abstract class BaseStateStream {
         break;
       case 'STATUS_UPDATE':
         if (event.connection) {
-          this.updateStatusComponent('connection', { status: event.connection });
+          const patch: Partial<typeof this._status.connection> = {
+            status: event.connection,
+            attempts: event.connection === ConnectionStatus.RECONNECTING ? event.connectionAttempts : undefined
+          };
+          this.updateStatusComponent('connection', patch);
         }
         if (event.auth) {
-          this.updateStatusComponent('auth', { status: event.auth });
+          const patch: Partial<typeof this._status.auth> = {
+            status: event.auth,
+            attempts: event.auth === AuthStatus.REAUTHENTICATING ? event.authAttempts : undefined
+          };
+          this.updateStatusComponent('auth', patch);
           // In remote mode, reaching AUTHENTICATED means we are RUNNING
           if (event.auth === AuthStatus.AUTHENTICATED) {
             this.updateStatusComponent('main', { status: StreamLifecycle.RUNNING });
@@ -367,8 +388,16 @@ export abstract class BaseStateStream {
    */
   private updateStatusComponent<K extends keyof StreamStatus>(key: K, patch: Partial<StreamStatus[K]>): void {
     const component = this._status[key];
+    const merged = { ...component, ...patch };
+
+    (Object.keys(merged) as Array<keyof typeof merged>).forEach((k) => {
+      if (merged[k] === undefined) {
+        delete merged[k];
+      }
+    });
+
     // Merge patch into the component
-    this._status[key] = { ...component, ...patch } as any;
+    this._status[key] = merged;
 
     // Trigger callback
     if (this.statusCallback) {

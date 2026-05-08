@@ -1,7 +1,7 @@
 import * as protobuf from 'protobufjs';
 import { ProcessedFrame, ProcessedSchemaState, StateStreamErrorCode } from 'StateStream/types/types';
 import { ConnectionStatus, AuthStatus } from 'StateStream/types/types.status';
-import { WorkerCommand, WorkerEvent, StreamMode } from 'StateStream/types/types.internal';
+import { WorkerCommand, WorkerEvent, StreamMode, DEFAULT_MAX_RECONNECT_ATTEMPTS, DEFAULT_MAX_AUTH_ATTEMPTS } from 'StateStream/types/types.internal';
 import type { BSB_Frame } from 'StateStream/types/schema';
 import bundle from 'StateStream/types/bundle.json';
 import { processFrame } from 'StateStream/utils/frame';
@@ -13,8 +13,8 @@ const StateType = root.lookupType('BSB_State.State');
 // Advanced Reconnect Constants
 const AUTH_CODE = 3000;
 const RECONNECT_CODES = new Set<number>([1001, 1006, 1012, 1013, 1014, 3008]);
-const MAX_AUTH_ATTEMPTS = 5;
-const MAX_RECONNECT_ATTEMPTS = 5;
+let maxAuthAttempts = DEFAULT_MAX_AUTH_ATTEMPTS;
+let maxReconnectAttempts = DEFAULT_MAX_RECONNECT_ATTEMPTS;
 
 let socket: WebSocket | null = null;
 let isBinaryMode = true;
@@ -283,29 +283,30 @@ function connect(addr: string, token?: string, isBinary: boolean = true, mode: S
     }
 
     if (e.code === AUTH_CODE && currentMode === 'remote') {
-      if (authRetryCount < MAX_AUTH_ATTEMPTS) {
+      if (authRetryCount < maxAuthAttempts) {
         authRetryCount++;
-        console.warn(`[Worker] Auth failed (3000). Requesting new token... (Attempt ${authRetryCount}/${MAX_AUTH_ATTEMPTS})`);
+        console.warn(`[Worker] Auth failed (3000). Requesting new token... (Attempt ${authRetryCount}/${maxAuthAttempts})`);
         broadcast({ type: 'TOKEN_EXPIRED' });
+        broadcast({ type: 'STATUS_UPDATE', auth: AuthStatus.REAUTHENTICATING, authAttempts: authRetryCount });
       } else {
         broadcast({ type: 'STATUS_UPDATE', auth: AuthStatus.FAILED });
         broadcast({
           type: 'ERROR',
           code: StateStreamErrorCode.AUTH_FAILED,
-          message: `Maximum authentication attempts (${MAX_AUTH_ATTEMPTS}) reached. Please log in again.`
+          message: `Maximum authentication attempts (${maxAuthAttempts}) reached. Please log in again.`
         });
       }
       return;
     }
 
-    if (currentMode === 'remote' && RECONNECT_CODES.has(e.code)) {
-      if (retryCount < MAX_RECONNECT_ATTEMPTS) {
+    if (RECONNECT_CODES.has(e.code)) {
+      if (retryCount < maxReconnectAttempts) {
         retryCount++;
         const delay = Math.min(1000 * retryCount, 5000);
 
-        console.log(`[Worker] Reconnecting (network code: ${e.code}) in ${delay}ms... (Attempt ${retryCount}/${MAX_RECONNECT_ATTEMPTS})`);
+        console.log(`[Worker] Reconnecting (network code: ${e.code}) in ${delay}ms... (Attempt ${retryCount}/${maxReconnectAttempts})`);
 
-        broadcast({ type: 'STATUS_UPDATE', connection: ConnectionStatus.RECONNECTING });
+        broadcast({ type: 'STATUS_UPDATE', connection: ConnectionStatus.RECONNECTING, connectionAttempts: retryCount });
         setTimeout(() => {
           if (activePorts.size > 0 && socket) {
             connect(currentAddr, currentToken, isBinaryMode, currentMode);
@@ -316,7 +317,7 @@ function connect(addr: string, token?: string, isBinary: boolean = true, mode: S
         broadcast({
           type: 'ERROR',
           code: StateStreamErrorCode.RECONNECT_FAILED,
-          message: `Maximum reconnection attempts (${MAX_RECONNECT_ATTEMPTS}) reached. Connection lost.`
+          message: `Maximum reconnection attempts (${maxReconnectAttempts}) reached. Connection lost.`
         });
       }
       return;
@@ -337,6 +338,9 @@ function connect(addr: string, token?: string, isBinary: boolean = true, mode: S
 function handleCommand(cmd: WorkerCommand, port: ClientPort) {
   switch (cmd.type) {
     case 'START':
+      maxAuthAttempts = cmd.maxAuthAttempts ?? DEFAULT_MAX_AUTH_ATTEMPTS;
+      maxReconnectAttempts = cmd.maxReconnectAttempts ?? DEFAULT_MAX_RECONNECT_ATTEMPTS;
+
       activePorts.add(port);
       if (socket && socket.readyState === WebSocket.OPEN && currentAddr === cmd.addr) {
         // Already connected to this address. Just send immediately.
