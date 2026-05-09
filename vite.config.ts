@@ -14,19 +14,33 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: {
-        index: 'src/index.ts'
-      },
+      entry: 'src/index.ts',
       name: 'busylib',
-      formats: ['es', 'cjs']
+      formats: ['es']
     },
     rollupOptions: {
       external: ['openapi-fetch'],
-      output: {
-        globals: {}
+      output: [
+        {
+          format: 'es',
+          preserveModules: true,
+          preserveModulesRoot: 'src',
+          entryFileNames: '[name].js',
+          globals: {}
+        },
+        {
+          format: 'cjs',
+          preserveModules: true,
+          preserveModulesRoot: 'src',
+          entryFileNames: '[name].cjs',
+          globals: {}
+        }
+      ],
+      treeshake: {
+        moduleSideEffects: false
       }
     },
-    minify: true
+    minify: false
   },
   worker: {
     format: 'es',

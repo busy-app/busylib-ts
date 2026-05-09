@@ -172,4 +172,4 @@ class LEDRenderer {
   }
 }
 
-export const LEDRendererInstance = new LEDRenderer();
+export const LEDRendererInstance = /*#__PURE__*/ new LEDRenderer();
