@@ -24,8 +24,7 @@ import {
   DEFAULT_DELAY_RECONNECT
 } from 'StateStream/types/types.internal';
 
-import StateWorker from '../worker/index.worker?worker&inline';
-import StateSharedWorker from '../worker/index.worker?sharedworker&inline';
+import workerDataUrl from 'busy:worker-url';
 import { convertStateUpdate } from 'StateStream/utils/converters';
 
 /**
@@ -299,7 +298,8 @@ export abstract class BaseStateStream {
       this.updateStatusComponent('worker', { status: WorkerStatus.INITIALIZING, lastError: undefined });
 
       if (window.SharedWorker) {
-        const sw = new StateSharedWorker({
+        const sw = new SharedWorker(workerDataUrl, {
+          type: 'module',
           name: workerName
         });
         this.worker = {
@@ -311,7 +311,7 @@ export abstract class BaseStateStream {
         sw.port.start();
       } else {
         // Fallback to Dedicated Worker
-        const dw = new StateWorker();
+        const dw = new Worker(workerDataUrl, { type: 'module' });
         this.worker = {
           port: dw,
           terminate: () => dw.terminate()
