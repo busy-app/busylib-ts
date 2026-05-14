@@ -1,6 +1,6 @@
 import { BSB_State, BSB_Frame } from 'StateStream/types/schema';
 import { Prettify } from 'Global/types.utils';
-import { StreamOptions } from './types.internal';
+import { StreamOptions, DEVICE_EVENT_TYPES } from './types.internal';
 import { StreamStatus } from './types.status';
 
 /**
@@ -93,6 +93,24 @@ export type RemoteState = Prettify<{
   bar_id: string;
   state: ProcessedSchemaState;
 }>;
+
+/**
+ * Device info from remote server events
+ */
+export interface RemoteDevice {
+  id: string;
+  hardware_id: string;
+  name: string | null;
+}
+
+export type DeviceEventType = (typeof DEVICE_EVENT_TYPES)[number];
+
+export interface DeviceEvent {
+  type: DeviceEventType;
+  device: RemoteDevice;
+}
+
+export type DeviceEventCallback = (event: DeviceEvent) => void;
 
 /**
  * Options for local device connections

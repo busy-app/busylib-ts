@@ -1,5 +1,7 @@
-import { StateStreamErrorCode, ProcessedSchemaState, RemoteState } from './types';
+import { StateStreamErrorCode, ProcessedSchemaState, RemoteState, DeviceEvent } from './types';
 import { ConnectionStatus, AuthStatus, WorkerStatus } from 'StateStream/types/types.status';
+
+export const DEVICE_EVENT_TYPES = ['device.linked', 'device.name-updated', 'device.unlinked'] as const;
 
 /**
  * Generic container for status and error, reused across components
@@ -48,6 +50,7 @@ export type WorkerEvent =
   | { type: 'ERROR'; code: StateStreamErrorCode; message: string; data?: any }
   | { type: 'RAW_DATA'; data: Uint8Array | string }
   | { type: 'DATA'; data: ProcessedSchemaState | RemoteState }
+  | { type: 'DEVICE_EVENT'; data: DeviceEvent }
   | {
       type: 'STATUS_UPDATE';
       connection?: ConnectionStatus;

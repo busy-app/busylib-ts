@@ -3,6 +3,7 @@ import {
   RawDataCallback,
   ErrorCallback,
   StatusCallback,
+  DeviceEventCallback,
   ProcessedState,
   ProcessedSchemaState,
   StateUpdateKey,
@@ -65,6 +66,7 @@ export abstract class BaseStateStream {
   protected rawDataCallback?: RawDataCallback;
   protected errorCallback?: ErrorCallback;
   protected statusCallback?: StatusCallback;
+  protected deviceEventCallback?: DeviceEventCallback;
 
   constructor(options: StreamOptions, config?: StreamConfig) {
     this.addr = options.addr || '';
@@ -124,7 +126,7 @@ export abstract class BaseStateStream {
     rawDataCallback?: RawDataCallback;
     errorCallback?: ErrorCallback;
     statusCallback?: StatusCallback;
-  }): void {
+  } = {}): void {
     if (this._status.main.status === StreamLifecycle.STARTING || this._status.main.status === StreamLifecycle.RUNNING) {
       const error = new StateStreamError(StateStreamErrorCode.STREAM_ALREADY_STARTED, 'StateStream is already running. Call stop() before starting again.');
 
@@ -225,6 +227,7 @@ export abstract class BaseStateStream {
     this.rawDataCallback = undefined;
     this.errorCallback = undefined;
     this.statusCallback = undefined;
+    this.deviceEventCallback = undefined;
   }
 
   /**
@@ -354,6 +357,11 @@ export abstract class BaseStateStream {
         break;
       case 'DISCONNECTED':
         this.updateStatusComponent('connection', { status: ConnectionStatus.DISCONNECTED });
+        break;
+      case 'DEVICE_EVENT':
+        if (this.deviceEventCallback) {
+          this.deviceEventCallback(event.data);
+        }
         break;
     }
   }

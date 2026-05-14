@@ -1,4 +1,14 @@
-import { RemoteStreamOptions, StateStreamError, StateStreamErrorCode, RemoteStreamConfig } from 'StateStream/types/types';
+import {
+  RemoteStreamOptions,
+  StateStreamError,
+  StateStreamErrorCode,
+  RemoteStreamConfig,
+  DeviceEventCallback,
+  DataCallback,
+  RawDataCallback,
+  ErrorCallback,
+  StatusCallback
+} from 'StateStream/types/types';
 import { BaseStateStream } from 'StateStream/classes/BaseStateStream';
 import { StreamMode, DEFAULT_MAX_AUTH_ATTEMPTS } from 'StateStream/types/types.internal';
 
@@ -21,6 +31,20 @@ export class RemoteStateStream extends BaseStateStream {
     );
     this.tokenProvider = options.tokenProvider;
     this.maxAuthAttempts = config?.maxAuthAttempts ?? DEFAULT_MAX_AUTH_ATTEMPTS;
+  }
+
+  public start({
+    deviceEventCallback,
+    ...rest
+  }: {
+    dataCallback?: DataCallback;
+    rawDataCallback?: RawDataCallback;
+    errorCallback?: ErrorCallback;
+    statusCallback?: StatusCallback;
+    deviceEventCallback?: DeviceEventCallback;
+  } = {}): void {
+    this.deviceEventCallback = deviceEventCallback;
+    super.start(rest);
   }
 
   /**

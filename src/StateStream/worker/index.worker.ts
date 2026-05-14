@@ -1,5 +1,6 @@
 import * as protobuf from 'protobufjs';
-import { ProcessedFrame, ProcessedSchemaState, StateStreamErrorCode } from 'StateStream/types/types';
+import { ProcessedFrame, ProcessedSchemaState, StateStreamErrorCode, DeviceEventType } from 'StateStream/types/types';
+import { DEVICE_EVENT_TYPES } from 'StateStream/types/types.internal';
 import { ConnectionStatus, AuthStatus } from 'StateStream/types/types.status';
 import {
   WorkerCommand,
@@ -159,10 +160,18 @@ function connect(addr: string, token?: string, isBinary: boolean = true, mode: S
               rawData = binaryData;
             }
           } else {
-            // JSON mode: handle JSON { bar_id, state }
             const json = JSON.parse(event.data);
-            barId = json.bar_id || json.barId;
             rawData = event.data;
+
+            // Device lifecycle events
+            if (DEVICE_EVENT_TYPES.includes(json.type as DeviceEventType)) {
+              broadcast({ type: 'RAW_DATA', data: rawData });
+              broadcast({ type: 'DEVICE_EVENT', data: json });
+              return;
+            }
+
+            // JSON protobuf envelope: { type: 'protobuf', bar_id, state } or legacy { bar_id, state }
+            barId = json.bar_id || json.barId;
 
             if (json.state) {
               if (typeof json.state === 'string') {
