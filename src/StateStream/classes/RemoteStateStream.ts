@@ -42,9 +42,9 @@ export class RemoteStateStream extends BaseStateStream {
     errorCallback?: ErrorCallback;
     statusCallback?: StatusCallback;
     deviceEventCallback?: DeviceEventCallback;
-  } = {}): void {
+  } = {}): Promise<void> {
     this.deviceEventCallback = deviceEventCallback;
-    super.start(rest);
+    return super.start(rest);
   }
 
   /**

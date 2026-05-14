@@ -46,6 +46,7 @@ export type WorkerCommand =
 export type WorkerEvent =
   | { type: 'CONNECTED' }
   | { type: 'DISCONNECTED' }
+  | { type: 'STOPPED'; wasClean: boolean; error?: string }
   | { type: 'TOKEN_EXPIRED' }
   | { type: 'ERROR'; code: StateStreamErrorCode; message: string; data?: any }
   | { type: 'RAW_DATA'; data: Uint8Array | string }

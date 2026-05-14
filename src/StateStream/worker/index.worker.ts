@@ -75,15 +75,27 @@ function sendSubscriptions() {
 /**
  * Stop socket
  */
-function stopSocket() {
+function stopSocket(intentional = false) {
   if (socket) {
     socket.onopen = null;
     socket.onmessage = null;
     socket.onerror = null;
-    socket.onclose = null;
+    socket.onclose = intentional ? handleIntentionalClose : null;
 
     socket.close();
-    socket = null;
+    if (!intentional) {
+      socket = null;
+    }
+  }
+}
+
+function handleIntentionalClose(e: CloseEvent) {
+  socket = null;
+  broadcast({ type: 'STATUS_UPDATE', connection: ConnectionStatus.DISCONNECTED });
+  if (e.wasClean) {
+    broadcast({ type: 'STOPPED', wasClean: true });
+  } else {
+    broadcast({ type: 'STOPPED', wasClean: false, error: `Connection closed unexpectedly (code: ${e.code})` });
   }
 }
 
@@ -377,10 +389,18 @@ function handleCommand(cmd: WorkerCommand, port: ClientPort) {
         }
       }
 
-      port.postMessage({ type: 'STATUS_UPDATE', connection: ConnectionStatus.DISCONNECTED });
-
       if (activePorts.size === 0) {
-        stopAndCleanup();
+        if (socket && socket.readyState === WebSocket.OPEN) {
+          // handleIntentionalClose will send STATUS_UPDATE + STOPPED
+          stopSocket(true);
+        } else {
+          stopAndCleanup();
+          port.postMessage({ type: 'STATUS_UPDATE', connection: ConnectionStatus.DISCONNECTED });
+          port.postMessage({ type: 'STOPPED', wasClean: true });
+        }
+      } else {
+        port.postMessage({ type: 'STATUS_UPDATE', connection: ConnectionStatus.DISCONNECTED });
+        port.postMessage({ type: 'STOPPED', wasClean: true });
       }
       break;
 

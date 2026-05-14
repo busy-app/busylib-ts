@@ -53,6 +53,11 @@ export abstract class BaseStateStream {
   private connectionTimer: ReturnType<typeof setTimeout> | null = null;
   private dataTimer: ReturnType<typeof setTimeout> | null = null;
 
+  private startResolve?: () => void;
+  private startReject?: (err: StateStreamError) => void;
+  private stopResolve?: () => void;
+  private stopReject?: (err: StateStreamError) => void;
+
   private _status: StreamStatus;
   public get status(): StreamStatus {
     return this._status;
@@ -126,7 +131,7 @@ export abstract class BaseStateStream {
     rawDataCallback?: RawDataCallback;
     errorCallback?: ErrorCallback;
     statusCallback?: StatusCallback;
-  } = {}): void {
+  } = {}): Promise<void> {
     if (this._status.main.status === StreamLifecycle.STARTING || this._status.main.status === StreamLifecycle.RUNNING) {
       const error = new StateStreamError(StateStreamErrorCode.STREAM_ALREADY_STARTED, 'StateStream is already running. Call stop() before starting again.');
 
@@ -139,10 +144,8 @@ export abstract class BaseStateStream {
 
       if (errorCallback) {
         errorCallback(error);
-      } else {
-        throw error;
       }
-      return;
+      return Promise.reject(error);
     }
 
     this.dataCallback = dataCallback;
@@ -153,55 +156,72 @@ export abstract class BaseStateStream {
     // Trigger immediate status update to STARTING
     this.updateStatusComponent('main', { status: StreamLifecycle.STARTING, lastError: undefined });
 
-    try {
-      this.ensureWorker();
+    return new Promise<void>((resolve, reject) => {
+      this.startResolve = resolve;
+      this.startReject = reject;
 
-      // Tell worker to connect
-      this.sendCommand({
-        type: 'START',
-        addr: this.normalizeUrl(this.addr),
-        token: this.token,
-        isBinary: this.isBinary,
-        mode: this.streamMode,
-        maxReconnectAttempts: this.maxReconnectAttempts,
-        maxAuthAttempts: this.maxAuthAttempts,
-        reconnectDelay: this.reconnectDelay
-      });
+      try {
+        this.ensureWorker();
 
-      // Start connection timeout timer
-      this.clearConnectionTimer();
-      this.connectionTimer = setTimeout(() => {
-        const error = new StateStreamError(StateStreamErrorCode.CONNECTION_TIMEOUT, `Connection timed out after ${this.connectTimeout}ms`);
-        this.mapErrorToStatus(error);
+        // Tell worker to connect
+        this.sendCommand({
+          type: 'START',
+          addr: this.normalizeUrl(this.addr),
+          token: this.token,
+          isBinary: this.isBinary,
+          mode: this.streamMode,
+          maxReconnectAttempts: this.maxReconnectAttempts,
+          maxAuthAttempts: this.maxAuthAttempts,
+          reconnectDelay: this.reconnectDelay
+        });
+
+        // Start connection timeout timer
+        this.clearConnectionTimer();
+        this.connectionTimer = setTimeout(() => {
+          const error = new StateStreamError(StateStreamErrorCode.CONNECTION_TIMEOUT, `Connection timed out after ${this.connectTimeout}ms`);
+          this.mapErrorToStatus(error);
+          if (this.errorCallback) {
+            this.errorCallback(error);
+          }
+          this.startReject?.(error);
+          this.startResolve = undefined;
+          this.startReject = undefined;
+          this.stop();
+        }, this.connectTimeout);
+      } catch (e) {
+        const error = e instanceof StateStreamError ? e : new StateStreamError(StateStreamErrorCode.UNKNOWN_ERROR, String(e));
         if (this.errorCallback) {
           this.errorCallback(error);
         }
-        this.stop();
-      }, this.connectTimeout);
-    } catch (e) {
-      const error = e instanceof StateStreamError ? e : new StateStreamError(StateStreamErrorCode.UNKNOWN_ERROR, String(e));
-      if (this.errorCallback) {
-        this.errorCallback(error);
+        this.startResolve = undefined;
+        this.startReject = undefined;
+        reject(error);
       }
-    }
+    });
   }
 
   /**
    * Stops the stream connection.
    */
-  public stop(): void {
+  public stop(): Promise<void> {
     this.clearConnectionTimer();
     this.clearDataTimer();
 
     if (this._status.main.status === StreamLifecycle.IDLE || this._status.main.status === StreamLifecycle.STOPPED) {
-      return;
+      return Promise.resolve();
     }
 
     this.updateStatusComponent('main', { status: StreamLifecycle.STOPPED });
     this.updateStatusComponent('connection', { status: ConnectionStatus.DISCONNECTED });
+    this.updateStatusComponent('auth', { status: AuthStatus.UNAUTHENTICATED });
+    this.updateStatusComponent('data', { status: DataStatus.NONE });
 
-    this.sendCommand({ type: 'STOP' });
-    this.clearCallbacks();
+    return new Promise<void>((resolve, reject) => {
+      this.stopResolve = resolve;
+      this.stopReject = reject;
+      this.sendCommand({ type: 'STOP' });
+      this.clearCallbacks();
+    });
   }
 
   /**
@@ -333,9 +353,11 @@ export abstract class BaseStateStream {
             attempts: event.auth === AuthStatus.REAUTHENTICATING ? event.authAttempts : undefined
           };
           this.updateStatusComponent('auth', patch);
-          // In remote mode, reaching AUTHENTICATED means we are RUNNING
           if (event.auth === AuthStatus.AUTHENTICATED) {
             this.updateStatusComponent('main', { status: StreamLifecycle.RUNNING });
+            this.startResolve?.();
+            this.startResolve = undefined;
+            this.startReject = undefined;
           }
         }
         break;
@@ -349,6 +371,22 @@ export abstract class BaseStateStream {
         if (this.errorCallback) {
           this.errorCallback(error);
         }
+
+        if (this.startReject) {
+          this.startReject(error);
+          this.startResolve = undefined;
+          this.startReject = undefined;
+        }
+        break;
+      }
+      case 'STOPPED': {
+        if (event.wasClean) {
+          this.stopResolve?.();
+        } else {
+          this.stopReject?.(new StateStreamError(StateStreamErrorCode.CONNECTION_LOST, event.error ?? 'Connection closed uncleanly'));
+        }
+        this.stopResolve = undefined;
+        this.stopReject = undefined;
         break;
       }
       case 'TOKEN_EXPIRED':
