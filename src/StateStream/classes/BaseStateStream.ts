@@ -5,9 +5,8 @@ import {
   StatusCallback,
   DeviceEventCallback,
   ProcessedState,
-  ProcessedSchemaState,
+  ProcessedUpdate,
   StateUpdateKey,
-  RemoteState,
   StateStreamError,
   StateStreamErrorCode,
   StreamConfig
@@ -18,6 +17,8 @@ import {
   WorkerEvent,
   StreamMode,
   StreamOptions,
+  RawSchemaState,
+  RawRemoteState,
   DEFAULT_MAX_RECONNECT_ATTEMPTS,
   DEFAULT_MAX_AUTH_ATTEMPTS,
   DEFAULT_DELAY_RECONNECT
@@ -25,6 +26,7 @@ import {
 
 import StateWorker from '../worker/index.worker?worker&inline';
 import StateSharedWorker from '../worker/index.worker?sharedworker&inline';
+import { convertStateUpdate } from 'StateStream/utils/converters';
 
 /**
  * Interface to unify SharedWorker and DedicatedWorker handling
@@ -497,8 +499,8 @@ export abstract class BaseStateStream {
    * Normalizes the raw state from the worker into a ProcessedState for the UI.
    * Extracts the 'state' key for each update and merges bar_id for remote mode.
    */
-  private normalizeState(payload: ProcessedSchemaState | RemoteState): ProcessedState {
-    let baseState: ProcessedSchemaState;
+  private normalizeState(payload: RawSchemaState | RawRemoteState): ProcessedState {
+    let baseState: RawSchemaState;
     let barId: string | undefined;
 
     if ('bar_id' in payload && 'state' in payload) {
@@ -510,20 +512,15 @@ export abstract class BaseStateStream {
       baseState = payload;
     }
 
-    // Process updates to add the 'state' key non-destructively
-    let normalizedUpdates = baseState.updates;
-    if (normalizedUpdates) {
-      normalizedUpdates = normalizedUpdates.map((update) => {
-        // Dynamically find the first key that has a value (this will be our 'state')
-        const stateKey = Object.keys(update).find((key) => update[key as keyof typeof update] != null) as StateUpdateKey | undefined;
-
-        // Ensure we clone deep enough or reconstruct correctly without overwriting internal array ref
-        return {
-          ...update,
-          state: stateKey
-        };
-      });
-    }
+    // Process updates: map enum fields to strings and add the 'state' key non-destructively
+    const normalizedUpdates = baseState.updates?.map((update) => {
+      // Dynamically find the first key that has a value (this will be our 'state')
+      const stateKey = Object.keys(update).find((key) => update[key as keyof typeof update] != null) as StateUpdateKey | undefined;
+      return {
+        ...convertStateUpdate(update),
+        state: stateKey
+      } as ProcessedUpdate;
+    });
 
     return {
       ...baseState,

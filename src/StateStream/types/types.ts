@@ -2,6 +2,7 @@ import { BSB_State, BSB_Frame } from 'StateStream/types/schema';
 import { Prettify } from 'Global/types.utils';
 import { StreamOptions, DEVICE_EVENT_TYPES } from './types.internal';
 import { StreamStatus } from './types.status';
+import type { ConvertedStateUpdate } from 'StateStream/utils/converters/types';
 
 /**
  * Error codes for StateStream
@@ -58,11 +59,10 @@ export type ProcessedFrame = Prettify<
 >;
 
 /**
- * StateUpdate with an optional 'state' key identifying the active module.
- * Also uses our ProcessedFrame for the 'frame' field.
+ * StateUpdate with mapped enum fields and an optional 'state' key identifying the active module.
  */
 export type ProcessedUpdate = Prettify<
-  Omit<BSB_State.StateUpdate, 'frame'> & {
+  Omit<ConvertedStateUpdate, 'frame'> & {
     state?: StateUpdateKey;
     frame?: ProcessedFrame | null;
   }

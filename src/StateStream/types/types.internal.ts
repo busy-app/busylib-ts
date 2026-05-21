@@ -1,4 +1,18 @@
-import { StateStreamErrorCode, ProcessedSchemaState, RemoteState, DeviceEvent } from './types';
+import { BSB_State } from 'StateStream/types/schema';
+import { Prettify } from 'Global/types.utils';
+import { StateStreamErrorCode, DeviceEvent } from './types';
+
+export type RawSchemaState = Prettify<
+  Omit<BSB_State.State, 'updates'> & {
+    updates?: BSB_State.StateUpdate[] | null;
+  }
+>;
+
+export type RawRemoteState = Prettify<{
+  bar_id: string;
+  state: RawSchemaState;
+}>;
+
 import { ConnectionStatus, AuthStatus, WorkerStatus } from 'StateStream/types/types.status';
 
 export const DEVICE_EVENT_TYPES = ['device.linked', 'device.name-updated', 'device.unlinked'] as const;
@@ -50,7 +64,7 @@ export type WorkerEvent =
   | { type: 'TOKEN_EXPIRED' }
   | { type: 'ERROR'; code: StateStreamErrorCode; message: string; data?: any }
   | { type: 'RAW_DATA'; data: Uint8Array | string }
-  | { type: 'DATA'; data: ProcessedSchemaState | RemoteState }
+  | { type: 'DATA'; data: RawSchemaState | RawRemoteState }
   | { type: 'DEVICE_EVENT'; data: DeviceEvent }
   | {
       type: 'STATUS_UPDATE';

@@ -1,6 +1,6 @@
 import * as protobuf from 'protobufjs';
-import { ProcessedFrame, ProcessedSchemaState, StateStreamErrorCode, DeviceEventType } from 'StateStream/types/types';
-import { DEVICE_EVENT_TYPES } from 'StateStream/types/types.internal';
+import { StateStreamErrorCode, DeviceEventType, ProcessedFrame } from 'StateStream/types/types';
+import { RawSchemaState, DEVICE_EVENT_TYPES } from 'StateStream/types/types.internal';
 import { ConnectionStatus, AuthStatus } from 'StateStream/types/types.status';
 import {
   WorkerCommand,
@@ -210,7 +210,7 @@ function connect(addr: string, token?: string, isBinary: boolean = true, mode: S
               bytes: Uint8Array,
               enums: Number,
               defaults: true
-            }) as unknown as ProcessedSchemaState;
+            }) as unknown as RawSchemaState;
 
             // Handle Server-side errors from Protobuf
             if (decodedState.error) {
