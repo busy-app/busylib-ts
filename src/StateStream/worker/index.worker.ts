@@ -29,6 +29,7 @@ let isBinaryMode = true;
 let currentMode: StreamMode = 'local';
 let currentToken: string | undefined = undefined;
 let currentAddr: string = '';
+let currentWorkerName: string | undefined = undefined;
 let retryCount = 0;
 let authRetryCount = 0;
 let isAuthReported = false;
@@ -366,6 +367,7 @@ function handleCommand(cmd: WorkerCommand, port: ClientPort) {
       maxAuthAttempts = cmd.maxAuthAttempts ?? DEFAULT_MAX_AUTH_ATTEMPTS;
       maxReconnectAttempts = cmd.maxReconnectAttempts ?? DEFAULT_MAX_RECONNECT_ATTEMPTS;
       reconnectDelay = cmd.reconnectDelay ?? DEFAULT_DELAY_RECONNECT;
+      currentWorkerName = cmd.workerName;
 
       activePorts.add(port);
       if (socket && socket.readyState === WebSocket.OPEN && currentAddr === cmd.addr) {
@@ -447,6 +449,10 @@ function handleCommand(cmd: WorkerCommand, port: ClientPort) {
           }
         }
       }
+      break;
+
+    case 'GET_WORKER_NAME':
+      port.postMessage({ type: 'WORKER_NAME', workerName: currentWorkerName });
       break;
   }
 }

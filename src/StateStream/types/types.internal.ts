@@ -48,11 +48,13 @@ export type WorkerCommand =
       maxReconnectAttempts: number;
       maxAuthAttempts: number;
       reconnectDelay: number;
+      workerName?: string;
     }
   | { type: 'STOP' }
   | { type: 'UPDATE_TOKEN'; token: string }
   | { type: 'SUBSCRIBE'; guid: string }
-  | { type: 'UNSUBSCRIBE'; guid: string };
+  | { type: 'UNSUBSCRIBE'; guid: string }
+  | { type: 'GET_WORKER_NAME' };
 
 /**
  * Worker Events (Sent from worker to main thread)
@@ -66,6 +68,7 @@ export type WorkerEvent =
   | { type: 'RAW_DATA'; data: Uint8Array | string }
   | { type: 'DATA'; data: RawSchemaState | RawRemoteState }
   | { type: 'DEVICE_EVENT'; data: DeviceEvent }
+  | { type: 'WORKER_NAME'; workerName: string | undefined }
   | {
       type: 'STATUS_UPDATE';
       connection?: ConnectionStatus;

@@ -135,6 +135,7 @@ export interface StreamConfig {
   dataTimeout?: number;
   maxReconnectAttempts?: number;
   reconnectDelay?: number;
+  workerName?: string;
 }
 
 export interface RemoteStreamConfig extends StreamConfig {

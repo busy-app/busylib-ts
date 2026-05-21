@@ -49,6 +49,7 @@ export abstract class BaseStateStream {
   protected maxReconnectAttempts: number;
   protected maxAuthAttempts: number;
   protected reconnectDelay: number;
+  protected workerName?: string;
   protected abstract streamMode: StreamMode;
 
   private worker: StreamWorker | null = null;
@@ -59,6 +60,7 @@ export abstract class BaseStateStream {
   private startReject?: (err: StateStreamError) => void;
   private stopResolve?: () => void;
   private stopReject?: (err: StateStreamError) => void;
+  private workerNameResolve?: (name: string | undefined) => void;
 
   private _status: StreamStatus;
   public get status(): StreamStatus {
@@ -79,6 +81,7 @@ export abstract class BaseStateStream {
     this.addr = options.addr || '';
     this.token = options.token;
     this.isBinary = options.isBinary ?? true;
+    this.workerName = config?.workerName;
     this.connectTimeout = config?.timeout ?? 5000;
     this.dataTimeout = config?.dataTimeout ?? 15000;
     this.maxReconnectAttempts = config?.maxReconnectAttempts ?? DEFAULT_MAX_RECONNECT_ATTEMPTS;
@@ -174,7 +177,8 @@ export abstract class BaseStateStream {
           mode: this.streamMode,
           maxReconnectAttempts: this.maxReconnectAttempts,
           maxAuthAttempts: this.maxAuthAttempts,
-          reconnectDelay: this.reconnectDelay
+          reconnectDelay: this.reconnectDelay,
+          workerName: this.workerName
         });
 
         // Start connection timeout timer
@@ -261,6 +265,16 @@ export abstract class BaseStateStream {
   }
 
   /**
+   * Requests the worker name stored in the worker and returns it as a Promise.
+   */
+  public getWorkerName(): Promise<string | undefined> {
+    return new Promise((resolve) => {
+      this.workerNameResolve = resolve;
+      this.sendCommand({ type: 'GET_WORKER_NAME' });
+    });
+  }
+
+  /**
    * Subclasses must provide their own URL normalization.
    */
   protected abstract normalizeUrl(addr: string): string;
@@ -277,8 +291,9 @@ export abstract class BaseStateStream {
   private ensureWorker(): void {
     if (this.worker || typeof window === 'undefined') return;
 
-    // Use btoa(addr) as name to share connection across tabs for the same device
-    const workerName = btoa(this.addr);
+    // Use provided workerName or fall back to btoa(addr) to share connection across tabs for the same device
+    this.workerName ??= btoa(this.addr);
+    const workerName = this.workerName;
 
     try {
       this.updateStatusComponent('worker', { status: WorkerStatus.INITIALIZING, lastError: undefined });
@@ -402,6 +417,10 @@ export abstract class BaseStateStream {
         if (this.deviceEventCallback) {
           this.deviceEventCallback(event.data);
         }
+        break;
+      case 'WORKER_NAME':
+        this.workerNameResolve?.(event.workerName);
+        this.workerNameResolve = undefined;
         break;
     }
   }
