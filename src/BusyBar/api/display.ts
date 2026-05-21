@@ -1,11 +1,17 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
 import type { TimeoutOptions, DisplayElements, ClearDisplayQuery, ScreenQuery } from 'BusyBar/types';
+import { Display } from 'BusyBar/types';
+import { blobToUint8Array, bgrToRgba, getDisplayDimensions, convertL4toRGBA } from 'Global/utils/frameData';
 
 export interface DrawParams extends TimeoutOptions, DisplayElements {}
 
 export interface ClearParams extends TimeoutOptions, Partial<ClearDisplayQuery> {}
 
 export interface GetScreenFrameParams extends TimeoutOptions, ScreenQuery {}
+
+export type GetScreenFrameOptions = { dataType: 'binary'; format?: 'raw' | 'rgba' } | { dataType?: 'blob'; format?: never };
+
+export type GetScreenFrameResult<T extends GetScreenFrameOptions | undefined> = T extends { dataType: 'binary' } ? Uint8Array | undefined : Blob | undefined;
 
 type Brightness = number | 'auto';
 export interface BrightnessParams extends TimeoutOptions {
@@ -56,7 +62,11 @@ async function clear(client: BusyBarClient, params?: ClearParams) {
   return data;
 }
 
-async function getScreenFrame(client: BusyBarClient, params: GetScreenFrameParams) {
+async function getScreenFrame<T extends GetScreenFrameOptions | undefined>(
+  client: BusyBarClient,
+  params: GetScreenFrameParams,
+  options?: T
+): Promise<GetScreenFrameResult<T>> {
   const { display, timeout } = params;
 
   const { data, error } = await client.withTimeout(
@@ -77,7 +87,27 @@ async function getScreenFrame(client: BusyBarClient, params: GetScreenFrameParam
     throw error;
   }
 
-  return data;
+  if (!data) {
+    return undefined as GetScreenFrameResult<T>;
+  }
+
+  if (options?.dataType === 'binary') {
+    const raw = await blobToUint8Array(data);
+
+    if (options.format === 'rgba') {
+      const { width, height } = getDisplayDimensions(display as Display);
+
+      if (display === Display.BACK) {
+        return new Uint8Array(convertL4toRGBA(raw, width, height).buffer) as GetScreenFrameResult<T>;
+      }
+
+      return bgrToRgba(raw, width, height) as GetScreenFrameResult<T>;
+    }
+
+    return raw as GetScreenFrameResult<T>;
+  }
+
+  return data as GetScreenFrameResult<T>;
 }
 
 async function getDisplayBrightness(client: BusyBarClient, params?: TimeoutOptions) {

@@ -1,4 +1,7 @@
 import type { BSB_Frame } from 'StateStream/types/schema';
+import { convertL4toRGBA, convertL8toRGBA, convertRGB888toRGBA } from 'Global/utils/frameData';
+
+export { convertL4toRGBA, convertL8toRGBA, convertRGB888toRGBA };
 
 /**
  * Decompresses Run-Length Encoded (RLE) data.
@@ -65,77 +68,6 @@ export async function decompressDeflate(data: Uint8Array): Promise<Uint8Array> {
   }
 }
 
-/**
- * Converts 4-bit grayscale (L4) to RGBA (Uint8ClampedArray).
- */
-export function convertL4toRGBA(data: Uint8Array, width: number, height: number): Uint8ClampedArray {
-  const rgba = new Uint8ClampedArray(width * height * 4);
-  let pixelIdx = 0;
-
-  for (let i = 0; i < data.length; i++) {
-    const byte = data[i]!;
-
-    // Each byte has 2 pixels (lower 4 bits, then upper 4 bits)
-    const p1 = (byte & 0x0f) * 17;
-    const p2 = ((byte >> 4) & 0x0f) * 17;
-
-    const pixels = [p1, p2];
-
-    for (const gray of pixels) {
-      if (pixelIdx < width * height) {
-        const offset = pixelIdx * 4;
-        rgba[offset] = gray; // R
-        rgba[offset + 1] = gray; // G
-        rgba[offset + 2] = gray; // B
-        rgba[offset + 3] = 255; // A
-        pixelIdx++;
-      }
-    }
-  }
-
-  return rgba;
-}
-
-/**
- * Converts 8-bit grayscale (L8) to RGBA.
- */
-export function convertL8toRGBA(data: Uint8Array, width: number, height: number): Uint8ClampedArray {
-  const rgba = new Uint8ClampedArray(width * height * 4);
-  const len = Math.min(data.length, width * height);
-
-  for (let i = 0; i < len; i++) {
-    const gray = data[i]!;
-    const offset = i * 4;
-    rgba[offset] = gray;
-    rgba[offset + 1] = gray;
-    rgba[offset + 2] = gray;
-    rgba[offset + 3] = 255;
-  }
-
-  return rgba;
-}
-
-/**
- * Converts RGB888 to RGBA.
- */
-export function convertRGB888toRGBA(data: Uint8Array, width: number, height: number): Uint8ClampedArray {
-  const rgba = new Uint8ClampedArray(width * height * 4);
-  const pixelsCount = width * height;
-
-  for (let i = 0; i < pixelsCount; i++) {
-    const srcOffset = i * 3;
-    const dstOffset = i * 4;
-
-    if (srcOffset + 2 < data.length) {
-      rgba[dstOffset] = data[srcOffset + 2]!; // R
-      rgba[dstOffset + 1] = data[srcOffset + 1]!; // G
-      rgba[dstOffset + 2] = data[srcOffset]!; // B
-      rgba[dstOffset + 3] = 255; // A
-    }
-  }
-
-  return rgba;
-}
 
 /**
  * Processes a frame: decompressing and converting to RGBA.

@@ -16,6 +16,7 @@ export type DisplayDrawParams = Display.DrawParams;
 export type DisplayClearParams = Display.ClearParams;
 export type DisplayBrightnessParams = Display.BrightnessParams;
 export type ScreenFrameGetParams = Display.GetScreenFrameParams;
+export type ScreenFrameGetOptions = Display.GetScreenFrameOptions;
 
 export type AudioPlayParams = Audio.AudioPlayParams;
 export type AudioVolumeParams = Audio.AudioVolumeParams;

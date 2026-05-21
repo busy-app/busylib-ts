@@ -5,6 +5,8 @@ import {
   DrawParams,
   ClearParams,
   GetScreenFrameParams,
+  GetScreenFrameOptions,
+  GetScreenFrameResult,
   getDisplayBrightness as getDisplayBrightnessApi,
   setDisplayBrightness as setDisplayBrightnessApi,
   BrightnessParams
@@ -46,10 +48,13 @@ export class DisplayMethods {
    * @param {GetScreenFrameParams} params - Parameters for the frame request.
    *   @param {number} params.display - Type of the display (Front = 0, Back = 1).
    *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @param {GetScreenFrameOptions} [options] - Options for the response format.
+   *   @param {'blob' | 'arrayBuffer'} [options.dataType='blob'] - Data type of the response.
    * @returns {Promise<Blob>} A promise that resolves to the screen frame as a Blob.
+   * @returns {Promise<ArrayBuffer>} A promise that resolves to the screen frame as an ArrayBuffer when dataType is 'arrayBuffer'.
    */
-  async DisplayScreenFrameGet(this: BusyBar, params: GetScreenFrameParams): Promise<Blob> {
-    return (await getScreenFrameApi(this.apiClient, params)) as Blob;
+  async DisplayScreenFrameGet<T extends GetScreenFrameOptions | undefined>(this: BusyBar, params: GetScreenFrameParams, options?: T): Promise<GetScreenFrameResult<T>> {
+    return getScreenFrameApi(this.apiClient, params, options);
   }
 
   /**
