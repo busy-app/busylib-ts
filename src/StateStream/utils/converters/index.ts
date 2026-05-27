@@ -23,7 +23,7 @@ import {
   convertMatterCommissioningStatus,
   convertBleServiceStatus
 } from './state';
-import { convertUpdateEvent, convertUpdateAction, convertUpdateStatus, convertCheckError } from './update';
+import { convertUpdateEvent, convertUpdateAction, convertUpdateStatus, convertCheckError, convertCheckEvent } from './update';
 
 export function convertPower(power: BSB_State.Power | null | undefined): ConvertedPower | null {
   if (power == null) return null;
@@ -95,6 +95,7 @@ export function convertCheckState(checkState: BSB_Update.CheckState | null | und
   if (checkState == null) return null;
   return {
     ...checkState,
+    event: convertCheckEvent(checkState.event),
     unavailable:
       checkState.unavailable == null
         ? checkState.unavailable

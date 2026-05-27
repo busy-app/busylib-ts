@@ -8,6 +8,7 @@ export type UpdateEvent = NonNullable<UpdateStatusSchema['event']>;
 export type UpdateAction = NonNullable<UpdateStatusSchema['action']>;
 export type UpdateStatusValue = NonNullable<UpdateStatusSchema['status']>;
 export type CheckError = 'not_available' | 'failure' | 'idle';
+export type CheckEvent = 'start' | 'stop' | 'none';
 
 const UPDATE_EVENT_MAP: Record<BSB_Update.UpdateEvent, UpdateEvent> = {
   [BSB_Update.UpdateEvent.SESSION_START]: 'session_start',
@@ -51,6 +52,12 @@ const CHECK_ERROR_MAP: Record<BSB_Update.CheckError, CheckError> = {
   [BSB_Update.CheckError.IDLE]: 'idle'
 };
 
+const CHECK_EVENT_MAP: Record<BSB_Update.CheckEvent, CheckEvent> = {
+  [BSB_Update.CheckEvent.START]: 'start',
+  [BSB_Update.CheckEvent.STOP]: 'stop',
+  [BSB_Update.CheckEvent.NONE]: 'none'
+};
+
 
 export function convertUpdateEvent(value: BSB_Update.UpdateEvent | null | undefined): UpdateEvent | null {
   return convertEnum(UPDATE_EVENT_MAP, value);
@@ -66,4 +73,8 @@ export function convertUpdateStatus(value: BSB_Update.UpdateStatus | null | unde
 
 export function convertCheckError(value: BSB_Update.CheckError | null | undefined): CheckError | null {
   return convertEnum(CHECK_ERROR_MAP, value);
+}
+
+export function convertCheckEvent(value: BSB_Update.CheckEvent | null | undefined): CheckEvent | null {
+  return convertEnum(CHECK_EVENT_MAP, value);
 }

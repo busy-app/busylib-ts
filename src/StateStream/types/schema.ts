@@ -1,611 +1,565 @@
-import Long from "long";
+import Long from 'long';
 /** Namespace BSB_State. */
 export namespace BSB_State {
+  /** Properties of a StateUpdate. */
+  export interface StateUpdate {
+    /** StateUpdate deviceName */
+    deviceName?: BSB_State.DeviceName | null;
 
-    /** Properties of a StateUpdate. */
-    export interface StateUpdate {
+    /** StateUpdate power */
+    power?: BSB_State.Power | null;
 
-        /** StateUpdate deviceName */
-        deviceName?: (BSB_State.DeviceName|null);
+    /** StateUpdate brightness */
+    brightness?: BSB_State.Brightness | null;
 
-        /** StateUpdate power */
-        power?: (BSB_State.Power|null);
+    /** StateUpdate audioVolume */
+    audioVolume?: BSB_State.AudioVolume | null;
 
-        /** StateUpdate brightness */
-        brightness?: (BSB_State.Brightness|null);
+    /** StateUpdate wifi */
+    wifi?: BSB_State.Wifi | null;
 
-        /** StateUpdate audioVolume */
-        audioVolume?: (BSB_State.AudioVolume|null);
+    /** StateUpdate updateState */
+    updateState?: BSB_Update.UpdateState | null;
 
-        /** StateUpdate wifi */
-        wifi?: (BSB_State.Wifi|null);
+    /** StateUpdate updateCheck */
+    updateCheck?: BSB_Update.CheckState | null;
 
-        /** StateUpdate updateState */
-        updateState?: (BSB_Update.UpdateState|null);
+    /** StateUpdate timezone */
+    timezone?: BSB_State.Timezone | null;
 
-        /** StateUpdate updateCheck */
-        updateCheck?: (BSB_Update.CheckState|null);
+    /** StateUpdate matter */
+    matter?: BSB_State.Matter | null;
 
-        /** StateUpdate timezone */
-        timezone?: (BSB_State.Timezone|null);
+    /** StateUpdate frame */
+    frame?: BSB_Frame.Frame | null;
 
-        /** StateUpdate matter */
-        matter?: (BSB_State.Matter|null);
+    /** StateUpdate input */
+    input?: BSB_Input.InputEvent | null;
 
-        /** StateUpdate frame */
-        frame?: (BSB_Frame.Frame|null);
+    /** StateUpdate timer */
+    timer?: BSB_Timer.Timer | null;
 
-        /** StateUpdate input */
-        input?: (BSB_Input.InputEvent|null);
+    /** StateUpdate ble */
+    ble?: BSB_State.Ble.Ble | null;
 
-        /** StateUpdate timer */
-        timer?: (BSB_Timer.Timer|null);
+    /** StateUpdate autoUpdateState */
+    autoUpdateState?: BSB_Update.AutoUpdateState | null;
 
-        /** StateUpdate ble */
-        ble?: (BSB_State.Ble.Ble|null);
+    /** StateUpdate timerProfiles */
+    timerProfiles?: BSB_Timer.Profiles | null;
+  }
 
-        /** StateUpdate autoUpdateState */
-        autoUpdateState?: (BSB_Update.AutoUpdateState|null);
+  /** Properties of a State. */
+  export interface State {
+    /** State timestamp */
+    timestamp?: number | Long | null;
+
+    /** State updates */
+    updates?: BSB_State.StateUpdate[] | null;
+
+    /** State error */
+    error?: BSB_Error.Error | null;
+  }
+
+  /** Properties of a DeviceName. */
+  export interface DeviceName {
+    /** DeviceName name */
+    name?: string | null;
+  }
+
+  /** Properties of a BrightnessAutomatic. */
+  export interface BrightnessAutomatic {}
+
+  /** Properties of a BrightnessManual. */
+  export interface BrightnessManual {
+    /** BrightnessManual brightness */
+    brightness?: number | null;
+  }
+
+  /** Properties of a Brightness. */
+  export interface Brightness {
+    /** Brightness automatic */
+    automatic?: BSB_State.BrightnessAutomatic | null;
+
+    /** Brightness manual */
+    manual?: BSB_State.BrightnessManual | null;
+
+    /** Brightness actualBrightness */
+    actualBrightness?: number | null;
+  }
+
+  /** BatteryStatus enum. */
+  export enum BatteryStatus {
+    DISCHARGING = 0,
+    CHARGING = 1,
+    CHARGED = 2
+  }
+
+  /** Properties of an UnknownPowerState. */
+  export interface UnknownPowerState {}
+
+  /** Properties of a PowerState. */
+  export interface PowerState {
+    /** PowerState batteryStatus */
+    batteryStatus?: BSB_State.BatteryStatus | null;
+
+    /** PowerState batteryChargePercent */
+    batteryChargePercent?: number | null;
+
+    /** PowerState batteryVoltageMv */
+    batteryVoltageMv?: number | null;
+
+    /** PowerState batteryCurrentMa */
+    batteryCurrentMa?: number | null;
+
+    /** PowerState usbVoltageMv */
+    usbVoltageMv?: number | null;
+  }
+
+  /** Properties of a Power. */
+  export interface Power {
+    /** Power unknown */
+    unknown?: BSB_State.UnknownPowerState | null;
+
+    /** Power known */
+    known?: BSB_State.PowerState | null;
+  }
+
+  /** Properties of an AudioVolume. */
+  export interface AudioVolume {
+    /** AudioVolume volume */
+    volume?: number | null;
+  }
+
+  /** WifiConnectionStatus enum. */
+  export enum WifiConnectionStatus {
+    CONNECTED = 0,
+    CONNECTING = 1,
+    DISCONNECTING = 2,
+    RECONNECTING = 3
+  }
+
+  /** WifiSecurity enum. */
+  export enum WifiSecurity {
+    UNKNOWN = 0,
+    OPEN = 1,
+    WPA = 2,
+    WPA2 = 3,
+    WEP = 4,
+    WPA_WPA2 = 5,
+    WPA3 = 6,
+    WPA2_WPA3 = 7
+  }
+
+  /** IpConfigurationMethod enum. */
+  export enum IpConfigurationMethod {
+    DHCP = 0,
+    STATIC = 1
+  }
+
+  /** IpProtocol enum. */
+  export enum IpProtocol {
+    IPV4 = 0,
+    IPV6 = 1
+  }
+
+  /** Properties of a WifiStateUnknown. */
+  export interface WifiStateUnknown {}
+
+  /** Properties of a WifiStateDisconnected. */
+  export interface WifiStateDisconnected {}
+
+  /** Properties of a WifiStateConnected. */
+  export interface WifiStateConnected {
+    /** WifiStateConnected status */
+    status?: BSB_State.WifiConnectionStatus | null;
+
+    /** WifiStateConnected ssid */
+    ssid?: string | null;
+
+    /** WifiStateConnected bssid */
+    bssid?: string | null;
+
+    /** WifiStateConnected channel */
+    channel?: number | null;
+
+    /** WifiStateConnected rssi */
+    rssi?: number | null;
+
+    /** WifiStateConnected security */
+    security?: BSB_State.WifiSecurity | null;
+  }
+
+  /** Properties of an IpAddress. */
+  export interface IpAddress {
+    /** IpAddress protocol */
+    protocol?: BSB_State.IpProtocol | null;
+
+    /** IpAddress method */
+    method?: BSB_State.IpConfigurationMethod | null;
+
+    /** IpAddress address */
+    address?: string | null;
+
+    /** IpAddress gateway */
+    gateway?: string | null;
+
+    /** IpAddress netmask */
+    netmask?: string | null;
+  }
+
+  /** Properties of a Wifi. */
+  export interface Wifi {
+    /** Wifi unknown */
+    unknown?: BSB_State.WifiStateUnknown | null;
+
+    /** Wifi disconnected */
+    disconnected?: BSB_State.WifiStateDisconnected | null;
+
+    /** Wifi connected */
+    connected?: BSB_State.WifiStateConnected | null;
+
+    /** Wifi ipAddresses */
+    ipAddresses?: BSB_State.IpAddress[] | null;
+  }
+
+  /** Properties of a Timezone. */
+  export interface Timezone {
+    /** Timezone name */
+    name?: string | null;
+
+    /** Timezone offset */
+    offset?: number | null;
+
+    /** Timezone abbr */
+    abbr?: string | null;
+  }
+
+  /** MatterCommissioningStatus enum. */
+  export enum MatterCommissioningStatus {
+    NEVER_STARTED = 0,
+    STARTED = 1,
+    COMPLETED_SUCCESSFULLY = 2,
+    FAILED = 3
+  }
+
+  /** Properties of a MatterCommissioningState. */
+  export interface MatterCommissioningState {
+    /** MatterCommissioningState status */
+    status?: BSB_State.MatterCommissioningStatus | null;
+
+    /** MatterCommissioningState timestamp */
+    timestamp?: number | Long | null;
+  }
+
+  /** Properties of a Matter. */
+  export interface Matter {
+    /** Matter fabricCount */
+    fabricCount?: number | null;
+
+    /** Matter state */
+    state?: BSB_State.MatterCommissioningState | null;
+  }
+
+  /** Namespace Ble. */
+  export namespace Ble {
+    /** ServiceStatus enum. */
+    export enum ServiceStatus {
+      RESET = 0,
+      INITIALIZATION = 1,
+      READY = 2,
+      ADVERTISING = 3,
+      CONNECTABLE = 4,
+      CONNECTED = 5,
+      ERROR = 6
     }
 
+    /** Properties of a Ble. */
+    export interface Ble {
+      /** Ble status */
+      status?: BSB_State.Ble.ServiceStatus | null;
 
-    /** Properties of a State. */
-    export interface State {
-
-        /** State timestamp */
-        timestamp?: (number|Long|null);
-
-        /** State updates */
-        updates?: (BSB_State.StateUpdate[]|null);
-
-        /** State error */
-        error?: (BSB_Error.Error|null);
+      /** Ble remoteAddress */
+      remoteAddress?: string | null;
     }
-
-
-    /** Properties of a DeviceName. */
-    export interface DeviceName {
-
-        /** DeviceName name */
-        name?: (string|null);
-    }
-
-
-    /** Properties of a BrightnessAutomatic. */
-    export interface BrightnessAutomatic {
-    }
-
-
-    /** Properties of a BrightnessManual. */
-    export interface BrightnessManual {
-
-        /** BrightnessManual brightness */
-        brightness?: (number|null);
-    }
-
-
-    /** Properties of a Brightness. */
-    export interface Brightness {
-
-        /** Brightness automatic */
-        automatic?: (BSB_State.BrightnessAutomatic|null);
-
-        /** Brightness manual */
-        manual?: (BSB_State.BrightnessManual|null);
-
-        /** Brightness actualBrightness */
-        actualBrightness?: (number|null);
-    }
-
-
-    /** BatteryStatus enum. */
-    export enum BatteryStatus {
-        DISCHARGING = 0,
-        CHARGING = 1,
-        CHARGED = 2
-    }
-
-    /** Properties of an UnknownPowerState. */
-    export interface UnknownPowerState {
-    }
-
-
-    /** Properties of a PowerState. */
-    export interface PowerState {
-
-        /** PowerState batteryStatus */
-        batteryStatus?: (BSB_State.BatteryStatus|null);
-
-        /** PowerState batteryChargePercent */
-        batteryChargePercent?: (number|null);
-
-        /** PowerState batteryVoltageMv */
-        batteryVoltageMv?: (number|null);
-
-        /** PowerState batteryCurrentMa */
-        batteryCurrentMa?: (number|null);
-
-        /** PowerState usbVoltageMv */
-        usbVoltageMv?: (number|null);
-    }
-
-
-    /** Properties of a Power. */
-    export interface Power {
-
-        /** Power unknown */
-        unknown?: (BSB_State.UnknownPowerState|null);
-
-        /** Power known */
-        known?: (BSB_State.PowerState|null);
-    }
-
-
-    /** Properties of an AudioVolume. */
-    export interface AudioVolume {
-
-        /** AudioVolume volume */
-        volume?: (number|null);
-    }
-
-
-    /** WifiConnectionStatus enum. */
-    export enum WifiConnectionStatus {
-        CONNECTED = 0,
-        CONNECTING = 1,
-        DISCONNECTING = 2,
-        RECONNECTING = 3
-    }
-
-    /** WifiSecurity enum. */
-    export enum WifiSecurity {
-        UNKNOWN = 0,
-        OPEN = 1,
-        WPA = 2,
-        WPA2 = 3,
-        WEP = 4,
-        WPA_WPA2 = 5,
-        WPA3 = 6,
-        WPA2_WPA3 = 7
-    }
-
-    /** IpConfigurationMethod enum. */
-    export enum IpConfigurationMethod {
-        DHCP = 0,
-        STATIC = 1
-    }
-
-    /** IpProtocol enum. */
-    export enum IpProtocol {
-        IPV4 = 0,
-        IPV6 = 1
-    }
-
-    /** Properties of a WifiStateUnknown. */
-    export interface WifiStateUnknown {
-    }
-
-
-    /** Properties of a WifiStateDisconnected. */
-    export interface WifiStateDisconnected {
-    }
-
-
-    /** Properties of a WifiStateConnected. */
-    export interface WifiStateConnected {
-
-        /** WifiStateConnected status */
-        status?: (BSB_State.WifiConnectionStatus|null);
-
-        /** WifiStateConnected ssid */
-        ssid?: (string|null);
-
-        /** WifiStateConnected bssid */
-        bssid?: (string|null);
-
-        /** WifiStateConnected channel */
-        channel?: (number|null);
-
-        /** WifiStateConnected rssi */
-        rssi?: (number|null);
-
-        /** WifiStateConnected security */
-        security?: (BSB_State.WifiSecurity|null);
-    }
-
-
-    /** Properties of an IpAddress. */
-    export interface IpAddress {
-
-        /** IpAddress protocol */
-        protocol?: (BSB_State.IpProtocol|null);
-
-        /** IpAddress method */
-        method?: (BSB_State.IpConfigurationMethod|null);
-
-        /** IpAddress address */
-        address?: (string|null);
-
-        /** IpAddress gateway */
-        gateway?: (string|null);
-
-        /** IpAddress netmask */
-        netmask?: (string|null);
-    }
-
-
-    /** Properties of a Wifi. */
-    export interface Wifi {
-
-        /** Wifi unknown */
-        unknown?: (BSB_State.WifiStateUnknown|null);
-
-        /** Wifi disconnected */
-        disconnected?: (BSB_State.WifiStateDisconnected|null);
-
-        /** Wifi connected */
-        connected?: (BSB_State.WifiStateConnected|null);
-
-        /** Wifi ipAddresses */
-        ipAddresses?: (BSB_State.IpAddress[]|null);
-    }
-
-
-    /** Properties of a Timezone. */
-    export interface Timezone {
-
-        /** Timezone name */
-        name?: (string|null);
-
-        /** Timezone offset */
-        offset?: (number|null);
-
-        /** Timezone abbr */
-        abbr?: (string|null);
-    }
-
-
-    /** MatterCommissioningStatus enum. */
-    export enum MatterCommissioningStatus {
-        NEVER_STARTED = 0,
-        STARTED = 1,
-        COMPLETED_SUCCESSFULLY = 2,
-        FAILED = 3
-    }
-
-    /** Properties of a MatterCommissioningState. */
-    export interface MatterCommissioningState {
-
-        /** MatterCommissioningState status */
-        status?: (BSB_State.MatterCommissioningStatus|null);
-
-        /** MatterCommissioningState timestamp */
-        timestamp?: (number|Long|null);
-    }
-
-
-    /** Properties of a Matter. */
-    export interface Matter {
-
-        /** Matter fabricCount */
-        fabricCount?: (number|null);
-
-        /** Matter state */
-        state?: (BSB_State.MatterCommissioningState|null);
-    }
-
-
-    /** Namespace Ble. */
-    export namespace Ble {
-
-        /** ServiceStatus enum. */
-        export enum ServiceStatus {
-            RESET = 0,
-            INITIALIZATION = 1,
-            READY = 2,
-            ADVERTISING = 3,
-            CONNECTABLE = 4,
-            CONNECTED = 5,
-            ERROR = 6
-        }
-
-        /** Properties of a Ble. */
-        export interface Ble {
-
-            /** Ble status */
-            status?: (BSB_State.Ble.ServiceStatus|null);
-
-            /** Ble remoteAddress */
-            remoteAddress?: (string|null);
-        }
-
-    }
+  }
 }
 
 /** Namespace BSB_Update. */
 export namespace BSB_Update {
+  /** UpdateEvent enum. */
+  export enum UpdateEvent {
+    SESSION_START = 0,
+    SESSION_STOP = 1,
+    ACTION_BEGIN = 2,
+    ACTION_DONE = 3,
+    DETAIL_CHANGE = 4,
+    ACTION_PROGRESS = 5,
+    EVENT_NONE = 6
+  }
 
-    /** UpdateEvent enum. */
-    export enum UpdateEvent {
-        SESSION_START = 0,
-        SESSION_STOP = 1,
-        ACTION_BEGIN = 2,
-        ACTION_DONE = 3,
-        DETAIL_CHANGE = 4,
-        ACTION_PROGRESS = 5,
-        EVENT_NONE = 6
-    }
+  /** UpdateAction enum. */
+  export enum UpdateAction {
+    DOWNLOAD = 0,
+    SHA_VERIFICATION = 1,
+    UNPACK = 2,
+    INSTALLATION_PREPARE = 3,
+    INSTALLATION_APPLY = 4,
+    ACTION_NONE = 5
+  }
 
-    /** UpdateAction enum. */
-    export enum UpdateAction {
-        DOWNLOAD = 0,
-        SHA_VERIFICATION = 1,
-        UNPACK = 2,
-        INSTALLATION_PREPARE = 3,
-        INSTALLATION_APPLY = 4,
-        ACTION_NONE = 5
-    }
+  /** UpdateStatus enum. */
+  export enum UpdateStatus {
+    OK = 0,
+    BATTERY_LOW = 1,
+    BUSY = 2,
+    DOWNLOAD_FAILURE = 3,
+    DOWNLOAD_ABORT = 4,
+    SHA_MISMATCH = 5,
+    UNPACK_CREATE_STAGING_DIRECTORY_FAILURE = 6,
+    UNPACK_ARCHIVE_OPEN_FAILURE = 7,
+    UNPACK_ARCHIVE_UNPACK_FAILURE = 8,
+    INSTALLATION_PREPARE_MANIFEST_NOT_FOUND = 9,
+    INSTALLATION_PREPARE_MANIFEST_INVALID = 10,
+    INSTALLATION_PREPARE_SESSION_CONFIG_SETUP_FAILURE = 11,
+    INSTALLATION_PREPARE_POINTER_SETUP_FAILURE = 12,
+    UNKNOWN_FAILURE = 13
+  }
 
-    /** UpdateStatus enum. */
-    export enum UpdateStatus {
-        OK = 0,
-        BATTERY_LOW = 1,
-        BUSY = 2,
-        DOWNLOAD_FAILURE = 3,
-        DOWNLOAD_ABORT = 4,
-        SHA_MISMATCH = 5,
-        UNPACK_CREATE_STAGING_DIRECTORY_FAILURE = 6,
-        UNPACK_ARCHIVE_OPEN_FAILURE = 7,
-        UNPACK_ARCHIVE_UNPACK_FAILURE = 8,
-        INSTALLATION_PREPARE_MANIFEST_NOT_FOUND = 9,
-        INSTALLATION_PREPARE_MANIFEST_INVALID = 10,
-        INSTALLATION_PREPARE_SESSION_CONFIG_SETUP_FAILURE = 11,
-        INSTALLATION_PREPARE_POINTER_SETUP_FAILURE = 12,
-        UNKNOWN_FAILURE = 13
-    }
+  /** CheckError enum. */
+  export enum CheckError {
+    NOT_AVAILABLE = 0,
+    FAILURE = 1,
+    IDLE = 2
+  }
 
-    /** CheckError enum. */
-    export enum CheckError {
-        NOT_AVAILABLE = 0,
-        FAILURE = 1,
-        IDLE = 2
-    }
+  /** CheckEvent enum. */
+  export enum CheckEvent {
+    START = 0,
+    STOP = 1,
+    NONE = 2
+  }
 
-    /** Properties of an UpdateAvailable. */
-    export interface UpdateAvailable {
+  /** Properties of an UpdateAvailable. */
+  export interface UpdateAvailable {
+    /** UpdateAvailable version */
+    version?: string | null;
+  }
 
-        /** UpdateAvailable version */
-        version?: (string|null);
-    }
+  /** Properties of an UpdateUnavailable. */
+  export interface UpdateUnavailable {
+    /** UpdateUnavailable reason */
+    reason?: BSB_Update.CheckError | null;
+  }
 
+  /** Properties of an UpdateState. */
+  export interface UpdateState {
+    /** UpdateState event */
+    event?: BSB_Update.UpdateEvent | null;
 
-    /** Properties of an UpdateUnavailable. */
-    export interface UpdateUnavailable {
+    /** UpdateState action */
+    action?: BSB_Update.UpdateAction | null;
 
-        /** UpdateUnavailable reason */
-        reason?: (BSB_Update.CheckError|null);
-    }
+    /** UpdateState status */
+    status?: BSB_Update.UpdateStatus | null;
+  }
 
+  /** Properties of a CheckState. */
+  export interface CheckState {
+    /** CheckState event */
+    event?: BSB_Update.CheckEvent | null;
 
-    /** Properties of an UpdateState. */
-    export interface UpdateState {
+    /** CheckState available */
+    available?: BSB_Update.UpdateAvailable | null;
 
-        /** UpdateState event */
-        event?: (BSB_Update.UpdateEvent|null);
+    /** CheckState unavailable */
+    unavailable?: BSB_Update.UpdateUnavailable | null;
+  }
 
-        /** UpdateState action */
-        action?: (BSB_Update.UpdateAction|null);
+  /** Properties of an AutoUpdateInterval. */
+  export interface AutoUpdateInterval {
+    /** AutoUpdateInterval start */
+    start?: number | null;
 
-        /** UpdateState status */
-        status?: (BSB_Update.UpdateStatus|null);
-    }
+    /** AutoUpdateInterval end */
+    end?: number | null;
+  }
 
+  /** Properties of an AutoUpdateState. */
+  export interface AutoUpdateState {
+    /** AutoUpdateState enabled */
+    enabled?: boolean | null;
 
-    /** Properties of a CheckState. */
-    export interface CheckState {
-
-        /** CheckState available */
-        available?: (BSB_Update.UpdateAvailable|null);
-
-        /** CheckState unavailable */
-        unavailable?: (BSB_Update.UpdateUnavailable|null);
-    }
-
-
-    /** Properties of an AutoUpdateInterval. */
-    export interface AutoUpdateInterval {
-
-        /** AutoUpdateInterval start */
-        start?: (number|null);
-
-        /** AutoUpdateInterval end */
-        end?: (number|null);
-    }
-
-
-    /** Properties of an AutoUpdateState. */
-    export interface AutoUpdateState {
-
-        /** AutoUpdateState enabled */
-        enabled?: (boolean|null);
-
-        /** AutoUpdateState interval */
-        interval?: (BSB_Update.AutoUpdateInterval|null);
-    }
-
+    /** AutoUpdateState interval */
+    interval?: BSB_Update.AutoUpdateInterval | null;
+  }
 }
 
 /** Namespace BSB_Frame. */
 export namespace BSB_Frame {
+  /** Encoding enum. */
+  export enum Encoding {
+    PLAIN = 0,
+    RUN_LENGTH = 1,
+    DEFLATE = 2,
+    DEFLATE_RUN_LENGTH = 3
+  }
 
-    /** Encoding enum. */
-    export enum Encoding {
-        PLAIN = 0,
-        RUN_LENGTH = 1,
-        DEFLATE = 2,
-        DEFLATE_RUN_LENGTH = 3
-    }
+  /** PixelFormat enum. */
+  export enum PixelFormat {
+    RGB888 = 0,
+    L8 = 1,
+    L4 = 2
+  }
 
-    /** PixelFormat enum. */
-    export enum PixelFormat {
-        RGB888 = 0,
-        L8 = 1,
-        L4 = 2
-    }
+  /** Screen enum. */
+  export enum Screen {
+    FRONT = 0,
+    BACK = 1
+  }
 
-    /** Screen enum. */
-    export enum Screen {
-        FRONT = 0,
-        BACK = 1
-    }
+  /** Properties of a Frame. */
+  export interface Frame {
+    /** Frame screen */
+    screen?: BSB_Frame.Screen | null;
 
-    /** Properties of a Frame. */
-    export interface Frame {
+    /** Frame width */
+    width?: number | null;
 
-        /** Frame screen */
-        screen?: (BSB_Frame.Screen|null);
+    /** Frame height */
+    height?: number | null;
 
-        /** Frame width */
-        width?: (number|null);
+    /** Frame encoding */
+    encoding?: BSB_Frame.Encoding | null;
 
-        /** Frame height */
-        height?: (number|null);
+    /** Frame pixelFormat */
+    pixelFormat?: BSB_Frame.PixelFormat | null;
 
-        /** Frame encoding */
-        encoding?: (BSB_Frame.Encoding|null);
-
-        /** Frame pixelFormat */
-        pixelFormat?: (BSB_Frame.PixelFormat|null);
-
-        /** Frame data */
-        data?: (Uint8Array|null);
-    }
-
+    /** Frame data */
+    data?: Uint8Array | null;
+  }
 }
 
 /** Namespace BSB_Timer. */
 export namespace BSB_Timer {
+  /** Properties of a Profile. */
+  export interface Profile {
+    /** Profile name */
+    name?: string | null;
 
-    /** Properties of a Timer. */
-    export interface Timer {
+    /** Profile json */
+    json?: BSB_Util.Json | null;
+  }
 
-        /** Timer json */
-        json?: (BSB_Util.Json|null);
-    }
+  /** Properties of a Profiles. */
+  export interface Profiles {
+    /** Profiles profiles */
+    profiles?: BSB_Timer.Profile[] | null;
+  }
 
+  /** Properties of a Timer. */
+  export interface Timer {
+    /** Timer json */
+    json?: BSB_Util.Json | null;
+  }
 }
 
 /** Namespace BSB_Util. */
 export namespace BSB_Util {
+  /** Compression enum. */
+  export enum Compression {
+    PLAIN = 0,
+    GZIP = 1
+  }
 
-    /** Compression enum. */
-    export enum Compression {
-        PLAIN = 0,
-        GZIP = 1
-    }
+  /** Properties of a Json. */
+  export interface Json {
+    /** Json compression */
+    compression?: BSB_Util.Compression | null;
 
-    /** Properties of a Json. */
-    export interface Json {
-
-        /** Json compression */
-        compression?: (BSB_Util.Compression|null);
-
-        /** Json data */
-        data?: (Uint8Array|null);
-    }
-
+    /** Json data */
+    data?: Uint8Array | null;
+  }
 }
 
 /** Namespace BSB_Input. */
 export namespace BSB_Input {
+  /** Button enum. */
+  export enum Button {
+    OK = 0,
+    BACK = 1,
+    START = 2
+  }
 
-    /** Button enum. */
-    export enum Button {
-        OK = 0,
-        BACK = 1,
-        START = 2
-    }
+  /** ButtonAction enum. */
+  export enum ButtonAction {
+    PRESS = 0,
+    RELEASE = 1
+  }
 
-    /** ButtonAction enum. */
-    export enum ButtonAction {
-        PRESS = 0,
-        RELEASE = 1
-    }
+  /** SwitchPosition enum. */
+  export enum SwitchPosition {
+    BUSY = 0,
+    CUSTOM = 1,
+    OFF = 2,
+    APPS = 3,
+    SETTINGS = 4
+  }
 
-    /** SwitchPosition enum. */
-    export enum SwitchPosition {
-        BUSY = 0,
-        CUSTOM = 1,
-        OFF = 2,
-        APPS = 3,
-        SETTINGS = 4
-    }
+  /** Properties of a ButtonEvent. */
+  export interface ButtonEvent {
+    /** ButtonEvent button */
+    button?: BSB_Input.Button | null;
 
-    /** Properties of a ButtonEvent. */
-    export interface ButtonEvent {
+    /** ButtonEvent action */
+    action?: BSB_Input.ButtonAction | null;
+  }
 
-        /** ButtonEvent button */
-        button?: (BSB_Input.Button|null);
+  /** Properties of a SwitchEvent. */
+  export interface SwitchEvent {
+    /** SwitchEvent position */
+    position?: BSB_Input.SwitchPosition | null;
+  }
 
-        /** ButtonEvent action */
-        action?: (BSB_Input.ButtonAction|null);
-    }
+  /** Properties of an EncoderEvent. */
+  export interface EncoderEvent {
+    /** EncoderEvent delta */
+    delta?: number | null;
+  }
 
+  /** Properties of an InputEvent. */
+  export interface InputEvent {
+    /** InputEvent buttonEvent */
+    buttonEvent?: BSB_Input.ButtonEvent | null;
 
-    /** Properties of a SwitchEvent. */
-    export interface SwitchEvent {
+    /** InputEvent switchEvent */
+    switchEvent?: BSB_Input.SwitchEvent | null;
 
-        /** SwitchEvent position */
-        position?: (BSB_Input.SwitchPosition|null);
-    }
-
-
-    /** Properties of an EncoderEvent. */
-    export interface EncoderEvent {
-
-        /** EncoderEvent delta */
-        delta?: (number|null);
-    }
-
-
-    /** Properties of an InputEvent. */
-    export interface InputEvent {
-
-        /** InputEvent buttonEvent */
-        buttonEvent?: (BSB_Input.ButtonEvent|null);
-
-        /** InputEvent switchEvent */
-        switchEvent?: (BSB_Input.SwitchEvent|null);
-
-        /** InputEvent encoderEvent */
-        encoderEvent?: (BSB_Input.EncoderEvent|null);
-    }
-
+    /** InputEvent encoderEvent */
+    encoderEvent?: BSB_Input.EncoderEvent | null;
+  }
 }
 
 /** Namespace BSB_Error. */
 export namespace BSB_Error {
+  /** Cause enum. */
+  export enum Cause {
+    RESOURCE_LIMIT = 0
+  }
 
-    /** Cause enum. */
-    export enum Cause {
-        RESOURCE_LIMIT = 0
-    }
+  /** Severity enum. */
+  export enum Severity {
+    FATAL = 0,
+    ERROR = 1,
+    WARNING = 2
+  }
 
-    /** Severity enum. */
-    export enum Severity {
-        FATAL = 0,
-        ERROR = 1,
-        WARNING = 2
-    }
+  /** Properties of an Error. */
+  export interface Error {
+    /** Error cause */
+    cause?: BSB_Error.Cause | null;
 
-    /** Properties of an Error. */
-    export interface Error {
-
-        /** Error cause */
-        cause?: (BSB_Error.Cause|null);
-
-        /** Error severity */
-        severity?: (BSB_Error.Severity|null);
-    }
-
+    /** Error severity */
+    severity?: BSB_Error.Severity | null;
+  }
 }

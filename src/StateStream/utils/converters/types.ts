@@ -4,7 +4,7 @@ import type { components } from 'Global/API';
 type WifiSecurityMethod = components['schemas']['WifiSecurityMethod'];
 type WifiIpMethod = components['schemas']['WifiIpMethod'];
 type WifiIpType = components['schemas']['WifiIpType'];
-import type { UpdateEvent, UpdateAction, UpdateStatusValue, CheckError } from './update';
+import type { UpdateEvent, UpdateAction, UpdateStatusValue, CheckError, CheckEvent } from './update';
 import type Long from 'long';
 
 export interface ConvertedPower {
@@ -44,6 +44,7 @@ export interface ConvertedUpdateState {
 }
 
 export interface ConvertedCheckState {
+  event?: CheckEvent | null;
   available?: BSB_Update.UpdateAvailable | null;
   unavailable?: { reason: CheckError | null } | null;
 }
@@ -63,6 +64,7 @@ export interface ConvertedStateUpdate {
   timer?: BSB_Timer.Timer | null;
   ble?: ConvertedBle | null;
   autoUpdateState?: BSB_Update.AutoUpdateState | null;
+  timerProfiles?: BSB_Timer.Profiles | null;
 }
 
 export interface ConvertedState {

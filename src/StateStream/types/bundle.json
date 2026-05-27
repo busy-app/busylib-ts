@@ -19,7 +19,8 @@
                 "input",
                 "timer",
                 "ble",
-                "autoUpdateState"
+                "autoUpdateState",
+                "timerProfiles"
               ]
             }
           },
@@ -79,15 +80,17 @@
             "autoUpdateState": {
               "type": "BSB_Update.AutoUpdateState",
               "id": 14
+            },
+            "timerProfiles": {
+              "type": "BSB_Timer.Profiles",
+              "id": 15
             }
           }
         },
         "State": {
           "oneofs": {
             "_error": {
-              "oneof": [
-                "error"
-              ]
+              "oneof": ["error"]
             }
           },
           "fields": {
@@ -131,10 +134,7 @@
         "Brightness": {
           "oneofs": {
             "setting": {
-              "oneof": [
-                "automatic",
-                "manual"
-              ]
+              "oneof": ["automatic", "manual"]
             }
           },
           "fields": {
@@ -189,10 +189,7 @@
         "Power": {
           "oneofs": {
             "state": {
-              "oneof": [
-                "unknown",
-                "known"
-              ]
+              "oneof": ["unknown", "known"]
             }
           },
           "fields": {
@@ -307,11 +304,7 @@
         "Wifi": {
           "oneofs": {
             "wifiState": {
-              "oneof": [
-                "unknown",
-                "disconnected",
-                "connected"
-              ]
+              "oneof": ["unknown", "disconnected", "connected"]
             }
           },
           "fields": {
@@ -398,9 +391,7 @@
             "Ble": {
               "oneofs": {
                 "_remoteAddress": {
-                  "oneof": [
-                    "remoteAddress"
-                  ]
+                  "oneof": ["remoteAddress"]
                 }
               },
               "fields": {
@@ -469,6 +460,13 @@
             "IDLE": 2
           }
         },
+        "CheckEvent": {
+          "values": {
+            "START": 0,
+            "STOP": 1,
+            "NONE": 2
+          }
+        },
         "UpdateAvailable": {
           "fields": {
             "version": {
@@ -504,13 +502,14 @@
         "CheckState": {
           "oneofs": {
             "status": {
-              "oneof": [
-                "available",
-                "unavailable"
-              ]
+              "oneof": ["available", "unavailable"]
             }
           },
           "fields": {
+            "event": {
+              "type": "CheckEvent",
+              "id": 3
+            },
             "available": {
               "type": "UpdateAvailable",
               "id": 1
@@ -602,6 +601,27 @@
     },
     "BSB_Timer": {
       "nested": {
+        "Profile": {
+          "fields": {
+            "name": {
+              "type": "string",
+              "id": 1
+            },
+            "json": {
+              "type": "BSB_Util.Json",
+              "id": 2
+            }
+          }
+        },
+        "Profiles": {
+          "fields": {
+            "profiles": {
+              "rule": "repeated",
+              "type": "Profile",
+              "id": 1
+            }
+          }
+        },
         "Timer": {
           "fields": {
             "json": {
@@ -689,11 +709,7 @@
         "InputEvent": {
           "oneofs": {
             "event": {
-              "oneof": [
-                "buttonEvent",
-                "switchEvent",
-                "encoderEvent"
-              ]
+              "oneof": ["buttonEvent", "switchEvent", "encoderEvent"]
             }
           },
           "fields": {
