@@ -36,7 +36,7 @@ export class SettingsMethods {
     const result = await setHttpAccessApi(this.apiClient, params);
 
     if (params.mode === 'key' && params.key) {
-      this.setApiKey(params.key);
+      this.setHTTPAccessPassword(params.key);
     }
 
     return result;

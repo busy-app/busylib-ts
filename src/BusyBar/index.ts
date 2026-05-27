@@ -43,6 +43,7 @@ export type BusyBarConfig = {
   addr?: string;
   token?: string;
   timeout?: number;
+  HTTPAccessPassword?: string;
 };
 
 /**
@@ -127,7 +128,13 @@ export class BusyBar {
 
     this.apiSemver = '';
 
-    const { client, setApiKey, setToken } = createApiClient(`${this.addr}/api/`, this.SystemVersionGet.bind(this), config?.token, config?.timeout);
+    const { client, setApiKey, setToken } = createApiClient(
+      `${this.addr}/api/`,
+      this.SystemVersionGet.bind(this),
+      config?.token,
+      config?.timeout,
+      config?.HTTPAccessPassword
+    );
 
     this.apiClient = client;
     this.setApiKeyFn = setApiKey;
@@ -175,11 +182,18 @@ export class BusyBar {
   }
 
   /**
-   * Sets API key for all subsequent requests.
+   * Sets HTTP Access Password for all subsequent requests.
    * @param {string} key - API key to use in "X-API-Token" header.
    */
-  setApiKey(key: string) {
+  setHTTPAccessPassword(key: string) {
     this.setApiKeyFn(key);
+  }
+
+  /**
+   * @deprecated Use {@link setHTTPAccessPassword} instead.
+   */
+  setApiKey(key: string) {
+    this.setHTTPAccessPassword(key);
   }
 
   /**

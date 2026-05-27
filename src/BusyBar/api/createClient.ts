@@ -94,10 +94,16 @@ export type BusyBarClient = Client<paths, `${string}/${string}`> & {
 /**
  * Initialize API client with baseUrl and version fetch function
  */
-function createApiClient(url: string, getApiVersion: GetVersionFn, token: BusyBarConfig['token'], defaultTimeout: number = 3000) {
+function createApiClient(
+  url: string,
+  getApiVersion: GetVersionFn,
+  token: BusyBarConfig['token'],
+  defaultTimeout: BusyBarConfig['timeout'] = 3000,
+  httpAccessPassword: BusyBarConfig['HTTPAccessPassword'] = undefined
+) {
   let apiSemver: ApiSemver | undefined = undefined;
   let bearerToken: string | undefined = token ?? undefined;
-  let apiKey: ApiKey | undefined = undefined;
+  let apiKey: ApiKey | undefined = httpAccessPassword ?? undefined;
 
   /**
    * Promise for an ongoing `/version` request ("in flight")
