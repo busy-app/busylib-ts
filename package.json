@@ -4,6 +4,10 @@
   "description": "A library for interacting with the BUSY Bar API",
   "version": "0.16.0",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/busy-app/busylib-ts"
+  },
   "publishConfig": {
     "access": "public"
   },
