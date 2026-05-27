@@ -26,7 +26,6 @@ jobs:
         with:
           node-version-file: ".nvmrc"
           registry-url: "https://registry.npmjs.org/"
-          scope: "@busy-app"
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v6
