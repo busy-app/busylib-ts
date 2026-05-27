@@ -3,6 +3,7 @@
   "private": false,
   "description": "A library for interacting with the BUSY Bar API",
   "version": "0.15.2",
+  "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
@@ -19,7 +20,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "LICENSE"
   ],
   "scripts": {
     "build": "vite build",
