@@ -1,5 +1,5 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { RequestOptions, AccountProfileSetParams } from 'BusyBar/types';
+import type { RequestOptions, AccountBackendSetParams } from 'BusyBar/types';
 
 async function getAccountState(client: BusyBarClient, params?: RequestOptions) {
   const { data, error } = await client.execute(
@@ -33,10 +33,10 @@ async function getAccountInfo(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function getAccountProfile(client: BusyBarClient, params?: RequestOptions) {
+async function getAccountBackend(client: BusyBarClient, params?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
-      client.GET('/account/profile', {
+      client.GET('/account/backend', {
         signal
       }),
     params
@@ -49,17 +49,16 @@ async function getAccountProfile(client: BusyBarClient, params?: RequestOptions)
   return data;
 }
 
-async function setAccountProfile(client: BusyBarClient, params: AccountProfileSetParams) {
-  const { profile, custom_url } = params;
+async function setAccountBackend(client: BusyBarClient, params: AccountBackendSetParams) {
+  const { server_url, client_cert_type, ignore_server_cert } = params;
 
   const { data, error } = await client.execute(
     (signal) =>
-      client.POST('/account/profile', {
-        params: {
-          query: {
-            profile,
-            custom_url
-          }
+      client.PUT('/account/backend', {
+        body: {
+          server_url,
+          client_cert_type,
+          ignore_server_cert
         },
         signal
       }),
@@ -105,4 +104,4 @@ async function linkDevice(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-export { getAccountState, getAccountInfo, getAccountProfile, setAccountProfile, unlinkDevice, linkDevice };
+export { getAccountState, getAccountInfo, getAccountBackend, setAccountBackend, unlinkDevice, linkDevice };

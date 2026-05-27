@@ -1,3 +1,6 @@
-import type { AccountProfile, RequestOptions } from 'BusyBar/types/models';
+import type { AccountBackend, RequestOptions } from 'BusyBar/types/models';
 
-export interface AccountProfileSetParams extends RequestOptions, AccountProfile {}
+export interface AccountBackendSetParams extends RequestOptions, AccountBackend {}
+
+/** @deprecated Use {@link AccountBackendSetParams} instead */
+export interface AccountProfileSetParams extends AccountBackendSetParams {}

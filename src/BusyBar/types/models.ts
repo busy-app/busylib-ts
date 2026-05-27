@@ -17,7 +17,9 @@ export type BusyFile = Buffer | Blob | File | ArrayBuffer;
 export type AccountInfo = components['schemas']['AccountInfo'];
 export type AccountLink = components['schemas']['AccountLink'];
 export type AccountStatus = components['schemas']['AccountStatus'];
-export type AccountProfile = components['schemas']['AccountProfile'];
+export type AccountBackend = components['schemas']['AccountBackend'];
+/** @deprecated Use {@link AccountBackend} instead */
+export type AccountProfile = AccountBackend;
 
 // Assets
 export type AssetsUploadQuery = operations['uploadAssetWithAppId']['parameters']['query'];
@@ -25,7 +27,9 @@ export type AssetsDeleteQuery = operations['deleteAppAssets']['parameters']['que
 
 // Audio
 export type AudioVolumeInfo = components['schemas']['AudioVolumeInfo'];
-export type AudioPlayQuery = operations['playAudio']['parameters']['query'];
+export type AudioPlayBody = components['schemas']['PlayAudio'];
+/** @deprecated Use {@link AudioPlayBody} instead */
+export type AudioPlayQuery = AudioPlayBody;
 export type AudioVolumeQuery = operations['setAudioVolume']['parameters']['query'];
 
 // BLE

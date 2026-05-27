@@ -830,35 +830,7 @@ export interface paths {
       cookie?: never;
     };
     /** @description Scans environment for available Wi-Fi networks */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['NetworkResponse'];
-          };
-        };
-        /** @description Scan not possible when connected */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['Error'];
-          };
-        };
-      };
-    };
+    get: operations['getWifiNetworks'];
     put?: never;
     post?: never;
     delete?: never;
@@ -1207,7 +1179,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/account/profile': {
+  '/account/backend': {
     parameters: {
       query?: never;
       header?: never;
@@ -1215,16 +1187,16 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Get MQTT profile
-     * @description Retrieves MQTT backend type (dev/prod/local)
+     * Get MQTT configuration
+     * @description Retrieves MQTT backend configuration
      */
-    get: operations['getAccountProfile'];
-    put?: never;
+    get: operations['getAccountBackend'];
     /**
-     * Set MQTT profile
-     * @description Sets MQTT backend type (dev/prod/local)
+     * Set MQTT configuration
+     * @description Sets MQTT backend configuration
      */
-    post: operations['setAccountProfile'];
+    put: operations['setAccountBackend'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -1612,7 +1584,7 @@ export interface components {
      *     } */
     NameInfo: {
       /**
-       * @description Device name
+       * @description Device name (letters, digits, spaces and common punctuation; no backtick or tilde)
        * @example BUSY bar
        */
       name: string;
@@ -1708,7 +1680,7 @@ export interface components {
      *           "y": 10,
      *           "type": "text",
      *           "text": "Hello, World! Long text",
-     *           "font": "medium",
+     *           "font": "normal",
      *           "color": "#FFFFFFFF",
      *           "width": 72,
      *           "scroll_rate": 1000,
@@ -1791,13 +1763,13 @@ export interface components {
       align?: 'top_left' | 'top_mid' | 'top_right' | 'mid_left' | 'center' | 'mid_right' | 'bottom_left' | 'bottom_mid' | 'bottom_right';
     };
     TextElement: Omit<components['schemas']['DisplayElement'], 'type'> & {
-      /** @description Text content to display */
+      /** @description Text content to display (printable ASCII only; fonts are bitmap ASCII) */
       text: string;
       /**
        * @description One of the available fonts to display the text in
        * @enum {string}
        */
-      font: 'small' | 'medium' | 'medium_condensed' | 'big';
+      font: 'tiny' | 'small' | 'normal' | 'condensed' | 'bold' | 'large' | 'extra_large' | 'global';
       /**
        * @description Color to display the text in, in #RRGGBBAA format
        * @default #FFFFFFFF
@@ -1900,6 +1872,25 @@ export interface components {
        */
       volume?: number;
     };
+    PlayAudio: {
+      /**
+       * @description Application ID for organizing assets
+       * @example my_app
+       */
+      application_name: string;
+    } & (
+      | {
+          /**
+           * @description Path to audio file within app's assets directory
+           * @example data.snd
+           */
+          path: string;
+        }
+      | {
+          /** @description Stock audio file name */
+          stock_path: string;
+        }
+    );
     TimestampInfo: {
       /**
        * @description ISO 8601 formatted timestamp with timezone
@@ -1998,6 +1989,11 @@ export interface components {
        * @example 1711.2.14.5.2.0.7
        */
       nwp_version?: string;
+      /**
+       * @description Matter version
+       * @example 1.0
+       */
+      matter_version?: string;
     };
     StatusSystem: {
       /**
@@ -2118,11 +2114,6 @@ export interface components {
       security?: components['schemas']['WifiSecurityMethod'];
       ip_config?: {
         ip_method?: components['schemas']['WifiIpMethod'];
-        /**
-         * @example ipv4
-         * @enum {string}
-         */
-        ip_type?: 'ipv4' | 'ipv6';
         /** @example 192.168.50.5 */
         address?: string;
         /** @example 255.255.255.0 */
@@ -2158,17 +2149,16 @@ export interface components {
        */
       status?: 'error' | 'disconnected' | 'connected';
     };
-    AccountProfile: {
+    AccountBackend: {
+      /** @description MQTT server url to connect to */
+      server_url: string;
       /**
-       * @example dev
+       * @description Client certificate type to use
        * @enum {string}
        */
-      profile: 'dev' | 'prod' | 'local' | 'custom';
-      /**
-       * @description Only present when profile is "custom"
-       * @example mqtts://mqtt.example.com:8883
-       */
-      custom_url?: string;
+      client_cert_type: 'default' | 'custom' | 'none';
+      /** @description Whether to ignore the server certificate */
+      ignore_server_cert: boolean;
     };
     AccountLink: {
       /** @example ABCD */
@@ -3173,15 +3163,6 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
-      /** @description Failed to load canvas app */
-      503: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['Error'];
-        };
-      };
     };
   };
   clearDisplay: {
@@ -3267,23 +3248,16 @@ export interface operations {
   };
   playAudio: {
     parameters: {
-      query: {
-        /**
-         * @description Application ID for organizing assets
-         * @example my_app
-         */
-        application_name: string;
-        /**
-         * @description Path to audio file within app's assets directory
-         * @example data.snd
-         */
-        path: string;
-      };
+      query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    requestBody?: never;
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PlayAudio'];
+      };
+    };
     responses: {
       /** @description Audio playback started successfully */
       200: {
@@ -3330,6 +3304,15 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+      /** @description No audio is playing */
+      410: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
         };
       };
       /** @description Audio system error */
@@ -3610,6 +3593,35 @@ export interface operations {
       };
     };
   };
+  getWifiNetworks: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NetworkResponse'];
+        };
+      };
+      /** @description Scan not possible when connected */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
   getTime: {
     parameters: {
       query?: never;
@@ -3719,7 +3731,7 @@ export interface operations {
       };
     };
   };
-  getAccountProfile: {
+  getAccountBackend: {
     parameters: {
       query?: never;
       header?: never;
@@ -3734,23 +3746,23 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AccountProfile'];
+          'application/json': components['schemas']['AccountBackend'];
         };
       };
     };
   };
-  setAccountProfile: {
+  setAccountBackend: {
     parameters: {
-      query: {
-        /** @example dev */
-        profile: 'dev' | 'prod' | 'local' | 'custom';
-        custom_url?: string;
-      };
+      query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    requestBody?: never;
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AccountBackend'];
+      };
+    };
     responses: {
       /** @description Set successfully */
       200: {
@@ -3840,8 +3852,8 @@ export interface operations {
     parameters: {
       query: {
         /**
-         * @description Timezone name
-         * @example Stuttgart
+         * @description Timezone name (use /time/tzlist to get available names)
+         * @example Berlin
          */
         timezone: string;
       };

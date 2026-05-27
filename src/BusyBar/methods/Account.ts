@@ -1,12 +1,12 @@
 import {
   getAccountState as getAccountStateApi,
   getAccountInfo as getAccountInfoApi,
-  getAccountProfile as getAccountProfileApi,
-  setAccountProfile as setAccountProfileApi,
+  getAccountBackend as getAccountBackendApi,
+  setAccountBackend as setAccountBackendApi,
   unlinkDevice as unlinkDeviceApi,
   linkDevice as linkDeviceApi
 } from 'BusyBar/api/account';
-import type { RequestOptions, AccountInfo, SuccessResponse, AccountLink, AccountStatus, AccountProfile, AccountProfileSetParams } from 'BusyBar/types';
+import type { RequestOptions, AccountInfo, SuccessResponse, AccountLink, AccountStatus, AccountBackend, AccountBackendSetParams } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class AccountMethods {
@@ -35,29 +35,40 @@ export class AccountMethods {
   }
 
   /**
-   * Get account profile.
+   * Get MQTT backend configuration.
    *
    * @param {RequestOptions} [params] - Optional parameters.
    *   @param {RequestOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
    *   @param {RequestOptions['signal']} [params.signal] - AbortSignal to cancel the request.
-   * @returns {Promise<AccountProfile>} A promise that resolves to the account profile.
+   * @returns {Promise<AccountBackend>} A promise that resolves to the MQTT backend configuration.
    */
-  async AccountProfileGet(this: BusyBar, params?: RequestOptions): Promise<AccountProfile> {
-    return await getAccountProfileApi(this.apiClient, params);
+  async AccountBackendGet(this: BusyBar, params?: RequestOptions): Promise<AccountBackend> {
+    return await getAccountBackendApi(this.apiClient, params);
+  }
+
+  /** @deprecated Use {@link AccountBackendGet} instead. */
+  async AccountProfileGet(this: BusyBar, params?: RequestOptions): Promise<AccountBackend> {
+    return await this.AccountBackendGet(params);
   }
 
   /**
-   * Set account profile.
+   * Set MQTT backend configuration.
    *
-   * @param {AccountProfileSetParams} params - Parameters for setting the account profile.
-   *   @param {AccountProfileSetParams['profile']} params.profile - Profile name.
-   *   @param {AccountProfileSetParams['custom_url']} [params.custom_url] - Custom profile URL.
-   *   @param {AccountProfileSetParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {AccountProfileSetParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {AccountBackendSetParams} params - Parameters for setting the MQTT backend configuration.
+   *   @param {AccountBackendSetParams['server_url']} params.server_url - MQTT server URL.
+   *   @param {AccountBackendSetParams['client_cert_type']} params.client_cert_type - Client certificate type.
+   *   @param {AccountBackendSetParams['ignore_server_cert']} params.ignore_server_cert - Whether to ignore the server certificate.
+   *   @param {AccountBackendSetParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {AccountBackendSetParams['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  async AccountProfileSet(this: BusyBar, params: AccountProfileSetParams): Promise<SuccessResponse> {
-    return await setAccountProfileApi(this.apiClient, params);
+  async AccountBackendSet(this: BusyBar, params: AccountBackendSetParams): Promise<SuccessResponse> {
+    return await setAccountBackendApi(this.apiClient, params);
+  }
+
+  /** @deprecated Use {@link AccountBackendSet} instead. */
+  async AccountProfileSet(this: BusyBar, params: AccountBackendSetParams): Promise<SuccessResponse> {
+    return await this.AccountBackendSet(params);
   }
 
   /**

@@ -2,16 +2,15 @@ import type { BusyBarClient } from 'BusyBar/types/internal';
 import type { RequestOptions, AudioPlayParams, AudioVolumeParams } from 'BusyBar/types';
 
 async function play(client: BusyBarClient, params: AudioPlayParams) {
-  const { application_name, path } = params;
+  const { application_name } = params;
+  const pathOrStock = 'path' in params ? { path: params.path } : { stock_path: params.stock_path };
 
   const { data, error } = await client.execute(
     (signal) =>
       client.POST('/audio/play', {
-        params: {
-          query: {
-            application_name,
-            path
-          }
+        body: {
+          application_name,
+          ...pathOrStock
         },
         signal
       }),
