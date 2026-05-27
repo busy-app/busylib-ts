@@ -1,14 +1,14 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { AutoUpdateSettings, TimeoutOptions, UpdateChangelogQuery, UpdateInstallQuery, BusyFile } from 'BusyBar/types';
+import type { AutoUpdateSettings, RequestOptions, UpdateChangelogQuery, UpdateInstallQuery, BusyFile } from 'BusyBar/types';
 
-export interface UpdateParams extends TimeoutOptions {
+export interface UpdateParams extends RequestOptions {
   file: BusyFile;
 }
 
 async function update(client: BusyBarClient, params: UpdateParams) {
   const { file } = params;
 
-  const { data, error } = await client.withTimeout(
+  const { data, error } = await client.execute(
     (signal) =>
       client.POST('/update', {
         headers: {
@@ -17,7 +17,7 @@ async function update(client: BusyBarClient, params: UpdateParams) {
         body: file as unknown as string,
         signal
       }),
-    params.timeout
+    params
   );
 
   if (error) {
@@ -27,8 +27,14 @@ async function update(client: BusyBarClient, params: UpdateParams) {
   return data;
 }
 
-async function check(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.POST('/update/check', { signal }), params?.timeout);
+async function check(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.POST('/update/check', {
+        signal
+      }),
+    params
+  );
 
   if (error) {
     throw error;
@@ -37,8 +43,14 @@ async function check(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-async function status(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.GET('/update/status', { signal }), params?.timeout);
+async function status(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.GET('/update/status', {
+        signal
+      }),
+    params
+  );
 
   if (error) {
     throw error;
@@ -47,12 +59,12 @@ async function status(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-export interface ChangelogParams extends TimeoutOptions, UpdateChangelogQuery {}
+export interface ChangelogParams extends RequestOptions, UpdateChangelogQuery {}
 
 async function changelog(client: BusyBarClient, params: ChangelogParams) {
   const { version } = params;
 
-  const { data, error } = await client.withTimeout(
+  const { data, error } = await client.execute(
     (signal) =>
       client.GET('/update/changelog', {
         params: {
@@ -62,7 +74,7 @@ async function changelog(client: BusyBarClient, params: ChangelogParams) {
         },
         signal
       }),
-    params.timeout
+    params
   );
 
   if (error) {
@@ -72,12 +84,12 @@ async function changelog(client: BusyBarClient, params: ChangelogParams) {
   return data;
 }
 
-export interface InstallParams extends TimeoutOptions, UpdateInstallQuery {}
+export interface InstallParams extends RequestOptions, UpdateInstallQuery {}
 
 async function install(client: BusyBarClient, params: InstallParams) {
   const { version } = params;
 
-  const { data, error } = await client.withTimeout(
+  const { data, error } = await client.execute(
     (signal) =>
       client.POST('/update/install', {
         params: {
@@ -87,7 +99,7 @@ async function install(client: BusyBarClient, params: InstallParams) {
         },
         signal
       }),
-    params.timeout
+    params
   );
 
   if (error) {
@@ -97,8 +109,14 @@ async function install(client: BusyBarClient, params: InstallParams) {
   return data;
 }
 
-async function abort(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.POST('/update/abort_download', { signal }), params?.timeout);
+async function abort(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.POST('/update/abort_download', {
+        signal
+      }),
+    params
+  );
 
   if (error) {
     throw error;
@@ -107,10 +125,16 @@ async function abort(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-export interface AutoUpdateParams extends TimeoutOptions, AutoUpdateSettings {}
+export interface AutoUpdateParams extends RequestOptions, AutoUpdateSettings {}
 
-async function getAutoUpdate(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.GET('/update/autoupdate', { signal }), params?.timeout);
+async function getAutoUpdate(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.GET('/update/autoupdate', {
+        signal
+      }),
+    params
+  );
 
   if (error) {
     throw error;
@@ -122,13 +146,17 @@ async function getAutoUpdate(client: BusyBarClient, params?: TimeoutOptions) {
 async function setAutoUpdate(client: BusyBarClient, params: AutoUpdateParams) {
   const { is_enabled, interval_start, interval_end } = params;
 
-  const { data, error } = await client.withTimeout(
+  const { data, error } = await client.execute(
     (signal) =>
       client.POST('/update/autoupdate', {
-        body: { is_enabled, interval_start, interval_end },
+        body: {
+          is_enabled,
+          interval_start,
+          interval_end
+        },
         signal
       }),
-    params.timeout
+    params
   );
 
   if (error) {

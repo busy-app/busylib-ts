@@ -12,7 +12,7 @@ import {
   InstallParams,
   AutoUpdateParams
 } from 'BusyBar/api/update';
-import type { TimeoutOptions, SuccessResponse, UpdateStatus, UpdateChangelog, AutoUpdateSettings } from 'BusyBar/types';
+import type { RequestOptions, SuccessResponse, UpdateStatus, UpdateChangelog, AutoUpdateSettings } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class UpdateMethods {
@@ -20,8 +20,9 @@ export class UpdateMethods {
    * Upload firmware update package.
    *
    * @param {UpdateParams} params - Update parameters.
-   *   @param {BusyFile} params.file - Firmware TAR file to upload.
-   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {UpdateParams['file']} params.file - Firmware TAR file to upload.
+   *   @param {UpdateParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {UpdateParams['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves when upload is complete.
    */
   async UpdateFromFile(this: BusyBar, params: UpdateParams): Promise<SuccessResponse> {
@@ -31,22 +32,24 @@ export class UpdateMethods {
   /**
    * Start firmware update check.
    *
-   * @param {TimeoutOptions} [params] - Optional parameters.
-   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @param {RequestOptions} [params] - Optional parameters.
+   *   @param {RequestOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves to the update check result.
    */
-  async UpdateCheck(this: BusyBar, params?: TimeoutOptions): Promise<SuccessResponse> {
+  async UpdateCheck(this: BusyBar, params?: RequestOptions): Promise<SuccessResponse> {
     return await checkUpdateApi(this.apiClient, params);
   }
 
   /**
    * Get firmware update status.
    *
-   * @param {TimeoutOptions} [params] - Optional parameters.
-   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @param {RequestOptions} [params] - Optional parameters.
+   *   @param {RequestOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<UpdateStatus>} A promise that resolves to the update status.
    */
-  async UpdateStatusGet(this: BusyBar, params?: TimeoutOptions): Promise<UpdateStatus> {
+  async UpdateStatusGet(this: BusyBar, params?: RequestOptions): Promise<UpdateStatus> {
     return await statusUpdateApi(this.apiClient, params);
   }
 
@@ -54,8 +57,9 @@ export class UpdateMethods {
    * Get firmware update changelog.
    *
    * @param {ChangelogParams} params - Parameters for the changelog request.
-   *   @param {string} params.version - Version string to get the changelog for.
-   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {ChangelogParams['version']} params.version - Version string to get the changelog for.
+   *   @param {ChangelogParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {ChangelogParams['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<UpdateChangelog>} A promise that resolves to the changelog content.
    */
   async UpdateChangelogGet(this: BusyBar, params: ChangelogParams): Promise<UpdateChangelog> {
@@ -66,8 +70,9 @@ export class UpdateMethods {
    * Start firmware update installation.
    *
    * @param {InstallParams} params - Parameters for the installation.
-   *   @param {string} params.version - Version string to install.
-   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {InstallParams['version']} params.version - Version string to install.
+   *   @param {InstallParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {InstallParams['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful initiation.
    */
   async UpdateInstall(this: BusyBar, params: InstallParams): Promise<SuccessResponse> {
@@ -77,22 +82,24 @@ export class UpdateMethods {
   /**
    * Abort firmware update download.
    *
-   * @param {TimeoutOptions} [params] - Optional parameters.
-   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @param {RequestOptions} [params] - Optional parameters.
+   *   @param {RequestOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful abort.
    */
-  async UpdateAbort(this: BusyBar, params?: TimeoutOptions): Promise<SuccessResponse> {
+  async UpdateAbort(this: BusyBar, params?: RequestOptions): Promise<SuccessResponse> {
     return await abortUpdateApi(this.apiClient, params);
   }
 
   /**
    * Get current auto-update settings.
    *
-   * @param {TimeoutOptions} [params] - Optional parameters.
-   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   * @param {RequestOptions} [params] - Optional parameters.
+   *   @param {RequestOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<AutoUpdateSettings>} A promise that resolves to the current auto-update settings.
    */
-  async UpdateAutoUpdateGet(this: BusyBar, params?: TimeoutOptions): Promise<AutoUpdateSettings> {
+  async UpdateAutoUpdateGet(this: BusyBar, params?: RequestOptions): Promise<AutoUpdateSettings> {
     return await getAutoUpdateApi(this.apiClient, params);
   }
 
@@ -103,7 +110,8 @@ export class UpdateMethods {
    *   @param {AutoUpdateParams['is_enabled']} params.is_enabled - Whether auto-update is enabled.
    *   @param {AutoUpdateParams['interval_start']} params.interval_start - Auto-update interval start time (HH:mm).
    *   @param {AutoUpdateParams['interval_end']} params.interval_end - Auto-update interval end time (HH:mm).
-   *   @param {TimeoutOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {AutoUpdateParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {AutoUpdateParams['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful update of settings.
    */
   async UpdateAutoUpdateSet(this: BusyBar, params: AutoUpdateParams): Promise<SuccessResponse> {

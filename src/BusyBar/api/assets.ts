@@ -1,14 +1,14 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { TimeoutOptions, AssetsUploadQuery, AssetsDeleteQuery, BusyFile } from 'BusyBar/types';
+import type { RequestOptions, AssetsUploadQuery, AssetsDeleteQuery, BusyFile } from 'BusyBar/types';
 
-export interface UploadParams extends TimeoutOptions, AssetsUploadQuery {
+export interface UploadParams extends RequestOptions, AssetsUploadQuery {
   data: BusyFile;
 }
 
 async function upload(client: BusyBarClient, params: UploadParams) {
   const { application_name, file, data } = params;
 
-  const { data: responseData, error } = await client.withTimeout(
+  const { data: responseData, error } = await client.execute(
     (signal) =>
       client.POST('/assets/upload', {
         params: {
@@ -23,7 +23,7 @@ async function upload(client: BusyBarClient, params: UploadParams) {
         body: data as unknown as string,
         signal
       }),
-    params.timeout
+    params
   );
 
   if (error) {
@@ -33,12 +33,12 @@ async function upload(client: BusyBarClient, params: UploadParams) {
   return responseData;
 }
 
-export interface DeleteParams extends TimeoutOptions, AssetsDeleteQuery {}
+export interface DeleteParams extends RequestOptions, AssetsDeleteQuery {}
 
 async function deleteAssets(client: BusyBarClient, params: DeleteParams) {
   const { application_name } = params;
 
-  const { data, error } = await client.withTimeout(
+  const { data, error } = await client.execute(
     (signal) =>
       client.DELETE('/assets/upload', {
         params: {
@@ -48,7 +48,7 @@ async function deleteAssets(client: BusyBarClient, params: DeleteParams) {
         },
         signal
       }),
-    params.timeout
+    params
   );
 
   if (error) {

@@ -1,18 +1,14 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { TimeoutOptions } from 'BusyBar/types';
+import type { RequestOptions } from 'BusyBar/types';
 
-async function version(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.GET('/version', { signal }), params?.timeout);
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
-async function status(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.GET('/status', { signal }), params?.timeout);
+async function version(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.GET('/version', {
+        signal
+      }),
+    params
+  );
 
   if (error) {
     throw error;
@@ -21,8 +17,14 @@ async function status(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-async function systemStatus(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.GET('/status/system', { signal }), params?.timeout);
+async function status(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.GET('/status', {
+        signal
+      }),
+    params
+  );
 
   if (error) {
     throw error;
@@ -31,8 +33,14 @@ async function systemStatus(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-async function powerStatus(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.GET('/status/power', { signal }), params?.timeout);
+async function systemStatus(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.GET('/status/system', {
+        signal
+      }),
+    params
+  );
 
   if (error) {
     throw error;
@@ -41,8 +49,14 @@ async function powerStatus(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-async function deviceStatus(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.GET('/status/device', { signal }), params?.timeout);
+async function powerStatus(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.GET('/status/power', {
+        signal
+      }),
+    params
+  );
 
   if (error) {
     throw error;
@@ -51,8 +65,14 @@ async function deviceStatus(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-async function firmwareStatus(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.GET('/status/firmware', { signal }), params?.timeout);
+async function deviceStatus(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.GET('/status/device', {
+        signal
+      }),
+    params
+  );
 
   if (error) {
     throw error;
@@ -61,8 +81,30 @@ async function firmwareStatus(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-async function transport(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.GET('/transport', { signal }), params?.timeout);
+async function firmwareStatus(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.GET('/status/firmware', {
+        signal
+      }),
+    params
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+async function transport(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.GET('/transport', {
+        signal
+      }),
+    params
+  );
 
   if (error) {
     throw error;

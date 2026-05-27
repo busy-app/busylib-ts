@@ -1,27 +1,27 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { TimeoutOptions, DisplayElements, ClearDisplayQuery, ScreenQuery } from 'BusyBar/types';
+import type { RequestOptions, DisplayElements, ClearDisplayQuery, ScreenQuery } from 'BusyBar/types';
 import { Display } from 'BusyBar/types';
 import { blobToUint8Array, bgrToRgba, getDisplayDimensions, convertL4toRGBA } from 'Global/utils/frameData';
 
-export interface DrawParams extends TimeoutOptions, DisplayElements {}
+export interface DrawParams extends RequestOptions, DisplayElements {}
 
-export interface ClearParams extends TimeoutOptions, Partial<ClearDisplayQuery> {}
+export interface ClearParams extends RequestOptions, Partial<ClearDisplayQuery> {}
 
-export interface GetScreenFrameParams extends TimeoutOptions, ScreenQuery {}
+export interface GetScreenFrameParams extends RequestOptions, ScreenQuery {}
 
 export type GetScreenFrameOptions = { dataType: 'binary'; format?: 'raw' | 'rgba' } | { dataType?: 'blob'; format?: never };
 
 export type GetScreenFrameResult<T extends GetScreenFrameOptions | undefined> = T extends { dataType: 'binary' } ? Uint8Array | undefined : Blob | undefined;
 
 type Brightness = number | 'auto';
-export interface BrightnessParams extends TimeoutOptions {
+export interface BrightnessParams extends RequestOptions {
   value: Brightness;
 }
 
 async function draw(client: BusyBarClient, params: DrawParams) {
-  const { application_name, elements, priority = 50, timeout } = params;
+  const { application_name, elements, priority = 50 } = params;
 
-  const { data, error } = await client.withTimeout(
+  const { data, error } = await client.execute(
     (signal) =>
       client.POST('/display/draw', {
         body: {
@@ -31,7 +31,7 @@ async function draw(client: BusyBarClient, params: DrawParams) {
         },
         signal
       }),
-    timeout
+    params
   );
 
   if (error) {
@@ -42,7 +42,7 @@ async function draw(client: BusyBarClient, params: DrawParams) {
 }
 
 async function clear(client: BusyBarClient, params?: ClearParams) {
-  const { data, error } = await client.withTimeout(
+  const { data, error } = await client.execute(
     (signal) =>
       client.DELETE('/display/draw', {
         params: {
@@ -52,7 +52,7 @@ async function clear(client: BusyBarClient, params?: ClearParams) {
         },
         signal
       }),
-    params?.timeout
+    params
   );
 
   if (error) {
@@ -67,9 +67,9 @@ async function getScreenFrame<T extends GetScreenFrameOptions | undefined>(
   params: GetScreenFrameParams,
   options?: T
 ): Promise<GetScreenFrameResult<T>> {
-  const { display, timeout } = params;
+  const { display } = params;
 
-  const { data, error } = await client.withTimeout(
+  const { data, error } = await client.execute(
     (signal) =>
       client.GET('/screen', {
         params: {
@@ -80,7 +80,7 @@ async function getScreenFrame<T extends GetScreenFrameOptions | undefined>(
         parseAs: 'blob',
         signal
       }),
-    timeout
+    params
   );
 
   if (error) {
@@ -110,8 +110,14 @@ async function getScreenFrame<T extends GetScreenFrameOptions | undefined>(
   return data as GetScreenFrameResult<T>;
 }
 
-async function getDisplayBrightness(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.GET('/display/brightness', { signal }), params?.timeout);
+async function getDisplayBrightness(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.GET('/display/brightness', {
+        signal
+      }),
+    params
+  );
 
   if (error) {
     throw error;
@@ -138,7 +144,7 @@ async function setDisplayBrightness(client: BusyBarClient, params: BrightnessPar
 
   const valueQuery = normalize(value);
 
-  const { data, error } = await client.withTimeout(
+  const { data, error } = await client.execute(
     (signal) =>
       client.POST('/display/brightness', {
         params: {
@@ -148,7 +154,7 @@ async function setDisplayBrightness(client: BusyBarClient, params: BrightnessPar
         },
         signal
       }),
-    params.timeout
+    params
   );
 
   if (error) {

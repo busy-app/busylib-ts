@@ -1,9 +1,9 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { TimeoutOptions, WifiConnectRequestConfig } from 'BusyBar/types';
+import type { RequestOptions, WifiConnectRequestConfig } from 'BusyBar/types';
 import type { RequireKeys } from 'Global/types.utils';
 
-async function status(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.GET('/wifi/status', { signal }), params?.timeout);
+async function status(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute((signal) => client.GET('/wifi/status', { signal }), params);
 
   if (error) {
     throw error;
@@ -15,12 +15,12 @@ async function status(client: BusyBarClient, params?: TimeoutOptions) {
 type RequiredIpConfig = RequireKeys<NonNullable<WifiConnectRequestConfig['ip_config']>, 'ip_method'>;
 
 export type ConnectParams = RequireKeys<Omit<WifiConnectRequestConfig, 'ip_config'> & { ip_config: RequiredIpConfig }, 'ssid' | 'security' | 'ip_config'> &
-  TimeoutOptions;
+  RequestOptions;
 
 async function connect(client: BusyBarClient, params: ConnectParams) {
   const { ssid, password, security, ip_config } = params;
 
-  const { data, error } = await client.withTimeout(
+  const { data, error } = await client.execute(
     (signal) =>
       client.POST('/wifi/connect', {
         body: {
@@ -31,7 +31,7 @@ async function connect(client: BusyBarClient, params: ConnectParams) {
         },
         signal
       }),
-    params.timeout
+    params
   );
 
   if (error) {
@@ -41,8 +41,14 @@ async function connect(client: BusyBarClient, params: ConnectParams) {
   return data;
 }
 
-async function disconnect(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.POST('/wifi/disconnect', { signal }), params?.timeout);
+async function disconnect(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.POST('/wifi/disconnect', {
+        signal
+      }),
+    params
+  );
 
   if (error) {
     throw error;
@@ -51,8 +57,14 @@ async function disconnect(client: BusyBarClient, params?: TimeoutOptions) {
   return data;
 }
 
-async function networks(client: BusyBarClient, params?: TimeoutOptions) {
-  const { data, error } = await client.withTimeout((signal) => client.GET('/wifi/networks', { signal }), params?.timeout);
+async function networks(client: BusyBarClient, params?: RequestOptions) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.GET('/wifi/networks', {
+        signal
+      }),
+    params
+  );
 
   if (error) {
     throw error;

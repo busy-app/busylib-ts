@@ -2,7 +2,7 @@ import createClient from 'openapi-fetch';
 import type { Client, Middleware } from 'openapi-fetch';
 import type { paths, components } from 'Global/API';
 import type { ApiKey, ApiSemver } from 'BusyBar/types/internal';
-import type { BusyBarConfig } from 'BusyBar/types';
+import type { BusyBarConfig, RequestOptions } from 'BusyBar/types';
 
 /**
  * Universal body serializer for different body types:
@@ -88,7 +88,7 @@ async function toFetchError(res: Response): Promise<FetchError> {
 }
 
 export type BusyBarClient = Client<paths, `${string}/${string}`> & {
-  withTimeout: <T>(requestFn: (signal?: AbortSignal) => Promise<T>, timeoutMs?: number) => Promise<T>;
+  execute: <T>(requestFn: (signal?: AbortSignal) => Promise<T>, options?: RequestOptions) => Promise<T>;
 };
 
 /**
@@ -180,19 +180,29 @@ function createApiClient(url: string, getApiVersion: GetVersionFn, token: BusyBa
     bodySerializer
   }) as BusyBarClient;
 
-  client.withTimeout = async <T>(requestFn: (signal?: AbortSignal) => Promise<T>, timeoutMs: number = defaultTimeout): Promise<T> => {
-    if (timeoutMs <= 0) {
-      return await requestFn();
+  client.execute = async <T>(requestFn: (signal?: AbortSignal) => Promise<T>, options?: RequestOptions): Promise<T> => {
+    const timeoutMs = options?.timeout ?? defaultTimeout;
+    const externalSignal = options?.signal;
+
+    const signals: AbortSignal[] = [];
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    if (timeoutMs > 0) {
+      const timeoutController = new AbortController();
+      timeoutId = setTimeout(() => timeoutController.abort(new DOMException(`Request timed out after ${timeoutMs}ms`, 'TimeoutError')), timeoutMs);
+      signals.push(timeoutController.signal);
+    }
+    if (externalSignal) {
+      signals.push(externalSignal);
     }
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    const signal = signals.length > 1 ? AbortSignal.any(signals) : signals[0];
 
     try {
-      return await requestFn(controller.signal);
+      return await requestFn(signal);
     } catch (error) {
-      if (error instanceof DOMException && error.name === 'AbortError') {
-        throw new Error(`Request timed out after ${timeoutMs}ms`);
+      if (error instanceof DOMException && error.name === 'AbortError' && externalSignal?.aborted) {
+        throw new DOMException('Request was aborted', 'AbortError');
       }
       throw error;
     } finally {

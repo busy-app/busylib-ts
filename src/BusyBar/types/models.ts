@@ -1,8 +1,12 @@
 import { operations, components, paths } from 'Global/API';
 
-export interface TimeoutOptions {
+export interface RequestOptions {
   timeout?: number;
+  signal?: AbortSignal;
 }
+
+/** @deprecated Use RequestOptions instead */
+export type TimeoutOptions = RequestOptions;
 
 export type SuccessResponse = components['schemas']['SuccessResponse'];
 export type Error = components['schemas']['Error'];

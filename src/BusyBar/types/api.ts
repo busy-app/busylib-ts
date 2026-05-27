@@ -8,6 +8,7 @@ import type * as Time from 'BusyBar/api/time';
 import type * as Settings from 'BusyBar/api/settings';
 import type * as Input from 'BusyBar/api/input';
 import type * as Account from 'BusyBar/api/account';
+import type * as SmartHome from 'BusyBar/api/smartHome';
 
 export type AssetsUploadParams = Assets.UploadParams;
 export type AssetsDeleteParams = Assets.DeleteParams;
@@ -44,3 +45,5 @@ export type NameParams = Settings.NameParams;
 export type InputKeyParams = Input.InputKeyParams;
 
 export type AccountProfileSetParams = Account.SetAccountProfileParams;
+
+export type SmartHomeSwitchStateParams = SmartHome.SmartHomeSwitchStateParams;
