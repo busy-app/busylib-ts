@@ -15,12 +15,7 @@ import { SmartHomeMethods } from './methods/SmartHome';
 import { AssetsMethods } from './methods/Assets';
 
 import { DEFAULT_DEVICE_URL, DEFAULT_PROXY_URL, PROXY_HOST_RE } from 'Global/constants';
-import { isIPv4 } from 'Global/utils/isIPv4';
-import { isMdns } from 'Global/utils/isMdns';
-import type { paths } from 'Global/API';
 import type { ApiSemver, ApiKey } from 'BusyBar/types/internal';
-
-import createClient from 'openapi-fetch';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface BusyBar
@@ -73,10 +68,10 @@ export class BusyBar {
   private setTokenFn: (token: string) => void;
 
   /**
-   * Detected connection type based on auth requirements.
-   * - "wifi": Device requires authentication (returned 401/403).
-   * - "usb": Device allows access without token (returned 200).
-   * - "unknown": Detection failed or not yet completed.
+   * Detected connection type. Populated after calling {@link SystemTransportGet}.
+   * - `'wifi'`: Device is connected via Wi-Fi.
+   * - `'usb'`: Device is connected via USB.
+   * - `'unknown'`: {@link SystemTransportGet} has not been called yet, or the request failed.
    */
   public connectionType: 'usb' | 'wifi' | 'unknown' = 'unknown';
 
@@ -139,46 +134,6 @@ export class BusyBar {
     this.apiClient = client;
     this.setApiKeyFn = setApiKey;
     this.setTokenFn = setToken;
-
-    this.detectConnectionType();
-  }
-
-  /**
-   * Probes the device to determine connection type.
-   * Sends a request without authentication credentials.
-   */
-  private async detectConnectionType() {
-    const hostname = new URL(this.addr).hostname;
-
-    // If not a local address (not IP, not mDNS) -> assume Internet (Proxy)
-    if (!isIPv4(hostname) && !isMdns(hostname)) {
-      this.connectionType = 'wifi';
-      return;
-    }
-
-    // Create temporary client WITHOUT auth middleware
-    const probeClient = createClient<paths>({
-      baseUrl: `${this.addr}/api/`
-    });
-
-    try {
-      // Request an endpoint that requires authorization (e.g. device name)
-      // client.GET does not throw on 4xx/5xx status, but throws on network error
-      const { response } = await probeClient.GET('/name');
-
-      if (response.status === 401 || response.status === 403) {
-        // If auth is requested -> it is WiFi
-        this.connectionType = 'wifi';
-      } else if (response.ok) {
-        // If data returned without key -> it is USB (trusted connection)
-        this.connectionType = 'usb';
-      } else {
-        // Treat any other status as detection failure
-        throw new Error(`Failed to detect connection type. Status: ${response.status}`);
-      }
-    } catch (error) {
-      throw error;
-    }
   }
 
   /**

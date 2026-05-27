@@ -95,6 +95,8 @@ export class SystemMethods {
    * @returns {Promise<NetworkInterfaceInfo>} Current transport info (usb/wifi).
    */
   async SystemTransportGet(this: BusyBar, params?: RequestOptions): Promise<NetworkInterfaceInfo> {
-    return await transportApi(this.apiClient, params);
+    const result = await transportApi(this.apiClient, params);
+    this.connectionType = result.type;
+    return result;
   }
 }
