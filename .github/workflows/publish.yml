@@ -10,24 +10,26 @@ on:
       - "*"
   pull_request:
 
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+
 jobs:
   publish:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - name: Setup Node.js & authenticate
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
         with:
-          node-version: "20.15.1"
+          node-version-file: ".nvmrc"
           registry-url: "https://registry.npmjs.org/"
-          always-auth: true
           scope: "@busy-app"
-          token: ${{ secrets.NPM_TOKEN }}
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -37,6 +39,4 @@ jobs:
 
       - name: Publish to npm
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
-        run: pnpm publish --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm publish --no-git-checks --provenance
