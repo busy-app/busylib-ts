@@ -1,11 +1,7 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { RequestOptions, AssetsUploadQuery, AssetsDeleteQuery, BusyFile } from 'BusyBar/types';
+import type { AssetsUploadParams, AssetsDeleteParams } from 'BusyBar/types';
 
-export interface UploadParams extends RequestOptions, AssetsUploadQuery {
-  data: BusyFile;
-}
-
-async function upload(client: BusyBarClient, params: UploadParams) {
+async function upload(client: BusyBarClient, params: AssetsUploadParams) {
   const { application_name, file, data } = params;
 
   const { data: responseData, error } = await client.execute(
@@ -33,9 +29,7 @@ async function upload(client: BusyBarClient, params: UploadParams) {
   return responseData;
 }
 
-export interface DeleteParams extends RequestOptions, AssetsDeleteQuery {}
-
-async function deleteAssets(client: BusyBarClient, params: DeleteParams) {
+async function deleteAssets(client: BusyBarClient, params: AssetsDeleteParams) {
   const { application_name } = params;
 
   const { data, error } = await client.execute(

@@ -2,10 +2,9 @@ import {
   status as statusWifiApi,
   connect as connectWifiApi,
   disconnect as disconnectWifiApi,
-  networks as networksWifiAPi,
-  ConnectParams
+  networks as networksWifiAPi
 } from 'BusyBar/api/wifi';
-import type { RequestOptions, WifiStatusResponse, SuccessResponse, WifiNetworkResponse } from 'BusyBar/types';
+import type { RequestOptions, WifiStatusResponse, SuccessResponse, WifiNetworkResponse, WifiConnectParams } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class WifiMethods {
@@ -24,16 +23,16 @@ export class WifiMethods {
   /**
    * Connects to Wi-Fi network.
    *
-   * @param {ConnectParams} params - Connection parameters:
-   *   @param {ConnectParams['ssid']} params.ssid - Network SSID.
-   *   @param {ConnectParams['password']} params.password - Network password.
-   *   @param {ConnectParams['security']} params.security - Security method.
-   *   @param {ConnectParams['ip_config']} [params.ip_config] - IP configuration.
-   *   @param {ConnectParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {ConnectParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {WifiConnectParams} params - Connection parameters:
+   *   @param {WifiConnectParams['ssid']} params.ssid - Network SSID.
+   *   @param {WifiConnectParams['password']} params.password - Network password.
+   *   @param {WifiConnectParams['security']} params.security - Security method.
+   *   @param {WifiConnectParams['ip_config']} [params.ip_config] - IP configuration.
+   *   @param {WifiConnectParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {WifiConnectParams['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful connection initiation.
    */
-  async WifiConnect(this: BusyBar, params: ConnectParams): Promise<SuccessResponse> {
+  async WifiConnect(this: BusyBar, params: WifiConnectParams): Promise<SuccessResponse> {
     return await connectWifiApi(this.apiClient, params);
   }
 

@@ -1,5 +1,5 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { RequestOptions, AccountProfile } from 'BusyBar/types';
+import type { RequestOptions, AccountProfileSetParams } from 'BusyBar/types';
 
 async function getAccountState(client: BusyBarClient, params?: RequestOptions) {
   const { data, error } = await client.execute(
@@ -49,9 +49,7 @@ async function getAccountProfile(client: BusyBarClient, params?: RequestOptions)
   return data;
 }
 
-export interface SetAccountProfileParams extends RequestOptions, AccountProfile {}
-
-async function setAccountProfile(client: BusyBarClient, params: SetAccountProfileParams) {
+async function setAccountProfile(client: BusyBarClient, params: AccountProfileSetParams) {
   const { profile, custom_url } = params;
 
   const { data, error } = await client.execute(

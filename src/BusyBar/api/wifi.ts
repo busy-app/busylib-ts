@@ -1,6 +1,5 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { RequestOptions, WifiConnectRequestConfig } from 'BusyBar/types';
-import type { RequireKeys } from 'Global/types.utils';
+import type { RequestOptions, WifiConnectParams } from 'BusyBar/types';
 
 async function status(client: BusyBarClient, params?: RequestOptions) {
   const { data, error } = await client.execute((signal) => client.GET('/wifi/status', { signal }), params);
@@ -12,12 +11,7 @@ async function status(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-type RequiredIpConfig = RequireKeys<NonNullable<WifiConnectRequestConfig['ip_config']>, 'ip_method'>;
-
-export type ConnectParams = RequireKeys<Omit<WifiConnectRequestConfig, 'ip_config'> & { ip_config: RequiredIpConfig }, 'ssid' | 'security' | 'ip_config'> &
-  RequestOptions;
-
-async function connect(client: BusyBarClient, params: ConnectParams) {
+async function connect(client: BusyBarClient, params: WifiConnectParams) {
   const { ssid, password, security, ip_config } = params;
 
   const { data, error } = await client.execute(

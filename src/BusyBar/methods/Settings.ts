@@ -2,11 +2,9 @@ import {
   getHttpAccess as getHttpAccessApi,
   setHttpAccess as setHttpAccessApi,
   getName as getNameApi,
-  setName as setNameApi,
-  HttpAccessParams,
-  NameParams
+  setName as setNameApi
 } from 'BusyBar/api/settings';
-import type { RequestOptions, SuccessResponse, HttpAccessInfo, NameInfo } from 'BusyBar/types';
+import type { RequestOptions, SuccessResponse, HttpAccessInfo, NameInfo, HttpAccessParams, NameParams } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class SettingsMethods {

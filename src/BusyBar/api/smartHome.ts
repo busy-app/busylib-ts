@@ -1,5 +1,5 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { RequestOptions, SmartHomeSwitchState } from 'BusyBar/types';
+import type { RequestOptions, SmartHomeSwitchStateParams } from 'BusyBar/types';
 
 async function pairingInfoGet(client: BusyBarClient, params?: RequestOptions) {
   const { data, error } = await client.execute(
@@ -64,8 +64,6 @@ async function switchStateGet(client: BusyBarClient, params?: RequestOptions) {
 
   return data;
 }
-
-export interface SmartHomeSwitchStateParams extends RequestOptions, SmartHomeSwitchState {}
 
 async function switchStatePost(client: BusyBarClient, params: SmartHomeSwitchStateParams) {
   const { state, startup } = params;

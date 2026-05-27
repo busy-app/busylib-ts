@@ -1,5 +1,5 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { RequestOptions, TimestampInfo, SetTimezoneQuery } from 'BusyBar/types';
+import type { RequestOptions, TimeTimestampParams, TimeTimezoneParams } from 'BusyBar/types';
 
 async function getTime(client: BusyBarClient, params?: RequestOptions) {
   const { data, error } = await client.execute(
@@ -17,9 +17,7 @@ async function getTime(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-export interface SetTimestampParams extends RequestOptions, TimestampInfo {}
-
-async function setTimestamp(client: BusyBarClient, params: SetTimestampParams) {
+async function setTimestamp(client: BusyBarClient, params: TimeTimestampParams) {
   const { timestamp } = params;
 
   const { data, error } = await client.execute(
@@ -56,9 +54,7 @@ async function getTimezone(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-export interface SetTimezoneParams extends RequestOptions, SetTimezoneQuery {}
-
-async function setTimezone(client: BusyBarClient, params: SetTimezoneParams) {
+async function setTimezone(client: BusyBarClient, params: TimeTimezoneParams) {
   const { timezone } = params;
 
   const { data, error } = await client.execute(

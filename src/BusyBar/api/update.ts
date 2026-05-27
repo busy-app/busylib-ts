@@ -1,11 +1,7 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { AutoUpdateSettings, RequestOptions, UpdateChangelogQuery, UpdateInstallQuery, BusyFile } from 'BusyBar/types';
+import type { RequestOptions, UpdateFromFileParams, UpdateChangelogParams, UpdateInstallParams, UpdateAutoUpdateParams } from 'BusyBar/types';
 
-export interface UpdateParams extends RequestOptions {
-  file: BusyFile;
-}
-
-async function update(client: BusyBarClient, params: UpdateParams) {
+async function update(client: BusyBarClient, params: UpdateFromFileParams) {
   const { file } = params;
 
   const { data, error } = await client.execute(
@@ -59,9 +55,7 @@ async function status(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-export interface ChangelogParams extends RequestOptions, UpdateChangelogQuery {}
-
-async function changelog(client: BusyBarClient, params: ChangelogParams) {
+async function changelog(client: BusyBarClient, params: UpdateChangelogParams) {
   const { version } = params;
 
   const { data, error } = await client.execute(
@@ -84,9 +78,7 @@ async function changelog(client: BusyBarClient, params: ChangelogParams) {
   return data;
 }
 
-export interface InstallParams extends RequestOptions, UpdateInstallQuery {}
-
-async function install(client: BusyBarClient, params: InstallParams) {
+async function install(client: BusyBarClient, params: UpdateInstallParams) {
   const { version } = params;
 
   const { data, error } = await client.execute(
@@ -125,8 +117,6 @@ async function abort(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-export interface AutoUpdateParams extends RequestOptions, AutoUpdateSettings {}
-
 async function getAutoUpdate(client: BusyBarClient, params?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
@@ -143,7 +133,7 @@ async function getAutoUpdate(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function setAutoUpdate(client: BusyBarClient, params: AutoUpdateParams) {
+async function setAutoUpdate(client: BusyBarClient, params: UpdateAutoUpdateParams) {
   const { is_enabled, interval_start, interval_end } = params;
 
   const { data, error } = await client.execute(

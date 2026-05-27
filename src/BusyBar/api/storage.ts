@@ -1,20 +1,15 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
 import type {
   RequestOptions,
-  StorageWriteQuery,
-  StorageReadQuery,
-  StorageListQuery,
-  StorageRemoveQuery,
-  StorageCreateDirQuery,
-  StorageRenameQuery,
-  BusyFile
+  StorageUploadFileParams,
+  StorageDownloadFileParams,
+  StorageReadDirectoryParams,
+  StorageRemoveParams,
+  StorageCreateDirectoryParams,
+  StorageRenameParams
 } from 'BusyBar/types';
 
-export interface UploadFileParams extends RequestOptions, StorageWriteQuery {
-  file: BusyFile;
-}
-
-async function write(client: BusyBarClient, params: UploadFileParams) {
+async function write(client: BusyBarClient, params: StorageUploadFileParams) {
   const { path, file } = params;
 
   const { data, error } = await client.execute(
@@ -41,11 +36,7 @@ async function write(client: BusyBarClient, params: UploadFileParams) {
   return data;
 }
 
-export interface DownloadFileParams extends RequestOptions, StorageReadQuery {
-  as_array_buffer?: boolean;
-}
-
-async function read(client: BusyBarClient, params: DownloadFileParams) {
+async function read(client: BusyBarClient, params: StorageDownloadFileParams) {
   const { path, as_array_buffer } = params;
 
   const { data, error } = await client.execute(
@@ -69,9 +60,7 @@ async function read(client: BusyBarClient, params: DownloadFileParams) {
   return data;
 }
 
-export interface ReadDirectoryParams extends RequestOptions, StorageListQuery {}
-
-async function list(client: BusyBarClient, params: ReadDirectoryParams) {
+async function list(client: BusyBarClient, params: StorageReadDirectoryParams) {
   const { path } = params;
 
   const { data, error } = await client.execute(
@@ -94,9 +83,7 @@ async function list(client: BusyBarClient, params: ReadDirectoryParams) {
   return data;
 }
 
-export interface RemoveParams extends RequestOptions, StorageRemoveQuery {}
-
-async function remove(client: BusyBarClient, params: RemoveParams) {
+async function remove(client: BusyBarClient, params: StorageRemoveParams) {
   const { path } = params;
 
   const { data, error } = await client.execute(
@@ -119,9 +106,7 @@ async function remove(client: BusyBarClient, params: RemoveParams) {
   return data;
 }
 
-export interface CreateDirectoryParams extends RequestOptions, StorageCreateDirQuery {}
-
-async function mkdir(client: BusyBarClient, params: CreateDirectoryParams) {
+async function mkdir(client: BusyBarClient, params: StorageCreateDirectoryParams) {
   const { path } = params;
 
   const { data, error } = await client.execute(
@@ -160,9 +145,7 @@ async function status(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-export interface RenameParams extends RequestOptions, StorageRenameQuery {}
-
-async function rename(client: BusyBarClient, params: RenameParams) {
+async function rename(client: BusyBarClient, params: StorageRenameParams) {
   const { path, new_path } = params;
 
   const { data, error } = await client.execute(

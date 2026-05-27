@@ -1,5 +1,5 @@
-import { setInputKey as setInputKeyApi, InputKeyParams } from 'BusyBar/api/input';
-import type { SuccessResponse } from 'BusyBar/types';
+import { setInputKey as setInputKeyApi } from 'BusyBar/api/input';
+import type { SuccessResponse, InputKeyParams } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class InputMethods {

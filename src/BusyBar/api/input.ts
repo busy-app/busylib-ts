@@ -1,7 +1,5 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { RequestOptions, InputKeyQuery } from 'BusyBar/types';
-
-export interface InputKeyParams extends RequestOptions, InputKeyQuery {}
+import type { InputKeyParams } from 'BusyBar/types';
 
 async function setInputKey(client: BusyBarClient, params: InputKeyParams) {
   const { key } = params;

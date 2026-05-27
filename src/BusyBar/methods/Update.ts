@@ -6,26 +6,22 @@ import {
   install as installUpdateApi,
   abort as abortUpdateApi,
   getAutoUpdate as getAutoUpdateApi,
-  setAutoUpdate as setAutoUpdateApi,
-  UpdateParams,
-  ChangelogParams,
-  InstallParams,
-  AutoUpdateParams
+  setAutoUpdate as setAutoUpdateApi
 } from 'BusyBar/api/update';
-import type { RequestOptions, SuccessResponse, UpdateStatus, UpdateChangelog, AutoUpdateSettings } from 'BusyBar/types';
+import type { RequestOptions, SuccessResponse, UpdateStatus, UpdateChangelog, AutoUpdateSettings, UpdateFromFileParams, UpdateChangelogParams, UpdateInstallParams, UpdateAutoUpdateParams } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class UpdateMethods {
   /**
    * Upload firmware update package.
    *
-   * @param {UpdateParams} params - Update parameters.
-   *   @param {UpdateParams['file']} params.file - Firmware TAR file to upload.
-   *   @param {UpdateParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {UpdateParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {UpdateFromFileParams} params - Update parameters.
+   *   @param {UpdateFromFileParams['file']} params.file - Firmware TAR file to upload.
+   *   @param {UpdateFromFileParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {UpdateFromFileParams['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves when upload is complete.
    */
-  async UpdateFromFile(this: BusyBar, params: UpdateParams): Promise<SuccessResponse> {
+  async UpdateFromFile(this: BusyBar, params: UpdateFromFileParams): Promise<SuccessResponse> {
     return await updateApi(this.apiClient, params);
   }
 
@@ -56,26 +52,26 @@ export class UpdateMethods {
   /**
    * Get firmware update changelog.
    *
-   * @param {ChangelogParams} params - Parameters for the changelog request.
-   *   @param {ChangelogParams['version']} params.version - Version string to get the changelog for.
-   *   @param {ChangelogParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {ChangelogParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {UpdateChangelogParams} params - Parameters for the changelog request.
+   *   @param {UpdateChangelogParams['version']} params.version - Version string to get the changelog for.
+   *   @param {UpdateChangelogParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {UpdateChangelogParams['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<UpdateChangelog>} A promise that resolves to the changelog content.
    */
-  async UpdateChangelogGet(this: BusyBar, params: ChangelogParams): Promise<UpdateChangelog> {
+  async UpdateChangelogGet(this: BusyBar, params: UpdateChangelogParams): Promise<UpdateChangelog> {
     return await changelogUpdateApi(this.apiClient, params);
   }
 
   /**
    * Start firmware update installation.
    *
-   * @param {InstallParams} params - Parameters for the installation.
-   *   @param {InstallParams['version']} params.version - Version string to install.
-   *   @param {InstallParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {InstallParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {UpdateInstallParams} params - Parameters for the installation.
+   *   @param {UpdateInstallParams['version']} params.version - Version string to install.
+   *   @param {UpdateInstallParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {UpdateInstallParams['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful initiation.
    */
-  async UpdateInstall(this: BusyBar, params: InstallParams): Promise<SuccessResponse> {
+  async UpdateInstall(this: BusyBar, params: UpdateInstallParams): Promise<SuccessResponse> {
     return await installUpdateApi(this.apiClient, params);
   }
 
@@ -106,15 +102,15 @@ export class UpdateMethods {
   /**
    * Set auto-update settings.
    *
-   * @param {AutoUpdateParams} params - Parameters for auto-update settings.
-   *   @param {AutoUpdateParams['is_enabled']} params.is_enabled - Whether auto-update is enabled.
-   *   @param {AutoUpdateParams['interval_start']} params.interval_start - Auto-update interval start time (HH:mm).
-   *   @param {AutoUpdateParams['interval_end']} params.interval_end - Auto-update interval end time (HH:mm).
-   *   @param {AutoUpdateParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {AutoUpdateParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {UpdateAutoUpdateParams} params - Parameters for auto-update settings.
+   *   @param {UpdateAutoUpdateParams['is_enabled']} params.is_enabled - Whether auto-update is enabled.
+   *   @param {UpdateAutoUpdateParams['interval_start']} params.interval_start - Auto-update interval start time (HH:mm).
+   *   @param {UpdateAutoUpdateParams['interval_end']} params.interval_end - Auto-update interval end time (HH:mm).
+   *   @param {UpdateAutoUpdateParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {UpdateAutoUpdateParams['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful update of settings.
    */
-  async UpdateAutoUpdateSet(this: BusyBar, params: AutoUpdateParams): Promise<SuccessResponse> {
+  async UpdateAutoUpdateSet(this: BusyBar, params: UpdateAutoUpdateParams): Promise<SuccessResponse> {
     return await setAutoUpdateApi(this.apiClient, params);
   }
 }

@@ -4,10 +4,9 @@ import {
   getAccountProfile as getAccountProfileApi,
   setAccountProfile as setAccountProfileApi,
   unlinkDevice as unlinkDeviceApi,
-  linkDevice as linkDeviceApi,
-  SetAccountProfileParams
+  linkDevice as linkDeviceApi
 } from 'BusyBar/api/account';
-import type { RequestOptions, AccountInfo, SuccessResponse, AccountLink, AccountStatus, AccountProfile } from 'BusyBar/types';
+import type { RequestOptions, AccountInfo, SuccessResponse, AccountLink, AccountStatus, AccountProfile, AccountProfileSetParams } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class AccountMethods {
@@ -50,14 +49,14 @@ export class AccountMethods {
   /**
    * Set account profile.
    *
-   * @param {SetAccountProfileParams} params - Parameters for setting the account profile.
-   *   @param {SetAccountProfileParams['profile']} params.profile - Profile name.
-   *   @param {SetAccountProfileParams['custom_url']} [params.custom_url] - Custom profile URL.
-   *   @param {SetAccountProfileParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {SetAccountProfileParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {AccountProfileSetParams} params - Parameters for setting the account profile.
+   *   @param {AccountProfileSetParams['profile']} params.profile - Profile name.
+   *   @param {AccountProfileSetParams['custom_url']} [params.custom_url] - Custom profile URL.
+   *   @param {AccountProfileSetParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {AccountProfileSetParams['signal']} [params.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  async AccountProfileSet(this: BusyBar, params: SetAccountProfileParams): Promise<SuccessResponse> {
+  async AccountProfileSet(this: BusyBar, params: AccountProfileSetParams): Promise<SuccessResponse> {
     return await setAccountProfileApi(this.apiClient, params);
   }
 

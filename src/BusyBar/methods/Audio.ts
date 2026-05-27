@@ -1,12 +1,10 @@
 import {
   play as playApi,
   stop as stopApi,
-  AudioPlayParams,
   getAudioVolume as getAudioVolumeApi,
-  setAudioVolume as setAudioVolumeApi,
-  AudioVolumeParams
+  setAudioVolume as setAudioVolumeApi
 } from 'BusyBar/api/audio';
-import type { RequestOptions, SuccessResponse, AudioVolumeInfo } from 'BusyBar/types';
+import type { RequestOptions, SuccessResponse, AudioVolumeInfo, AudioPlayParams, AudioVolumeParams } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class AudioMethods {

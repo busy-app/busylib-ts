@@ -1,5 +1,5 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { RequestOptions, HttpAccessQuery, NameInfo } from 'BusyBar/types';
+import type { RequestOptions, HttpAccessParams, NameParams } from 'BusyBar/types';
 
 async function getHttpAccess(client: BusyBarClient, params?: RequestOptions) {
   const { data, error } = await client.execute(
@@ -16,8 +16,6 @@ async function getHttpAccess(client: BusyBarClient, params?: RequestOptions) {
 
   return data;
 }
-
-export interface HttpAccessParams extends RequestOptions, HttpAccessQuery {}
 
 async function setHttpAccess(client: BusyBarClient, params: HttpAccessParams) {
   const { mode, key } = params;
@@ -63,8 +61,6 @@ async function getName(client: BusyBarClient, params?: RequestOptions) {
 
   return data;
 }
-
-export interface NameParams extends RequestOptions, NameInfo {}
 
 async function setName(client: BusyBarClient, params: NameParams) {
   const { name } = params;

@@ -1,7 +1,5 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { RequestOptions, AudioPlayQuery, AudioVolumeQuery } from 'BusyBar/types';
-
-export interface AudioPlayParams extends RequestOptions, AudioPlayQuery {}
+import type { RequestOptions, AudioPlayParams, AudioVolumeParams } from 'BusyBar/types';
 
 async function play(client: BusyBarClient, params: AudioPlayParams) {
   const { application_name, path } = params;
@@ -58,8 +56,6 @@ async function getAudioVolume(client: BusyBarClient, params?: RequestOptions) {
 
   return data;
 }
-
-export interface AudioVolumeParams extends RequestOptions, AudioVolumeQuery {}
 
 async function setAudioVolume(client: BusyBarClient, params: AudioVolumeParams) {
   const { volume, silent } = params;

@@ -1,24 +1,9 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { RequestOptions, DisplayElements, ClearDisplayQuery, ScreenQuery } from 'BusyBar/types';
+import type { RequestOptions, DisplayDrawParams, DisplayClearParams, ScreenFrameGetParams, ScreenFrameGetOptions, ScreenFrameGetResult, DisplayBrightnessParams } from 'BusyBar/types';
 import { Display } from 'BusyBar/types';
 import { blobToUint8Array, bgrToRgba, getDisplayDimensions, convertL4toRGBA } from 'Global/utils/frameData';
 
-export interface DrawParams extends RequestOptions, DisplayElements {}
-
-export interface ClearParams extends RequestOptions, Partial<ClearDisplayQuery> {}
-
-export interface GetScreenFrameParams extends RequestOptions, ScreenQuery {}
-
-export type GetScreenFrameOptions = { dataType: 'binary'; format?: 'raw' | 'rgba' } | { dataType?: 'blob'; format?: never };
-
-export type GetScreenFrameResult<T extends GetScreenFrameOptions | undefined> = T extends { dataType: 'binary' } ? Uint8Array | undefined : Blob | undefined;
-
-type Brightness = number | 'auto';
-export interface BrightnessParams extends RequestOptions {
-  value: Brightness;
-}
-
-async function draw(client: BusyBarClient, params: DrawParams) {
+async function draw(client: BusyBarClient, params: DisplayDrawParams) {
   const { application_name, elements, priority = 50 } = params;
 
   const { data, error } = await client.execute(
@@ -41,7 +26,7 @@ async function draw(client: BusyBarClient, params: DrawParams) {
   return data;
 }
 
-async function clear(client: BusyBarClient, params?: ClearParams) {
+async function clear(client: BusyBarClient, params?: DisplayClearParams) {
   const { data, error } = await client.execute(
     (signal) =>
       client.DELETE('/display/draw', {
@@ -62,11 +47,11 @@ async function clear(client: BusyBarClient, params?: ClearParams) {
   return data;
 }
 
-async function getScreenFrame<T extends GetScreenFrameOptions | undefined>(
+async function getScreenFrame<T extends ScreenFrameGetOptions | undefined>(
   client: BusyBarClient,
-  params: GetScreenFrameParams,
+  params: ScreenFrameGetParams,
   options?: T
-): Promise<GetScreenFrameResult<T>> {
+): Promise<ScreenFrameGetResult<T>> {
   const { display } = params;
 
   const { data, error } = await client.execute(
@@ -88,7 +73,7 @@ async function getScreenFrame<T extends GetScreenFrameOptions | undefined>(
   }
 
   if (!data) {
-    return undefined as GetScreenFrameResult<T>;
+    return undefined as ScreenFrameGetResult<T>;
   }
 
   if (options?.dataType === 'binary') {
@@ -98,16 +83,16 @@ async function getScreenFrame<T extends GetScreenFrameOptions | undefined>(
       const { width, height } = getDisplayDimensions(display as Display);
 
       if (display === Display.BACK) {
-        return new Uint8Array(convertL4toRGBA(raw, width, height).buffer) as GetScreenFrameResult<T>;
+        return new Uint8Array(convertL4toRGBA(raw, width, height).buffer) as ScreenFrameGetResult<T>;
       }
 
-      return bgrToRgba(raw, width, height) as GetScreenFrameResult<T>;
+      return bgrToRgba(raw, width, height) as ScreenFrameGetResult<T>;
     }
 
-    return raw as GetScreenFrameResult<T>;
+    return raw as ScreenFrameGetResult<T>;
   }
 
-  return data as GetScreenFrameResult<T>;
+  return data as ScreenFrameGetResult<T>;
 }
 
 async function getDisplayBrightness(client: BusyBarClient, params?: RequestOptions) {
@@ -126,8 +111,10 @@ async function getDisplayBrightness(client: BusyBarClient, params?: RequestOptio
   return data;
 }
 
-async function setDisplayBrightness(client: BusyBarClient, params: BrightnessParams) {
+async function setDisplayBrightness(client: BusyBarClient, params: DisplayBrightnessParams) {
   const { value } = params;
+
+  type Brightness = number | 'auto';
 
   const normalize = (val: Brightness): string => {
     if (typeof val === 'number') {
