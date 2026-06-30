@@ -1,14 +1,16 @@
-# BUSY Lib
+# busylib
 
 [![node version](https://img.shields.io/node/v/%40busy-app%2Fbusy-lib?color=66cc33&style=flat)](https://nodejs.org) [![license](https://img.shields.io/npm/l/@busy-app/busy-lib?color=2B7FFF&style=flat)](./LICENSE)
 
-A TypeScript library for interacting with the [BUSY Bar](https://busy.app/) - a productivity multi-tool with an LED pixel screen for custom statuses. Currently it features three modules:
+A TypeScript library for interacting with the [BUSY Bar](https://busy.app/) - a productivity multi-tool with an LED pixel screen for custom statuses, built-in Pomodoro timer, and apps.
 
-- **`BusyBar`** - a typed client for the device's [HTTP API](https://docs.busy.app/bar/dev/http-api)
-- **`StateStream`** - real-time device state updates over WebSocket
+The library currently features three modules:
+
+- **`BusyBar`** - a typed client for the BUSY Bar [HTTP API](https://docs.busy.app/bar/dev/http-api)
+- **`StateStream`** - real-time BUSY Bar state updates over WebSocket
 - **`LEDRenderer`** - WebGL2 BUSY Bar display renderer
 
-ESM and CJS builds are both shipped, with full type definitions.
+Supports both ESM (import) and CommonJS (require), with full TypeScript type definitions.
 
 ## Table of contents
 
@@ -16,6 +18,7 @@ ESM and CJS builds are both shipped, with full type definitions.
 - [BUSY Bar HTTP API](#busy-bar-http-api)
 - [StateStream](#statestream---real-time-device-state-updates)
 - [LEDRenderer](#ledrenderer---rendering-busy-bar-display)
+- [Links](#links)
 - [License](#license)
 
 ## Install
@@ -28,7 +31,7 @@ npm i @busy-app/busy-lib
 
 ## BUSY Bar HTTP API
 
-`BusyBar` is a single class that talks to the device over HTTP - a typed wrapper around the [HTTP API](https://docs.busy.app/bar/dev/http-api). It aggregates every namespace - `System*`, `Display*`, `Audio*`, `Wifi*`, `Storage*`, `Settings*`, `Ble*`, `Input*`, `SmartHome*`, `Account*`, `Assets*`, `Time*`, `Update*` - so everything can be called from one instance. All methods are async and return typed results.
+`BusyBar` is a single class that talks to the BUSY Bar over HTTP - a typed wrapper around the [HTTP API](https://docs.busy.app/bar/dev/http-api). It aggregates every namespace - `System*`, `Display*`, `Audio*`, `Wifi*`, `Storage*`, `Settings*`, `Ble*`, `Input*`, `SmartHome*`, `Account*`, `Assets*`, `Time*`, `Update*` - so everything can be called from one instance. All methods are async and return typed results.
 
 ### Quick start
 
@@ -36,13 +39,13 @@ npm i @busy-app/busy-lib
 import { BusyBar } from '@busy-app/busy-lib';
 
 const bar = new BusyBar({
-  addr: '10.0.4.20' // the device's IP address
+  addr: '10.0.4.20' // the BUSY Bar's IP address
 });
 
 const status = await bar.SystemStatusGet();
 ```
 
-Since every call is a network request to a physical device, any method can reject. What you catch depends on the error:
+Since every call is a network request to a physical device, any method may reject. What you catch depends on the error:
 
 - **HTTP error** (4xx/5xx) - a custom error with `status`, `statusText`, and the
   parsed `body` attached, plus a human-readable `message`
@@ -108,7 +111,7 @@ const bar = new BusyBar({
 bar.setToken('<new-token>'); // change at runtime
 ```
 
-For local network access, the device can optionally require an HTTP access password. Configure it in the web UI over USB-Ethernet (`10.0.4.20`) under Settings → HTTP Access. Provide the password in the constructor or at runtime with `setHTTPAccessPassword`:
+For local network access, the BUSY Bar can optionally require an HTTP access password. Configure it in the web UI over USB-Ethernet (`10.0.4.20`) under Settings → HTTP Access. Provide the password in the constructor or at runtime with `setHTTPAccessPassword`:
 
 ```ts
 const bar = new BusyBar({
@@ -124,9 +127,9 @@ bar.setHTTPAccessPassword('<new-password>'); // change at runtime
 
 ---
 
-## StateStream - real time device state updates
+## StateStream - real-time device state updates
 
-`StateStream` receives the device's protobuf-encoded state updates over WebSocket. It runs in a Shared Worker to avoid overloading the BUSY Bar with multiple connections from multiple tabs.
+`StateStream` receives the BUSY Bar's protobuf-encoded state updates over WebSocket. It runs in a Shared Worker to avoid overloading the BUSY Bar with multiple connections from multiple tabs.
 
 `StateStream` decodes protobuf for you, so you get ready-to-use typed objects in your callbacks.
 The worker is bundled inline; no bundler configuration is required on your side.
@@ -212,16 +215,16 @@ errorCallback: (err) => {
 
 - **Browser only.** `StateStream` is designed for the browser and relies on `SharedWorker` with fallback to Web Workers. Node implementation on Worker Threads is possible but not currently planned
 - **`STALE` ≠ websocket closed.** A live connection that simply stops sending messages flips `status.data` to `STALE` after `dataTimeout` - the websocket is still up, even if the device is no longer responding
-- **Don't double-start.** Calling `start()` while already starting/running rejects with `STREAM_ALREADY_STARTED`. Call `stop()` first
-- **Stop vs Destroy.** `stop()` closes the websocket gracefully and clears callbacks; `destroy()` also terminates the worker
+- **Don't double-start.** If the stream is already starting or running, `start()` rejects with `STREAM_ALREADY_STARTED`. Call `stop()` first
+- **Stop vs Destroy.** `stop()` closes the websocket gracefully and clears callbacks; `destroy()` does the same and also terminates the worker
 
 ---
 
 ## LEDRenderer - rendering BUSY Bar display
 
-`LEDRenderer` paints a display frame onto a `<canvas>` using WebGL2, with a (customizable) rounded-pixel LED look. It's a singleton - importing `LEDRenderer` always gives the same instance, and the WebGL context is created lazily on first use.
+`LEDRenderer` paints a display frame onto a `<canvas>` using WebGL2, with a rounded-pixel LED look (customizable). It's a singleton - importing `LEDRenderer` always gives the same instance, and the WebGL context is created lazily on first use.
 
-> This module currently targets the **front** display only - frames are `72 × 16` pixels. Use `getDisplayDimensions(Display.FRONT)` to get those dimensions.
+> This module currently targets the **front** display only - frames are `72 × 16` pixels. You can use the `getDisplayDimensions(Display.FRONT)` helper to get those dimensions.
 
 `renderFrame` always expects RGBA bytes. How you get to RGBA depends on where the
 frame comes from:
@@ -286,6 +289,13 @@ LEDRenderer.renderFrame(canvas, rgba, width, height, {
 
 - **Browser only.** `LEDRenderer` needs `window` and a WebGL2 context
 - **`data` length must match `width × height × 4`.** The bytes are uploaded straight to a WebGL texture as RGBA, so the buffer must hold exactly four bytes per pixel for the `width` and `height` you pass. A mismatch makes WebGL throw synchronously from `renderFrame`
+
+---
+
+## Links
+- Documentation: https://docs.busy.app/bar/dev/libraries
+- Source: https://github.com/busy-app/busylib-ts
+- npm: https://www.npmjs.com/package/@busy-app/busy-lib
 
 ---
 
