@@ -9,6 +9,7 @@ export * from './api/input';
 export * from './api/settings';
 export * from './api/smartHome';
 export * from './api/storage';
+export * from './api/system';
 export * from './api/time';
 export * from './api/update';
 export * from './api/wifi';

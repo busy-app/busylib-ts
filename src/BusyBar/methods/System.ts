@@ -5,9 +5,21 @@ import {
   powerStatus as powerStatusApi,
   deviceStatus as deviceStatusApi,
   firmwareStatus as firmwareStatusApi,
-  transport as transportApi
+  transport as transportApi,
+  logDump as logDumpApi
 } from 'BusyBar/api/system';
-import type { VersionInfo, Status, StatusSystem, StatusDevice, StatusFirmware, StatusPower, NetworkInterfaceInfo, RequestOptions } from 'BusyBar/types';
+import type {
+  VersionInfo,
+  Status,
+  StatusSystem,
+  StatusDevice,
+  StatusFirmware,
+  StatusPower,
+  NetworkInterfaceInfo,
+  RequestOptions,
+  LogDumpParams,
+  SuccessResponse
+} from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class SystemMethods {
@@ -98,5 +110,20 @@ export class SystemMethods {
     const result = await transportApi(this.apiClient, params);
     this.connectionType = result.type;
     return result;
+  }
+
+  /**
+   * Dump captured log.
+   *
+   * Snapshot the in-memory log buffer to a file (defaults to /ext/dump.log).
+   *
+   * @param {LogDumpParams} [params] - Optional parameters.
+   *   @param {LogDumpParams['path']} [params.path] - Destination file path (defaults to /ext/dump.log).
+   *   @param {LogDumpParams['timeout']} [params.timeout] - Request timeout in milliseconds.
+   *   @param {LogDumpParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @returns {Promise<SuccessResponse>} A promise that resolves on successful log dump.
+   */
+  async SystemLogDump(this: BusyBar, params?: LogDumpParams): Promise<SuccessResponse> {
+    return await logDumpApi(this.apiClient, params);
   }
 }

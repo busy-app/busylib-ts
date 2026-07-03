@@ -1,5 +1,5 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { RequestOptions } from 'BusyBar/types';
+import type { RequestOptions, LogDumpParams } from 'BusyBar/types';
 
 async function version(client: BusyBarClient, params?: RequestOptions) {
   const { data, error } = await client.execute(
@@ -113,4 +113,25 @@ async function transport(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-export { version, status, systemStatus, powerStatus, deviceStatus, firmwareStatus, transport };
+async function logDump(client: BusyBarClient, params?: LogDumpParams) {
+  const { data, error } = await client.execute(
+    (signal) =>
+      client.POST('/log_dump', {
+        params: {
+          query: {
+            path: params?.path
+          }
+        },
+        signal
+      }),
+    params
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export { version, status, systemStatus, powerStatus, deviceStatus, firmwareStatus, transport, logDump };
