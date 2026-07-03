@@ -87,13 +87,13 @@ const bar = new BusyBar({
 
 ### Connection options
 
-The `addr` you pass decides how the client connects. It accepts an IP address, an mDNS host (`busybar.local`), a domain, or a full URL.
+The `addr` you pass decides how the client connects. It accepts an IP address, a domain, or a full URL.
 
 ```ts
 new BusyBar(); // defaults to http://10.0.4.20
 
 new BusyBar({
-  addr: 'busybar.local' // or 10.0.4.20, http://192.168.13.37, https://example.com, etc.
+  addr: '10.0.4.20' // or http://192.168.13.37, https://example.com, etc.
 });
 
 new BusyBar({

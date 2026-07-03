@@ -50,7 +50,7 @@ export type BusyBarConfig = {
  */
 export class BusyBar {
   /**
-   * Device host address (IP or mDNS).
+   * Device host address.
    * @type {BusyBarConfig['host']}
    * @readonly
    */
@@ -79,7 +79,6 @@ export class BusyBar {
    *
    * Can be:
    * - An IP address (e.g. `192.168.0.10`)
-   * - An mDNS hostname (e.g. `busybar.local`)
    * - A domain name
    * - A full URL (`http://` or `https://`)
    *
