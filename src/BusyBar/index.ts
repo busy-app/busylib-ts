@@ -70,14 +70,6 @@ export class BusyBar {
   private setTokenFn: (token: string) => void;
 
   /**
-   * Detected connection type. Populated after calling {@link SystemTransportGet}.
-   * - `'wifi'`: Device is connected via Wi-Fi.
-   * - `'usb'`: Device is connected via USB.
-   * - `'unknown'`: {@link SystemTransportGet} has not been called yet, or the request failed.
-   */
-  public connectionType: 'usb' | 'wifi' | 'unknown' = 'unknown';
-
-  /**
    * Creates an instance of BUSY Bar.
    * Initializes the API client with the provided host address.
    *

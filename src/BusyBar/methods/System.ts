@@ -108,7 +108,6 @@ export class SystemMethods {
    */
   async SystemTransportGet(this: BusyBar, params?: RequestOptions): Promise<NetworkInterfaceInfo> {
     const result = await transportApi(this.apiClient, params);
-    this.connectionType = result.type;
     return result;
   }
 
