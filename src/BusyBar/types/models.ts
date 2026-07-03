@@ -48,6 +48,7 @@ export type ImageElement = components['schemas']['ImageElement'];
 export type DisplayBrightnessInfo = components['schemas']['DisplayBrightnessInfo'];
 export type AnimationElement = components['schemas']['AnimationElement'];
 export type CountdownElement = components['schemas']['CountdownElement'];
+export type RectangleElement = components['schemas']['RectangleElement'];
 export type ScreenResponse = components['schemas']['ScreenResponse'];
 export type ClearDisplayQuery = NonNullable<operations['clearDisplay']['parameters']['query']>;
 export type ScreenQuery = paths['/screen']['get']['parameters']['query'];
