@@ -57,6 +57,11 @@ export type ScreenQuery = paths['/screen']['get']['parameters']['query'];
 // Input
 export type InputKeyQuery = operations['setInputKey']['parameters']['query'];
 
+// Busy
+export type BusySnapshot = components['schemas']['BusySnapshot'];
+export type BusyProfile = components['schemas']['BusyProfile'];
+export type BusyProfileSlot = components['schemas']['BusyProfileSlot'];
+
 // SmartHome
 export type SmartHomePairingPayload = components['schemas']['SmartHomePairingPayload'];
 export type SmartHomePairingInfo = components['schemas']['SmartHomePairingInfo'];

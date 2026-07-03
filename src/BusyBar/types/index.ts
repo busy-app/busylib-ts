@@ -4,6 +4,7 @@ export type { BusyBarConfig } from '../index';
 export * from './api/account';
 export * from './api/assets';
 export * from './api/audio';
+export * from './api/busy';
 export * from './api/display';
 export * from './api/input';
 export * from './api/settings';
