@@ -6,7 +6,7 @@
       "BusyBar/*": ["src/BusyBar/*"],
       "ScreenStream/*": ["src/ScreenStream/*"],
       "StateStream/*": ["src/StateStream/*"],
-      "LedRenderer/*": ["src/LedRenderer/*"],
+      "ScreenRenderer/*": ["src/ScreenRenderer/*"],
       "Input/*": ["src/Input/*"],
       "Global/*": ["src/Global/*"]
     },

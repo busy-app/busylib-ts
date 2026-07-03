@@ -8,7 +8,7 @@ The library currently features three modules:
 
 - **`BusyBar`** - a typed client for the BUSY Bar [HTTP API](https://docs.busy.app/bar/dev/http-api)
 - **`StateStream`** - real-time BUSY Bar state updates over WebSocket
-- **`LEDRenderer`** - WebGL2 BUSY Bar display renderer
+- **`ScreenRenderer`** - WebGL2 BUSY Bar display renderer
 
 Supports both ESM (import) and CommonJS (require), with full TypeScript type definitions.
 
@@ -17,7 +17,7 @@ Supports both ESM (import) and CommonJS (require), with full TypeScript type def
 - [Install](#install)
 - [BUSY Bar HTTP API](#busy-bar-http-api)
 - [StateStream](#statestream---real-time-device-state-updates)
-- [LEDRenderer](#ledrenderer---rendering-busy-bar-display)
+- [ScreenRenderer](#screenrenderer---rendering-busy-bar-display)
 - [Links](#links)
 - [License](#license)
 
@@ -220,9 +220,9 @@ errorCallback: (err) => {
 
 ---
 
-## LEDRenderer - rendering BUSY Bar display
+## ScreenRenderer - rendering BUSY Bar display
 
-`LEDRenderer` paints a display frame onto a `<canvas>` using WebGL2, with a rounded-pixel LED look (customizable). It's a singleton - importing `LEDRenderer` always gives the same instance, and the WebGL context is created lazily on first use.
+`ScreenRenderer` paints a display frame onto a `<canvas>` using WebGL2, with a rounded-pixel LED look (customizable). It's a singleton - importing `ScreenRenderer` always gives the same instance, and the WebGL context is created lazily on first use.
 
 > This module currently targets the **front** display only - frames are `72 × 16` pixels. You can use the `getDisplayDimensions(Display.FRONT)` helper to get those dimensions.
 
@@ -237,7 +237,7 @@ The renderer knows nothing about the device - it just draws a pixel grid. Any `U
 ```ts
 // a 2×1 grid: one red pixel, one green pixel
 const data = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255]);
-LEDRenderer.renderFrame(canvas, data, 2, 1);
+ScreenRenderer.renderFrame(Display.FRONT, { canvas, data, width: 2, height: 1 });
 ```
 
 ### Quick start with StateStream
@@ -247,7 +247,7 @@ State updates can carry a `frame`, and its `data` is **already RGBA** - the work
 ```ts
 import {
   LocalStateStream,
-  LEDRenderer,
+  ScreenRenderer,
   Display,
   getDisplayDimensions
 } from '@busy-app/busy-lib';
@@ -263,7 +263,7 @@ try {
     dataCallback: (state) => {
       for (const update of state.updates ?? []) {
         if (canvas && update.frame?.data) {
-          LEDRenderer.renderFrame(canvas, update.frame.data, width, height);
+          ScreenRenderer.renderFrame(Display.FRONT, { canvas, data: update.frame.data, width, height });
         }
       }
     }
@@ -278,7 +278,7 @@ try {
 `renderFrame` takes an optional config argument to tune the look:
 
 ```ts
-LEDRenderer.renderFrame(canvas, rgba, width, height, {
+ScreenRenderer.renderFrame(Display.FRONT, { canvas, data: rgba, width, height }, {
   pixelSize: 0.85, // 0–1, size of each cell within its grid slot
   radius: 0.5, // 0–1, corner radius of each pixel
   darkThreshold: 0.04 // pixels darker than this are rendered transparent
@@ -287,7 +287,7 @@ LEDRenderer.renderFrame(canvas, rgba, width, height, {
 
 ### Pitfalls
 
-- **Browser only.** `LEDRenderer` needs `window` and a WebGL2 context
+- **Browser only.** `ScreenRenderer` needs `window` and a WebGL2 context
 - **`data` length must match `width × height × 4`.** The bytes are uploaded straight to a WebGL texture as RGBA, so the buffer must hold exactly four bytes per pixel for the `width` and `height` you pass. A mismatch makes WebGL throw synchronously from `renderFrame`
 
 ---
