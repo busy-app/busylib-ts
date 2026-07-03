@@ -89,7 +89,7 @@ export class BusyBar {
    * Optional authentication token.
    *
    * Must be provided when `addr` points to a secured proxy endpoint
-   * such as `https://proxy.busy.app`.
+   * such as `https://api.busy.app`.
    *
    * @param {BusyBarConfig['timeout']} config.timeout -
    * Optional default timeout for all requests in milliseconds.
@@ -104,8 +104,18 @@ export class BusyBar {
     } else {
       let addr = config.addr.trim();
 
-      if (!/^https?:\/\//i.test(addr)) {
+      const hasExplicitProtocol = /^https?:\/\//i.test(addr);
+      if (!hasExplicitProtocol) {
         addr = `http://${addr}`;
+      }
+
+      // Normalize to the bare origin, dropping any trailing path/slashes
+      // (e.g. `api.busy.app/busybar/`, `api.busy.app/`) so the prefix is added once.
+      addr = new URL(addr).origin;
+
+      // Default the proxy host to https when no protocol was explicitly provided.
+      if (!hasExplicitProtocol && PROXY_HOST_RE.test(addr)) {
+        addr = addr.replace(/^http:/i, 'https:');
       }
 
       if (PROXY_HOST_RE.test(addr) && !config.token) {
@@ -117,8 +127,11 @@ export class BusyBar {
 
     this.apiSemver = '';
 
+    // Device endpoints live under `/api/`, the proxy exposes them under `/busybar/`.
+    const pathPrefix = PROXY_HOST_RE.test(this.addr) ? '/busybar/' : '/api/';
+
     const { client, setApiKey, setToken } = createApiClient(
-      `${this.addr}/api/`,
+      `${this.addr}${pathPrefix}`,
       this.SystemVersionGet.bind(this),
       config?.token,
       config?.timeout,

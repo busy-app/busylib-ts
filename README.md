@@ -94,7 +94,7 @@ new BusyBar({
 });
 
 new BusyBar({
-  addr: 'https://proxy.busy.app',
+  addr: 'https://api.busy.app',
   token: '<bearer-token>' // API token required for the BUSY proxy, see Authentication section
 });
 ```
@@ -105,7 +105,7 @@ You can set up remote proxy access to send requests to your BUSY Bar from anywhe
 
 ```ts
 const bar = new BusyBar({
-  addr: 'https://proxy.busy.app',
+  addr: 'https://api.busy.app',
   token: '<token>'
 });
 bar.setToken('<new-token>'); // change at runtime
@@ -123,7 +123,7 @@ bar.setHTTPAccessPassword('<new-password>'); // change at runtime
 
 ### Pitfalls
 
-- **Protocol is auto-added.** `addr` protocol defaults to `http://`. Be explicit when you need HTTPS
+- **Protocol is auto-added.** `addr` defaults to `http://`, except the BUSY proxy host, which defaults to `https://`. Specify the protocol explicitly to override
 
 ---
 
