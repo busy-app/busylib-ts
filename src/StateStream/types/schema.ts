@@ -166,27 +166,27 @@ export namespace BSB_State {
   /** Properties of a WifiStateUnknown. */
   export interface WifiStateUnknown {}
 
-  /** Properties of a WifiStateDisconnected. */
-  export interface WifiStateDisconnected {}
+  /** Properties of a WifiStateInactive. */
+  export interface WifiStateInactive {}
 
-  /** Properties of a WifiStateConnected. */
-  export interface WifiStateConnected {
-    /** WifiStateConnected status */
+  /** Properties of a WifiStateActive. */
+  export interface WifiStateActive {
+    /** WifiStateActive status */
     status?: BSB_State.WifiConnectionStatus | null;
 
-    /** WifiStateConnected ssid */
+    /** WifiStateActive ssid */
     ssid?: string | null;
 
-    /** WifiStateConnected bssid */
+    /** WifiStateActive bssid */
     bssid?: string | null;
 
-    /** WifiStateConnected channel */
+    /** WifiStateActive channel */
     channel?: number | null;
 
-    /** WifiStateConnected rssi */
+    /** WifiStateActive rssi */
     rssi?: number | null;
 
-    /** WifiStateConnected security */
+    /** WifiStateActive security */
     security?: BSB_State.WifiSecurity | null;
   }
 
@@ -213,11 +213,11 @@ export namespace BSB_State {
     /** Wifi unknown */
     unknown?: BSB_State.WifiStateUnknown | null;
 
-    /** Wifi disconnected */
-    disconnected?: BSB_State.WifiStateDisconnected | null;
+    /** Wifi inactive */
+    inactive?: BSB_State.WifiStateInactive | null;
 
-    /** Wifi connected */
-    connected?: BSB_State.WifiStateConnected | null;
+    /** Wifi active */
+    active?: BSB_State.WifiStateActive | null;
 
     /** Wifi ipAddresses */
     ipAddresses?: BSB_State.IpAddress[] | null;

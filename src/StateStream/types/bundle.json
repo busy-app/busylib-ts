@@ -246,10 +246,10 @@
         "WifiStateUnknown": {
           "fields": {}
         },
-        "WifiStateDisconnected": {
+        "WifiStateInactive": {
           "fields": {}
         },
-        "WifiStateConnected": {
+        "WifiStateActive": {
           "fields": {
             "status": {
               "type": "WifiConnectionStatus",
@@ -304,7 +304,7 @@
         "Wifi": {
           "oneofs": {
             "wifiState": {
-              "oneof": ["unknown", "disconnected", "connected"]
+              "oneof": ["unknown", "inactive", "active"]
             }
           },
           "fields": {
@@ -312,12 +312,12 @@
               "type": "WifiStateUnknown",
               "id": 1
             },
-            "disconnected": {
-              "type": "WifiStateDisconnected",
+            "inactive": {
+              "type": "WifiStateInactive",
               "id": 2
             },
-            "connected": {
-              "type": "WifiStateConnected",
+            "active": {
+              "type": "WifiStateActive",
               "id": 3
             },
             "ipAddresses": {

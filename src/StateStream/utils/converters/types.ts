@@ -14,22 +14,28 @@ export interface ConvertedPower {
 
 export interface ConvertedWifi {
   unknown?: BSB_State.WifiStateUnknown | null;
-  disconnected?: BSB_State.WifiStateDisconnected | null;
-  connected?: (Omit<BSB_State.WifiStateConnected, 'status' | 'security'> & {
-    status: WifiConnectionStatus | null;
-    security: WifiSecurityMethod | null;
-  }) | null;
-  ipAddresses?: (Omit<BSB_State.IpAddress, 'protocol' | 'method'> & {
-    protocol: WifiIpType | null;
-    method: WifiIpMethod | null;
-  })[] | null;
+  disconnected?: BSB_State.WifiStateInactive | null;
+  connected?:
+    | (Omit<BSB_State.WifiStateActive, 'status' | 'security'> & {
+        status: WifiConnectionStatus | null;
+        security: WifiSecurityMethod | null;
+      })
+    | null;
+  ipAddresses?:
+    | (Omit<BSB_State.IpAddress, 'protocol' | 'method'> & {
+        protocol: WifiIpType | null;
+        method: WifiIpMethod | null;
+      })[]
+    | null;
 }
 
 export interface ConvertedMatter {
   fabricCount?: number | null;
-  state?: (Omit<BSB_State.MatterCommissioningState, 'status'> & {
-    status: MatterCommissioningStatus | null;
-  }) | null;
+  state?:
+    | (Omit<BSB_State.MatterCommissioningState, 'status'> & {
+        status: MatterCommissioningStatus | null;
+      })
+    | null;
 }
 
 export interface ConvertedBle {

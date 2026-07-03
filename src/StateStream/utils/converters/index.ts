@@ -41,15 +41,17 @@ export function convertPower(power: BSB_State.Power | null | undefined): Convert
 
 export function convertWifi(wifi: BSB_State.Wifi | null | undefined): ConvertedWifi | null {
   if (wifi == null) return null;
+  const { active, inactive, ...rest } = wifi;
   return {
-    ...wifi,
+    ...rest,
+    disconnected: inactive,
     connected:
-      wifi.connected == null
-        ? wifi.connected
+      active == null
+        ? active
         : {
-            ...wifi.connected,
-            status: convertWifiConnectionStatus(wifi.connected.status),
-            security: convertWifiSecurity(wifi.connected.security)
+            ...active,
+            status: convertWifiConnectionStatus(active.status),
+            security: convertWifiSecurity(active.security)
           },
     ipAddresses:
       wifi.ipAddresses?.map((ip) => ({
