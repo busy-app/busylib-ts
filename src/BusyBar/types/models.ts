@@ -35,11 +35,6 @@ export type AudioVolumeQuery = operations['setAudioVolume']['parameters']['query
 // BLE
 export type BleStatusResponse = components['schemas']['BleStatusResponse'];
 
-// Display
-export enum Display {
-  FRONT = 0,
-  BACK = 1
-}
 
 export type DisplayElements = components['schemas']['DisplayElements'];
 export type DisplayElement = components['schemas']['DisplayElement'];

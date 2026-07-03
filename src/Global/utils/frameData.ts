@@ -1,4 +1,4 @@
-import { Display } from 'BusyBar/types';
+import { Display } from 'Global/types';
 
 export function convertL4toRGBA(data: Uint8Array, width: number, height: number): Uint8ClampedArray {
   const rgba = new Uint8ClampedArray(width * height * 4);

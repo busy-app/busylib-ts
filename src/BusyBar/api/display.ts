@@ -1,6 +1,6 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
 import type { RequestOptions, DisplayDrawParams, DisplayClearParams, ScreenFrameGetParams, ScreenFrameGetOptions, ScreenFrameGetResult, DisplayBrightnessParams } from 'BusyBar/types';
-import { Display } from 'BusyBar/types';
+import { Display } from 'Global/types';
 import { blobToUint8Array, bgrToRgba, getDisplayDimensions, convertL4toRGBA } from 'Global/utils/frameData';
 
 async function draw(client: BusyBarClient, params: DisplayDrawParams) {
