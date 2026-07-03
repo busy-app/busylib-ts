@@ -1,11 +1,11 @@
-import type { BusySnapshot, BusyProfile, BusyProfileSlot, RequestOptions } from 'BusyBar/types/models';
+import type { BusySnapshot, BusyProfile, BusyProfileSlot } from 'BusyBar/types/models';
 
-export interface BusySnapshotSetParams extends RequestOptions, BusySnapshot {}
+export interface BusySnapshotSetParams extends BusySnapshot {}
 
-export interface BusyProfileGetParams extends RequestOptions {
+export interface BusyProfileGetParams {
   slot: BusyProfileSlot;
 }
 
-export interface BusyProfileSetParams extends RequestOptions, BusyProfile {
+export interface BusyProfileSetParams extends BusyProfile {
   slot: BusyProfileSlot;
 }

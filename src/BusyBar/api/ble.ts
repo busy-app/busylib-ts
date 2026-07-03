@@ -1,13 +1,13 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
 import type { RequestOptions } from 'BusyBar/types';
 
-async function enable(client: BusyBarClient, params?: RequestOptions) {
+async function enable(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.POST('/ble/enable', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -17,13 +17,13 @@ async function enable(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function disable(client: BusyBarClient, params?: RequestOptions) {
+async function disable(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.POST('/ble/disable', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -33,13 +33,13 @@ async function disable(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function pairing(client: BusyBarClient, params?: RequestOptions) {
+async function pairing(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.DELETE('/ble/pairing', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -49,13 +49,13 @@ async function pairing(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function status(client: BusyBarClient, params?: RequestOptions) {
+async function status(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/ble/status', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {

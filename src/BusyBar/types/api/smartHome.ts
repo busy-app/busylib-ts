@@ -1,3 +1,3 @@
-import type { SmartHomeSwitchState, RequestOptions } from 'BusyBar/types/models';
+import type { SmartHomeSwitchState } from 'BusyBar/types/models';
 
-export interface SmartHomeSwitchStateParams extends RequestOptions, SmartHomeSwitchState {}
+export interface SmartHomeSwitchStateParams extends SmartHomeSwitchState {}

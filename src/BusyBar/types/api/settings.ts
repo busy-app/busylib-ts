@@ -1,5 +1,5 @@
-import type { HttpAccessQuery, NameInfo, RequestOptions } from 'BusyBar/types/models';
+import type { HttpAccessQuery, NameInfo } from 'BusyBar/types/models';
 
-export interface HttpAccessParams extends RequestOptions, HttpAccessQuery {}
+export interface HttpAccessParams extends HttpAccessQuery {}
 
-export interface NameParams extends RequestOptions, NameInfo {}
+export interface NameParams extends NameInfo {}

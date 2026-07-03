@@ -3,13 +3,14 @@ import type {
   RequestOptions,
   StorageUploadFileParams,
   StorageDownloadFileParams,
+  StorageDownloadFileOptions,
   StorageReadDirectoryParams,
   StorageRemoveParams,
   StorageCreateDirectoryParams,
   StorageRenameParams
 } from 'BusyBar/types';
 
-async function write(client: BusyBarClient, params: StorageUploadFileParams) {
+async function write(client: BusyBarClient, params: StorageUploadFileParams, options?: RequestOptions) {
   const { path, file } = params;
 
   const { data, error } = await client.execute(
@@ -26,7 +27,7 @@ async function write(client: BusyBarClient, params: StorageUploadFileParams) {
         body: file as unknown as string,
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -36,8 +37,8 @@ async function write(client: BusyBarClient, params: StorageUploadFileParams) {
   return data;
 }
 
-async function read(client: BusyBarClient, params: StorageDownloadFileParams) {
-  const { path, as_array_buffer } = params;
+async function read(client: BusyBarClient, params: StorageDownloadFileParams, options?: StorageDownloadFileOptions) {
+  const { path } = params;
 
   const { data, error } = await client.execute(
     (signal) =>
@@ -47,10 +48,10 @@ async function read(client: BusyBarClient, params: StorageDownloadFileParams) {
             path
           }
         },
-        parseAs: as_array_buffer ? 'arrayBuffer' : 'blob',
+        parseAs: options?.as_array_buffer ? 'arrayBuffer' : 'blob',
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -60,7 +61,7 @@ async function read(client: BusyBarClient, params: StorageDownloadFileParams) {
   return data;
 }
 
-async function list(client: BusyBarClient, params: StorageReadDirectoryParams) {
+async function list(client: BusyBarClient, params: StorageReadDirectoryParams, options?: RequestOptions) {
   const { path } = params;
 
   const { data, error } = await client.execute(
@@ -73,7 +74,7 @@ async function list(client: BusyBarClient, params: StorageReadDirectoryParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -83,7 +84,7 @@ async function list(client: BusyBarClient, params: StorageReadDirectoryParams) {
   return data;
 }
 
-async function remove(client: BusyBarClient, params: StorageRemoveParams) {
+async function remove(client: BusyBarClient, params: StorageRemoveParams, options?: RequestOptions) {
   const { path } = params;
 
   const { data, error } = await client.execute(
@@ -96,7 +97,7 @@ async function remove(client: BusyBarClient, params: StorageRemoveParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -106,7 +107,7 @@ async function remove(client: BusyBarClient, params: StorageRemoveParams) {
   return data;
 }
 
-async function mkdir(client: BusyBarClient, params: StorageCreateDirectoryParams) {
+async function mkdir(client: BusyBarClient, params: StorageCreateDirectoryParams, options?: RequestOptions) {
   const { path } = params;
 
   const { data, error } = await client.execute(
@@ -119,7 +120,7 @@ async function mkdir(client: BusyBarClient, params: StorageCreateDirectoryParams
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -129,13 +130,13 @@ async function mkdir(client: BusyBarClient, params: StorageCreateDirectoryParams
   return data;
 }
 
-async function status(client: BusyBarClient, params?: RequestOptions) {
+async function status(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/storage/status', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -145,7 +146,7 @@ async function status(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function rename(client: BusyBarClient, params: StorageRenameParams) {
+async function rename(client: BusyBarClient, params: StorageRenameParams, options?: RequestOptions) {
   const { path, new_path } = params;
 
   const { data, error } = await client.execute(
@@ -159,7 +160,7 @@ async function rename(client: BusyBarClient, params: StorageRenameParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {

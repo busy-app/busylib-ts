@@ -1,5 +1,5 @@
-import type { AudioPlayBody, AudioVolumeQuery, RequestOptions } from 'BusyBar/types/models';
+import type { AudioPlayBody, AudioVolumeQuery } from 'BusyBar/types/models';
 
-export type AudioPlayParams = RequestOptions & AudioPlayBody;
+export type AudioPlayParams = AudioPlayBody;
 
-export interface AudioVolumeParams extends RequestOptions, AudioVolumeQuery {}
+export interface AudioVolumeParams extends AudioVolumeQuery {}

@@ -1,13 +1,13 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
 import type { RequestOptions, BusySnapshotSetParams, BusyProfileGetParams, BusyProfileSetParams } from 'BusyBar/types';
 
-async function getSnapshot(client: BusyBarClient, params?: RequestOptions) {
+async function getSnapshot(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/busy/snapshot', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -17,16 +17,14 @@ async function getSnapshot(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function setSnapshot(client: BusyBarClient, params: BusySnapshotSetParams) {
-  const { timeout, signal: _signal, ...body } = params;
-
+async function setSnapshot(client: BusyBarClient, params: BusySnapshotSetParams, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.PUT('/busy/snapshot', {
-        body,
+        body: params,
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -36,7 +34,7 @@ async function setSnapshot(client: BusyBarClient, params: BusySnapshotSetParams)
   return data;
 }
 
-async function getProfile(client: BusyBarClient, params: BusyProfileGetParams) {
+async function getProfile(client: BusyBarClient, params: BusyProfileGetParams, options?: RequestOptions) {
   const { slot } = params;
 
   const { data, error } = await client.execute(
@@ -47,7 +45,7 @@ async function getProfile(client: BusyBarClient, params: BusyProfileGetParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -57,8 +55,8 @@ async function getProfile(client: BusyBarClient, params: BusyProfileGetParams) {
   return data;
 }
 
-async function setProfile(client: BusyBarClient, params: BusyProfileSetParams) {
-  const { slot, timeout, signal: _signal, ...body } = params;
+async function setProfile(client: BusyBarClient, params: BusyProfileSetParams, options?: RequestOptions) {
+  const { slot, ...body } = params;
 
   const { data, error } = await client.execute(
     (signal) =>
@@ -69,7 +67,7 @@ async function setProfile(client: BusyBarClient, params: BusyProfileSetParams) {
         body,
         signal
       }),
-    params
+    options
   );
 
   if (error) {

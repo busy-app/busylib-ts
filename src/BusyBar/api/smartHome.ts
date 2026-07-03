@@ -1,13 +1,13 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
 import type { RequestOptions, SmartHomeSwitchStateParams } from 'BusyBar/types';
 
-async function pairingInfoGet(client: BusyBarClient, params?: RequestOptions) {
+async function pairingInfoGet(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/smart_home/pairing', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -17,13 +17,13 @@ async function pairingInfoGet(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function pairingPayloadPost(client: BusyBarClient, params?: RequestOptions) {
+async function pairingPayloadPost(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.POST('/smart_home/pairing', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -33,13 +33,13 @@ async function pairingPayloadPost(client: BusyBarClient, params?: RequestOptions
   return data;
 }
 
-async function pairingDelete(client: BusyBarClient, params?: RequestOptions) {
+async function pairingDelete(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.DELETE('/smart_home/pairing', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -49,13 +49,13 @@ async function pairingDelete(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function switchStateGet(client: BusyBarClient, params?: RequestOptions) {
+async function switchStateGet(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/smart_home/switch', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -65,7 +65,7 @@ async function switchStateGet(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function switchStatePost(client: BusyBarClient, params: SmartHomeSwitchStateParams) {
+async function switchStatePost(client: BusyBarClient, params: SmartHomeSwitchStateParams, options?: RequestOptions) {
   const { state, startup } = params;
 
   const { data, error } = await client.execute(
@@ -77,7 +77,7 @@ async function switchStatePost(client: BusyBarClient, params: SmartHomeSwitchSta
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {

@@ -1,11 +1,11 @@
-import type { AutoUpdateSettings, UpdateChangelogQuery, UpdateInstallQuery, BusyFile, RequestOptions } from 'BusyBar/types/models';
+import type { AutoUpdateSettings, UpdateChangelogQuery, UpdateInstallQuery, BusyFile } from 'BusyBar/types/models';
 
-export interface UpdateFromFileParams extends RequestOptions {
+export interface UpdateFromFileParams {
   file: BusyFile;
 }
 
-export interface UpdateChangelogParams extends RequestOptions, UpdateChangelogQuery {}
+export interface UpdateChangelogParams extends UpdateChangelogQuery {}
 
-export interface UpdateInstallParams extends RequestOptions, UpdateInstallQuery {}
+export interface UpdateInstallParams extends UpdateInstallQuery {}
 
-export interface UpdateAutoUpdateParams extends RequestOptions, AutoUpdateSettings {}
+export interface UpdateAutoUpdateParams extends AutoUpdateSettings {}

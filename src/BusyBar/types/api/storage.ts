@@ -9,18 +9,20 @@ import type {
   RequestOptions
 } from 'BusyBar/types/models';
 
-export interface StorageUploadFileParams extends RequestOptions, StorageWriteQuery {
+export interface StorageUploadFileParams extends StorageWriteQuery {
   file: BusyFile;
 }
 
-export interface StorageDownloadFileParams extends RequestOptions, StorageReadQuery {
+export interface StorageDownloadFileParams extends StorageReadQuery {}
+
+export interface StorageDownloadFileOptions extends RequestOptions {
   as_array_buffer?: boolean;
 }
 
-export interface StorageReadDirectoryParams extends RequestOptions, StorageListQuery {}
+export interface StorageReadDirectoryParams extends StorageListQuery {}
 
-export interface StorageRemoveParams extends RequestOptions, StorageRemoveQuery {}
+export interface StorageRemoveParams extends StorageRemoveQuery {}
 
-export interface StorageCreateDirectoryParams extends RequestOptions, StorageCreateDirQuery {}
+export interface StorageCreateDirectoryParams extends StorageCreateDirQuery {}
 
-export interface StorageRenameParams extends RequestOptions, StorageRenameQuery {}
+export interface StorageRenameParams extends StorageRenameQuery {}

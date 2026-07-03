@@ -1,7 +1,7 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { AssetsUploadParams, AssetsDeleteParams } from 'BusyBar/types';
+import type { RequestOptions, AssetsUploadParams, AssetsDeleteParams } from 'BusyBar/types';
 
-async function upload(client: BusyBarClient, params: AssetsUploadParams) {
+async function upload(client: BusyBarClient, params: AssetsUploadParams, options?: RequestOptions) {
   const { application_name, file, data } = params;
 
   const { data: responseData, error } = await client.execute(
@@ -19,7 +19,7 @@ async function upload(client: BusyBarClient, params: AssetsUploadParams) {
         body: data as unknown as string,
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -29,7 +29,7 @@ async function upload(client: BusyBarClient, params: AssetsUploadParams) {
   return responseData;
 }
 
-async function deleteAssets(client: BusyBarClient, params: AssetsDeleteParams) {
+async function deleteAssets(client: BusyBarClient, params: AssetsDeleteParams, options?: RequestOptions) {
   const { application_name } = params;
 
   const { data, error } = await client.execute(
@@ -42,7 +42,7 @@ async function deleteAssets(client: BusyBarClient, params: AssetsDeleteParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {

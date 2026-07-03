@@ -1,7 +1,7 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
 import type { RequestOptions, AudioPlayParams, AudioVolumeParams } from 'BusyBar/types';
 
-async function play(client: BusyBarClient, params: AudioPlayParams) {
+async function play(client: BusyBarClient, params: AudioPlayParams, options?: RequestOptions) {
   const { application_name } = params;
   const pathOrStock = 'path' in params ? { path: params.path } : { stock_path: params.stock_path };
 
@@ -14,7 +14,7 @@ async function play(client: BusyBarClient, params: AudioPlayParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -24,13 +24,13 @@ async function play(client: BusyBarClient, params: AudioPlayParams) {
   return data;
 }
 
-async function stop(client: BusyBarClient, params?: RequestOptions) {
+async function stop(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.DELETE('/audio/play', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -40,13 +40,13 @@ async function stop(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function getAudioVolume(client: BusyBarClient, params?: RequestOptions) {
+async function getAudioVolume(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/audio/volume', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -56,7 +56,7 @@ async function getAudioVolume(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function setAudioVolume(client: BusyBarClient, params: AudioVolumeParams) {
+async function setAudioVolume(client: BusyBarClient, params: AudioVolumeParams, options?: RequestOptions) {
   const { volume, silent } = params;
 
   if (typeof volume !== 'number' || volume < 0 || volume > 100) {
@@ -74,7 +74,7 @@ async function setAudioVolume(client: BusyBarClient, params: AudioVolumeParams) 
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {

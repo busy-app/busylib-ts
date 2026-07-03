@@ -1,9 +1,17 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { RequestOptions, DisplayDrawParams, DisplayClearParams, ScreenFrameGetParams, ScreenFrameGetOptions, ScreenFrameGetResult, DisplayBrightnessParams } from 'BusyBar/types';
+import type {
+  RequestOptions,
+  DisplayDrawParams,
+  DisplayClearParams,
+  ScreenFrameGetParams,
+  ScreenFrameGetOptions,
+  ScreenFrameGetResult,
+  DisplayBrightnessParams
+} from 'BusyBar/types';
 import { Display } from 'Global/types';
 import { blobToUint8Array, bgrToRgba, getDisplayDimensions, convertL4toRGBA } from 'Global/utils/frameData';
 
-async function draw(client: BusyBarClient, params: DisplayDrawParams) {
+async function draw(client: BusyBarClient, params: DisplayDrawParams, options?: RequestOptions) {
   const { application_name, elements, priority = 50 } = params;
 
   const { data, error } = await client.execute(
@@ -16,7 +24,7 @@ async function draw(client: BusyBarClient, params: DisplayDrawParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -26,7 +34,7 @@ async function draw(client: BusyBarClient, params: DisplayDrawParams) {
   return data;
 }
 
-async function clear(client: BusyBarClient, params?: DisplayClearParams) {
+async function clear(client: BusyBarClient, params?: DisplayClearParams, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.DELETE('/display/draw', {
@@ -37,7 +45,7 @@ async function clear(client: BusyBarClient, params?: DisplayClearParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -65,7 +73,7 @@ async function getScreenFrame<T extends ScreenFrameGetOptions | undefined>(
         parseAs: 'blob',
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -95,13 +103,13 @@ async function getScreenFrame<T extends ScreenFrameGetOptions | undefined>(
   return data as ScreenFrameGetResult<T>;
 }
 
-async function getDisplayBrightness(client: BusyBarClient, params?: RequestOptions) {
+async function getDisplayBrightness(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/display/brightness', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -111,7 +119,7 @@ async function getDisplayBrightness(client: BusyBarClient, params?: RequestOptio
   return data;
 }
 
-async function setDisplayBrightness(client: BusyBarClient, params: DisplayBrightnessParams) {
+async function setDisplayBrightness(client: BusyBarClient, params: DisplayBrightnessParams, options?: RequestOptions) {
   const { value } = params;
 
   type Brightness = number | 'auto';
@@ -141,7 +149,7 @@ async function setDisplayBrightness(client: BusyBarClient, params: DisplayBright
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {

@@ -35,7 +35,6 @@ export type AudioVolumeQuery = operations['setAudioVolume']['parameters']['query
 // BLE
 export type BleStatusResponse = components['schemas']['BleStatusResponse'];
 
-
 export type DisplayElements = components['schemas']['DisplayElements'];
 export type DisplayElement = components['schemas']['DisplayElement'];
 export type TextElement = components['schemas']['TextElement'];

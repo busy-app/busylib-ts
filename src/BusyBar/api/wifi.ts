@@ -1,8 +1,8 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
 import type { RequestOptions, WifiConnectParams } from 'BusyBar/types';
 
-async function status(client: BusyBarClient, params?: RequestOptions) {
-  const { data, error } = await client.execute((signal) => client.GET('/wifi/status', { signal }), params);
+async function status(client: BusyBarClient, options?: RequestOptions) {
+  const { data, error } = await client.execute((signal) => client.GET('/wifi/status', { signal }), options);
 
   if (error) {
     throw error;
@@ -11,7 +11,7 @@ async function status(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function connect(client: BusyBarClient, params: WifiConnectParams) {
+async function connect(client: BusyBarClient, params: WifiConnectParams, options?: RequestOptions) {
   const { ssid, password, security, ip_config } = params;
 
   const { data, error } = await client.execute(
@@ -25,7 +25,7 @@ async function connect(client: BusyBarClient, params: WifiConnectParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -35,13 +35,13 @@ async function connect(client: BusyBarClient, params: WifiConnectParams) {
   return data;
 }
 
-async function disconnect(client: BusyBarClient, params?: RequestOptions) {
+async function disconnect(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.POST('/wifi/disconnect', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -51,13 +51,13 @@ async function disconnect(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function networks(client: BusyBarClient, params?: RequestOptions) {
+async function networks(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/wifi/networks', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {

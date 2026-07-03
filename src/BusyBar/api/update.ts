@@ -1,7 +1,7 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
 import type { RequestOptions, UpdateFromFileParams, UpdateChangelogParams, UpdateInstallParams, UpdateAutoUpdateParams } from 'BusyBar/types';
 
-async function update(client: BusyBarClient, params: UpdateFromFileParams) {
+async function update(client: BusyBarClient, params: UpdateFromFileParams, options?: RequestOptions) {
   const { file } = params;
 
   const { data, error } = await client.execute(
@@ -13,7 +13,7 @@ async function update(client: BusyBarClient, params: UpdateFromFileParams) {
         body: file as unknown as string,
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -23,13 +23,13 @@ async function update(client: BusyBarClient, params: UpdateFromFileParams) {
   return data;
 }
 
-async function check(client: BusyBarClient, params?: RequestOptions) {
+async function check(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.POST('/update/check', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -39,13 +39,13 @@ async function check(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function status(client: BusyBarClient, params?: RequestOptions) {
+async function status(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/update/status', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -55,7 +55,7 @@ async function status(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function changelog(client: BusyBarClient, params: UpdateChangelogParams) {
+async function changelog(client: BusyBarClient, params: UpdateChangelogParams, options?: RequestOptions) {
   const { version } = params;
 
   const { data, error } = await client.execute(
@@ -68,7 +68,7 @@ async function changelog(client: BusyBarClient, params: UpdateChangelogParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -78,7 +78,7 @@ async function changelog(client: BusyBarClient, params: UpdateChangelogParams) {
   return data;
 }
 
-async function install(client: BusyBarClient, params: UpdateInstallParams) {
+async function install(client: BusyBarClient, params: UpdateInstallParams, options?: RequestOptions) {
   const { version } = params;
 
   const { data, error } = await client.execute(
@@ -91,7 +91,7 @@ async function install(client: BusyBarClient, params: UpdateInstallParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -101,13 +101,13 @@ async function install(client: BusyBarClient, params: UpdateInstallParams) {
   return data;
 }
 
-async function abort(client: BusyBarClient, params?: RequestOptions) {
+async function abort(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.POST('/update/abort_download', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -117,13 +117,13 @@ async function abort(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function getAutoUpdate(client: BusyBarClient, params?: RequestOptions) {
+async function getAutoUpdate(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/update/autoupdate', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -133,7 +133,7 @@ async function getAutoUpdate(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function setAutoUpdate(client: BusyBarClient, params: UpdateAutoUpdateParams) {
+async function setAutoUpdate(client: BusyBarClient, params: UpdateAutoUpdateParams, options?: RequestOptions) {
   const { is_enabled, interval_start, interval_end } = params;
 
   const { data, error } = await client.execute(
@@ -146,7 +146,7 @@ async function setAutoUpdate(client: BusyBarClient, params: UpdateAutoUpdatePara
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {

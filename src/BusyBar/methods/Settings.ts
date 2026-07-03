@@ -1,9 +1,4 @@
-import {
-  getHttpAccess as getHttpAccessApi,
-  setHttpAccess as setHttpAccessApi,
-  getName as getNameApi,
-  setName as setNameApi
-} from 'BusyBar/api/settings';
+import { getHttpAccess as getHttpAccessApi, setHttpAccess as setHttpAccessApi, getName as getNameApi, setName as setNameApi } from 'BusyBar/api/settings';
 import type { RequestOptions, SuccessResponse, HttpAccessInfo, NameInfo, HttpAccessParams, NameParams } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
@@ -11,13 +6,13 @@ export class SettingsMethods {
   /**
    * Get HTTP API access over Wi-Fi configuration.
    *
-   * @param {RequestOptions} [params] - Optional parameters.
-   *   @param {RequestOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {RequestOptions['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<HttpAccessInfo>} A promise that resolves to the access configuration.
    */
-  async SettingsAccessGet(this: BusyBar, params?: RequestOptions): Promise<HttpAccessInfo> {
-    return await getHttpAccessApi(this.apiClient, params);
+  async SettingsAccessGet(this: BusyBar, options?: RequestOptions): Promise<HttpAccessInfo> {
+    return await getHttpAccessApi(this.apiClient, options);
   }
 
   /**
@@ -26,12 +21,13 @@ export class SettingsMethods {
    * @param {HttpAccessParams} params - Access parameters:
    *   @param {HttpAccessParams['mode']} params.mode - Enable/disable access.
    *   @param {HttpAccessParams['key']} [params.key] - Access key (4-10 digits).
-   *   @param {HttpAccessParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {HttpAccessParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  async SettingsAccessSet(this: BusyBar, params: HttpAccessParams): Promise<SuccessResponse> {
-    const result = await setHttpAccessApi(this.apiClient, params);
+  async SettingsAccessSet(this: BusyBar, params: HttpAccessParams, options?: RequestOptions): Promise<SuccessResponse> {
+    const result = await setHttpAccessApi(this.apiClient, params, options);
 
     if (params.mode === 'key' && params.key) {
       this.setHTTPAccessPassword(params.key);
@@ -43,13 +39,13 @@ export class SettingsMethods {
   /**
    * Get current device name.
    *
-   * @param {RequestOptions} [params] - Optional parameters.
-   *   @param {RequestOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {RequestOptions['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<NameInfo>} A promise that resolves to the device name.
    */
-  async SettingsNameGet(this: BusyBar, params?: RequestOptions): Promise<NameInfo> {
-    return await getNameApi(this.apiClient, params);
+  async SettingsNameGet(this: BusyBar, options?: RequestOptions): Promise<NameInfo> {
+    return await getNameApi(this.apiClient, options);
   }
 
   /**
@@ -57,11 +53,12 @@ export class SettingsMethods {
    *
    * @param {NameParams} params - Name parameters:
    *   @param {NameParams['name']} params.name - New device name (max 64 chars).
-   *   @param {NameParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {NameParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  async SettingsNameSet(this: BusyBar, params: NameParams): Promise<SuccessResponse> {
-    return await setNameApi(this.apiClient, params);
+  async SettingsNameSet(this: BusyBar, params: NameParams, options?: RequestOptions): Promise<SuccessResponse> {
+    return await setNameApi(this.apiClient, params, options);
   }
 }

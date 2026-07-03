@@ -1,7 +1,7 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
-import type { InputKeyParams } from 'BusyBar/types';
+import type { RequestOptions, InputKeyParams } from 'BusyBar/types';
 
-async function setInputKey(client: BusyBarClient, params: InputKeyParams) {
+async function setInputKey(client: BusyBarClient, params: InputKeyParams, options?: RequestOptions) {
   const { key } = params;
 
   const { data, error } = await client.execute(
@@ -14,7 +14,7 @@ async function setInputKey(client: BusyBarClient, params: InputKeyParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {

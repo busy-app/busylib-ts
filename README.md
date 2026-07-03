@@ -56,18 +56,21 @@ Since every call is a network request to a physical device, any method may rejec
 
 ### Request options
 
-Every method takes an optional config, depending on the API. Common options include `timeout` and `signal` for request cancellation (both optional):
+Methods that take an API payload accept it as the first argument, followed by an optional `options` object; methods without a payload take `options` as their only argument. Common options include `timeout` and `signal` for request cancellation (both optional):
 
 ```ts
 const controller = new AbortController();
 
 try {
-  await bar.SettingsNameSet({
-    name: 'My BUSY Bar', // the API payload
-
-    timeout: 1000, // ms; overrides the client default (3000)
-    signal: controller.signal // cancel the request via AbortController
-  });
+  await bar.SettingsNameSet(
+    {
+      name: 'My BUSY Bar' // the API payload
+    },
+    {
+      timeout: 1000, // ms; overrides the client default (3000)
+      signal: controller.signal // cancel the request via AbortController
+    }
+  );
 } catch (err) {
   // rejects with a TimeoutError or AbortError when the request is cut short
   console.error(err);

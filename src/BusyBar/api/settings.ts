@@ -1,13 +1,13 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
 import type { RequestOptions, HttpAccessParams, NameParams } from 'BusyBar/types';
 
-async function getHttpAccess(client: BusyBarClient, params?: RequestOptions) {
+async function getHttpAccess(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/access', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -17,7 +17,7 @@ async function getHttpAccess(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function setHttpAccess(client: BusyBarClient, params: HttpAccessParams) {
+async function setHttpAccess(client: BusyBarClient, params: HttpAccessParams, options?: RequestOptions) {
   const { mode, key } = params;
   const keyValue = key ?? '';
 
@@ -36,7 +36,7 @@ async function setHttpAccess(client: BusyBarClient, params: HttpAccessParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -46,13 +46,13 @@ async function setHttpAccess(client: BusyBarClient, params: HttpAccessParams) {
   return data;
 }
 
-async function getName(client: BusyBarClient, params?: RequestOptions) {
+async function getName(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/name', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -62,7 +62,7 @@ async function getName(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function setName(client: BusyBarClient, params: NameParams) {
+async function setName(client: BusyBarClient, params: NameParams, options?: RequestOptions) {
   const { name } = params;
 
   const { data, error } = await client.execute(
@@ -73,7 +73,7 @@ async function setName(client: BusyBarClient, params: NameParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {

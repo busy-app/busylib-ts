@@ -16,13 +16,13 @@ export class BusyMethods {
    *
    * Gets the current state of the BUSY timer in snapshot form.
    *
-   * @param {RequestOptions} [params] - Optional parameters.
-   *   @param {RequestOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {RequestOptions['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<BusySnapshot>} Current BUSY timer snapshot.
    */
-  async BusySnapshotGet(this: BusyBar, params?: RequestOptions): Promise<BusySnapshot> {
-    return await getSnapshotApi(this.apiClient, params);
+  async BusySnapshotGet(this: BusyBar, options?: RequestOptions): Promise<BusySnapshot> {
+    return await getSnapshotApi(this.apiClient, options);
   }
 
   /**
@@ -33,12 +33,13 @@ export class BusyMethods {
    * @param {BusySnapshotSetParams} params - Snapshot to set.
    *   @param {BusySnapshotSetParams['snapshot']} params.snapshot - Timer snapshot data.
    *   @param {BusySnapshotSetParams['snapshot_timestamp_ms']} params.snapshot_timestamp_ms - Snapshot timestamp in milliseconds.
-   *   @param {BusySnapshotSetParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {BusySnapshotSetParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successfully set snapshot.
    */
-  async BusySnapshotSet(this: BusyBar, params: BusySnapshotSetParams): Promise<SuccessResponse> {
-    return await setSnapshotApi(this.apiClient, params);
+  async BusySnapshotSet(this: BusyBar, params: BusySnapshotSetParams, options?: RequestOptions): Promise<SuccessResponse> {
+    return await setSnapshotApi(this.apiClient, params, options);
   }
 
   /**
@@ -48,12 +49,13 @@ export class BusyMethods {
    *
    * @param {BusyProfileGetParams} params - Profile lookup parameters.
    *   @param {BusyProfileGetParams['slot']} params.slot - Profile slot.
-   *   @param {BusyProfileGetParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {BusyProfileGetParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<BusyProfile>} BUSY timer profile for the given slot.
    */
-  async BusyProfileGet(this: BusyBar, params: BusyProfileGetParams): Promise<BusyProfile> {
-    return await getProfileApi(this.apiClient, params);
+  async BusyProfileGet(this: BusyBar, params: BusyProfileGetParams, options?: RequestOptions): Promise<BusyProfile> {
+    return await getProfileApi(this.apiClient, params, options);
   }
 
   /**
@@ -63,11 +65,12 @@ export class BusyMethods {
    *
    * @param {BusyProfileSetParams} params - Profile to set.
    *   @param {BusyProfileSetParams['slot']} params.slot - Profile slot.
-   *   @param {BusyProfileSetParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {BusyProfileSetParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successfully set profile.
    */
-  async BusyProfileSet(this: BusyBar, params: BusyProfileSetParams): Promise<SuccessResponse> {
-    return await setProfileApi(this.apiClient, params);
+  async BusyProfileSet(this: BusyBar, params: BusyProfileSetParams, options?: RequestOptions): Promise<SuccessResponse> {
+    return await setProfileApi(this.apiClient, params, options);
   }
 }

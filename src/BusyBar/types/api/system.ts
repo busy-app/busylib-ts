@@ -1,3 +1,3 @@
-import type { LogDumpQuery, RequestOptions } from 'BusyBar/types/models';
+import type { LogDumpQuery } from 'BusyBar/types/models';
 
-export interface LogDumpParams extends RequestOptions, Partial<LogDumpQuery> {}
+export interface LogDumpParams extends Partial<LogDumpQuery> {}

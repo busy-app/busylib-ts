@@ -1,3 +1,3 @@
-import type { InputKeyQuery, RequestOptions } from 'BusyBar/types/models';
+import type { InputKeyQuery } from 'BusyBar/types/models';
 
-export interface InputKeyParams extends RequestOptions, InputKeyQuery {}
+export interface InputKeyParams extends InputKeyQuery {}

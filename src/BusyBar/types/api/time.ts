@@ -1,5 +1,5 @@
-import type { TimestampInfo, SetTimezoneQuery, RequestOptions } from 'BusyBar/types/models';
+import type { TimestampInfo, SetTimezoneQuery } from 'BusyBar/types/models';
 
-export interface TimeTimestampParams extends RequestOptions, TimestampInfo {}
+export interface TimeTimestampParams extends TimestampInfo {}
 
-export interface TimeTimezoneParams extends RequestOptions, SetTimezoneQuery {}
+export interface TimeTimezoneParams extends SetTimezoneQuery {}

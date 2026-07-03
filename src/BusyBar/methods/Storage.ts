@@ -15,6 +15,7 @@ import type {
   StorageStatus,
   StorageUploadFileParams,
   StorageDownloadFileParams,
+  StorageDownloadFileOptions,
   StorageReadDirectoryParams,
   StorageRemoveParams,
   StorageCreateDirectoryParams,
@@ -29,12 +30,13 @@ export class StorageMethods {
    * @param {StorageUploadFileParams} params - Upload parameters:
    *   @param {StorageUploadFileParams['path']} params.path - Destination path.
    *   @param {StorageUploadFileParams['file']} params.file - File content.
-   *   @param {StorageUploadFileParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {StorageUploadFileParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful upload.
    */
-  async StorageWrite(this: BusyBar, params: StorageUploadFileParams): Promise<SuccessResponse> {
-    return await writeStorageApi(this.apiClient, params);
+  async StorageWrite(this: BusyBar, params: StorageUploadFileParams, options?: RequestOptions): Promise<SuccessResponse> {
+    return await writeStorageApi(this.apiClient, params, options);
   }
 
   /**
@@ -42,13 +44,14 @@ export class StorageMethods {
    *
    * @param {StorageDownloadFileParams} params - Download parameters:
    *   @param {StorageDownloadFileParams['path']} params.path - Path to the file.
-   *   @param {StorageDownloadFileParams['as_array_buffer']} [params.as_array_buffer] - Whether to return ArrayBuffer instead of Blob.
-   *   @param {StorageDownloadFileParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {StorageDownloadFileParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {StorageDownloadFileOptions} [options] - Optional request options.
+   *   @param {StorageDownloadFileOptions['as_array_buffer']} [options.as_array_buffer] - Whether to return ArrayBuffer instead of Blob.
+   *   @param {StorageDownloadFileOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {StorageDownloadFileOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<StorageReadResponse>} A promise that resolves to the file content (Blob or ArrayBuffer).
    */
-  async StorageRead(this: BusyBar, params: StorageDownloadFileParams): Promise<StorageReadResponse> {
-    return await readStorageApi(this.apiClient, params);
+  async StorageRead(this: BusyBar, params: StorageDownloadFileParams, options?: StorageDownloadFileOptions): Promise<StorageReadResponse> {
+    return await readStorageApi(this.apiClient, params, options);
   }
 
   /**
@@ -56,12 +59,13 @@ export class StorageMethods {
    *
    * @param {StorageReadDirectoryParams} params - List parameters:
    *   @param {StorageReadDirectoryParams['path']} params.path - Path to the directory.
-   *   @param {StorageReadDirectoryParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {StorageReadDirectoryParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<StorageList>} A promise that resolves to a list of files and directories.
    */
-  async StorageListGet(this: BusyBar, params: StorageReadDirectoryParams): Promise<StorageList> {
-    return await listStorageApi(this.apiClient, params);
+  async StorageListGet(this: BusyBar, params: StorageReadDirectoryParams, options?: RequestOptions): Promise<StorageList> {
+    return await listStorageApi(this.apiClient, params, options);
   }
 
   /**
@@ -69,12 +73,13 @@ export class StorageMethods {
    *
    * @param {StorageRemoveParams} params - Remove parameters:
    *   @param {StorageRemoveParams['path']} params.path - Path to the file to remove.
-   *   @param {StorageRemoveParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {StorageRemoveParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful removal.
    */
-  async StorageRemove(this: BusyBar, params: StorageRemoveParams): Promise<SuccessResponse> {
-    return await removeStorageApi(this.apiClient, params);
+  async StorageRemove(this: BusyBar, params: StorageRemoveParams, options?: RequestOptions): Promise<SuccessResponse> {
+    return await removeStorageApi(this.apiClient, params, options);
   }
 
   /**
@@ -82,24 +87,25 @@ export class StorageMethods {
    *
    * @param {StorageCreateDirectoryParams} params - Directory creation parameters:
    *   @param {StorageCreateDirectoryParams['path']} params.path - Path to the new directory.
-   *   @param {StorageCreateDirectoryParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {StorageCreateDirectoryParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful creation.
    */
-  async StorageMkdir(this: BusyBar, params: StorageCreateDirectoryParams): Promise<SuccessResponse> {
-    return await mkdirStorageApi(this.apiClient, params);
+  async StorageMkdir(this: BusyBar, params: StorageCreateDirectoryParams, options?: RequestOptions): Promise<SuccessResponse> {
+    return await mkdirStorageApi(this.apiClient, params, options);
   }
 
   /**
    * Show storage usage.
    *
-   * @param {RequestOptions} [params] - Optional parameters.
-   *   @param {RequestOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {RequestOptions['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<StorageStatus>} A promise that resolves to the storage status.
    */
-  async StorageStatusGet(this: BusyBar, params?: RequestOptions): Promise<StorageStatus> {
-    return await statusStorageApi(this.apiClient, params);
+  async StorageStatusGet(this: BusyBar, options?: RequestOptions): Promise<StorageStatus> {
+    return await statusStorageApi(this.apiClient, options);
   }
 
   /**
@@ -108,11 +114,12 @@ export class StorageMethods {
    * @param {StorageRenameParams} params - Rename parameters:
    *   @param {StorageRenameParams['path']} params.path - Current path of the file or directory.
    *   @param {StorageRenameParams['new_path']} params.new_path - New path for the file or directory.
-   *   @param {StorageRenameParams['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {StorageRenameParams['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful rename.
    */
-  async StorageRename(this: BusyBar, params: StorageRenameParams): Promise<SuccessResponse> {
-    return await renameStorageApi(this.apiClient, params);
+  async StorageRename(this: BusyBar, params: StorageRenameParams, options?: RequestOptions): Promise<SuccessResponse> {
+    return await renameStorageApi(this.apiClient, params, options);
   }
 }

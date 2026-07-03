@@ -6,48 +6,48 @@ export class BleMethods {
   /**
    * Enable BLE. Starts advertising.
    *
-   * @param {RequestOptions} [params] - Optional parameters.
-   *   @param {RequestOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {RequestOptions['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional parameters.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  async BleEnable(this: BusyBar, params?: RequestOptions): Promise<SuccessResponse> {
-    return await enableBleApi(this.apiClient, params);
+  async BleEnable(this: BusyBar, options?: RequestOptions): Promise<SuccessResponse> {
+    return await enableBleApi(this.apiClient, options);
   }
 
   /**
    * Disable BLE. Stops advertising.
    *
-   * @param {RequestOptions} [params] - Optional parameters.
-   *   @param {RequestOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {RequestOptions['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional parameters.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  async BleDisable(this: BusyBar, params?: RequestOptions): Promise<SuccessResponse> {
-    return await disableBleApi(this.apiClient, params);
+  async BleDisable(this: BusyBar, options?: RequestOptions): Promise<SuccessResponse> {
+    return await disableBleApi(this.apiClient, options);
   }
 
   /**
    * Remove pairing. Remove pairing with previous device.
    *
-   * @param {RequestOptions} [params] - Optional parameters.
-   *   @param {RequestOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {RequestOptions['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional parameters.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  async BleUnpair(this: BusyBar, params?: RequestOptions): Promise<SuccessResponse> {
-    return await pairingBleApi(this.apiClient, params);
+  async BleUnpair(this: BusyBar, options?: RequestOptions): Promise<SuccessResponse> {
+    return await pairingBleApi(this.apiClient, options);
   }
 
   /**
    * Returns current BLE status.
    *
-   * @param {RequestOptions} [params] - Optional parameters.
-   *   @param {RequestOptions['timeout']} [params.timeout] - Request timeout in milliseconds.
-   *   @param {RequestOptions['signal']} [params.signal] - AbortSignal to cancel the request.
+   * @param {RequestOptions} [options] - Optional parameters.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<BleStatusResponse>} A promise that resolves to the BLE status.
    */
-  async BleStatusGet(this: BusyBar, params?: RequestOptions): Promise<BleStatusResponse> {
-    return await statusBleApi(this.apiClient, params);
+  async BleStatusGet(this: BusyBar, options?: RequestOptions): Promise<BleStatusResponse> {
+    return await statusBleApi(this.apiClient, options);
   }
 }

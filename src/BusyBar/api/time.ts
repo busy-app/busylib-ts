@@ -1,13 +1,13 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
 import type { RequestOptions, TimeTimestampParams, TimeTimezoneParams } from 'BusyBar/types';
 
-async function getTime(client: BusyBarClient, params?: RequestOptions) {
+async function getTime(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/time', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -17,7 +17,7 @@ async function getTime(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function setTimestamp(client: BusyBarClient, params: TimeTimestampParams) {
+async function setTimestamp(client: BusyBarClient, params: TimeTimestampParams, options?: RequestOptions) {
   const { timestamp } = params;
 
   const { data, error } = await client.execute(
@@ -28,7 +28,7 @@ async function setTimestamp(client: BusyBarClient, params: TimeTimestampParams) 
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -38,13 +38,13 @@ async function setTimestamp(client: BusyBarClient, params: TimeTimestampParams) 
   return data;
 }
 
-async function getTimezone(client: BusyBarClient, params?: RequestOptions) {
+async function getTimezone(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/time/timezone', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -54,7 +54,7 @@ async function getTimezone(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function setTimezone(client: BusyBarClient, params: TimeTimezoneParams) {
+async function setTimezone(client: BusyBarClient, params: TimeTimezoneParams, options?: RequestOptions) {
   const { timezone } = params;
 
   const { data, error } = await client.execute(
@@ -65,7 +65,7 @@ async function setTimezone(client: BusyBarClient, params: TimeTimezoneParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -75,13 +75,13 @@ async function setTimezone(client: BusyBarClient, params: TimeTimezoneParams) {
   return data;
 }
 
-async function getTzList(client: BusyBarClient, params?: RequestOptions) {
+async function getTzList(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/time/tzlist', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {

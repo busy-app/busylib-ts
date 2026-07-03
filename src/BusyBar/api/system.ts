@@ -1,13 +1,13 @@
 import type { BusyBarClient } from 'BusyBar/types/internal';
 import type { RequestOptions, LogDumpParams } from 'BusyBar/types';
 
-async function version(client: BusyBarClient, params?: RequestOptions) {
+async function version(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/version', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -17,13 +17,13 @@ async function version(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function status(client: BusyBarClient, params?: RequestOptions) {
+async function status(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/status', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -33,13 +33,13 @@ async function status(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function systemStatus(client: BusyBarClient, params?: RequestOptions) {
+async function systemStatus(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/status/system', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -49,13 +49,13 @@ async function systemStatus(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function powerStatus(client: BusyBarClient, params?: RequestOptions) {
+async function powerStatus(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/status/power', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -65,13 +65,13 @@ async function powerStatus(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function deviceStatus(client: BusyBarClient, params?: RequestOptions) {
+async function deviceStatus(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/status/device', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -81,13 +81,13 @@ async function deviceStatus(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function firmwareStatus(client: BusyBarClient, params?: RequestOptions) {
+async function firmwareStatus(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/status/firmware', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -97,13 +97,13 @@ async function firmwareStatus(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function transport(client: BusyBarClient, params?: RequestOptions) {
+async function transport(client: BusyBarClient, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.GET('/transport', {
         signal
       }),
-    params
+    options
   );
 
   if (error) {
@@ -113,7 +113,7 @@ async function transport(client: BusyBarClient, params?: RequestOptions) {
   return data;
 }
 
-async function logDump(client: BusyBarClient, params?: LogDumpParams) {
+async function logDump(client: BusyBarClient, params?: LogDumpParams, options?: RequestOptions) {
   const { data, error } = await client.execute(
     (signal) =>
       client.POST('/log_dump', {
@@ -124,7 +124,7 @@ async function logDump(client: BusyBarClient, params?: LogDumpParams) {
         },
         signal
       }),
-    params
+    options
   );
 
   if (error) {
