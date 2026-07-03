@@ -25,6 +25,7 @@ export class LocalStateStream extends BaseStateStream {
       {
         isBinary: true, // Default for local is binary
         ...options,
+        token: options.HTTPAccessPassword ?? options.token,
         addr: addr
       },
       config

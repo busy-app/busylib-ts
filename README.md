@@ -141,7 +141,7 @@ import { LocalStateStream } from '@busy-app/busy-lib';
 
 const stream = new LocalStateStream({
   addr: '10.0.4.20'
-  // use token: '<password>' for local network access with HTTP password enabled
+  // use HTTPAccessPassword: '<password>' for local network access with HTTP password enabled
 });
 
 try {
