@@ -1,3 +1,9 @@
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/busy-app/busylib-ts/dev/.github/assets/light_theme_banner.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/busy-app/busylib-ts/dev/.github/assets/dark_theme_banner.png">
+  <img alt="busylib - a TypeScript library for interacting with the BUSY Bar" width="830" height="218" src="https://raw.githubusercontent.com/busy-app/busylib-ts/dev/.github/assets/light_theme_banner.png">
+</picture>
+
 # busylib
 
 [![node version](https://img.shields.io/node/v/%40busy-app%2Fbusy-lib?color=66cc33&style=flat)](https://nodejs.org) [![license](https://img.shields.io/npm/l/@busy-app/busy-lib?color=2B7FFF&style=flat)](./LICENSE)
