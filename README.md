@@ -302,7 +302,6 @@ ScreenRenderer.renderFrame(Display.FRONT, { canvas, data: rgba, width, height },
 ---
 
 ## Links
-- Documentation: https://docs.busy.app/bar/dev/libraries
 - Source: https://github.com/busy-app/busylib-ts
 - npm: https://www.npmjs.com/package/@busy-app/busy-lib
 
