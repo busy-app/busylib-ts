@@ -46,11 +46,6 @@ export class AccountMethods {
     return await getAccountBackendApi(this.apiClient, options);
   }
 
-  /** @deprecated Use {@link AccountBackendGet} instead. */
-  async AccountProfileGet(this: BusyBar, options?: RequestOptions): Promise<AccountBackend> {
-    return await this.AccountBackendGet(options);
-  }
-
   /**
    * Set MQTT backend configuration.
    *
@@ -65,11 +60,6 @@ export class AccountMethods {
    */
   async AccountBackendSet(this: BusyBar, params: AccountBackendSetParams, options?: RequestOptions): Promise<SuccessResponse> {
     return await setAccountBackendApi(this.apiClient, params, options);
-  }
-
-  /** @deprecated Use {@link AccountBackendSet} instead. */
-  async AccountProfileSet(this: BusyBar, params: AccountBackendSetParams, options?: RequestOptions): Promise<SuccessResponse> {
-    return await this.AccountBackendSet(params, options);
   }
 
   /**

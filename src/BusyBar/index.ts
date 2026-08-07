@@ -151,13 +151,6 @@ export class BusyBar {
   }
 
   /**
-   * @deprecated Use {@link setHTTPAccessPassword} instead.
-   */
-  setApiKey(key: string) {
-    this.setHTTPAccessPassword(key);
-  }
-
-  /**
    * Sets Bearer token for all subsequent requests.
    * @param {string} token - Bearer token to use in "Authorization" header.
    */

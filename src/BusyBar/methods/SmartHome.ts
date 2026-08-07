@@ -76,27 +76,4 @@ export class SmartHomeMethods {
   async SmartHomeSwitchStateSet(this: BusyBar, params: SmartHomeSwitchStateParams, options?: RequestOptions): Promise<SuccessResponse> {
     return await switchStatePostApi(this.apiClient, params, options);
   }
-
-  // ALIASES for backward compatibility (Matter -> SmartHome)
-
-  /**
-   * @deprecated Use SmartHomePairingGet instead.
-   */
-  async MatterStatusGet(this: BusyBar, options?: RequestOptions): Promise<SmartHomePairingInfo> {
-    return await this.SmartHomePairingGet(options);
-  }
-
-  /**
-   * @deprecated Use SmartHomePair instead.
-   */
-  async MatterPair(this: BusyBar, options?: RequestOptions): Promise<SmartHomePairingPayload> {
-    return await this.SmartHomePair(options);
-  }
-
-  /**
-   * @deprecated Use SmartHomeErase instead.
-   */
-  async MatterErase(this: BusyBar, options?: RequestOptions): Promise<SuccessResponse> {
-    return await this.SmartHomeErase(options);
-  }
 }

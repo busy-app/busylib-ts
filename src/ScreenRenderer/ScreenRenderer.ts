@@ -25,8 +25,3 @@ class ScreenRenderer {
 }
 
 export const ScreenRendererInstance = /*#__PURE__*/ new ScreenRenderer();
-
-/**
- * @deprecated Use {@link ScreenRendererInstance} (exported as `ScreenRenderer`) instead.
- */
-export const LEDRendererInstance = ScreenRendererInstance;
