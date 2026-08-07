@@ -4,11 +4,11 @@ import { BusyBar } from 'BusyBar/index';
 
 export class AssetsMethods {
   /**
-   * Upload asset file with app ID. Uploads a file to a specific app's assets directory.
+   * Upload asset file with app ID. Upload a file to the application-specific assets directory. If the directory does not yet exist, it will be created automatically. Additionally, if the file name contains a subdirectory, it will be created as well, and the file will be placed inside of it.
    *
    * @param {AssetsUploadParams} params - Parameters for the upload.
    *   @param {AssetsUploadParams['application_name']} params.application_name - Application name for organizing assets.
-   *   @param {AssetsUploadParams['file']} params.file - Filename for the uploaded asset.
+   *   @param {AssetsUploadParams['file']} params.file - File path for the uploaded asset within the app assets directory.
    *   @param {AssetsUploadParams['data']} params.data - File data to upload.
    * @param {RequestOptions} [options] - Optional request options.
    *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.

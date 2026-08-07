@@ -18,7 +18,7 @@ import type {
   NetworkInterfaceInfo,
   RequestOptions,
   LogDumpParams,
-  SuccessResponse
+  LogDumpResponse
 } from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
@@ -112,18 +112,16 @@ export class SystemMethods {
   }
 
   /**
-   * Dump captured log.
-   *
-   * Snapshot the in-memory log buffer to a file (defaults to /ext/dump.log).
+   * Dump captured log. Snapshot the in-memory log buffer to a file (defaults to /ext/log.txt).
    *
    * @param {LogDumpParams} [params] - Optional parameters.
-   *   @param {LogDumpParams['path']} [params.path] - Destination file path (defaults to /ext/dump.log).
+   *   @param {LogDumpParams['filename']} [params.filename] - Destination file name without extension (defaults to `log`).
    * @param {RequestOptions} [options] - Optional request options.
    *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
-   * @returns {Promise<SuccessResponse>} A promise that resolves on successful log dump.
+   * @returns {Promise<LogDumpResponse>} A promise that resolves to the result and the full path to the written log file.
    */
-  async SystemLogDump(this: BusyBar, params?: LogDumpParams, options?: RequestOptions): Promise<SuccessResponse> {
+  async SystemLogDump(this: BusyBar, params?: LogDumpParams, options?: RequestOptions): Promise<LogDumpResponse> {
     return await logDumpApi(this.apiClient, params, options);
   }
 }

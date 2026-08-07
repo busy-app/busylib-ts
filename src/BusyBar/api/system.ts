@@ -119,7 +119,7 @@ async function logDump(client: BusyBarClient, params?: LogDumpParams, options?: 
       client.POST('/log_dump', {
         params: {
           query: {
-            path: params?.path
+            filename: params?.filename
           }
         },
         signal

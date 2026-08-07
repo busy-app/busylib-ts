@@ -119,7 +119,9 @@ export interface paths {
     put?: never;
     /**
      * Upload asset file with app ID
-     * @description Uploads a file to a specific app's assets directory
+     * @description Upload a file to the application-specific assets directory. If the directory does not yet exist, it will be created automatically.
+     *     Additionally, if the file name contains a subdirectory, it will be created as well, and the file will be placed inside of it.
+     *
      */
     post: operations['uploadAssetWithAppId'];
     /**
@@ -410,7 +412,7 @@ export interface paths {
      */
     get: operations['getBusyProfile'];
     /**
-     * Set BUSY time profile
+     * Set BUSY timer profile
      * @description Sets the BUSY timer profile under specified slot
      */
     put: operations['setBusyProfile'];
@@ -1073,7 +1075,7 @@ export interface paths {
     put?: never;
     /**
      * Dump captured log
-     * @description Snapshot the in-memory log buffer to a file (defaults to /ext/dump.log)
+     * @description Snapshot the in-memory log buffer to a file (defaults to /ext/log.txt)
      */
     post: operations['dumpLog'];
     delete?: never;
@@ -1340,6 +1342,15 @@ export interface paths {
             'application/json': components['schemas']['StatusResponse'];
           };
         };
+        /** @description Wi-Fi operation failed */
+        503: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['Error'];
+          };
+        };
       };
     };
     put?: never;
@@ -1391,6 +1402,15 @@ export interface paths {
             'application/json': components['schemas']['Error'];
           };
         };
+        /** @description Wi-Fi operation failed */
+        503: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['Error'];
+          };
+        };
       };
     };
     delete?: never;
@@ -1429,6 +1449,15 @@ export interface paths {
         };
         /** @description Already disconnected */
         400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['Error'];
+          };
+        };
+        /** @description Wi-Fi operation failed */
+        503: {
           headers: {
             [name: string]: unknown;
           };
@@ -1516,6 +1545,10 @@ export interface components {
       /** @description Whether to ignore the server certificate */
       ignore_server_cert: boolean;
     };
+    /** @example my_app */
+    ApplicationName: string;
+    AssetsPath: string;
+    StockPath: string;
     /** @example {
      *       "application_name": "my_app",
      *       "led_notification_color": "#FF0000FF",
@@ -1547,31 +1580,19 @@ export interface components {
      *           "font": "small",
      *           "color": "#AAFF00FF",
      *           "display": "front"
-     *         },
-     *         {
-     *           "id": "2",
-     *           "timeout": 6,
-     *           "type": "image",
-     *           "path": "data.png",
-     *           "x": 0,
-     *           "y": 0,
-     *           "display": "back"
      *         }
      *       ]
      *     } */
     DisplayElements: {
-      /**
-       * @description Application ID for organizing assets
-       * @example my_app
-       */
-      application_name: string;
+      /** @description Application name for organizing assets */
+      application_name: components['schemas']['ApplicationName'];
       /**
        * @description Draw priority in the range [1, 100] inclusive. A draw request is accepted when its priority is greater than or equal to (>=) the priority of the currently running system app. Equal-priority requests from a different application_name override whatever is on screen. System app priority levels: stub/poweroff apps = 0 (always preemptable), any standard built-in app = 10, active BUSY/CUSTOM work session = 90. The draw API only accepts values 1–100; 0 is reserved for internal use.
        * @default 50
        */
       priority: number;
       /**
-       * @description Color to blink the status LED, in #RRGGBBAA format.  If not specified, the LED will not blink.
+       * @description Color to blink the status LED, in #RRGGBBAA format. If not specified, the LED will not blink.
        * @example #FF0000FF
        */
       led_notification_color?: string;
@@ -1650,11 +1671,11 @@ export interface components {
       ((
         | {
             /** @description Path to the image file in the app's assets */
-            path: string;
+            path: components['schemas']['AssetsPath'];
           }
         | {
             /** @description Stock image file name */
-            stock_path: string;
+            stock_path: components['schemas']['StockPath'];
           }
       ) & {
         /**
@@ -1673,11 +1694,11 @@ export interface components {
       ((
         | {
             /** @description Path to the animation file in the app's assets */
-            path?: string;
+            path?: components['schemas']['AssetsPath'];
           }
         | {
             /** @description Stock animation file name */
-            stock_path?: string;
+            stock_path?: components['schemas']['StockPath'];
           }
       ) & {
         /**
@@ -1768,22 +1789,16 @@ export interface components {
       type: 'rectangle';
     };
     PlayAudio: {
-      /**
-       * @description Application ID for organizing assets
-       * @example my_app
-       */
-      application_name: string;
+      /** @description Application name for organizing assets */
+      application_name: components['schemas']['ApplicationName'];
     } & (
       | {
-          /**
-           * @description Path to audio file within app's assets directory
-           * @example data.snd
-           */
-          path: string;
+          /** @description Path to audio file within app's assets directory */
+          path: components['schemas']['AssetsPath'];
         }
       | {
           /** @description Stock audio file name */
-          stock_path: string;
+          stock_path: components['schemas']['StockPath'];
         }
     );
     BleStatusResponse: {
@@ -2166,6 +2181,11 @@ export interface components {
        */
       commit_hash: string;
       /**
+       * @description Intercom handshake version string (forced version, git hash, or "intercom" if check disabled)
+       * @example abc123de
+       */
+      intercom_version: string;
+      /**
        * @description Radio firmware version
        * @example 1711.2.14.5.2.0.7
        */
@@ -2487,6 +2507,15 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description PIN request timeout */
+      503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
     };
   };
   getAccountInfo: {
@@ -2547,6 +2576,15 @@ export interface operations {
           'application/json': components['schemas']['AccountBackend'];
         };
       };
+      /** @description Failed to serialize MQTT configuration */
+      503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
     };
   };
   setAccountBackend: {
@@ -2585,16 +2623,13 @@ export interface operations {
   uploadAssetWithAppId: {
     parameters: {
       query: {
+        /** @description Application name for organizing assets */
+        application_name: components['schemas']['ApplicationName'];
         /**
-         * @description Application ID for organizing assets
-         * @example my_app
+         * @description File path for the uploaded asset within the app assets directory
+         * @example file.png
          */
-        application_name: string;
-        /**
-         * @description Filename for the uploaded asset
-         * @example data.png
-         */
-        file: string;
+        file: components['schemas']['AssetsPath'];
       };
       header?: never;
       path?: never;
@@ -2633,16 +2668,22 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description Failed to write uploaded file */
+      508: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
     };
   };
   deleteAppAssets: {
     parameters: {
       query: {
-        /**
-         * @description Application ID whose assets should be deleted
-         * @example my_app
-         */
-        application_name: string;
+        /** @description Application ID whose assets should be deleted */
+        application_name: components['schemas']['ApplicationName'];
       };
       header?: never;
       path?: never;
@@ -2669,7 +2710,7 @@ export interface operations {
         };
       };
       /** @description Delete failed */
-      500: {
+      503: {
         headers: {
           [name: string]: unknown;
         };
@@ -2724,11 +2765,8 @@ export interface operations {
   clearDisplay: {
     parameters: {
       query?: {
-        /**
-         * @description Application identifier
-         * @example my_app
-         */
-        application_name?: string;
+        /** @description Application identifier */
+        application_name?: components['schemas']['ApplicationName'];
       };
       header?: never;
       path?: never;
@@ -2769,7 +2807,7 @@ export interface operations {
           'application/json': components['schemas']['SuccessResponse'];
         };
       };
-      /** @description Invalid file path or file not found */
+      /** @description Invalid file path */
       400: {
         headers: {
           [name: string]: unknown;
@@ -2778,8 +2816,8 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
-      /** @description Audio system error */
-      500: {
+      /** @description Audio file not found or is unplayable */
+      404: {
         headers: {
           [name: string]: unknown;
         };
@@ -2817,7 +2855,7 @@ export interface operations {
         };
       };
       /** @description Audio system error */
-      500: {
+      503: {
         headers: {
           [name: string]: unknown;
         };
@@ -3260,6 +3298,15 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description Failed to write uploaded file */
+      508: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
     };
   };
   readStorageFile: {
@@ -3516,15 +3563,6 @@ export interface operations {
           'application/json': components['schemas']['VersionInfo'];
         };
       };
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['Error'];
-        };
-      };
     };
   };
   getTransport: {
@@ -3543,15 +3581,6 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['NetworkInterfaceInfo'];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3574,8 +3603,8 @@ export interface operations {
           'application/json': components['schemas']['Status'];
         };
       };
-      /** @description Internal server error */
-      500: {
+      /** @description Failed to retrieve status */
+      503: {
         headers: {
           [name: string]: unknown;
         };
@@ -3603,8 +3632,8 @@ export interface operations {
           'application/json': components['schemas']['StatusDevice'];
         };
       };
-      /** @description Internal server error */
-      500: {
+      /** @description Failed to retrieve status */
+      503: {
         headers: {
           [name: string]: unknown;
         };
@@ -3632,8 +3661,8 @@ export interface operations {
           'application/json': components['schemas']['StatusFirmware'];
         };
       };
-      /** @description Internal server error */
-      500: {
+      /** @description Failed to retrieve status */
+      503: {
         headers: {
           [name: string]: unknown;
         };
@@ -3661,8 +3690,8 @@ export interface operations {
           'application/json': components['schemas']['StatusSystem'];
         };
       };
-      /** @description Internal server error */
-      500: {
+      /** @description Failed to retrieve status */
+      503: {
         headers: {
           [name: string]: unknown;
         };
@@ -3690,8 +3719,8 @@ export interface operations {
           'application/json': components['schemas']['StatusPower'];
         };
       };
-      /** @description Internal server error */
-      500: {
+      /** @description Failed to retrieve status */
+      503: {
         headers: {
           [name: string]: unknown;
         };
@@ -3705,10 +3734,10 @@ export interface operations {
     parameters: {
       query?: {
         /**
-         * @description Destination file path (defaults to /ext/dump.log)
-         * @example /ext/dump.log
+         * @description Destination file name (without extension)
+         * @example log
          */
-        path?: string;
+        filename?: string;
       };
       header?: never;
       path?: never;
@@ -3722,11 +3751,28 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SuccessResponse'];
+          'application/json': {
+            /** @example OK */
+            result: string;
+            /**
+             * @description Full path to the written log file
+             * @example /ext/dump.txt
+             */
+            path: string;
+          };
         };
       };
-      /** @description Internal server error */
-      500: {
+      /** @description Invalid filename */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Failed to dump logs */
+      508: {
         headers: {
           [name: string]: unknown;
         };
@@ -3915,6 +3961,15 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description Upload received on a closed or invalid update context. */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Update package too large. */
       413: {
         headers: {
@@ -3924,8 +3979,8 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
-      /** @description Internal server error during update process. */
-      500: {
+      /** @description Failed to save the update package. */
+      508: {
         headers: {
           [name: string]: unknown;
         };
@@ -3963,7 +4018,7 @@ export interface operations {
         };
       };
       /** @description Failed to start update check */
-      500: {
+      503: {
         headers: {
           [name: string]: unknown;
         };
@@ -4073,16 +4128,7 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
-      /** @description Failed to start background installation */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['Error'];
-        };
-      };
-      /** @description Battery too low for update */
+      /** @description Battery too low or installation failed to start */
       503: {
         headers: {
           [name: string]: unknown;
@@ -4131,15 +4177,6 @@ export interface operations {
           'application/json': components['schemas']['AutoupdateSettings'];
         };
       };
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['Error'];
-        };
-      };
     };
   };
   setAutoupdateSettings: {
@@ -4174,7 +4211,7 @@ export interface operations {
         };
       };
       /** @description Failed to apply settings */
-      500: {
+      503: {
         headers: {
           [name: string]: unknown;
         };
@@ -4204,6 +4241,15 @@ export interface operations {
       };
       /** @description Scan not possible when connected */
       400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Wi-Fi operation failed */
+      503: {
         headers: {
           [name: string]: unknown;
         };
