@@ -12,7 +12,7 @@ import { Display } from 'Global/types';
 import { blobToUint8Array, bgrToRgba, getDisplayDimensions, convertL4toRGBA } from 'Global/utils/frameData';
 
 async function draw(client: BusyBarClient, params: DisplayDrawParams, options?: RequestOptions) {
-  const { application_name, elements, priority = 50 } = params;
+  const { application_name, elements, priority = 50, led_notification_color } = params;
 
   const { data, error } = await client.execute(
     (signal) =>
@@ -20,7 +20,8 @@ async function draw(client: BusyBarClient, params: DisplayDrawParams, options?: 
         body: {
           application_name,
           priority,
-          elements
+          elements,
+          ...(led_notification_color ? { led_notification_color } : {}),
         },
         signal
       }),
