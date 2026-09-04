@@ -152,7 +152,7 @@ export interface paths {
     post: operations['drawOnDisplay'];
     /**
      * Clear display
-     * @description Deletes display elements drawn by the Canvas application. If application_name is specified, only elements for that app are removed.
+     * @description Deletes display elements drawn via this API. This operation can be selective - see the request body type.
      */
     delete: operations['clearDisplay'];
     options?: never;
@@ -337,7 +337,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** @description Returns current BLE status */
+    /**
+     * Get BLE status
+     * @description Returns current BLE status
+     */
     get: {
       parameters: {
         query?: never;
@@ -462,6 +465,54 @@ export interface paths {
      */
     post: operations['setHttpAccess'];
     delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/access/tokens': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * List all access tokens
+     * @description Provides basic information all access tokens (IDs, names and timestamps)
+     */
+    get: operations['getAccessTokens'];
+    put?: never;
+    /**
+     * Create a new access token
+     * @description Generates a new access token for authorization alongside the access key
+     */
+    post: operations['createAccessToken'];
+    /**
+     * Revoke all access tokens
+     * @description Removes all access tokens all at once
+     */
+    delete: operations['deleteAllAccessTokens'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/access/tokens/{short_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /**
+     * Revoke an access token
+     * @description Removes the access token with the specified short ID
+     */
+    delete: operations['revokeAccessToken'];
     options?: never;
     head?: never;
     patch?: never;
@@ -598,12 +649,21 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Smart home commissioning status */
+    /**
+     * Smart home commissioning status
+     * @description Retrieves the number of commissioned fabrics and the latest smart home pairing status
+     */
     get: operations['getSmartHomeCommissioningStatus'];
     put?: never;
-    /** Link device to a smart home */
+    /**
+     * Link device to a smart home
+     * @description Starts the commissioning process and returns onboarding data like QR code and manual pairing code to link the device with a smart home system
+     */
     post: operations['startSmartHomePairing'];
-    /** Erase all smart home links */
+    /**
+     * Erase all smart home links
+     * @description Removes all existing smart home pairings (fabrics) and automatically reboots the device to apply the reset
+     */
     delete: {
       parameters: {
         query?: never;
@@ -645,7 +705,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Get state of emulated smart home switch */
+    /**
+     * Get state of emulated smart home switch
+     * @description Returns the current state of the virtual switch emulated by the device
+     */
     get: {
       parameters: {
         query?: never;
@@ -676,7 +739,10 @@ export interface paths {
       };
     };
     put?: never;
-    /** Set state of emulated smart home switch */
+    /**
+     * Set state of emulated smart home switch
+     * @description Updates the current state and/or startup mode of the emulated smart home switch
+     */
     post: {
       parameters: {
         query?: never;
@@ -763,7 +829,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** List files on internal storage */
+    /**
+     * List files on internal storage
+     * @description Returns a list of all files and directories located inside the specified storage path
+     */
     get: operations['listStorageFiles'];
     put?: never;
     post?: never;
@@ -840,7 +909,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Show storage usage */
+    /**
+     * Show storage usage
+     * @description Retrieves information about storage partition capacity, including total, used, and free space in bytes
+     */
     get: operations['getStorageStatus'];
     put?: never;
     post?: never;
@@ -880,7 +952,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Get single frame for requested screen */
+    /**
+     * Get single frame for requested screen
+     * @description Captures and returns a single static image frame of the specified display (Front or Back)
+     */
     get: {
       parameters: {
         query: {
@@ -1323,7 +1398,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** @description Returns current Wi-Fi status */
+    /**
+     * Get Wi-Fi connection status
+     * @description Returns the current connection state of the Wi-Fi module, along with network details like SSID, RSSI, and IP address if connected
+     */
     get: {
       parameters: {
         query?: never;
@@ -1480,7 +1558,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** @description Scans environment for available Wi-Fi networks */
+    /**
+     * Scan for available Wi-Fi networks
+     * @description Scans to discover nearby available Wi-Fi networks and returns their SSIDs, security styles, and signal strengths
+     */
     get: operations['getWifiNetworks'];
     put?: never;
     post?: never;
@@ -1503,13 +1584,13 @@ export interface components {
     };
     /** @example {
      *       "error": "Invalid parameter",
-     *       "code": 400
+     *       "error_code": "invalid_parameter"
      *     } */
     Error: {
       /** @description Error message */
       error: string;
       /** @description Error code */
-      code?: number;
+      error_code?: string;
     };
     AccountLink: {
       /** @example ABCD */
@@ -1603,6 +1684,7 @@ export interface components {
         | components['schemas']['AnimationElement']
         | components['schemas']['CountdownElement']
         | components['schemas']['RectangleElement']
+        | components['schemas']['XpmBitmapElement']
       )[];
     };
     DisplayElement: {
@@ -1616,7 +1698,7 @@ export interface components {
        * @description Type of display element
        * @enum {string}
        */
-      type: 'text' | 'image' | 'animation' | 'countdown' | 'rectangle';
+      type: 'text' | 'image' | 'animation' | 'countdown' | 'rectangle' | 'xpmbitmap';
       /**
        * @description X coordinate of selected anchor point relative to top-left of display
        * @default 0
@@ -1638,6 +1720,8 @@ export interface components {
        * @enum {string}
        */
       align?: 'top_left' | 'top_mid' | 'top_right' | 'mid_left' | 'center' | 'mid_right' | 'bottom_left' | 'bottom_mid' | 'bottom_right';
+      /** @description Order of the element. Elements with higher Z-indexes are drawn on top of those with lower ones. */
+      z_index?: number;
     };
     TextElement: Omit<components['schemas']['DisplayElement'], 'type'> & {
       /** @description Text content to display (printable ASCII only; fonts are bitmap ASCII) */
@@ -1646,7 +1730,7 @@ export interface components {
        * @description One of the available fonts to display the text in
        * @enum {string}
        */
-      font: 'tiny' | 'small' | 'normal' | 'condensed' | 'bold' | 'large' | 'extra_large' | 'global';
+      font: 'tiny' | 'small' | 'normal' | 'condensed' | 'bold' | 'large' | 'extra_large' | 'global' | 'superscript';
       /**
        * @description Color to display the text in, in #RRGGBBAA format
        * @default #FFFFFFFF
@@ -1788,6 +1872,21 @@ export interface components {
        */
       type: 'rectangle';
     };
+    XpmBitmapElement: Omit<components['schemas']['DisplayElement'], 'type'> & {
+      /** @description XPM2 source as plain text: must begin with a "! XPM2" signature line, followed by a "width height ncolors cpp" header line, then ncolors color lines, then height pixel rows. Each color line is "<chars> <visual> <value>" where visual is c (color), g/g4 (grayscale), m (monochrome), or s (symbolic). Values can be hex (#RGB, #RRGGBB, #RRRGGGBBB, #RRRRGGGGBBBB),  or named (none, black, white, red, green, blue, yellow, cyan, magenta, gray, grey). Limits: ncolors <= 32, cpp <= 4, and width/height must not exceed the target display dimensions (see the "display" field). */
+      data: string;
+      /**
+       * @description Opacity of the image in percentage (0-100)
+       * @default 100
+       */
+      opacity: number;
+    } & {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      type: 'xpmbitmap';
+    };
     PlayAudio: {
       /** @description Application name for organizing assets */
       application_name: components['schemas']['ApplicationName'];
@@ -1801,6 +1900,15 @@ export interface components {
           stock_path: components['schemas']['StockPath'];
         }
     );
+    DeletionParameters: {
+      /**
+       * @description Fill in this field for a sanity check that you actually own these elements. Omit it to delete them anyway.
+       * @example my_app
+       */
+      application_name?: components['schemas']['ApplicationName'];
+      /** @description Unique identifiers of elements that should be deleted. Omit this field to delete all elements. */
+      element_ids?: string[];
+    };
     BleStatusResponse: {
       /**
        * @example connected
@@ -1936,6 +2044,48 @@ export interface components {
        * @example true
        */
       key_valid?: boolean;
+    };
+    AccessToken: {
+      /**
+       * @description Short ID of the access token. Matches the first 8 characters of the token.
+       * @example AAMTBO0f
+       */
+      short_id?: string;
+      /**
+       * @description Long ("display") ID of the access token. Matches the first 8 characters and last 6 characters of the token.
+       * @example AAMTBO0f…Wn4fID
+       */
+      display_id?: string;
+      /**
+       * @description User-assigned name of the token
+       * @example My Script Name
+       */
+      name?: string;
+      /**
+       * @description Unix millisecond timestamp of when the token was created. Note: it's a number in a string.
+       * @example 1785812863582
+       */
+      created_at?: string;
+      /**
+       * @description Unix millisecond timestamp of when the token was used to make any request. Note: it's a number in a string.
+       * @example 1785812891337
+       */
+      last_used_at?: string;
+      /**
+       * @description Full access token. Can be used in place of the access key in "X-API-Token" header. Only shown once when generated, never again.
+       * @example AAMTBO0fvAxB5ZO8ds8bA1JofGWn4fID
+       */
+      token?: string;
+    };
+    AccessTokensInfo: {
+      tokens?: components['schemas']['AccessToken'][];
+    };
+    AccessTokensCreateRequest: {
+      /**
+       * @description Arbitrary name to differentiate this token from others
+       * @example My Script Name
+       */
+      name: string;
     };
     /** @example {
      *       "name": "BUSY bar"
@@ -2772,15 +2922,28 @@ export interface operations {
       path?: never;
       cookie?: never;
     };
-    requestBody?: never;
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['DeletionParameters'];
+      };
+    };
     responses: {
-      /** @description Display cleared successfully */
+      /** @description Display or some elements cleared successfully */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+      /** @description Invalid deletion data */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3088,6 +3251,92 @@ export interface operations {
       };
     };
   };
+  getAccessTokens: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Information retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AccessTokensInfo'];
+        };
+      };
+    };
+  };
+  createAccessToken: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AccessTokensCreateRequest'];
+      };
+    };
+    responses: {
+      /** @description Retrieved information about access tokens */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AccessToken'];
+        };
+      };
+    };
+  };
+  deleteAllAccessTokens: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Deleted all access tokens */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+    };
+  };
+  revokeAccessToken: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        short_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Deleted corresponding access token */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+    };
+  };
   getDisplayBrightness: {
     parameters: {
       query?: never;
@@ -3260,6 +3509,11 @@ export interface operations {
          * @example /ext/test.png
          */
         path: string;
+        /**
+         * @description Append to the file instead of replacing it (0 - replace (default), 1 - append; the file is created if it does not exist)
+         * @example 1
+         */
+        append?: 0 | 1;
       };
       header?: never;
       path?: never;
@@ -3756,7 +4010,7 @@ export interface operations {
             result: string;
             /**
              * @description Full path to the written log file
-             * @example /ext/dump.txt
+             * @example /ext/log.txt
              */
             path: string;
           };
@@ -4116,7 +4370,10 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['Error'];
+          'application/json': components['schemas']['Error'] & {
+            /** @enum {string} */
+            error_code?: 'version_missing' | 'not_available' | 'version_mismatch';
+          };
         };
       };
       /** @description Update already in progress */
@@ -4125,7 +4382,10 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['Error'];
+          'application/json': components['schemas']['Error'] & {
+            /** @enum {string} */
+            error_code?: 'busy';
+          };
         };
       };
       /** @description Battery too low or installation failed to start */
@@ -4134,7 +4394,10 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['Error'];
+          'application/json': components['schemas']['Error'] & {
+            /** @enum {string} */
+            error_code?: 'battery_low';
+          };
         };
       };
     };
