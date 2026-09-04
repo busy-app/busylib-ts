@@ -49,6 +49,18 @@ export type InputKeyQuery = operations['setInputKey']['parameters']['query'];
 export type BusySnapshot = components['schemas']['BusySnapshot'];
 export type BusyProfile = components['schemas']['BusyProfile'];
 export type BusyProfileSlot = components['schemas']['BusyProfileSlot'];
+export type BusyBarSettings = components['schemas']['BusyBarSettings'];
+
+export type BusySnapshotNotStarted = components['schemas']['BusySnapshotNotStarted'];
+export type BusySnapshotInfinite = components['schemas']['BusySnapshotInfinite'];
+export type BusySnapshotSimple = components['schemas']['BusySnapshotSimple'];
+export type BusySnapshotInterval = components['schemas']['BusySnapshotInterval'];
+export type BusySnapshotState = BusySnapshot['snapshot'];
+
+export type BusyTimerInfiniteSettings = components['schemas']['BusyTimerInfiniteSettings'];
+export type BusyTimerSimpleSettings = components['schemas']['BusyTimerSimpleSettings'];
+export type BusyTimerIntervalSettings = components['schemas']['BusyTimerIntervalSettings'];
+export type BusyTimerSettings = BusyProfile['timer_settings'];
 
 // SmartHome
 export type SmartHomePairingPayload = components['schemas']['SmartHomePairingPayload'];
