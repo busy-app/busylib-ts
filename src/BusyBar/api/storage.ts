@@ -11,15 +11,13 @@ import type {
 } from 'BusyBar/types';
 
 async function write(client: BusyBarClient, params: StorageUploadFileParams, options?: RequestOptions) {
-  const { path, file } = params;
+  const { file, ...query } = params;
 
   const { data, error } = await client.execute(
     (signal) =>
       client.POST('/storage/write', {
         params: {
-          query: {
-            path
-          }
+          query
         },
         headers: {
           'Content-Type': 'application/octet-stream'

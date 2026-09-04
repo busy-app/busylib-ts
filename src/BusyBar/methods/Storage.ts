@@ -30,6 +30,7 @@ export class StorageMethods {
    * @param {StorageUploadFileParams} params - Upload parameters:
    *   @param {StorageUploadFileParams['path']} params.path - Destination path.
    *   @param {StorageUploadFileParams['file']} params.file - File content.
+   *   @param {StorageUploadFileParams['append']} [params.append] - Append to the file instead of replacing it (0 - replace (default), 1 - append; the file is created if it does not exist).
    * @param {RequestOptions} [options] - Optional request options.
    *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
