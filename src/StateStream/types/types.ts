@@ -115,7 +115,7 @@ export type DeviceEventCallback = (event: DeviceEvent) => void;
 /**
  * Options for local device connections
  */
-export interface LocalStreamOptions extends StreamOptions {
+export interface LocalStreamOptions extends Omit<StreamOptions, 'token'> {
   HTTPAccessPassword?: string;
 }
 
