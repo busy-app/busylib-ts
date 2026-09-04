@@ -1671,7 +1671,7 @@ export interface components {
        * @description Draw priority in the range [1, 100] inclusive. A draw request is accepted when its priority is greater than or equal to (>=) the priority of the currently running system app. Equal-priority requests from a different application_name override whatever is on screen. System app priority levels: stub/poweroff apps = 0 (always preemptable), any standard built-in app = 10, active BUSY/CUSTOM work session = 90. The draw API only accepts values 1–100; 0 is reserved for internal use.
        * @default 50
        */
-      priority: number;
+      priority?: number;
       /**
        * @description Color to blink the status LED, in #RRGGBBAA format. If not specified, the LED will not blink.
        * @example #FF0000FF
@@ -1703,18 +1703,18 @@ export interface components {
        * @description X coordinate of selected anchor point relative to top-left of display
        * @default 0
        */
-      x: number;
+      x?: number;
       /**
        * @description Y coordinate of selected anchor point relative to top-left of display
        * @default 0
        */
-      y: number;
+      y?: number;
       /**
        * @description Which display to show the element on (for dual-display devices)
        * @default front
        * @enum {string}
        */
-      display: 'front' | 'back';
+      display?: 'front' | 'back';
       /**
        * @description Anchor point of element. Also use `x` and `y` to position element.
        * @enum {string}
@@ -1735,7 +1735,7 @@ export interface components {
        * @description Color to display the text in, in #RRGGBBAA format
        * @default #FFFFFFFF
        */
-      color: string;
+      color?: string;
       /** @description Width of the label */
       width?: number;
       /** @description Scroll rate in pixels per minute */
@@ -1766,7 +1766,7 @@ export interface components {
          * @description Opacity of the image in percentage (0-100)
          * @default 100
          */
-        opacity: number;
+        opacity?: number;
       }) & {
         /**
          * @description discriminator enum property added by openapi-typescript
@@ -1789,19 +1789,19 @@ export interface components {
          * @description Whether to loop the requested part of the animation
          * @default false
          */
-        loop: boolean;
+        loop?: boolean;
         /**
          * @description If the element has been created before and this flag is true, the previous range will finish before the requested one starts.
          * @default false
          */
-        await_previous_end: boolean;
+        await_previous_end?: boolean;
         /** @description Name of the section to play back. Specifying "default" selects the entire animation. */
         section?: string;
         /**
          * @description Opacity of the animated image in percentage (0-100)
          * @default 100
          */
-        opacity: number;
+        opacity?: number;
       }) & {
         /**
          * @description discriminator enum property added by openapi-typescript
@@ -1816,7 +1816,7 @@ export interface components {
        * @description Color to display the text in, in #RRGGBBAA format
        * @default #FFFFFFFF
        */
-      color: string;
+      color?: string;
       /**
        * @description Whether to count up or down
        * @enum {string}
@@ -1846,7 +1846,7 @@ export interface components {
        * @default none
        * @enum {string}
        */
-      fill: 'none' | 'solid' | 'gradient_h' | 'gradient_v';
+      fill?: 'none' | 'solid' | 'gradient_h' | 'gradient_v';
       /**
        * @description Colors used for filling the rectangle. For solid fill, provide one color. For gradient fill, provide two colors.
        * @default [
@@ -1854,17 +1854,17 @@ export interface components {
        *       "#00000000"
        *     ]
        */
-      fill_colors: string[];
+      fill_colors?: string[];
       /**
        * @description Width of the rectangle border in pixels (0 for no border)
        * @default 1
        */
-      border_width: number;
+      border_width?: number;
       /**
        * @description Color of the rectangle border in #RRGGBBAA format
        * @default #FFFFFFFF
        */
-      border_color: string;
+      border_color?: string;
     } & {
       /**
        * @description discriminator enum property added by openapi-typescript
@@ -1879,7 +1879,7 @@ export interface components {
        * @description Opacity of the image in percentage (0-100)
        * @default 100
        */
-      opacity: number;
+      opacity?: number;
     } & {
       /**
        * @description discriminator enum property added by openapi-typescript

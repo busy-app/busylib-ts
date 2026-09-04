@@ -8,7 +8,7 @@ generate-api:
 	@mv openapi.tmp.yaml openapi.yaml
 
 	@echo "Generating TypeScript types..."
-	@$(OPENAPI_TS) openapi.yaml -o src/Global/API.ts
+	@$(OPENAPI_TS) openapi.yaml --default-non-nullable false -o src/Global/API.ts
 
 	@echo "Removing openapi.yaml..."
 	@rm openapi.yaml
