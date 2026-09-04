@@ -12,15 +12,12 @@ import { Display } from 'Global/types';
 import { blobToUint8Array, bgrToRgba, getDisplayDimensions, convertL4toRGBA } from 'Global/utils/frameData';
 
 async function draw(client: BusyBarClient, params: DisplayDrawParams, options?: RequestOptions) {
-  const { application_name, elements, priority = 50 } = params;
-
   const { data, error } = await client.execute(
     (signal) =>
       client.POST('/display/draw', {
         body: {
-          application_name,
-          priority,
-          elements
+          ...params,
+          priority: params.priority ?? 50
         },
         signal
       }),
