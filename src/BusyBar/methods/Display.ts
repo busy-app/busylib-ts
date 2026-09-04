@@ -36,11 +36,11 @@ export class DisplayMethods {
   }
 
   /**
-   * Clear display. Deletes display elements drawn by the Canvas application.
-   * If application_name is specified, only elements for that app are removed.
+   * Clear display. Deletes display elements drawn via this API.
    *
    * @param {DisplayClearParams} [params] - Optional parameters.
-   *   @param {string} [params.application_name] - Application identifier.
+   *   @param {DisplayClearParams['application_name']} [params.application_name] - Fill in this field for a sanity check that you actually own these elements. Omit it to delete them anyway.
+   *   @param {DisplayClearParams['element_ids']} [params.element_ids] - Unique identifiers of elements that should be deleted. Omit this field to delete all elements.
    * @param {RequestOptions} [options] - Optional request options.
    *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.

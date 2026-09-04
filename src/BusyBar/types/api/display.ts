@@ -1,8 +1,8 @@
-import type { DisplayElements, ClearDisplayQuery, ScreenQuery, RequestOptions } from 'BusyBar/types/models';
+import type { DisplayElements, ClearDisplayQuery, DeletionParameters, ScreenQuery, RequestOptions } from 'BusyBar/types/models';
 
 export interface DisplayDrawParams extends DisplayElements {}
 
-export interface DisplayClearParams extends Partial<ClearDisplayQuery> {}
+export interface DisplayClearParams extends ClearDisplayQuery, DeletionParameters {}
 
 export interface ScreenFrameGetParams extends ScreenQuery {}
 

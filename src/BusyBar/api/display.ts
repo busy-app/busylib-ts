@@ -35,11 +35,7 @@ async function clear(client: BusyBarClient, params?: DisplayClearParams, options
   const { data, error } = await client.execute(
     (signal) =>
       client.DELETE('/display/draw', {
-        params: {
-          query: {
-            application_name: params?.application_name
-          }
-        },
+        body: params ?? {},
         signal
       }),
     options

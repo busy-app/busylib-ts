@@ -39,6 +39,7 @@ export type RectangleElement = components['schemas']['RectangleElement'];
 export type XpmBitmapElement = components['schemas']['XpmBitmapElement'];
 export type ScreenResponse = components['schemas']['ScreenResponse'];
 export type ClearDisplayQuery = NonNullable<operations['clearDisplay']['parameters']['query']>;
+export type DeletionParameters = components['schemas']['DeletionParameters'];
 export type LogDumpQuery = NonNullable<operations['dumpLog']['parameters']['query']>;
 export type LogDumpResponse = operations['dumpLog']['responses'][200]['content']['application/json'];
 export type ScreenQuery = paths['/screen']['get']['parameters']['query'];
