@@ -59,6 +59,10 @@ export type SmartHomeSwitchState = components['schemas']['SmartHomeSwitchState']
 export type HttpAccessInfo = components['schemas']['HttpAccessInfo'];
 export type HttpAccessQuery = operations['setHttpAccess']['parameters']['query'];
 export type NameInfo = components['schemas']['NameInfo'];
+export type AccessToken = components['schemas']['AccessToken'];
+export type AccessTokensInfo = components['schemas']['AccessTokensInfo'];
+export type AccessTokenCreateBody = components['schemas']['AccessTokensCreateRequest'];
+export type AccessTokenRevokePath = operations['revokeAccessToken']['parameters']['path'];
 
 // Storage
 export type StorageList = components['schemas']['StorageList'];

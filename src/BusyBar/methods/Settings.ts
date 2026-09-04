@@ -1,5 +1,25 @@
-import { getHttpAccess as getHttpAccessApi, setHttpAccess as setHttpAccessApi, getName as getNameApi, setName as setNameApi } from 'BusyBar/api/settings';
-import type { RequestOptions, SuccessResponse, HttpAccessInfo, NameInfo, HttpAccessParams, NameParams } from 'BusyBar/types';
+import {
+  getHttpAccess as getHttpAccessApi,
+  setHttpAccess as setHttpAccessApi,
+  getName as getNameApi,
+  setName as setNameApi,
+  getAccessTokens as getAccessTokensApi,
+  createAccessToken as createAccessTokenApi,
+  deleteAllAccessTokens as deleteAllAccessTokensApi,
+  revokeAccessToken as revokeAccessTokenApi
+} from 'BusyBar/api/settings';
+import type {
+  RequestOptions,
+  SuccessResponse,
+  HttpAccessInfo,
+  NameInfo,
+  HttpAccessParams,
+  NameParams,
+  AccessToken,
+  AccessTokensInfo,
+  AccessTokenCreateParams,
+  AccessTokenRevokeParams
+} from 'BusyBar/types';
 import { BusyBar } from 'BusyBar/index';
 
 export class SettingsMethods {
@@ -60,5 +80,62 @@ export class SettingsMethods {
    */
   async SettingsNameSet(this: BusyBar, params: NameParams, options?: RequestOptions): Promise<SuccessResponse> {
     return await setNameApi(this.apiClient, params, options);
+  }
+
+  /**
+   * List all access tokens.
+   *
+   * Provides basic information about all access tokens (IDs, names and timestamps).
+   * The full token value is never returned here - it is only shown once on creation.
+   *
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
+   * @returns {Promise<AccessTokensInfo>} A promise that resolves to the list of access tokens.
+   */
+  async SettingsAccessTokensGet(this: BusyBar, options?: RequestOptions): Promise<AccessTokensInfo> {
+    return await getAccessTokensApi(this.apiClient, options);
+  }
+
+  /**
+   * Create a new access token.
+   *
+   * The returned `token` field is only present in this response and cannot be retrieved later.
+   *
+   * @param {AccessTokenCreateParams} params - Token parameters:
+   *   @param {AccessTokenCreateParams['name']} params.name - Arbitrary name to differentiate this token from others.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
+   * @returns {Promise<AccessToken>} A promise that resolves to the created token.
+   */
+  async SettingsAccessTokenCreate(this: BusyBar, params: AccessTokenCreateParams, options?: RequestOptions): Promise<AccessToken> {
+    return await createAccessTokenApi(this.apiClient, params, options);
+  }
+
+  /**
+   * Revoke all access tokens at once.
+   *
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
+   * @returns {Promise<SuccessResponse>} A promise that resolves on success.
+   */
+  async SettingsAccessTokensDelete(this: BusyBar, options?: RequestOptions): Promise<SuccessResponse> {
+    return await deleteAllAccessTokensApi(this.apiClient, options);
+  }
+
+  /**
+   * Revoke a single access token.
+   *
+   * @param {AccessTokenRevokeParams} params - Token parameters:
+   *   @param {AccessTokenRevokeParams['short_id']} params.short_id - Short ID of the token (first 8 characters).
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
+   * @returns {Promise<SuccessResponse>} A promise that resolves on success.
+   */
+  async SettingsAccessTokenRevoke(this: BusyBar, params: AccessTokenRevokeParams, options?: RequestOptions): Promise<SuccessResponse> {
+    return await revokeAccessTokenApi(this.apiClient, params, options);
   }
 }
