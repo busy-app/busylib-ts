@@ -3269,6 +3269,15 @@ export interface operations {
           'application/json': components['schemas']['AccessTokensInfo'];
         };
       };
+      /** @description Request forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
     };
   };
   createAccessToken: {
@@ -3293,6 +3302,24 @@ export interface operations {
           'application/json': components['schemas']['AccessToken'];
         };
       };
+      /** @description Invalid request data */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Request forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
     };
   };
   deleteAllAccessTokens: {
@@ -3311,6 +3338,15 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+      /** @description Request forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
         };
       };
     };
@@ -3333,6 +3369,24 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+      /** @description Request forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Specified token not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
         };
       };
     };
