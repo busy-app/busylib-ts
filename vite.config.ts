@@ -34,12 +34,6 @@ export default defineConfig({
     }),
     copyFontMaps()
   ],
-  resolve: {
-    alias: {
-      // Duplicates the package's `imports` map: bundlers read `#` as a URL fragment and ignore it.
-      '#font-maps': path.resolve(__dirname, 'src/Utils/font/font-maps-stub.js')
-    }
-  },
   build: {
     lib: {
       entry: ['src/index.ts', 'src/Utils/font/fonts.ts'],
@@ -47,7 +41,7 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: ['openapi-fetch'],
+      external: ['openapi-fetch', '#font-maps'],
       output: [
         {
           format: 'es',
