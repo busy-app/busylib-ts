@@ -4,9 +4,7 @@ import { convertEnum } from 'StateStream/utils/convertEnum';
 
 export type BatteryStatus = components['schemas']['StatusPower']['state'];
 export type WifiConnectionStatus = components['schemas']['StatusResponse']['state'];
-export type MatterCommissioningStatus = NonNullable<
-  NonNullable<components['schemas']['SmartHomePairingInfo']['latest_pairing_status']>['value']
->;
+export type MatterCommissioningStatus = NonNullable<NonNullable<components['schemas']['SmartHomePairingInfo']['latest_pairing_status']>['value']>;
 export type BleServiceStatus = components['schemas']['BleStatusResponse']['status'];
 
 type WifiSecurityMethod = components['schemas']['WifiSecurityMethod'];
@@ -63,7 +61,6 @@ const BLE_STATUS_MAP: Record<BSB_State.Ble.ServiceStatus, BleServiceStatus> = {
   [BSB_State.Ble.ServiceStatus.CONNECTED]: 'connected',
   [BSB_State.Ble.ServiceStatus.ERROR]: 'internal error'
 };
-
 
 export function convertBatteryStatus(value: BSB_State.BatteryStatus | null | undefined): BatteryStatus | null {
   return convertEnum(BATTERY_STATUS_MAP, value);

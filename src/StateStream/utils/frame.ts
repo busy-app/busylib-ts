@@ -68,7 +68,6 @@ export async function decompressDeflate(data: Uint8Array): Promise<Uint8Array> {
   }
 }
 
-
 /**
  * Processes a frame: decompressing and converting to RGBA.
  */

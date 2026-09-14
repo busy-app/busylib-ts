@@ -57,7 +57,7 @@ export abstract class BaseRenderer<O> {
 
   /**
    * Internal WebGL rendering pass
-   * 
+   *
    * Subclasses manage their own viewports, uniforms, and draw calls
    */
   protected abstract render(data: Uint8Array | Uint8ClampedArray, width: number, height: number, options: Required<O>): void;

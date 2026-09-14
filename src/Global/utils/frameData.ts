@@ -80,10 +80,10 @@ export function bgrToRgba(data: Uint8Array, width: number, height: number): Uint
     const dst = i * 4;
 
     if (src + 2 < data.length) {
-      rgba[dst] = data[src + 2]!;     // R
+      rgba[dst] = data[src + 2]!; // R
       rgba[dst + 1] = data[src + 1]!; // G
-      rgba[dst + 2] = data[src]!;     // B
-      rgba[dst + 3] = 255;            // A
+      rgba[dst + 2] = data[src]!; // B
+      rgba[dst + 3] = 255; // A
     }
   }
 

@@ -58,7 +58,6 @@ const CHECK_EVENT_MAP: Record<BSB_Update.CheckEvent, CheckEvent> = {
   [BSB_Update.CheckEvent.NONE]: 'none'
 };
 
-
 export function convertUpdateEvent(value: BSB_Update.UpdateEvent | null | undefined): UpdateEvent | null {
   return convertEnum(UPDATE_EVENT_MAP, value);
 }
