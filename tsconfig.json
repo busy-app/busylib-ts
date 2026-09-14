@@ -8,7 +8,8 @@
       "StateStream/*": ["src/StateStream/*"],
       "ScreenRenderer/*": ["src/ScreenRenderer/*"],
       "Input/*": ["src/Input/*"],
-      "Global/*": ["src/Global/*"]
+      "Global/*": ["src/Global/*"],
+      "Utils/*": ["src/Utils/*"]
     },
 
     "target": "ES2020",

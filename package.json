@@ -16,11 +16,19 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "imports": {
+    "#font-maps": "./dist/Utils/font/font-maps-stub.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./fonts": {
+      "types": "./dist/Utils/font/fonts.d.ts",
+      "import": "./dist/Utils/font/fonts.js",
+      "require": "./dist/Utils/font/fonts.cjs"
     }
   },
   "files": [
@@ -31,7 +39,9 @@
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "docs:generate": "typedoc",
-    "format": "prettier --write '**/*.ts'"
+    "format": "prettier --write '**/*.ts'",
+    "fonts:build": "node tools/build-font-maps.mjs",
+    "fonts:check": "node tools/build-font-maps.mjs --check"
   },
   "dependencies": {
     "openapi-fetch": "^0.14.0",
