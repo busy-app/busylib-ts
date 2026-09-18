@@ -75,6 +75,9 @@ const widths = new Map<string, number>();
 const boxes = new Map<string, { top: number; height: number }>();
 const inks = new Map<string, { top: number; height: number }>();
 
+/** Cap metrics, by font. One entry per font, so it needs no limit. */
+const caps: Record<string, { top: number; height: number }> = {};
+
 /** The cache key. The separator cannot occur in a font name. */
 function keyFor(text: string, font: DeviceFont): string {
   return `${font}\0${text}`;
@@ -91,6 +94,9 @@ export function registerFontMaps(extra: { fonts: Record<string, unknown> }): voi
   widths.clear();
   boxes.clear();
   inks.clear();
+  for (const name in caps) {
+    delete caps[name];
+  }
 }
 
 for (const map of MAPS) registerFontMaps(map);
@@ -206,6 +212,23 @@ export function lineHeight(font: DeviceFont): number {
 /** Distance from the top of the line to where glyphs sit (`ascent`). */
 export function fontBaseline(font: DeviceFont): number {
   return mapFor(font).ascent;
+}
+
+/**
+ * Where a capital sits on the line, and how tall it is, in visible pixels.
+ *
+ * Unlike `lineHeight` and `fontBaseline`, this covers only lit rows, so lines stacked by it sit the asked-for distance apart. Descenders hang below the box.
+ */
+export function capBox(font: DeviceFont): { top: number; height: number } {
+  const known = caps[font];
+  if (known !== undefined) {
+    return known;
+  }
+
+  const ink = textInk('X', font);
+  const box = ink.height > 0 ? ink : { top: 0, height: mapFor(font).ascent };
+  caps[font] = box;
+  return box;
 }
 
 /**
