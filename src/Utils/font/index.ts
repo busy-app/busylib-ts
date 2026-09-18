@@ -68,12 +68,29 @@ function decode(raw: RawFontMap): FontMap {
 const RAW: Record<string, RawFontMap> = {};
 const DECODED: Record<string, FontMap> = {};
 
+/** Measurements already taken, by font and string. Dropped whole once full: an app's working set is far smaller than this. */
+const LIMIT = 512;
+
+const widths = new Map<string, number>();
+const boxes = new Map<string, { top: number; height: number }>();
+const inks = new Map<string, { top: number; height: number }>();
+
+/** The cache key. The separator cannot occur in a font name. */
+function keyFor(text: string, font: DeviceFont): string {
+  return `${font}\0${text}`;
+}
+
 /** Makes a font measurable. Each map in maps/ holds one. */
 export function registerFontMaps(extra: { fonts: Record<string, unknown> }): void {
   for (const [name, raw] of Object.entries(extra.fonts)) {
     RAW[name] = raw as RawFontMap;
     delete DECODED[name];
   }
+
+  // New metrics: whatever was measured under the old ones no longer holds.
+  widths.clear();
+  boxes.clear();
+  inks.clear();
 }
 
 for (const map of MAPS) registerFontMaps(map);
@@ -127,12 +144,23 @@ function metricsOf(ch: string, map: FontMap): Metrics | null {
 
 /** String width in pixels. Advances include letter spacing; no kerning. */
 export function textWidth(text: string, font: DeviceFont): number {
+  const key = keyFor(text, font);
+  const known = widths.get(key);
+  if (known !== undefined) {
+    return known;
+  }
+
   const map = mapFor(font);
   let width = 0;
   for (const ch of text) {
     const m = metricsOf(ch, map);
     if (m) width += m[0];
   }
+
+  if (widths.size >= LIMIT) {
+    widths.clear();
+  }
+  widths.set(key, width);
   return width;
 }
 
@@ -140,6 +168,12 @@ export function textWidth(text: string, font: DeviceFont): number {
  * Vertical metrics in visible pixel coordinates, taken from the string's own characters. Subtract `top` to put the pixels on a given row. Zeros for an empty string.
  */
 export function textInk(text: string, font: DeviceFont): { top: number; height: number } {
+  const key = keyFor(text, font);
+  const known = inks.get(key);
+  if (known !== undefined) {
+    return known;
+  }
+
   const map = mapFor(font);
   let top = Infinity;
   let bottom = -Infinity;
@@ -155,8 +189,13 @@ export function textInk(text: string, font: DeviceFont): { top: number; height: 
     if (t + h > bottom) bottom = t + h;
   }
 
-  if (top === Infinity) return { top: 0, height: 0 };
-  return { top, height: bottom - top };
+  const ink = top === Infinity ? { top: 0, height: 0 } : { top, height: bottom - top };
+
+  if (inks.size >= LIMIT) {
+    inks.clear();
+  }
+  inks.set(key, ink);
+  return ink;
 }
 
 /** Font line height (ascent − descent). Wider than the visible pixels. */
@@ -173,6 +212,12 @@ export function fontBaseline(font: DeviceFont): number {
  * Layout box: from the top of the visible pixels to the baseline. Unlike `textInk`, descenders hang outside it.
  */
 export function textLayoutBox(text: string, font: DeviceFont): { top: number; height: number } {
+  const key = keyFor(text, font);
+  const known = boxes.get(key);
+  if (known !== undefined) {
+    return known;
+  }
+
   const map = mapFor(font);
   const baseline = map.ascent;
   let top = Infinity;
@@ -184,6 +229,11 @@ export function textLayoutBox(text: string, font: DeviceFont): { top: number; he
     if (t < top) top = t;
   }
 
-  if (top === Infinity) return { top: 0, height: 0 };
-  return { top, height: Math.max(0, baseline - top) };
+  const box = top === Infinity ? { top: 0, height: 0 } : { top, height: Math.max(0, baseline - top) };
+
+  if (boxes.size >= LIMIT) {
+    boxes.clear();
+  }
+  boxes.set(key, box);
+  return box;
 }
