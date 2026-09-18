@@ -16,6 +16,9 @@ function copyFontMaps() {
       for (const file of fs.readdirSync(from)) {
         fs.copyFileSync(path.resolve(from, file), path.resolve(to, file));
       }
+
+      // `#font-maps` is external, so Rollup never emits the stub.
+      fs.copyFileSync(path.resolve(__dirname, 'src/Utils/font/font-maps-stub.js'), path.resolve(__dirname, 'dist/Utils/font/font-maps-stub.js'));
     }
   };
 }

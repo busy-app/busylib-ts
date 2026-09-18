@@ -26,7 +26,7 @@
       "require": "./dist/index.cjs"
     },
     "./fonts": {
-      "types": "./dist/Utils/font/fonts.d.ts",
+      "types": "./dist/fonts.d.ts",
       "import": "./dist/Utils/font/fonts.js",
       "require": "./dist/Utils/font/fonts.cjs"
     }
