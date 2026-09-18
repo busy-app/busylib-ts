@@ -43,32 +43,73 @@ export function measure(node: Node): Measured {
     return { node, ...measureLeaf(node), children: [] };
   }
 
-  const children = node.children.map(measure);
+  // One pass per container, in plain loops: allocations are dear on the device's interpreter, and map/reduce/spread each cost one.
+  const source = node.children;
+  const count = source.length;
+  const children: Measured[] = new Array<Measured>(count);
+  for (let i = 0; i < count; i++) {
+    children[i] = measure(source[i]!);
+  }
+
   const pad = resolvePadding(node.padding);
   const gap = node.type === 'stack' ? 0 : (node.gap ?? 0);
-  const gaps = children.length > 1 ? gap * (children.length - 1) : 0;
+  const gaps = count > 1 ? gap * (count - 1) : 0;
 
-  let contentW: number;
-  let contentH: number;
+  let contentW = 0;
+  let contentH = 0;
   // Inherited from the first text child.
   let baseline: number | null = null;
 
   if (node.type === 'row') {
-    contentW = children.reduce((sum, c) => sum + c.width, 0) + gaps;
-
     // Children with a baseline line up on it; the rest take their height.
-    const above = Math.max(0, ...children.map((c) => c.baseline ?? c.height));
-    const below = Math.max(0, ...children.map((c) => c.height - (c.baseline ?? c.height)));
+    let above = 0;
+    let below = 0;
+    let anyBaseline = false;
+
+    for (let i = 0; i < count; i++) {
+      const child = children[i]!;
+      contentW += child.width;
+
+      const rise = child.baseline ?? child.height;
+      if (rise > above) {
+        above = rise;
+      }
+
+      const drop = child.height - rise;
+      if (drop > below) {
+        below = drop;
+      }
+
+      if (child.baseline !== null) {
+        anyBaseline = true;
+      }
+    }
+
+    contentW += gaps;
     contentH = above + below;
-    baseline = children.some((c) => c.baseline !== null) ? above : null;
+    baseline = anyBaseline ? above : null;
   } else if (node.type === 'column') {
-    contentW = children.reduce((max, c) => Math.max(max, c.width), 0);
-    contentH = children.reduce((sum, c) => sum + c.height, 0) + gaps;
+    for (let i = 0; i < count; i++) {
+      const child = children[i]!;
+      if (child.width > contentW) {
+        contentW = child.width;
+      }
+      contentH += child.height;
+    }
+
+    contentH += gaps;
     // A column's baseline is its first row's.
-    baseline = children.length > 0 ? children[0]!.baseline : null;
+    baseline = count > 0 ? children[0]!.baseline : null;
   } else {
-    contentW = children.reduce((max, c) => Math.max(max, c.width), 0);
-    contentH = children.reduce((max, c) => Math.max(max, c.height), 0);
+    for (let i = 0; i < count; i++) {
+      const child = children[i]!;
+      if (child.width > contentW) {
+        contentW = child.width;
+      }
+      if (child.height > contentH) {
+        contentH = child.height;
+      }
+    }
   }
 
   return {

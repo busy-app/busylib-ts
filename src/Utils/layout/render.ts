@@ -58,7 +58,9 @@ function place(m: Measured, baseX: number, baseY: number, display: 'front' | 'ba
   const node = m.node;
 
   // Applied once per node, leaf or container, and only here.
-  const { dx, dy } = offsetOf(node);
+  const offset = node as { dx?: number; dy?: number };
+  const dx = offset.dx ?? 0;
+  const dy = offset.dy ?? 0;
   const x = baseX + dx;
   const y = baseY + dy;
 
@@ -80,7 +82,8 @@ function place(m: Measured, baseX: number, baseY: number, display: 'front' | 'ba
     // No main axis: justify is horizontal, align vertical. `between` falls back to start.
     const horizontal: CrossAlign = node.justify === 'between' ? 'start' : (node.justify ?? 'start');
     const vertical = align;
-    for (const child of m.children) {
+    for (let i = 0; i < m.children.length; i++) {
+      const child = m.children[i]!;
       const cx = innerX + crossOffset(innerW - child.width, horizontal);
       const cy = innerY + crossOffset(innerH - child.height, vertical);
       place(child, cx, cy, display, out);
@@ -91,16 +94,29 @@ function place(m: Measured, baseX: number, baseY: number, display: 'front' | 'ba
   const horizontal = node.type === 'row';
   const gap = node.gap ?? 0;
   const count = m.children.length;
-  const used = m.children.reduce((sum, c) => sum + (horizontal ? c.width : c.height), 0) + (count > 1 ? gap * (count - 1) : 0);
+  // One pass for both: the size taken along the main axis, and the largest rise above the line that text children align to.
+  let used = 0;
+  let rowBaseline = 0;
+  for (let i = 0; i < count; i++) {
+    const child = m.children[i]!;
+    used += horizontal ? child.width : child.height;
+
+    if (horizontal) {
+      const rise = child.baseline ?? 0;
+      if (rise > rowBaseline) {
+        rowBaseline = rise;
+      }
+    }
+  }
+  used += count > 1 ? gap * (count - 1) : 0;
+
   const free = (horizontal ? innerW : innerH) - used;
   const { start, step } = mainOffset(free, node.justify ?? 'start', count);
 
-  // The largest rise above the line; text children align to it.
-  const rowBaseline = horizontal ? Math.max(0, ...m.children.map((c) => c.baseline ?? 0)) : 0;
-
   let cursor = (horizontal ? innerX : innerY) + start;
 
-  for (const child of m.children) {
+  for (let i = 0; i < count; i++) {
+    const child = m.children[i]!;
     let cx: number;
     let cy: number;
 
@@ -122,29 +138,34 @@ function place(m: Measured, baseX: number, baseY: number, display: 'front' | 'ba
   }
 }
 
-/** Reads the optional manual dx/dy. */
-function offsetOf(node: Node): { dx: number; dy: number } {
-  const withOffset = node as { dx?: number; dy?: number };
-  return { dx: withOffset.dx ?? 0, dy: withOffset.dy ?? 0 };
-}
-
 /**
  * Turns a leaf into a DisplayDraw element, dropping layout-only fields. A rectangle's width/height are element fields and stay.
+ *
+ * Copied key by key into one object: spreading and then deleting builds two and reshapes both.
  */
 function toElement(node: Node, x: number, y: number, display: 'front' | 'back'): Element {
-  const { dx: _dx, dy: _dy, ...rest } = node as Record<string, unknown>;
+  const source = node as Record<string, unknown>;
 
-  if (node.type === 'image' || node.type === 'animation' || node.type === 'countdown') {
-    delete rest.width;
-    delete rest.height;
+  // Images, animations and countdowns carry a size for the layout only; the device works it out itself.
+  const type = node.type;
+  const sizeIsLayoutOnly = type === 'image' || type === 'animation' || type === 'countdown';
+
+  const out: Record<string, unknown> = {};
+  for (const key in source) {
+    if (key === 'dx' || key === 'dy') {
+      continue;
+    }
+    if (sizeIsLayoutOnly && (key === 'width' || key === 'height')) {
+      continue;
+    }
+    out[key] = source[key];
   }
 
-  return {
-    ...rest,
-    x: Math.round(x),
-    y: Math.round(y),
-    display: (rest.display as 'front' | 'back' | undefined) ?? display
-  } as Element;
+  out.x = Math.round(x);
+  out.y = Math.round(y);
+  if (out.display === undefined) out.display = display;
+
+  return out as Element;
 }
 
 /** Lays out the tree and returns the elements for DisplayDraw. */
