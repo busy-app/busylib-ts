@@ -13,6 +13,7 @@ import { BleMethods } from './methods/Ble';
 import { InputMethods } from './methods/Input';
 import { SmartHomeMethods } from './methods/SmartHome';
 import { AssetsMethods } from './methods/Assets';
+import { AppsMethods } from './methods/Apps';
 import { BusyMethods } from './methods/Busy';
 
 import { DEFAULT_DEVICE_URL, DEFAULT_PROXY_URL, PROXY_HOST_RE } from 'Global/constants';
@@ -33,6 +34,7 @@ export interface BusyBar
     BleMethods,
     InputMethods,
     AssetsMethods,
+    AppsMethods,
     SmartHomeMethods,
     BusyMethods {}
 
@@ -181,5 +183,6 @@ applyMixins(BusyBar, [
   InputMethods,
   SmartHomeMethods,
   AssetsMethods,
+  AppsMethods,
   BusyMethods
 ]);

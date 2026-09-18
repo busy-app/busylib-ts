@@ -2,6 +2,7 @@ export * from './models';
 export type { BusyBarConfig } from '../index';
 
 export * from './api/account';
+export * from './api/apps';
 export * from './api/assets';
 export * from './api/audio';
 export * from './api/busy';

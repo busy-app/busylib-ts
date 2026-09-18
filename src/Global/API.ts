@@ -108,6 +108,116 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/apps/stage': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Stage a JavaScript application for installation
+     * @description Uploads an application package (TGZ or TAR file) and initiates the installation process.
+     */
+    post: operations['stageApp'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/apps/install': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Install a staged JavaScript application
+     * @description Installs a staged JavaScript application using the installation key
+     */
+    post: operations['installApp'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/apps': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /**
+     * Delete a JavaScript application
+     * @description Removes an installed JavaScript application, keeping its settings
+     */
+    delete: operations['removeApp'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/apps/list': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * List installed JavaScript applications
+     * @description Lists installed JavaScript applications
+     */
+    get: operations['listApps'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/apps/settings': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get application settings
+     * @description Returns the complete settings document; the first request materializes it from the schema defaults.
+     *
+     */
+    get: operations['getAppSettings'];
+    /**
+     * Set application settings
+     * @description Replaces the settings document: every field must be present and valid, with a version matching the application settings; unknown keys are dropped.
+     *
+     */
+    put: operations['setAppSettings'];
+    post?: never;
+    /**
+     * Reset application settings
+     * @description Resets every field to its schema default.
+     */
+    delete: operations['resetAppSettings'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/assets/upload': {
     parameters: {
       query?: never;
@@ -1626,6 +1736,83 @@ export interface components {
       /** @description Whether to ignore the server certificate */
       ignore_server_cert: boolean;
     };
+    /**
+     * @description JavaScript application id
+     * @example app.author.example_app
+     */
+    AppId: string;
+    AppStageResult: {
+      /**
+       * @description Operation result
+       * @example OK
+       */
+      result: string;
+      /**
+       * @description Single-use installation key
+       * @example 123456789
+       */
+      install_key: number;
+      /** @description Staged application info */
+      staged: components['schemas']['AppInfo'];
+      /** @description If an application with the same ID is already installed, its info */
+      installed?: components['schemas']['AppInfo'];
+    };
+    AppInfo: {
+      /**
+       * @description Application ID
+       * @example com.example.useful-app
+       */
+      id: string;
+      /**
+       * @description Human-readable application name
+       * @example A Useful App
+       */
+      name: string;
+      /**
+       * @description Application version
+       * @example 1.0.0
+       */
+      version: string;
+      /**
+       * @description Application author
+       * @example Erika Mustermann
+       */
+      author: string;
+      /**
+       * @description Application description
+       * @example An app to assist in my daily routine
+       */
+      description: string;
+      /**
+       * @description Application icon path
+       * @example /ext/apps_assets/shared/images/unknown_app_front_8x8.image
+       */
+      icon_path: string;
+      /**
+       * @description A flag indicating that this app only shows up in debug mode
+       * @example false
+       */
+      is_debug: boolean;
+    };
+    AppListResult: {
+      apps: components['schemas']['AppInfo'][];
+    };
+    AppSettingsDocument: {
+      /**
+       * @description Settings version of the application schema
+       * @example 1
+       */
+      version: number;
+      /**
+       * @description Setting values keyed by field id, with groups as nested objects
+       * @example {
+       *       "volume": 5
+       *     }
+       */
+      values: {
+        [key: string]: unknown;
+      };
+    };
     /** @example my_app */
     ApplicationName: string;
     AssetsPath: string;
@@ -2761,6 +2948,330 @@ export interface operations {
       };
       /** @description Bad request */
       400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  stageApp: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/octet-stream': string;
+      };
+    };
+    responses: {
+      /** @description Application staged successfully. */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AppStageResult'];
+        };
+      };
+      /** @description Invalid parameters, invalid package file, or installation preparation failed. */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Application package too large. */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Failed to save the application package. */
+      508: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  installApp: {
+    parameters: {
+      query: {
+        /**
+         * @description Installation key
+         * @example 123456789
+         */
+        install_key: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Application installed successfully. */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+      /** @description Invalid parameters. */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  removeApp: {
+    parameters: {
+      query: {
+        app_id: components['schemas']['AppId'];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Done successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+      /** @description Missing application id */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description App with given ID was not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  listApps: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Done successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AppListResult'];
+        };
+      };
+    };
+  };
+  getAppSettings: {
+    parameters: {
+      query: {
+        app_id: components['schemas']['AppId'];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Settings document */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AppSettingsDocument'];
+        };
+      };
+      /** @description Invalid application identifier */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Unknown application or no settings */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Invalid settings schema or failed to build the document */
+      503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Storage error */
+      508: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  setAppSettings: {
+    parameters: {
+      query: {
+        app_id: components['schemas']['AppId'];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AppSettingsDocument'];
+      };
+    };
+    responses: {
+      /** @description Settings stored */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+      /** @description Invalid application identifier or document */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Unknown application or no settings */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Invalid settings schema */
+      503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Storage error */
+      508: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  resetAppSettings: {
+    parameters: {
+      query: {
+        app_id: components['schemas']['AppId'];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Settings reset */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+      /** @description Invalid application identifier */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Unknown application or no settings */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Invalid settings schema */
+      503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Storage error */
+      508: {
         headers: {
           [name: string]: unknown;
         };
