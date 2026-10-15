@@ -21,8 +21,8 @@ async function setHttpAccess(client: BusyBarClient, params: HttpAccessParams, op
   const { mode, key } = params;
   const keyValue = key ?? '';
 
-  if (String(keyValue).trim() && !/^\d{4,10}$/.test(String(keyValue))) {
-    throw new Error('Key must be a string of 4 to 10 digits');
+  if (String(keyValue).trim() && !/^[A-Za-z0-9]{4,32}$/.test(String(keyValue))) {
+    throw new Error('Key must be a string of 4 to 32 letters or digits');
   }
 
   const { data, error } = await client.execute(
