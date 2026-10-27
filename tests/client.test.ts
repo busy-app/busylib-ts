@@ -6,6 +6,7 @@ import { bodySerializer } from 'BusyBar/client/body';
 import { toFetchError } from 'BusyBar/client/errors';
 import type { BusyBarConfig } from 'BusyBar/client/types';
 import { API_SEMVER, decode, defaultHandler, hang, json, mockFetch, pathOf, text, type Handler } from './tools/fetch';
+import { failingHandler, versionMismatchOnce } from './tools/fixtures';
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -121,25 +122,8 @@ describe('version', () => {
 });
 
 describe('405', () => {
-  function outdatedVersion(): { requests: ReturnType<typeof mockFetch>['requests']; handler: Handler } {
-    let semver = '1.0.0';
-    let rejected = false;
-    const handler: Handler = (request) => {
-      if (pathOf(request) === '/version') {
-        return json({ api_semver: semver });
-      }
-      if (!rejected) {
-        rejected = true;
-        semver = '2.0.0';
-        return json({ error: 'version mismatch' }, { status: 405 });
-      }
-      return defaultHandler(request);
-    };
-    return { requests: mockFetch(handler).requests, handler };
-  }
-
   test('renegotiates the version and retries once', async () => {
-    const { requests } = outdatedVersion();
+    const { requests } = mockFetch(versionMismatchOnce(defaultHandler));
     const client = new BusyBarClient();
     await expect(client.GET('/status')).resolves.toEqual({ result: 'OK' });
     expect(requests.map(pathOf)).toEqual(['/version', '/status', '/version', '/status']);
@@ -148,7 +132,7 @@ describe('405', () => {
   });
 
   test('retries requests with a body', async () => {
-    const { requests } = outdatedVersion();
+    const { requests } = mockFetch(versionMismatchOnce(defaultHandler));
     await new BusyBarClient().POST('/display/draw', { body: drawBody });
     const draws = requests.filter((r) => pathOf(r) === '/display/draw');
     expect(draws).toHaveLength(2);
@@ -156,7 +140,7 @@ describe('405', () => {
   });
 
   test('a second 405 is thrown', async () => {
-    mockFetch((request) => (pathOf(request) === '/version' ? defaultHandler(request) : json({ error: 'nope' }, { status: 405 })));
+    mockFetch(failingHandler(() => json({ error: 'nope' }, { status: 405 })));
     await expect(new BusyBarClient().GET('/status')).rejects.toMatchObject({ message: 'nope', status: 405 });
   });
 
