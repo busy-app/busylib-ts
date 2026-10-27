@@ -39,5 +39,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "env.d.ts"]
+  "include": ["src", "tests", "env.d.ts", "tools/busybar/BusyBar.template.ts"]
 }

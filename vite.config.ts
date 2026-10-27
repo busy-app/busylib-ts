@@ -30,6 +30,7 @@ export default defineConfig({
       entry: path.resolve(__dirname, 'src/StateStream/worker/index.worker.ts')
     }),
     dts({
+      tsconfigPath: './tsconfig.build.json',
       entryRoot: 'src',
       outDir: 'dist',
       rollupTypes: true,

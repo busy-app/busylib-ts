@@ -37,13 +37,15 @@
   ],
   "scripts": {
     "build": "vite build",
-    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit",
     "test:package": "vitest run --project package",
     "docs:generate": "typedoc",
     "format": "prettier --write '**/*.ts'",
     "fonts:build": "node tools/build-font-maps.mjs",
-    "fonts:check": "node tools/build-font-maps.mjs --check"
+    "fonts:check": "node tools/build-font-maps.mjs --check",
+    "busybar:build": "node tools/busybar/build-busybar.mjs",
+    "busybar:check": "node tools/busybar/build-busybar.mjs --check"
   },
   "dependencies": {
     "openapi-fetch": "^0.14.0",
