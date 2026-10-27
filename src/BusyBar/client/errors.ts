@@ -1,11 +1,4 @@
-/**
- * Error thrown for a non-2xx response, with the HTTP status and the response body attached.
- */
-export interface FetchError<T = unknown> extends Error {
-  status: number;
-  statusText: string;
-  body: T;
-}
+import type { FetchError } from './types';
 
 /**
  * Builds a FetchError from a failed response and its body, which the transport has already read and parsed (JSON when it parses, text otherwise).

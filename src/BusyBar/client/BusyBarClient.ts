@@ -2,18 +2,8 @@ import { resolveAddress } from './config';
 import { toFetchError } from './errors';
 import { withSignal } from './signal';
 import { createTransport } from './transport';
-import type {
-  ApiClient,
-  ApiKey,
-  ApiSemver,
-  BusyBarConfig,
-  HttpMethod,
-  InitParam,
-  PathsWithMethod,
-  RequestInitFor,
-  RequestOptions,
-  ResponseData
-} from './types';
+import type { ApiClient, ApiSemver, BusyBarConfig, HttpMethod, InitParam, PathsWithMethod, RequestInitFor, RequestOptions, ResponseData } from './types';
+import type { ApiKey } from './types.internal';
 
 const VERSION_PATH = '/version';
 const DEFAULT_TIMEOUT = 3000;
