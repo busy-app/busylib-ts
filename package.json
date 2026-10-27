@@ -37,7 +37,9 @@
   ],
   "scripts": {
     "build": "vite build",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
+    "test": "vitest run --project unit",
+    "test:package": "vitest run --project package",
     "docs:generate": "typedoc",
     "format": "prettier --write '**/*.ts'",
     "fonts:build": "node tools/build-font-maps.mjs",
@@ -57,7 +59,8 @@
     "typescript": "~5.8.3",
     "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.4",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.2.7"
   },
   "engines": {
     "node": ">=18"
