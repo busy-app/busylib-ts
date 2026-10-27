@@ -1,6 +1,6 @@
 // Layout tree types. The tree exists only in TS; the engine flattens it into DisplayDraw's elements[]. Leaf fields come from busy-lib and pass through, minus x/y/align, plus sizes where needed.
 
-import type { DisplayDrawParams } from 'BusyBar/types';
+import type { DisplayDrawParams } from 'BusyBar-old/types';
 
 // The discriminated union lives in the DisplayDraw params, not in DisplayElement.
 type Element = NonNullable<DisplayDrawParams['elements']>[number];

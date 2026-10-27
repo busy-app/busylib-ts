@@ -8,7 +8,7 @@
 //
 // Returns DisplayDraw elements rather than a layout tree: the geometry follows from the width, the line step and the side the scrollbar is on, so there is nothing to lay out.
 
-import type { DisplayDrawParams } from 'BusyBar/types';
+import type { DisplayDrawParams } from 'BusyBar-old/types';
 import { capBox, type DeviceFont } from 'Utils/font';
 
 type Element = NonNullable<DisplayDrawParams['elements']>[number];

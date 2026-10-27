@@ -4,6 +4,7 @@
     "paths": {
       "src/*": ["src/*"],
       "BusyBar/*": ["src/BusyBar/*"],
+      "BusyBar-old/*": ["src/BusyBar-old/*"],
       "ScreenStream/*": ["src/ScreenStream/*"],
       "StateStream/*": ["src/StateStream/*"],
       "ScreenRenderer/*": ["src/ScreenRenderer/*"],
