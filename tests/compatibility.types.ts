@@ -1,4 +1,4 @@
-// Type compatibility of the new BusyBar with BusyBar-old, checked by `typecheck` (tsconfig.test.json); removed together with BusyBar-old.
+// Type compatibility of the new BusyBar with BusyBar-old, checked by `typecheck`; removed together with BusyBar-old.
 import type { BusyBar as OldBusyBar } from 'BusyBar-old/index';
 import type { BusyBar, ScreenFrameGetOptions } from 'BusyBar/index';
 
@@ -18,6 +18,8 @@ type Generic = 'DisplayScreenFrameGet';
 type Mismatching<K extends keyof BusyBar & keyof OldBusyBar> = { [M in K]: Equals<OmitThisParameter<OldBusyBar[M]>, BusyBar[M]> extends true ? never : M }[K];
 
 export type OnlyClientIsNew = Assert<Equals<Exclude<keyof BusyBar, keyof OldBusyBar>, 'client'>>;
+
+export type NothingMissing = AssertNone<Exclude<keyof OldBusyBar, keyof BusyBar>>;
 
 export type SameMethods = AssertNone<Mismatching<Exclude<Methods, Generic>>>;
 

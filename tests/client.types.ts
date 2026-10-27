@@ -1,4 +1,4 @@
-// Type-level tests of the core request methods, checked by `typecheck` (tsconfig.test.json) and never run.
+// Type-level tests of the core request methods, checked by `typecheck` and never run.
 import { expectTypeOf } from 'vitest';
 import type { components } from 'Global/API';
 import type { BusyBarClient } from 'BusyBar/index';
