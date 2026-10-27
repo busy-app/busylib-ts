@@ -1,7 +1,7 @@
 // Differential tests: every case runs against BusyBar-old, and against the new BusyBar once its scope is migrated; recorded requests, the result or error and apiSemver must match.
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { BusyBar as OldBusyBar } from 'BusyBar-old/index';
-import type { RequestOptions } from 'BusyBar/client/types';
+import { BusyBar, type RequestOptions } from 'BusyBar/index';
 import { Display } from 'Global/types';
 import { json, mockFetch, pathOf, text, type Handler, type RecordedRequest } from './tools/fetch';
 import { failingHandler, fixtureHandler, versionMismatchOnce } from './tools/fixtures';
@@ -229,8 +229,15 @@ const scenarios: Scenario[] = [
   { name: 'aborted', handler: () => fixtureHandler, options: () => ({ signal: AbortSignal.abort() }) }
 ];
 
+interface NormalizedRequest {
+  method: string;
+  url: string;
+  headers: Record<string, string>;
+  body: unknown;
+}
+
 interface Run {
-  requests: unknown[];
+  requests: NormalizedRequest[];
   outcome: { data: unknown } | { error: unknown };
   apiSemver: string;
 }
@@ -262,7 +269,7 @@ function normalizeError(error: unknown): unknown {
   return { name: error.name, message: error.message, status, statusText, body };
 }
 
-function normalizeRequest({ method, url, headers, body }: RecordedRequest): unknown {
+function normalizeRequest({ method, url, headers, body }: RecordedRequest): NormalizedRequest {
   const isJson = headers['content-type']?.includes('json');
   const decoded = body && (isJson ? JSON.parse(new TextDecoder().decode(body)) : Buffer.from(body).toString('base64'));
   return { method, url, headers, body: decoded };
@@ -286,9 +293,12 @@ async function run(createBar: () => Bar, testCase: Case, scenario: Scenario): Pr
 
 const config = { token: 'token', HTTPAccessPassword: '1234' };
 const createOld = () => new OldBusyBar(config);
+// tests/compatibility.types.ts guarantees the migrated methods have the old types.
+const createNew = () => new BusyBar(config) as unknown as Bar;
 
 const caseName = (c: Case) => (c.variant ? `${c.method} (${c.variant})` : c.method);
 const endpointOf = (r: RecordedRequest) => `${r.method} ${pathOf(r)}`;
+const sendsBody = (r: Run) => r.requests.some((request) => request.body !== undefined);
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -334,11 +344,35 @@ describe('scenarios on the old implementation', () => {
     expect(runs['aborted']?.outcome).toMatchObject({ error: { name: 'AbortError', message: 'Request was aborted' } });
 
     // The old retry re-sends the consumed Request, so it fails for every request with a body.
-    const hasBody = runs['ok']!.requests.some((r) => (r as { body?: unknown }).body !== undefined);
-    if (hasBody) {
+    if (sendsBody(runs['ok']!)) {
       expect(runs['405']?.outcome).toMatchObject({ error: { name: 'TypeError' } });
     } else {
       expect(runs['405']?.outcome).toHaveProperty('data');
+    }
+  });
+});
+
+describe('new implementation matches the old one', () => {
+  const migrated = cases.filter((c) => c.method in BusyBar.prototype);
+
+  test.each(migrated.map((c) => [caseName(c), c] as const))('%s', async (_, testCase) => {
+    for (const scenario of scenarios) {
+      const expected = await run(createOld, testCase, scenario);
+      const actual = await run(createNew, testCase, scenario);
+
+      // Expected divergence: the old retry fails with TypeError, the new one sends the body again and succeeds.
+      if (scenario.name === '405' && sendsBody(expected)) {
+        expect(expected.outcome).toMatchObject({ error: { name: 'TypeError' } });
+        expect(actual.outcome).toEqual((await run(createNew, testCase, scenarios[0]!)).outcome);
+        expect(actual.apiSemver).toBe('2.0.0');
+
+        const [first, retried, ...rest] = actual.requests.filter((r) => !r.url.endsWith('/version'));
+        expect(rest).toEqual([]);
+        expect(retried).toEqual({ ...first, headers: { ...first?.headers, 'x-api-sem-ver': '2.0.0' } });
+        continue;
+      }
+
+      expect(actual, scenario.name).toEqual(expected);
     }
   });
 });

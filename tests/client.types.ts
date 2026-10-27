@@ -1,7 +1,7 @@
 // Type-level tests of the core request methods, checked by `typecheck` (tsconfig.test.json) and never run.
 import { expectTypeOf } from 'vitest';
 import type { components } from 'Global/API';
-import type { BusyBarClient } from 'BusyBar/client/BusyBarClient';
+import type { BusyBarClient } from 'BusyBar/index';
 import type { version, status } from 'BusyBar-old/api/system';
 import type { draw, getScreenFrame } from 'BusyBar-old/api/display';
 import type { read } from 'BusyBar-old/api/storage';

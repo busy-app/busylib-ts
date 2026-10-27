@@ -1,10 +1,9 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { BusyBar as OldBusyBar } from 'BusyBar-old/index';
-import { BusyBarClient } from 'BusyBar/client/BusyBarClient';
+import { BusyBarClient, type BusyBarConfig } from 'BusyBar/index';
 import { resolveAddress } from 'BusyBar/client/config';
 import { bodySerializer } from 'BusyBar/client/body';
 import { toFetchError } from 'BusyBar/client/errors';
-import type { BusyBarConfig } from 'BusyBar/client/types';
 import { API_SEMVER, decode, defaultHandler, hang, json, mockFetch, pathOf, text, type Handler } from './tools/fetch';
 import { failingHandler, versionMismatchOnce } from './tools/fixtures';
 
