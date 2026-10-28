@@ -97,7 +97,7 @@ export class BusyBar {
   }
 
   /**
-   * Core client: pass it to the functions, or call its typed `GET`/`POST`/`PUT`/`DELETE`/`request` for endpoints without a method.
+   * Core client: pass it to the functions, or call its typed `GET`/`POST`/`PUT`/`DELETE`/`request` to send a request by its path with options the methods do not take.
    * @type {BusyBarClient}
    */
   get client(): BusyBarClient {
