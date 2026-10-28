@@ -149,37 +149,36 @@ export class BusyBarClient {
 
   private send(method: HttpMethod, path: string, init: SendInit | undefined): Promise<unknown> {
     const { timeout = this.timeout, signal: externalSignal, ...transportInit } = init ?? {};
+
+    // The timeout covers version negotiation too. A sync arrow calling a method: JerryScript loses `this` inside async arrows.
+    return withSignal((signal) => this.pipeline(method, path, transportInit, signal), timeout, externalSignal);
+  }
+
+  private async pipeline(method: HttpMethod, path: string, init: Record<string, unknown>, signal: AbortSignal | undefined): Promise<unknown> {
     const isVersion = path === VERSION_PATH;
 
-    // The timeout covers version negotiation too.
-    return withSignal(
-      async (signal) => {
-        if (!isVersion) {
-          await this.ensureVersion();
-        }
+    if (!isVersion) {
+      await this.ensureVersion();
+    }
 
-        let result = await this.dispatch(method, path, transportInit, signal);
+    let result = await this.dispatch(method, path, init, signal);
 
-        // The device rejects an outdated X-API-Sem-Ver with 405: renegotiate and retry once. The transport serializes the body again, so requests with a body are retried too.
-        if (result.response.status === 405 && !isVersion) {
-          this.semver = '';
-          await this.ensureVersion();
-          result = await this.dispatch(method, path, transportInit, signal);
-        }
+    // The device rejects an outdated X-API-Sem-Ver with 405: renegotiate and retry once. The transport serializes the body again, so requests with a body are retried too.
+    if (result.response.status === 405 && !isVersion) {
+      this.semver = '';
+      await this.ensureVersion();
+      result = await this.dispatch(method, path, init, signal);
+    }
 
-        if (!result.response.ok) {
-          throw toFetchError(result.response, result.error);
-        }
+    if (!result.response.ok) {
+      throw toFetchError(result.response, result.error);
+    }
 
-        if (isVersion) {
-          this.semver = (result.data as { api_semver?: ApiSemver } | undefined)?.api_semver ?? '';
-        }
+    if (isVersion) {
+      this.semver = (result.data as { api_semver?: ApiSemver } | undefined)?.api_semver ?? '';
+    }
 
-        return result.data;
-      },
-      timeout,
-      externalSignal
-    );
+    return result.data;
   }
 
   private dispatch(method: HttpMethod, path: string, init: Record<string, unknown>, signal: AbortSignal | undefined): Promise<TransportResult> {
