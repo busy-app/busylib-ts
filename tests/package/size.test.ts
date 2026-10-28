@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { gzipSync } from 'node:zlib';
-import { build, type Rollup } from 'vite';
+import { build, type Rolldown } from 'vite';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 const root = path.resolve(__dirname, '../..');
@@ -26,7 +26,7 @@ const scenarios: Scenario[] = [
     code: `import { BusyBarClient } from '@busy-app/busy-lib';
 globalThis.client = new BusyBarClient();`,
     endpoints: [],
-    limit: { min: 11_600, gzip: 4_400 }
+    limit: { min: 10_900, gzip: 4_100 }
   },
   {
     name: 'BusyBarClient + displayDraw',
@@ -34,7 +34,7 @@ globalThis.client = new BusyBarClient();`,
 const client = new BusyBarClient();
 globalThis.run = () => ${drawCall};`,
     endpoints: ['POST /display/draw'],
-    limit: { min: 11_800, gzip: 4_500 }
+    limit: { min: 11_100, gzip: 4_200 }
   },
   {
     name: 'weather',
@@ -46,14 +46,14 @@ globalThis.run = async () => {
   await ${drawCall};
 };`,
     endpoints: ['DELETE /display/draw', 'GET /apps/settings', 'POST /display/draw'],
-    limit: { min: 12_000, gzip: 4_600 }
+    limit: { min: 11_300, gzip: 4_300 }
   },
   {
     name: 'BusyBar',
     code: `import { BusyBar } from '@busy-app/busy-lib';
 globalThis.bar = new BusyBar();`,
     endpoints: 78,
-    limit: { min: 26_400, gzip: 7_500 }
+    limit: { min: 25_200, gzip: 7_200 }
   }
 ];
 
@@ -65,18 +65,18 @@ async function bundle(scenario: Scenario): Promise<string> {
     root: project,
     configFile: false,
     logLevel: 'silent',
-    build: { write: false, minify: true, modulePreload: false, rollupOptions: { input: entry } }
-  })) as Rollup.RollupOutput;
+    build: { write: false, minify: true, modulePreload: false, rolldownOptions: { input: entry } }
+  })) as Rolldown.RolldownOutput;
 
   return result.output
-    .filter((file): file is Rollup.OutputChunk => file.type === 'chunk')
+    .filter((file): file is Rolldown.OutputChunk => file.type === 'chunk')
     .map((chunk) => chunk.code)
     .join('\n');
 }
 
-// Minification keeps property names and string literals, so `client.POST('/display/draw'` stays recognizable.
+// Minification keeps property names and string literals, so `client.POST('/display/draw'` stays recognizable; the quotes depend on the minifier (oxc emits template literals).
 function endpointsIn(code: string): string[] {
-  return [...new Set([...code.matchAll(/\.(GET|POST|PUT|DELETE)\("([^"]+)"/g)].map(([, method, endpoint]) => `${method} ${endpoint}`))].sort();
+  return [...new Set([...code.matchAll(/\.(GET|POST|PUT|DELETE)\(["'`]([^"'`]+)["'`]/g)].map(([, method, endpoint]) => `${method} ${endpoint}`))].sort();
 }
 
 beforeAll(() => {

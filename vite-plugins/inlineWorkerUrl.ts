@@ -1,5 +1,4 @@
 import { build, type Plugin } from 'vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import path from 'node:path';
 
 const VIRTUAL_ID = 'busy:worker-url';
@@ -32,7 +31,7 @@ export function inlineWorkerUrl(options: InlineWorkerUrlOptions): Plugin {
         const result = await build({
           configFile: false,
           logLevel: 'warn',
-          plugins: [tsconfigPaths()],
+          resolve: { tsconfigPaths: true },
           build: {
             write: false,
             minify: true,
@@ -41,9 +40,9 @@ export function inlineWorkerUrl(options: InlineWorkerUrlOptions): Plugin {
               formats: ['es'],
               fileName: () => 'worker.js'
             },
-            rollupOptions: {
+            rolldownOptions: {
               output: {
-                inlineDynamicImports: true
+                codeSplitting: false
               }
             }
           }

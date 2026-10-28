@@ -1,3 +1,4 @@
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import ts from 'typescript';
@@ -10,6 +11,11 @@ async function runtimeExports() {
   // The path is computed so typecheck does not depend on dist existing.
   const module = await import(pathToFileURL(path.join(dist, 'index.js')).href);
   return Object.keys(module).sort();
+}
+
+// The cjs build is emitted separately, so it can lose or rename exports the es build has.
+function requireExports() {
+  return Object.keys(createRequire(import.meta.url)(path.join(dist, 'index.cjs'))).sort();
 }
 
 function declarationExports() {
@@ -29,5 +35,6 @@ function declarationExports() {
 test('public exports match the snapshot', async () => {
   const exports = { js: await runtimeExports(), dts: declarationExports() };
   expect(exports.dts.values).toEqual(exports.js);
+  expect(requireExports()).toEqual(exports.js);
   await expect(JSON.stringify(exports, null, 2) + '\n').toMatchFileSnapshot('__snapshots__/exports.json');
 });

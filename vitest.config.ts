@@ -1,9 +1,8 @@
 import { configDefaults, defineConfig } from 'vitest/config';
-import tsconfigPaths from 'vite-tsconfig-paths';
 
 // Separate from vite.config.ts: tests need path aliases only, not the dts, worker and font-map build plugins.
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  resolve: { tsconfigPaths: true },
   test: {
     projects: [
       { extends: true, test: { name: 'unit', include: ['tests/**/*.test.ts'], exclude: [...configDefaults.exclude, 'tests/package/**'] } },
