@@ -37,7 +37,9 @@ npm i @busy-app/busy-lib
 
 ## BUSY Bar HTTP API
 
-`BusyBar` is a single class that talks to the BUSY Bar over HTTP - a typed wrapper around the [HTTP API](https://docs.busy.app/bar/dev/http-api). It aggregates every namespace - `System*`, `Display*`, `Audio*`, `Wifi*`, `Storage*`, `Settings*`, `Ble*`, `Input*`, `SmartHome*`, `Account*`, `Assets*`, `Time*`, `Update*` - so everything can be called from one instance. All methods are async and return typed results.
+`BusyBar` is a single class that talks to the BUSY Bar over HTTP - a typed wrapper around the [HTTP API](https://docs.busy.app/bar/dev/http-api). It aggregates every namespace - `System*`, `Display*`, `Audio*`, `Wifi*`, `Storage*`, `Settings*`, `Ble*`, `Input*`, `SmartHome*`, `Account*`, `Apps*`, `Assets*`, `Busy*`, `Time*`, `Update*` - so everything can be called from one instance. All methods are async and return typed results.
+
+Every method is also exported as a standalone function, so a bundle can include only the requests it makes - see [Tree-shakable functions](#tree-shakable-functions).
 
 ### Quick start
 
@@ -53,10 +55,8 @@ const status = await bar.SystemStatusGet();
 
 Since every call is a network request to a physical device, any method may reject. What you catch depends on the error:
 
-- **HTTP error** (4xx/5xx) - a custom error with `status`, `statusText`, and the
-  parsed `body` attached, plus a human-readable `message`
-- **Timeout** - a `DOMException` with `name === 'TimeoutError'` (the default
-  timeout is 3000ms; see [Request options](#request-options))
+- **HTTP error** (4xx/5xx) - a `FetchError`: an `Error` with `status`, `statusText`, and the parsed `body` attached, plus a human-readable `message`
+- **Timeout** - a `DOMException` with `name === 'TimeoutError'` (the default timeout is 3000ms; see [Request options](#request-options))
 - **Aborted via `signal`** - a `DOMException` with `name === 'AbortError'` (if `AbortController` is passed and request is aborted)
 - **Unreachable device / network failure** - the native `fetch` error (e.g. `TypeError: Failed to fetch`)
 
@@ -128,6 +128,68 @@ const bar = new BusyBar({
   HTTPAccessPassword: '<password>'
 });
 bar.setHTTPAccessPassword('<new-password>'); // change at runtime
+```
+
+### Tree-shakable functions
+
+`new BusyBar()` brings every method into the bundle, because bundlers cannot drop unused methods of a class. When size matters - for example, in an app that runs on the BUSY Bar - use `BusyBarClient` with standalone functions instead: each `BusyBar` method has a corresponding camelCase function (`DisplayDraw` → `displayDraw`) that takes the client as its first argument, and the bundle includes only the functions you import.
+
+```ts
+import { BusyBarClient, displayClear, displayDraw } from '@busy-app/busy-lib';
+
+const client = new BusyBarClient({
+  addr: '10.0.4.20'
+});
+
+await displayClear(client); // same as bar.DisplayClear()
+await displayDraw(client, {
+  application_name: 'my_app',
+  elements: [{
+    id: '0',
+    type: 'text',
+    text: 'Hello',
+    font: 'normal'
+  }]
+});
+```
+
+Aside from the initial `client` argument, functions accept the same parameters and options and return the same typed results as the corresponding methods. `BusyBarClient` takes the same config as `BusyBar` and handles authentication (`setToken`, `setHTTPAccessPassword`), API version negotiation (`apiSemver`) and timeouts.
+
+Which one to use:
+
+- **`BusyBar`** - scripts, Node.js tools and web apps where bundle size is not critical: one object with every method
+- **`BusyBarClient` + functions** - apps on the device and other size-sensitive bundles: a client with one function is about 11 KB minified (4 KB gzip), the whole `BusyBar` is about 24 KB (7 KB gzip)
+
+Because `BusyBar` uses `BusyBarClient` internally, both approaches can be mixed: `bar.client` can be passed to any standalone function.
+
+```ts
+const bar = new BusyBar();
+await displayDraw(bar.client, { application_name: 'my_app', elements: [] });
+```
+
+`BusyBar` methods are bound to their instance, so they keep working when destructured or passed as callbacks:
+
+```ts
+const { DisplayClear } = bar;
+await DisplayClear();
+```
+
+### Direct requests
+
+Every endpoint has a method, but a request can also be sent by its path with the client's `GET`, `POST`, `PUT`, `DELETE` and `request` - for example, to pass request options the methods do not take, such as `parseAs` or extra `headers`. The path, parameters, body and result are typed from the API schema, and the request gets the same authentication headers, API version negotiation, `timeout`, `signal` and errors as the methods. What a method adds on top - defaults, parameter validation, response decoding - is not applied.
+
+```ts
+const controller = new AbortController();
+
+// the frame as the device sends it, without the decoding DisplayScreenFrameGet does
+const frame = await bar.client.GET('/screen', {
+  params: { query: { display: 0 } },
+  parseAs: 'blob',
+  timeout: 1000
+});
+
+// the same, with the HTTP method as an argument
+await bar.client.request('GET', '/status', { signal: controller.signal });
 ```
 
 ### Pitfalls
