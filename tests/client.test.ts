@@ -1,6 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
-import { BusyBar as OldBusyBar } from 'BusyBar-old/index';
-import { BusyBarClient, type BusyBarConfig } from 'BusyBar/index';
+import { BusyBar, BusyBarClient, type BusyBarConfig } from 'BusyBar/index';
 import { resolveAddress } from 'BusyBar/client/config';
 import { bodySerializer } from 'BusyBar/client/body';
 import { toFetchError } from 'BusyBar/client/errors';
@@ -29,13 +28,13 @@ describe('resolveAddress', () => {
 
   test.each(cases)('%s', (_, config, addr, baseUrl) => {
     expect(resolveAddress(config)).toEqual({ addr, baseUrl });
-    expect(new OldBusyBar(config).addr).toBe(addr);
+    expect(new BusyBar(config).addr).toBe(addr);
   });
 
   test('proxy without token throws', () => {
     const message = 'Token is required. Please provide it.';
     expect(() => resolveAddress({ addr: 'api.busy.app' })).toThrow(message);
-    expect(() => new OldBusyBar({ addr: 'api.busy.app' })).toThrow(message);
+    expect(() => new BusyBar({ addr: 'api.busy.app' })).toThrow(message);
   });
 
   test('requests go to the base URL', async () => {

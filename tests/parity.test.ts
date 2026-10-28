@@ -1,13 +1,12 @@
-// Differential tests: every case runs against BusyBar-old, and against the new BusyBar once its scope is migrated; recorded requests, the result or error and apiSemver must match.
+// Snapshot tests of every BusyBar method: each case runs in every scenario, and the recorded requests, the result or error and apiSemver must match the snapshot.
+import { createHash } from 'node:crypto';
 import { afterEach, describe, expect, test, vi } from 'vitest';
-import { BusyBar as OldBusyBar } from 'BusyBar-old/index';
 import { BusyBar, type RequestOptions } from 'BusyBar/index';
 import { Display } from 'Global/types';
 import { json, mockFetch, pathOf, text, type Handler, type RecordedRequest } from './tools/fetch';
 import { failingHandler, fixtureHandler, versionMismatchOnce } from './tools/fixtures';
 
-type Bar = OldBusyBar;
-type MethodName = { [K in keyof Bar]: Bar[K] extends (...args: never[]) => unknown ? K : never }[keyof Bar];
+type MethodName = { [K in keyof BusyBar]: BusyBar[K] extends (...args: never[]) => unknown ? K : never }[keyof BusyBar];
 
 interface Case {
   method: MethodName;
@@ -15,7 +14,7 @@ interface Case {
   variant?: string;
   // `METHOD /path` the call must end with, or `null` when it must fail before sending anything.
   endpoint: string | null;
-  call: (bar: Bar, options?: RequestOptions) => Promise<unknown>;
+  call: (bar: BusyBar, options?: RequestOptions) => Promise<unknown>;
 }
 
 const file = Uint8Array.from([1, 2, 3, 4]);
@@ -242,12 +241,14 @@ interface Run {
   apiSemver: string;
 }
 
+// Screen frames are tens of kilobytes, so long payloads are stored as a hash to keep the snapshot readable.
 async function encodeBytes(value: Blob | ArrayBuffer | Uint8Array): Promise<string> {
   const buffer = value instanceof Blob ? await value.arrayBuffer() : value;
-  return Buffer.from(buffer instanceof ArrayBuffer ? new Uint8Array(buffer) : buffer).toString('base64');
+  const bytes = Buffer.from(buffer instanceof ArrayBuffer ? new Uint8Array(buffer) : buffer);
+  return bytes.length <= 64 ? bytes.toString('base64') : `${bytes.length} bytes, sha256 ${createHash('sha256').update(bytes).digest('hex')}`;
 }
 
-// Turns results into plain JSON, so runs can be compared and later stored as snapshots.
+// Turns results into plain JSON, so runs can be stored as snapshots.
 async function normalizeData(data: unknown): Promise<unknown> {
   if (data instanceof Blob) {
     return { Blob: await encodeBytes(data) };
@@ -275,9 +276,12 @@ function normalizeRequest({ method, url, headers, body }: RecordedRequest): Norm
   return { method, url, headers, body: decoded };
 }
 
-async function run(createBar: () => Bar, testCase: Case, scenario: Scenario): Promise<Run> {
+const config = { token: 'token', HTTPAccessPassword: '1234' };
+
+async function run(testCase: Case, scenario: Scenario): Promise<Run> {
   const { requests } = mockFetch(scenario.handler());
-  const bar = createBar();
+  // Created after mocking: openapi-fetch captures globalThis.fetch when the client is created.
+  const bar = new BusyBar(config);
 
   const outcome = await Promise.resolve()
     .then(() => testCase.call(bar, scenario.options?.()))
@@ -291,14 +295,9 @@ async function run(createBar: () => Bar, testCase: Case, scenario: Scenario): Pr
   return { requests: requests.map(normalizeRequest), outcome, apiSemver: bar.apiSemver };
 }
 
-const config = { token: 'token', HTTPAccessPassword: '1234' };
-const createOld = () => new OldBusyBar(config);
-// tests/compatibility.types.ts guarantees the migrated methods have the old types.
-const createNew = () => new BusyBar(config) as unknown as Bar;
-
 const caseName = (c: Case) => (c.variant ? `${c.method} (${c.variant})` : c.method);
 const endpointOf = (r: RecordedRequest) => `${r.method} ${pathOf(r)}`;
-const sendsBody = (r: Run) => r.requests.some((request) => request.body !== undefined);
+const isVersion = (r: NormalizedRequest) => r.url.endsWith('/version');
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -306,15 +305,16 @@ afterEach(() => {
 
 describe('cases', () => {
   test('cover every BusyBar method', () => {
-    const methods = Object.getOwnPropertyNames(OldBusyBar.prototype).filter((name) => !['constructor', 'setToken', 'setHTTPAccessPassword'].includes(name));
+    const fixed = ['constructor', 'client', 'addr', 'apiSemver', 'apiClient', 'setToken', 'setHTTPAccessPassword'];
+    const methods = Object.getOwnPropertyNames(BusyBar.prototype).filter((name) => !fixed.includes(name));
     expect(methods).toHaveLength(78);
     expect([...new Set(cases.map((c) => c.method))].sort()).toEqual(methods.sort());
   });
 
-  // Checks the cases themselves on the old implementation: valid params, the right endpoint, fixtures for every response.
+  // Checks the cases themselves: valid params, the right endpoint, fixtures for every response.
   test.each(cases.map((c) => [caseName(c), c] as const))('%s calls its endpoint', async (_, testCase) => {
     const { requests } = mockFetch(fixtureHandler);
-    const call = testCase.call(createOld());
+    const call = testCase.call(new BusyBar());
 
     if (testCase.endpoint === null) {
       await expect(call).rejects.toThrow();
@@ -328,51 +328,29 @@ describe('cases', () => {
   });
 });
 
-describe('scenarios on the old implementation', () => {
+describe('scenarios', () => {
   const sendingCases = cases.filter((c) => c.endpoint !== null && c.method !== 'SystemVersionGet');
 
   test.each(sendingCases.map((c) => [caseName(c), c] as const))('%s', async (_, testCase) => {
     // Sequential: each run replaces the global fetch.
     const runs: Record<string, Run> = {};
     for (const scenario of scenarios) {
-      runs[scenario.name] = await run(createOld, testCase, scenario);
+      runs[scenario.name] = await run(testCase, scenario);
     }
 
+    // Guards the snapshot from being updated with a broken run.
     expect(runs['ok']?.outcome).toHaveProperty('data');
     expect(runs['JSON error']?.outcome).toMatchObject({ error: { message: 'bad', status: 500 } });
     expect(runs['text error']?.outcome).toMatchObject({ error: { message: 'oops', status: 500 } });
     expect(runs['aborted']?.outcome).toMatchObject({ error: { name: 'AbortError', message: 'Request was aborted' } });
 
-    // The old retry re-sends the consumed Request, so it fails for every request with a body.
-    if (sendsBody(runs['ok']!)) {
-      expect(runs['405']?.outcome).toMatchObject({ error: { name: 'TypeError' } });
-    } else {
-      expect(runs['405']?.outcome).toHaveProperty('data');
-    }
-  });
-});
+    // The rejected request is sent once more with the new version, body included.
+    expect(runs['405']?.outcome).toEqual(runs['ok']?.outcome);
+    expect(runs['405']?.apiSemver).toBe('2.0.0');
+    const [first, retried] = runs['405']!.requests.filter((r) => !isVersion(r));
+    expect(retried).toEqual({ ...first, headers: { ...first?.headers, 'x-api-sem-ver': '2.0.0' } });
 
-describe('new implementation matches the old one', () => {
-  const migrated = cases.filter((c) => c.method in BusyBar.prototype);
-
-  test.each(migrated.map((c) => [caseName(c), c] as const))('%s', async (_, testCase) => {
-    for (const scenario of scenarios) {
-      const expected = await run(createOld, testCase, scenario);
-      const actual = await run(createNew, testCase, scenario);
-
-      // Expected divergence: the old retry fails with TypeError, the new one sends the body again and succeeds.
-      if (scenario.name === '405' && sendsBody(expected)) {
-        expect(expected.outcome).toMatchObject({ error: { name: 'TypeError' } });
-        expect(actual.outcome).toEqual((await run(createNew, testCase, scenarios[0]!)).outcome);
-        expect(actual.apiSemver).toBe('2.0.0');
-
-        const [first, retried, ...rest] = actual.requests.filter((r) => !r.url.endsWith('/version'));
-        expect(rest).toEqual([]);
-        expect(retried).toEqual({ ...first, headers: { ...first?.headers, 'x-api-sem-ver': '2.0.0' } });
-        continue;
-      }
-
-      expect(actual, scenario.name).toEqual(expected);
-    }
+    // Recorded from BusyBar-old before it was removed; only the 405 runs with a body were taken from the new implementation, as the old retry failed with TypeError.
+    expect(runs).toMatchSnapshot();
   });
 });

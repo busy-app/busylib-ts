@@ -1,10 +1,9 @@
-// Endpoint coverage: the new scopes call exactly the endpoints the old api modules called, and together they cover every endpoint of the API schema.
+// Endpoint coverage: the scope functions together call every endpoint of the API schema, each one once.
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, test } from 'vitest';
 
 const root = path.resolve(__dirname, '..');
-const oldApiDir = path.join(root, 'src/BusyBar-old/api');
 const scopesDir = path.join(root, 'src/BusyBar/scopes');
 
 // Endpoints served elsewhere, not by request functions.
@@ -38,35 +37,11 @@ function schemaEndpoints(): string[] {
   return endpoints.sort();
 }
 
-const oldScopes = fs
-  .readdirSync(oldApiDir)
-  .filter((name) => name !== 'createClient.ts')
-  .map((name) => path.basename(name, '.ts'))
-  .sort();
-
-const migratedScopes = fs.existsSync(scopesDir) ? fs.readdirSync(scopesDir).sort() : [];
-
-const oldEndpoints = (scope: string) => endpointsIn(path.join(oldApiDir, `${scope}.ts`));
-const newEndpoints = (scope: string) => endpointsIn(path.join(scopesDir, scope, 'functions.ts'));
+const scopes = fs.readdirSync(scopesDir).sort();
 
 describe('endpoint coverage', () => {
-  test('the old implementation covers the whole schema', () => {
-    const covered = oldScopes.flatMap(oldEndpoints);
-    expect(new Set(covered).size).toBe(covered.length);
-    expect(covered).toHaveLength(78);
-    expect(schemaEndpoints().filter((e) => !covered.includes(e))).toEqual(NOT_WRAPPED);
-    expect(covered.filter((e) => !schemaEndpoints().includes(e))).toEqual([]);
-  });
-
-  test('migrated scopes call the same endpoints as before', () => {
-    expect(migratedScopes.filter((scope) => !oldScopes.includes(scope))).toEqual([]);
-    expect(Object.fromEntries(migratedScopes.map((scope) => [scope, newEndpoints(scope)]))).toEqual(
-      Object.fromEntries(migratedScopes.map((scope) => [scope, oldEndpoints(scope)]))
-    );
-  });
-
-  test.runIf(migratedScopes.length === oldScopes.length)('the new implementation covers the whole schema', () => {
-    const covered = migratedScopes.flatMap(newEndpoints).sort();
+  test('scope functions cover the whole schema', () => {
+    const covered = scopes.flatMap((scope) => endpointsIn(path.join(scopesDir, scope, 'functions.ts'))).sort();
     expect(covered).toEqual(schemaEndpoints().filter((e) => !NOT_WRAPPED.includes(e)));
   });
 });

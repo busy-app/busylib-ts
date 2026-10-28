@@ -1,5 +1,4 @@
-export { BusyBar, type BusyBarConfig } from 'BusyBar-old/index';
-export * from 'BusyBar-old/types';
+export * from 'BusyBar/index';
 export * from 'StateStream/index';
 export * from 'ScreenRenderer/index';
 export * from 'Global/types';
