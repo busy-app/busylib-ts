@@ -132,7 +132,7 @@ bar.setHTTPAccessPassword('<new-password>'); // change at runtime
 
 ### Tree-shakable functions
 
-`new BusyBar()` brings every method into the bundle, because bundlers cannot drop unused methods of a class. When size matters - for example, in an app that runs on the BUSY Bar - use `BusyBarClient` with standalone functions instead: each `BusyBar` method has a corresponding camelCase function (`DisplayDraw` → `displayDraw`) that takes the client as its first argument, and the bundle includes only the functions you import.
+`new BusyBar()` brings every method into the bundle, because bundlers cannot drop unused methods of a class. When size matters, use a client with standalone functions instead: each `BusyBar` method has a corresponding camelCase function (`DisplayDraw` → `displayDraw`) that takes the client as its first argument, and the bundle includes only the functions you import.
 
 ```ts
 import { BusyBarClient, displayClear, displayDraw } from '@busy-app/busy-lib';
@@ -158,7 +158,8 @@ Aside from the initial `client` argument, functions accept the same parameters a
 Which one to use:
 
 - **`BusyBar`** - scripts, Node.js tools and web apps where bundle size is not critical: one object with every method
-- **`BusyBarClient` + functions** - apps on the device and other size-sensitive bundles: a client with one function is about 5 KB minified (2 KB gzip), the whole `BusyBar` is about 18 KB (5 KB gzip)
+- **`BusyBarClient` + functions** - size-sensitive bundles: only the functions you import
+- **`BusyBarAppClient` + functions** - apps that run on the BUSY Bar itself, see [Apps on the BUSY Bar](#apps-on-the-busy-bar)
 
 Because `BusyBar` uses `BusyBarClient` internally, both approaches can be mixed: `bar.client` can be passed to any standalone function.
 
@@ -191,6 +192,35 @@ const frame = await bar.client.GET('/screen', {
 // the same, with the HTTP method as an argument
 await bar.client.request('GET', '/status', { signal: controller.signal });
 ```
+
+### Apps on the BUSY Bar
+
+An app that runs on the BUSY Bar talks to the device it runs on, and most of what `BusyBarClient` does is not needed there: requests from the device itself are always allowed, the firmware checks the app's `api_version` when installing and launching it, and there is no proxy. Use `BusyBarAppClient` instead - it adds only a timeout and `FetchError` on top of `fetch`, with no authentication headers and no API version negotiation. Apps run in JerryScript, where every layer of JS adds to the time of each request, so a lighter client makes the display respond faster.
+
+```ts
+import { BusyBarAppClient, displayDraw } from '@busy-app/busy-lib';
+
+const client = new BusyBarAppClient(); // the BUSY Bar the app runs on
+
+await displayDraw(client, {
+  application_name: 'my_app',
+  elements: [{
+    id: '0',
+    type: 'text',
+    text: 'Hello',
+    font: 'normal'
+  }]
+});
+```
+
+`BusyBarAppClient` works with every standalone function and has the same `GET`, `POST`, `PUT`, `DELETE` and `request` for [direct requests](#direct-requests). It takes `addr` (`localhost` by default) and `timeout` (3000ms by default, `0` disables it).
+
+`BusyBarClient` works on the device too, but it asks for `/version` before the first request and runs the full pipeline for every request, which shows in how fast the display responds.
+
+Firmware limits, for any client:
+
+- **A timeout does not cancel the request.** The firmware cannot abort a request, so a timeout only rejects the promise, and the request itself runs to the end. The rejection is an `Error` with `name === 'TimeoutError'`, not a `DOMException` - it is a stub in the firmware
+- **`signal` has no effect.** `AbortController` is a stub in the firmware, and its `fetch` ignores `signal`
 
 ### Pitfalls
 

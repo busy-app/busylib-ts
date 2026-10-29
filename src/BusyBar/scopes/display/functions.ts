@@ -1,7 +1,6 @@
 import { Display } from 'Global/types';
 import { blobToUint8Array, bgrToRgba, getDisplayDimensions, convertL4toRGBA } from 'Global/utils/frameData';
-import type { BusyBarClient } from 'BusyBar/client/BusyBarClient';
-import type { RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
 import type { SuccessResponse } from 'BusyBar/types';
 import type {
   DisplayBrightnessInfo,
@@ -16,7 +15,7 @@ import type {
 /**
  * Draw on display. Sends drawing data to the display. Supports JSON-defined display elements.
  *
- * @param {BusyBarClient} client - BUSY Bar client.
+ * @param {RequestClient} client - BUSY Bar client.
  * @param {DisplayDrawParams} params - Parameters for the draw operation.
  *   @param {string} params.application_name - Application ID for organizing assets.
  *   @param {Array} params.elements - Display elements to draw.
@@ -26,7 +25,7 @@ import type {
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful draw command.
  */
-export async function displayDraw(client: BusyBarClient, params: DisplayDrawParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function displayDraw(client: RequestClient, params: DisplayDrawParams, options?: RequestOptions): Promise<SuccessResponse> {
   return client.POST('/display/draw', {
     body: {
       ...params,
@@ -39,7 +38,7 @@ export async function displayDraw(client: BusyBarClient, params: DisplayDrawPara
 /**
  * Clear display. Deletes display elements drawn via this API.
  *
- * @param {BusyBarClient} client - BUSY Bar client.
+ * @param {RequestClient} client - BUSY Bar client.
  * @param {DisplayClearParams} [params] - Optional parameters.
  *   @param {DisplayClearParams['application_name']} [params.application_name] - Fill in this field for a sanity check that you actually own these elements. Omit it to delete them anyway.
  *   @param {DisplayClearParams['element_ids']} [params.element_ids] - Unique identifiers of elements that should be deleted. Omit this field to delete all elements.
@@ -48,7 +47,7 @@ export async function displayDraw(client: BusyBarClient, params: DisplayDrawPara
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful clear command.
  */
-export async function displayClear(client: BusyBarClient, params?: DisplayClearParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function displayClear(client: RequestClient, params?: DisplayClearParams, options?: RequestOptions): Promise<SuccessResponse> {
   return client.DELETE('/display/draw', {
     body: params ?? {},
     ...options
@@ -58,7 +57,7 @@ export async function displayClear(client: BusyBarClient, params?: DisplayClearP
 /**
  * Get single frame for requested screen.
  *
- * @param {BusyBarClient} client - BUSY Bar client.
+ * @param {RequestClient} client - BUSY Bar client.
  * @param {ScreenFrameGetParams} params - Parameters for the frame request.
  *   @param {ScreenFrameGetParams['display']} params.display - Type of the display (Front = 0, Back = 1).
  * @param {ScreenFrameGetOptions} [options] - Options for the response format and request.
@@ -70,7 +69,7 @@ export async function displayClear(client: BusyBarClient, params?: DisplayClearP
  * @returns {Promise<ArrayBuffer>} A promise that resolves to the screen frame as an ArrayBuffer when dataType is 'arrayBuffer'.
  */
 export async function displayScreenFrameGet<T extends ScreenFrameGetOptions | undefined>(
-  client: BusyBarClient,
+  client: RequestClient,
   params: ScreenFrameGetParams,
   options?: T
 ): Promise<ScreenFrameGetResult<T>> {
@@ -113,20 +112,20 @@ export async function displayScreenFrameGet<T extends ScreenFrameGetOptions | un
 /**
  * Get display brightness.
  *
- * @param {BusyBarClient} client - BUSY Bar client.
+ * @param {RequestClient} client - BUSY Bar client.
  * @param {RequestOptions} [options] - Optional request options.
  *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<DisplayBrightnessInfo>} A promise that resolves to the brightness information.
  */
-export async function displayBrightnessGet(client: BusyBarClient, options?: RequestOptions): Promise<DisplayBrightnessInfo> {
+export async function displayBrightnessGet(client: RequestClient, options?: RequestOptions): Promise<DisplayBrightnessInfo> {
   return client.GET('/display/brightness', options);
 }
 
 /**
  * Set display brightness.
  *
- * @param {BusyBarClient} client - BUSY Bar client.
+ * @param {RequestClient} client - BUSY Bar client.
  * @param {DisplayBrightnessParams} params - Brightness parameters.
  *   @param {DisplayBrightnessParams['value']} params.value - Brightness (0-100 or "auto").
  * @param {RequestOptions} [options] - Optional request options.
@@ -134,7 +133,7 @@ export async function displayBrightnessGet(client: BusyBarClient, options?: Requ
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function displayBrightnessSet(client: BusyBarClient, params: DisplayBrightnessParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function displayBrightnessSet(client: RequestClient, params: DisplayBrightnessParams, options?: RequestOptions): Promise<SuccessResponse> {
   const { value } = params;
 
   type Brightness = number | 'auto';

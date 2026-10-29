@@ -1,6 +1,9 @@
 import { DEFAULT_DEVICE_URL, DEFAULT_PROXY_URL, PROXY_HOST_RE } from 'Global/constants';
 import type { BusyBarConfig } from './types';
 
+/** Request timeout in milliseconds when the config does not set one. */
+export const DEFAULT_TIMEOUT = 3000;
+
 /**
  * Normalizes the configured address to a bare origin and builds the API base URL for it.
  * @param {BusyBarConfig} [config] - BUSY Bar connection configuration.

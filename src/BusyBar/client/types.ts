@@ -9,6 +9,11 @@ export type BusyBarConfig = {
   HTTPAccessPassword?: string;
 };
 
+export type BusyBarAppConfig = {
+  addr?: string;
+  timeout?: number;
+};
+
 export interface RequestOptions {
   timeout?: number;
   signal?: AbortSignal;
@@ -47,6 +52,25 @@ export type InitParam<I> = RequiredKeys<I> extends never ? [init?: I & RequestOp
  * Successful response data for the given method and path, typed by the schema and `parseAs`.
  */
 export type ResponseData<M extends HttpMethod, P extends PathsWithMethod<M>, I> = ParsedData<SuccessContent<Operation<M, P>>, I>;
+
+/**
+ * What the request functions need from a client: typed requests by path that return the response data and throw `FetchError`. Implemented by `BusyBarClient` and `BusyBarAppClient`.
+ */
+export interface RequestClient {
+  request<M extends HttpMethod, P extends PathsWithMethod<M>, I extends RequestInitFor<M, P>>(
+    method: M,
+    path: P,
+    ...init: InitParam<I>
+  ): Promise<ResponseData<M, P, I>>;
+  GET<P extends PathsWithMethod<'GET'>, I extends RequestInitFor<'GET', P>>(path: P, ...init: InitParam<I>): Promise<ResponseData<'GET', P, I>>;
+  POST<P extends PathsWithMethod<'POST'>, I extends RequestInitFor<'POST', P>>(path: P, ...init: InitParam<I>): Promise<ResponseData<'POST', P, I>>;
+  PUT<P extends PathsWithMethod<'PUT'>, I extends RequestInitFor<'PUT', P>>(path: P, ...init: InitParam<I>): Promise<ResponseData<'PUT', P, I>>;
+  DELETE<P extends PathsWithMethod<'DELETE'>, I extends RequestInitFor<'DELETE', P>>(path: P, ...init: InitParam<I>): Promise<ResponseData<'DELETE', P, I>>;
+  /**
+   * Sets the HTTP access password for the next requests; only a client that sends it has this method.
+   */
+  setHTTPAccessPassword?(key: string): void;
+}
 
 /**
  * Raw transport without the core pipeline: no auth headers, no version negotiation, no timeouts, errors are returned instead of thrown.

@@ -1,7 +1,8 @@
-// Snapshot tests of every BusyBar method: each case runs in every scenario, and the recorded requests, the result or error and apiSemver must match the snapshot.
+// Snapshot tests of every BusyBar method: each case runs in every scenario, and the recorded requests, the result or error and apiSemver must match the snapshot. The same cases check the functions with BusyBarAppClient against BusyBar.
 import { createHash } from 'node:crypto';
 import { afterEach, describe, expect, test, vi } from 'vitest';
-import { BusyBar, type RequestOptions } from 'BusyBar/index';
+import * as api from 'BusyBar/index';
+import { BusyBar, BusyBarAppClient, type RequestOptions } from 'BusyBar/index';
 import { Display } from 'Global/types';
 import { json, mockFetch, pathOf, text, type Handler, type RecordedRequest } from './tools/fetch';
 import { failingHandler, fixtureHandler, versionMismatchOnce } from './tools/fixtures';
@@ -278,9 +279,21 @@ function normalizeRequest({ method, url, headers, body }: RecordedRequest): Norm
 
 const config = { token: 'token', HTTPAccessPassword: '1234' };
 
-async function run(testCase: Case, scenario: Scenario): Promise<Run> {
+// The functions with a BusyBarAppClient, shaped like BusyBar so the same cases can call them.
+function appBar(): BusyBar {
+  const client = new BusyBarAppClient();
+  const functions = Object.entries(api).filter(([name, value]) => /^[a-z]/.test(name) && typeof value === 'function') as [
+    string,
+    (...args: unknown[]) => unknown
+  ][];
+  return Object.fromEntries(
+    functions.map(([name, fn]) => [name[0]!.toUpperCase() + name.slice(1), (...args: unknown[]) => fn(client, ...args)])
+  ) as unknown as BusyBar;
+}
+
+async function run(testCase: Case, scenario: Scenario, create: () => BusyBar = () => new BusyBar(config)): Promise<Run> {
   const { requests } = mockFetch(scenario.handler());
-  const bar = new BusyBar(config);
+  const bar = create();
 
   const outcome = await Promise.resolve()
     .then(() => testCase.call(bar, scenario.options?.()))
@@ -351,5 +364,26 @@ describe('scenarios', () => {
 
     // Recorded from BusyBar-old before it was removed; only the 405 runs with a body were taken from the new implementation, as the old retry failed with TypeError.
     expect(runs).toMatchSnapshot();
+  });
+});
+
+describe('BusyBarAppClient', () => {
+  // What only the core adds: version negotiation and its headers.
+  const withoutCore = ({ requests, outcome }: Run) => ({
+    outcome,
+    requests: requests
+      .filter((r) => !isVersion(r))
+      .map(({ headers: { 'x-api-sem-ver': _, 'x-api-token': __, ...headers }, ...request }) => ({ ...request, headers }))
+  });
+
+  // 405 and abort are handled by the core only.
+  const shared = scenarios.filter((s) => ['ok', 'JSON error', 'text error'].includes(s.name));
+
+  test.each(cases.map((c) => [caseName(c), c] as const))('%s sends what BusyBar sends, without the core', async (_, testCase) => {
+    for (const scenario of shared) {
+      const viaBar = await run(testCase, scenario, () => new BusyBar({ addr: 'localhost' }));
+      const viaApp = await run(testCase, scenario, appBar);
+      expect(withoutCore(viaApp), scenario.name).toEqual(withoutCore(viaBar));
+    }
   });
 });

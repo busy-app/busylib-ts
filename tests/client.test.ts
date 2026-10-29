@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
-import { BusyBar, BusyBarClient, type BusyBarConfig } from 'BusyBar/index';
+import { BusyBar, BusyBarAppClient, BusyBarClient, type BusyBarConfig } from 'BusyBar/index';
 import { resolveAddress } from 'BusyBar/client/config';
 import { bodySerializer } from 'BusyBar/client/body';
 import { toFetchError } from 'BusyBar/client/errors';
@@ -354,6 +354,58 @@ describe('transport', () => {
     const result = await apiClient.request('POST', '/display/draw', { body: drawBody });
     expect(result.data).toEqual({ result: 'OK' });
     expect(requests.map((r) => `${r.method} ${pathOf(r)}`)).toEqual(['POST /display/draw']);
+  });
+});
+
+describe('BusyBarAppClient', () => {
+  test('requests go to localhost, without version negotiation and core headers', async () => {
+    const { requests } = mockFetch();
+    const data = await new BusyBarAppClient().GET('/status');
+    expect(data).toEqual({ result: 'OK' });
+    expect(requests.map((r) => r.url)).toEqual(['http://localhost/api/status']);
+    expect(requests[0]?.headers).toEqual({});
+  });
+
+  test('addr sets the device address', async () => {
+    const { requests } = mockFetch();
+    await new BusyBarAppClient({ addr: '10.0.4.20' }).request('POST', '/display/draw', { body: drawBody });
+    expect(requests.map((r) => `${r.method} ${r.url}`)).toEqual(['POST http://10.0.4.20/api/display/draw']);
+    expect(JSON.parse(decode(requests[0]?.body) ?? '')).toEqual(drawBody);
+  });
+
+  test('a non-2xx response is thrown as FetchError', async () => {
+    mockFetch(() => json({ error: 'bad' }, { status: 400, statusText: 'Bad Request' }));
+    await expect(new BusyBarAppClient().GET('/status')).rejects.toMatchObject({
+      message: 'bad',
+      status: 400,
+      statusText: 'Bad Request',
+      body: { error: 'bad' }
+    });
+  });
+
+  test('timeout rejects with TimeoutError, as on the device: no AbortController and a fetch that ignores the signal', async () => {
+    stubDeviceFetch();
+    await expect(new BusyBarAppClient({ timeout: 20 }).GET('/status')).rejects.toMatchObject({ name: 'TimeoutError', message: 'Request timed out after 20ms' });
+    await expect(new BusyBarAppClient().GET('/status', { timeout: 10 })).rejects.toMatchObject({
+      name: 'TimeoutError',
+      message: 'Request timed out after 10ms'
+    });
+  });
+
+  test('timeout 0 sets no timer', async () => {
+    mockFetch();
+    const set = vi.spyOn(globalThis, 'setTimeout');
+    await new BusyBarAppClient({ timeout: 0 }).GET('/status');
+    expect(set).not.toHaveBeenCalled();
+    set.mockRestore();
+  });
+
+  test('the timer of an answered request is cleared', async () => {
+    mockFetch();
+    const clear = vi.spyOn(globalThis, 'clearTimeout');
+    await new BusyBarAppClient({ timeout: 1000 }).GET('/status');
+    expect(clear).toHaveBeenCalledTimes(1);
+    clear.mockRestore();
   });
 });
 

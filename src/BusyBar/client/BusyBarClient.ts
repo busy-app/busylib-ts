@@ -1,12 +1,22 @@
-import { resolveAddress } from './config';
+import { DEFAULT_TIMEOUT, resolveAddress } from './config';
 import { toFetchError } from './errors';
 import { withSignal } from './signal';
 import { createTransport, sendRequest, type SendInit, type TransportResult } from './transport';
-import type { ApiClient, ApiSemver, BusyBarConfig, HttpMethod, InitParam, PathsWithMethod, RequestInitFor, RequestOptions, ResponseData } from './types';
+import type {
+  ApiClient,
+  ApiSemver,
+  BusyBarConfig,
+  HttpMethod,
+  InitParam,
+  PathsWithMethod,
+  RequestClient,
+  RequestInitFor,
+  RequestOptions,
+  ResponseData
+} from './types';
 import type { ApiKey } from './types.internal';
 
 const VERSION_PATH = '/version';
-const DEFAULT_TIMEOUT = 3000;
 
 type ClientInit = SendInit & RequestOptions;
 
@@ -15,7 +25,7 @@ type ClientInit = SendInit & RequestOptions;
  *
  * @class
  */
-export class BusyBarClient {
+export class BusyBarClient implements RequestClient {
   private readonly address: string;
   private readonly baseUrl: string;
   private transport: ApiClient | null = null;

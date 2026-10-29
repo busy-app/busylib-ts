@@ -1,5 +1,6 @@
 export { BusyBar } from 'BusyBar/BusyBar.generated';
 export { BusyBarClient } from 'BusyBar/client/BusyBarClient';
+export { BusyBarAppClient } from 'BusyBar/client/BusyBarAppClient';
 export type * from 'BusyBar/client/types';
 export type * from 'BusyBar/types';
 

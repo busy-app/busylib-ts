@@ -1,5 +1,4 @@
-import type { BusyBarClient } from 'BusyBar/client/BusyBarClient';
-import type { RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
 import type {
   AccessToken,
   AccessTokenCreateParams,
@@ -15,20 +14,20 @@ import type { SuccessResponse } from 'BusyBar/types';
 /**
  * Get HTTP API access over Wi-Fi configuration.
  *
- * @param {BusyBarClient} client - BUSY Bar client.
+ * @param {RequestClient} client - BUSY Bar client.
  * @param {RequestOptions} [options] - Optional request options.
  *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<HttpAccessInfo>} A promise that resolves to the access configuration.
  */
-export async function settingsAccessGet(client: BusyBarClient, options?: RequestOptions): Promise<HttpAccessInfo> {
+export async function settingsAccessGet(client: RequestClient, options?: RequestOptions): Promise<HttpAccessInfo> {
   return client.GET('/access', options);
 }
 
 /**
  * Set HTTP API access over Wi-Fi configuration.
  *
- * @param {BusyBarClient} client - BUSY Bar client.
+ * @param {RequestClient} client - BUSY Bar client.
  * @param {HttpAccessParams} params - Access parameters:
  *   @param {HttpAccessParams['mode']} params.mode - Enable/disable access.
  *   @param {HttpAccessParams['key']} [params.key] - Access key (4-10 digits).
@@ -37,7 +36,7 @@ export async function settingsAccessGet(client: BusyBarClient, options?: Request
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function settingsAccessSet(client: BusyBarClient, params: HttpAccessParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function settingsAccessSet(client: RequestClient, params: HttpAccessParams, options?: RequestOptions): Promise<SuccessResponse> {
   const { mode, key } = params;
   const keyValue = key ?? '';
 
@@ -57,7 +56,7 @@ export async function settingsAccessSet(client: BusyBarClient, params: HttpAcces
 
   // The device now requires the new key, so subsequent requests must send it.
   if (params.mode === 'key' && params.key) {
-    client.setHTTPAccessPassword(params.key);
+    client.setHTTPAccessPassword?.(params.key);
   }
 
   return result;
@@ -66,20 +65,20 @@ export async function settingsAccessSet(client: BusyBarClient, params: HttpAcces
 /**
  * Get current device name.
  *
- * @param {BusyBarClient} client - BUSY Bar client.
+ * @param {RequestClient} client - BUSY Bar client.
  * @param {RequestOptions} [options] - Optional request options.
  *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<NameInfo>} A promise that resolves to the device name.
  */
-export async function settingsNameGet(client: BusyBarClient, options?: RequestOptions): Promise<NameInfo> {
+export async function settingsNameGet(client: RequestClient, options?: RequestOptions): Promise<NameInfo> {
   return client.GET('/name', options);
 }
 
 /**
  * Set device name.
  *
- * @param {BusyBarClient} client - BUSY Bar client.
+ * @param {RequestClient} client - BUSY Bar client.
  * @param {NameParams} params - Name parameters:
  *   @param {NameParams['name']} params.name - New device name (max 64 chars).
  * @param {RequestOptions} [options] - Optional request options.
@@ -87,7 +86,7 @@ export async function settingsNameGet(client: BusyBarClient, options?: RequestOp
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function settingsNameSet(client: BusyBarClient, params: NameParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function settingsNameSet(client: RequestClient, params: NameParams, options?: RequestOptions): Promise<SuccessResponse> {
   const { name } = params;
 
   return client.POST('/name', {
@@ -104,13 +103,13 @@ export async function settingsNameSet(client: BusyBarClient, params: NameParams,
  * Provides basic information about all access tokens (IDs, names and timestamps).
  * The full token value is never returned here - it is only shown once on creation.
  *
- * @param {BusyBarClient} client - BUSY Bar client.
+ * @param {RequestClient} client - BUSY Bar client.
  * @param {RequestOptions} [options] - Optional request options.
  *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<AccessTokensInfo>} A promise that resolves to the list of access tokens.
  */
-export async function settingsAccessTokensGet(client: BusyBarClient, options?: RequestOptions): Promise<AccessTokensInfo> {
+export async function settingsAccessTokensGet(client: RequestClient, options?: RequestOptions): Promise<AccessTokensInfo> {
   return client.GET('/access/tokens', options);
 }
 
@@ -119,7 +118,7 @@ export async function settingsAccessTokensGet(client: BusyBarClient, options?: R
  *
  * The returned `token` field is only present in this response and cannot be retrieved later.
  *
- * @param {BusyBarClient} client - BUSY Bar client.
+ * @param {RequestClient} client - BUSY Bar client.
  * @param {AccessTokenCreateParams} params - Token parameters:
  *   @param {AccessTokenCreateParams['name']} params.name - Arbitrary name to differentiate this token from others.
  * @param {RequestOptions} [options] - Optional request options.
@@ -127,7 +126,7 @@ export async function settingsAccessTokensGet(client: BusyBarClient, options?: R
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<AccessToken>} A promise that resolves to the created token.
  */
-export async function settingsAccessTokenCreate(client: BusyBarClient, params: AccessTokenCreateParams, options?: RequestOptions): Promise<AccessToken> {
+export async function settingsAccessTokenCreate(client: RequestClient, params: AccessTokenCreateParams, options?: RequestOptions): Promise<AccessToken> {
   const { name } = params;
 
   return client.POST('/access/tokens', {
@@ -141,20 +140,20 @@ export async function settingsAccessTokenCreate(client: BusyBarClient, params: A
 /**
  * Revoke all access tokens at once.
  *
- * @param {BusyBarClient} client - BUSY Bar client.
+ * @param {RequestClient} client - BUSY Bar client.
  * @param {RequestOptions} [options] - Optional request options.
  *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function settingsAccessTokensDelete(client: BusyBarClient, options?: RequestOptions): Promise<SuccessResponse> {
+export async function settingsAccessTokensDelete(client: RequestClient, options?: RequestOptions): Promise<SuccessResponse> {
   return client.DELETE('/access/tokens', options);
 }
 
 /**
  * Revoke a single access token.
  *
- * @param {BusyBarClient} client - BUSY Bar client.
+ * @param {RequestClient} client - BUSY Bar client.
  * @param {AccessTokenRevokeParams} params - Token parameters:
  *   @param {AccessTokenRevokeParams['short_id']} params.short_id - Short ID of the token (first 8 characters).
  * @param {RequestOptions} [options] - Optional request options.
@@ -162,7 +161,7 @@ export async function settingsAccessTokensDelete(client: BusyBarClient, options?
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function settingsAccessTokenRevoke(client: BusyBarClient, params: AccessTokenRevokeParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function settingsAccessTokenRevoke(client: RequestClient, params: AccessTokenRevokeParams, options?: RequestOptions): Promise<SuccessResponse> {
   const { short_id: shortId } = params;
 
   return client.DELETE('/access/tokens/{short_id}', {
