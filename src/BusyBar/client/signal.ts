@@ -28,6 +28,9 @@ export async function withSignal<T>(requestFn: (signal?: AbortSignal) => Promise
     }
     throw error;
   } finally {
-    clearTimeout(timeoutId);
+    // Only a timer that was set: the device logs an error for clearTimeout(undefined).
+    if (timeoutId !== undefined) {
+      clearTimeout(timeoutId);
+    }
   }
 }

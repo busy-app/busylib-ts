@@ -171,6 +171,15 @@ describe('timeout and abort', () => {
     await expect(new BusyBarClient({ timeout: 20 }).GET('/version', { timeout: 0 })).resolves.toEqual({ api_semver: API_SEMVER });
   });
 
+  test('without a timeout no timer is cleared', async () => {
+    // The device logs an error for clearTimeout(undefined).
+    mockFetch();
+    const clear = vi.spyOn(globalThis, 'clearTimeout');
+    await new BusyBarClient({ timeout: 0 }).GET('/status');
+    expect(clear).not.toHaveBeenCalled();
+    clear.mockRestore();
+  });
+
   test('caller abort rejects with AbortError', async () => {
     mockFetch(hangStatus);
     const controller = new AbortController();
