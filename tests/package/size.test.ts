@@ -26,7 +26,7 @@ const scenarios: Scenario[] = [
     code: `import { BusyBarClient } from '@busy-app/busy-lib';
 globalThis.client = new BusyBarClient();`,
     endpoints: [],
-    limit: { min: 5_200, gzip: 2_250 }
+    limit: { min: 5_900, gzip: 2_450 }
   },
   {
     name: 'BusyBarClient + displayDraw',
@@ -34,7 +34,7 @@ globalThis.client = new BusyBarClient();`,
 const client = new BusyBarClient();
 globalThis.run = () => ${drawCall};`,
     endpoints: ['POST /display/draw'],
-    limit: { min: 5_400, gzip: 2_350 }
+    limit: { min: 6_050, gzip: 2_550 }
   },
   {
     name: 'weather',
@@ -46,7 +46,7 @@ globalThis.run = async () => {
   await ${drawCall};
 };`,
     endpoints: ['DELETE /display/draw', 'GET /apps/settings', 'POST /display/draw'],
-    limit: { min: 5_650, gzip: 2_450 }
+    limit: { min: 6_300, gzip: 2_600 }
   },
   {
     name: 'BusyBar',

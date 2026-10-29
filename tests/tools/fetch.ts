@@ -76,3 +76,12 @@ export function mockFetch(handler: Handler = defaultHandler): { requests: Record
 
   return { requests };
 }
+
+/**
+ * Stubs what the device firmware gives a request: empty AbortController and DOMException stubs and a fetch that ignores the signal. It answers `/version` and leaves every other request hanging; Request is not used, since Node's needs a real AbortController.
+ */
+export function stubDeviceFetch(): void {
+  vi.stubGlobal('AbortController', function AbortController() {});
+  vi.stubGlobal('DOMException', function DOMException() {});
+  vi.stubGlobal('fetch', (url: string) => (url.endsWith('/version') ? Promise.resolve(json({ api_semver: API_SEMVER })) : new Promise<Response>(() => {})));
+}

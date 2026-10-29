@@ -4,7 +4,7 @@ import { resolveAddress } from 'BusyBar/client/config';
 import { bodySerializer } from 'BusyBar/client/body';
 import { toFetchError } from 'BusyBar/client/errors';
 import { sendRequest } from 'BusyBar/client/transport';
-import { API_SEMVER, decode, defaultHandler, hang, json, mockFetch, pathOf, text, type Handler } from './tools/fetch';
+import { API_SEMVER, decode, defaultHandler, hang, json, mockFetch, pathOf, stubDeviceFetch, text, type Handler } from './tools/fetch';
 import { failingHandler, versionMismatchOnce } from './tools/fixtures';
 
 afterEach(() => {
@@ -178,6 +178,11 @@ describe('timeout and abort', () => {
     await new BusyBarClient({ timeout: 0 }).GET('/status');
     expect(clear).not.toHaveBeenCalled();
     clear.mockRestore();
+  });
+
+  test('with the device firmware stubs the timeout still rejects', async () => {
+    stubDeviceFetch();
+    await expect(new BusyBarClient({ timeout: 20 }).GET('/status')).rejects.toMatchObject({ name: 'TimeoutError', message: 'Request timed out after 20ms' });
   });
 
   test('caller abort rejects with AbortError', async () => {
