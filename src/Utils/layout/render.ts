@@ -1,6 +1,6 @@
 // Placement: measured tree → flat elements[] for DisplayDraw. Coordinates are absolute from the screen's top-left, and elements keep the default align.
 
-import type { DisplayDrawParams } from 'BusyBar/types';
+import type { DisplayDrawParams } from 'BusyBar/scopes/display/types';
 import { measure, type Measured } from 'Utils/layout/measure';
 import { isContainer, resolvePadding, type CrossAlign, type MainAlign, type Node } from 'Utils/layout/types';
 

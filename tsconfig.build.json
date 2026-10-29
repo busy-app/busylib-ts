@@ -1,0 +1,5 @@
+{
+  // Library sources only: used by the build (vite-plugin-dts) and typedoc. tsconfig.json adds tests and tooling for the IDE and typecheck.
+  "extends": "./tsconfig.json",
+  "include": ["src", "env.d.ts"]
+}

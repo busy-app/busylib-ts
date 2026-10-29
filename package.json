@@ -2,7 +2,7 @@
   "name": "@busy-app/busy-lib",
   "private": false,
   "description": "A library for interacting with the BUSY Bar API",
-  "version": "0.21.1",
+  "version": "1.0.0-rc",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -38,16 +38,20 @@
   "scripts": {
     "build": "vite build",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit",
+    "test:package": "vitest run --project package",
     "docs:generate": "typedoc",
     "format": "prettier --write '**/*.ts'",
     "fonts:build": "node tools/build-font-maps.mjs",
-    "fonts:check": "node tools/build-font-maps.mjs --check"
+    "fonts:check": "node tools/build-font-maps.mjs --check",
+    "busybar:build": "node tools/busybar/build-busybar.mjs",
+    "busybar:check": "node tools/busybar/build-busybar.mjs --check"
   },
   "dependencies": {
-    "openapi-fetch": "^0.14.0",
-    "protobufjs": "^8.0.1"
+    "protobufjs": "^8.8.1"
   },
   "devDependencies": {
+    "@microsoft/api-extractor": "7.59.4",
     "@types/node": "22.15.1",
     "long": "^5.3.2",
     "openapi-typescript": "^7.8.0",
@@ -55,9 +59,9 @@
     "protobufjs-cli": "^2.0.1",
     "typedoc": "^0.28.5",
     "typescript": "~5.8.3",
-    "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.4",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite": "8.1.4",
+    "vite-plugin-dts": "^5.1.2",
+    "vitest": "^5.0.5"
   },
   "engines": {
     "node": ">=18"

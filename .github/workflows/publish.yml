@@ -30,12 +30,47 @@ jobs:
           node-version-file: ".nvmrc"
           registry-url: "https://registry.npmjs.org"
 
+      # Release tags are X.Y.Z or X.Y.Z-rc[.N] and must match package.json; release candidates go to the `next` dist-tag, so `npm i` keeps installing the latest stable version.
+      - name: Check release tag
+        id: release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          PATTERN='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-rc(\.(0|[1-9][0-9]*))?)?$'
+          if [[ ! "$TAG" =~ $PATTERN ]]; then
+            echo "::error::Tag '$TAG' is not a release version: expected X.Y.Z, X.Y.Z-rc or X.Y.Z-rc.N"
+            exit 1
+          fi
+          VERSION=$(node -p "require('./package.json').version")
+          if [[ "$TAG" != "$VERSION" ]]; then
+            echo "::error::Tag '$TAG' does not match the package.json version '$VERSION'"
+            exit 1
+          fi
+          if [[ "$TAG" == *-rc* ]]; then
+            echo "dist-tag=next" >> "$GITHUB_OUTPUT"
+          else
+            echo "dist-tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Check generated BusyBar
+        run: pnpm busybar:check
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      - name: Test
+        run: pnpm test
 
       - name: Build library
         run: pnpm run build
 
+      - name: Test package
+        run: pnpm test:package
+
       - name: Publish to npm
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
-        run: pnpm stage publish --no-git-checks --provenance
+        run: pnpm stage publish --no-git-checks --provenance --tag ${{ steps.release.outputs.dist-tag }}

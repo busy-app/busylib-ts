@@ -14,8 +14,10 @@
 
     "target": "ES2020",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
 
+    // Resolves the package.json `imports` map (`#font-maps`) under bundler resolution.
+    "rootDir": ".",
     "outDir": "dist",
     "declaration": true,
     "declarationDir": "dist/types",
@@ -38,5 +40,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "env.d.ts"]
+  "include": ["src", "tests", "env.d.ts", "tools/busybar/BusyBar.template.ts", "vite.config.ts", "vitest.config.ts", "vite-plugins"]
 }

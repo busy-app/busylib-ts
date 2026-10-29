@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import dts from 'vite-plugin-dts';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -17,48 +16,48 @@ function copyFontMaps() {
         fs.copyFileSync(path.resolve(from, file), path.resolve(to, file));
       }
 
-      // `#font-maps` is external, so Rollup never emits the stub.
+      // `#font-maps` is external, so the bundler never emits the stub.
       fs.copyFileSync(path.resolve(__dirname, 'src/Utils/font/font-maps-stub.js'), path.resolve(__dirname, 'dist/Utils/font/font-maps-stub.js'));
     }
   };
 }
 
 export default defineConfig({
+  resolve: {
+    tsconfigPaths: true
+  },
   plugins: [
-    tsconfigPaths(),
     inlineWorkerUrl({
       entry: path.resolve(__dirname, 'src/StateStream/worker/index.worker.ts')
     }),
     dts({
+      tsconfigPath: './tsconfig.build.json',
       entryRoot: 'src',
-      outDir: 'dist',
-      rollupTypes: true,
+      outDirs: 'dist',
+      bundleTypes: true,
       copyDtsFiles: true
     }),
     copyFontMaps()
   ],
   build: {
     lib: {
-      entry: ['src/index.ts', 'src/Utils/font/fonts.ts'],
-      name: 'busylib',
-      formats: ['es']
+      // Formats come from `output` below.
+      entry: ['src/index.ts', 'src/Utils/font/fonts.ts']
     },
-    rollupOptions: {
-      external: ['openapi-fetch', '#font-maps'],
+    rolldownOptions: {
+      external: ['#font-maps'],
       output: [
         {
           format: 'es',
           preserveModules: true,
           preserveModulesRoot: 'src',
-          entryFileNames: '[name].js',
-          globals: {}
+          entryFileNames: '[name].js'
         },
         {
           format: 'cjs',
           preserveModules: true,
           preserveModulesRoot: 'src',
-          entryFileNames: '[name].cjs',
-          globals: {}
+          entryFileNames: '[name].cjs'
         }
       ],
       treeshake: {
@@ -68,7 +67,6 @@ export default defineConfig({
     minify: false
   },
   worker: {
-    format: 'es',
-    plugins: () => [tsconfigPaths()]
+    format: 'es'
   }
 });
