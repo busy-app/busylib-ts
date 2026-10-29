@@ -1,16 +1,14 @@
 import { resolveAddress } from './config';
 import { toFetchError } from './errors';
 import { withSignal } from './signal';
-import { createTransport } from './transport';
+import { createTransport, sendRequest, type SendInit, type TransportResult } from './transport';
 import type { ApiClient, ApiSemver, BusyBarConfig, HttpMethod, InitParam, PathsWithMethod, RequestInitFor, RequestOptions, ResponseData } from './types';
 import type { ApiKey } from './types.internal';
 
 const VERSION_PATH = '/version';
 const DEFAULT_TIMEOUT = 3000;
 
-type SendInit = RequestOptions & Record<string, unknown>;
-type TransportResult = { data?: unknown; error?: unknown; response: Response };
-type TransportMethod = (path: string, init: Record<string, unknown>) => Promise<TransportResult>;
+type ClientInit = SendInit & RequestOptions;
 
 /**
  * Core BUSY Bar client: holds the connection state and runs every request through one pipeline (timeout and abort, API version negotiation, auth headers, retry on 405, errors).
@@ -19,7 +17,8 @@ type TransportMethod = (path: string, init: Record<string, unknown>) => Promise<
  */
 export class BusyBarClient {
   private readonly address: string;
-  private readonly transport: ApiClient;
+  private readonly baseUrl: string;
+  private transport: ApiClient | null = null;
   private readonly timeout: number;
   private token: string | undefined;
   private apiKey: ApiKey | undefined;
@@ -41,7 +40,7 @@ export class BusyBarClient {
     const { addr, baseUrl } = resolveAddress(config);
 
     this.address = addr;
-    this.transport = createTransport(baseUrl);
+    this.baseUrl = baseUrl;
     this.timeout = config?.timeout ?? DEFAULT_TIMEOUT;
     this.token = config?.token;
     this.apiKey = config?.HTTPAccessPassword;
@@ -68,6 +67,9 @@ export class BusyBarClient {
    * @type {ApiClient}
    */
   get apiClient(): ApiClient {
+    if (!this.transport) {
+      this.transport = createTransport(this.baseUrl);
+    }
     return this.transport;
   }
 
@@ -100,7 +102,7 @@ export class BusyBarClient {
     path: P,
     ...init: InitParam<I>
   ): Promise<ResponseData<M, P, I>> {
-    return this.send(method, path, init[0] as SendInit | undefined) as Promise<ResponseData<M, P, I>>;
+    return this.send(method, path, init[0] as ClientInit | undefined) as Promise<ResponseData<M, P, I>>;
   }
 
   /**
@@ -111,7 +113,7 @@ export class BusyBarClient {
    * @returns {Promise} Response data; a non-2xx response is thrown as `FetchError`.
    */
   GET<P extends PathsWithMethod<'GET'>, I extends RequestInitFor<'GET', P>>(path: P, ...init: InitParam<I>): Promise<ResponseData<'GET', P, I>> {
-    return this.send('GET', path, init[0] as SendInit | undefined) as Promise<ResponseData<'GET', P, I>>;
+    return this.send('GET', path, init[0] as ClientInit | undefined) as Promise<ResponseData<'GET', P, I>>;
   }
 
   /**
@@ -122,7 +124,7 @@ export class BusyBarClient {
    * @returns {Promise} Response data; a non-2xx response is thrown as `FetchError`.
    */
   POST<P extends PathsWithMethod<'POST'>, I extends RequestInitFor<'POST', P>>(path: P, ...init: InitParam<I>): Promise<ResponseData<'POST', P, I>> {
-    return this.send('POST', path, init[0] as SendInit | undefined) as Promise<ResponseData<'POST', P, I>>;
+    return this.send('POST', path, init[0] as ClientInit | undefined) as Promise<ResponseData<'POST', P, I>>;
   }
 
   /**
@@ -133,7 +135,7 @@ export class BusyBarClient {
    * @returns {Promise} Response data; a non-2xx response is thrown as `FetchError`.
    */
   PUT<P extends PathsWithMethod<'PUT'>, I extends RequestInitFor<'PUT', P>>(path: P, ...init: InitParam<I>): Promise<ResponseData<'PUT', P, I>> {
-    return this.send('PUT', path, init[0] as SendInit | undefined) as Promise<ResponseData<'PUT', P, I>>;
+    return this.send('PUT', path, init[0] as ClientInit | undefined) as Promise<ResponseData<'PUT', P, I>>;
   }
 
   /**
@@ -144,20 +146,21 @@ export class BusyBarClient {
    * @returns {Promise} Response data; a non-2xx response is thrown as `FetchError`.
    */
   DELETE<P extends PathsWithMethod<'DELETE'>, I extends RequestInitFor<'DELETE', P>>(path: P, ...init: InitParam<I>): Promise<ResponseData<'DELETE', P, I>> {
-    return this.send('DELETE', path, init[0] as SendInit | undefined) as Promise<ResponseData<'DELETE', P, I>>;
+    return this.send('DELETE', path, init[0] as ClientInit | undefined) as Promise<ResponseData<'DELETE', P, I>>;
   }
 
-  private send(method: HttpMethod, path: string, init: SendInit | undefined): Promise<unknown> {
-    const { timeout = this.timeout, signal: externalSignal, ...transportInit } = init ?? {};
+  private send(method: HttpMethod, path: string, init: ClientInit | undefined): Promise<unknown> {
+    const timeout = init?.timeout ?? this.timeout;
 
     // The timeout covers version negotiation too. A sync arrow calling a method: JerryScript loses `this` inside async arrows.
-    return withSignal((signal) => this.pipeline(method, path, transportInit, signal), timeout, externalSignal);
+    return withSignal((signal) => this.pipeline(method, path, init, signal), timeout, init?.signal);
   }
 
-  private async pipeline(method: HttpMethod, path: string, init: Record<string, unknown>, signal: AbortSignal | undefined): Promise<unknown> {
+  // The transport reads only its own fields of `init`, so `timeout` and `signal` are left in it.
+  private async pipeline(method: HttpMethod, path: string, init: ClientInit | undefined, signal: AbortSignal | undefined): Promise<unknown> {
     const isVersion = path === VERSION_PATH;
 
-    if (!isVersion) {
+    if (!isVersion && !this.semver) {
       await this.ensureVersion();
     }
 
@@ -181,24 +184,24 @@ export class BusyBarClient {
     return result.data;
   }
 
-  private dispatch(method: HttpMethod, path: string, init: Record<string, unknown>, signal: AbortSignal | undefined): Promise<TransportResult> {
-    const transportMethod = this.transport[method] as unknown as TransportMethod;
-    return transportMethod.call(this.transport, path, { ...init, headers: mergeHeaders(init.headers, this.coreHeaders(path)), signal });
+  private dispatch(method: HttpMethod, path: string, init: ClientInit | undefined, signal: AbortSignal | undefined): Promise<TransportResult> {
+    return sendRequest(this.baseUrl, method, path, init, this.coreHeaders(path), signal);
   }
 
+  // Lowercase names: the transport sets them over the same headers from `init` as they are.
   private coreHeaders(path: string): Record<string, string> {
     const headers: Record<string, string> = {};
 
     if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`;
+      headers['authorization'] = `Bearer ${this.token}`;
     }
 
     if (path !== VERSION_PATH) {
       if (this.semver) {
-        headers['X-API-Sem-Ver'] = this.semver;
+        headers['x-api-sem-ver'] = this.semver;
       }
       if (this.apiKey) {
-        headers['X-API-Token'] = this.apiKey;
+        headers['x-api-token'] = this.apiKey;
       }
     }
 
@@ -224,28 +227,4 @@ export class BusyBarClient {
 
     await this.versionRequest;
   }
-}
-
-// Same rules as the transport: `null` drops a header and arrays add several values; core headers always win.
-function mergeHeaders(base: unknown, core: Record<string, string>): Headers {
-  const headers = new Headers();
-
-  if (base && typeof base === 'object') {
-    const entries = base instanceof Headers ? base.entries() : Object.entries(base);
-    for (const [key, value] of entries) {
-      if (Array.isArray(value)) {
-        for (const item of value) {
-          headers.append(key, String(item));
-        }
-      } else if (value !== null && value !== undefined) {
-        headers.set(key, String(value));
-      }
-    }
-  }
-
-  for (const [key, value] of Object.entries(core)) {
-    headers.set(key, value);
-  }
-
-  return headers;
 }

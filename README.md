@@ -158,7 +158,7 @@ Aside from the initial `client` argument, functions accept the same parameters a
 Which one to use:
 
 - **`BusyBar`** - scripts, Node.js tools and web apps where bundle size is not critical: one object with every method
-- **`BusyBarClient` + functions** - apps on the device and other size-sensitive bundles: a client with one function is about 11 KB minified (4 KB gzip), the whole `BusyBar` is about 24 KB (7 KB gzip)
+- **`BusyBarClient` + functions** - apps on the device and other size-sensitive bundles: a client with one function is about 5 KB minified (2 KB gzip), the whole `BusyBar` is about 18 KB (5 KB gzip)
 
 Because `BusyBar` uses `BusyBarClient` internally, both approaches can be mixed: `bar.client` can be passed to any standalone function.
 

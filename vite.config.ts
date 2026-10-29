@@ -45,7 +45,7 @@ export default defineConfig({
       entry: ['src/index.ts', 'src/Utils/font/fonts.ts']
     },
     rolldownOptions: {
-      external: ['openapi-fetch', '#font-maps'],
+      external: ['#font-maps'],
       output: [
         {
           format: 'es',

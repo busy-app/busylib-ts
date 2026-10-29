@@ -280,7 +280,6 @@ const config = { token: 'token', HTTPAccessPassword: '1234' };
 
 async function run(testCase: Case, scenario: Scenario): Promise<Run> {
   const { requests } = mockFetch(scenario.handler());
-  // Created after mocking: openapi-fetch captures globalThis.fetch when the client is created.
   const bar = new BusyBar(config);
 
   const outcome = await Promise.resolve()

@@ -51,7 +51,7 @@ export function hang(signal: AbortSignal): Promise<never> {
 }
 
 /**
- * Replaces the global fetch with a recorder that answers through the handler; install it before creating clients, because the transport captures fetch on creation.
+ * Replaces the global fetch with a recorder that answers through the handler; the transport reads the global fetch on every request.
  * @param {Handler} [handler] - Builds the response for each request.
  * @returns {{ requests: RecordedRequest[] }} Requests in the order they were sent.
  */
@@ -60,7 +60,8 @@ export function mockFetch(handler: Handler = defaultHandler): { requests: Record
 
   vi.stubGlobal(
     'fetch',
-    vi.fn(async (request: Request) => {
+    vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const request = input instanceof Request ? input : new Request(input, init);
       // A real fetch consumes the request body, so sending the same Request twice fails with TypeError: reading the original body keeps that behaviour, the handler gets a copy.
       const copy = request.clone();
       const body = request.body ? new Uint8Array(await request.arrayBuffer()) : undefined;

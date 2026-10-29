@@ -48,7 +48,6 @@
     "busybar:check": "node tools/busybar/build-busybar.mjs --check"
   },
   "dependencies": {
-    "openapi-fetch": "^0.14.0",
     "protobufjs": "^8.8.1"
   },
   "devDependencies": {

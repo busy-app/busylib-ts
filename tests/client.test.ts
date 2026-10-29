@@ -3,6 +3,7 @@ import { BusyBar, BusyBarClient, type BusyBarConfig } from 'BusyBar/index';
 import { resolveAddress } from 'BusyBar/client/config';
 import { bodySerializer } from 'BusyBar/client/body';
 import { toFetchError } from 'BusyBar/client/errors';
+import { sendRequest } from 'BusyBar/client/transport';
 import { API_SEMVER, decode, defaultHandler, hang, json, mockFetch, pathOf, text, type Handler } from './tools/fetch';
 import { failingHandler, versionMismatchOnce } from './tools/fixtures';
 
@@ -237,6 +238,108 @@ describe('apiClient', () => {
     expect(result.error).toEqual({ error: 'bad' });
     expect(requests.map(pathOf)).toEqual(['/status']);
     expect(requests[0]?.headers).not.toHaveProperty('authorization');
+  });
+});
+
+describe('transport', () => {
+  const base = 'http://10.0.4.20/api/';
+
+  test('path parameters are substituted and encoded', async () => {
+    const { requests } = mockFetch();
+    await sendRequest(base, 'DELETE', '/access/tokens/{short_id}', { params: { path: { short_id: 'a b/c' } } });
+    expect(requests[0]?.url).toBe('http://10.0.4.20/api/access/tokens/a%20b%2Fc');
+  });
+
+  test('query: values encoded, arrays as repeated keys, undefined and null skipped', async () => {
+    const { requests } = mockFetch();
+    await sendRequest(base, 'GET', '/storage/list', { params: { query: { path: '/ext/a b', n: 1, flag: false, ids: [1, 2], skip: undefined, none: null } } });
+    await sendRequest(base, 'GET', '/status', { params: { query: { skip: undefined } } });
+    expect(requests.map((r) => r.url)).toEqual([
+      'http://10.0.4.20/api/storage/list?path=%2Fext%2Fa%20b&n=1&flag=false&ids=1&ids=2',
+      'http://10.0.4.20/api/status'
+    ]);
+  });
+
+  test('headers: names are case-insensitive, null drops, arrays join, core headers win', async () => {
+    const { requests } = mockFetch();
+    await sendRequest(base, 'POST', '/display/draw', { body: {}, headers: { 'Content-Type': null, Accept: ['a', 'b'], 'X-Num': 1 } });
+    await sendRequest(
+      base,
+      'POST',
+      '/update',
+      { body: new Blob(['x']), headers: new Headers({ 'Content-Type': 'application/octet-stream' }) },
+      { authorization: 'Bearer core' }
+    );
+    await sendRequest(base, 'GET', '/status', { headers: { Authorization: 'Bearer init' } }, { authorization: 'Bearer core' });
+    expect(requests[0]?.headers).toEqual({ accept: 'a, b', 'x-num': '1', 'content-type': 'text/plain;charset=UTF-8' });
+    expect(requests[1]?.headers).toEqual({ authorization: 'Bearer core', 'content-type': 'application/octet-stream' });
+    expect(requests[2]?.headers).toEqual({ authorization: 'Bearer core' });
+  });
+
+  test('a body gets Content-Type application/json, FormData its own, no body none', async () => {
+    const { requests } = mockFetch();
+    await sendRequest(base, 'POST', '/display/draw', { body: { a: 1 } });
+    await sendRequest(base, 'POST', '/display/draw', { body: new FormData() });
+    await sendRequest(base, 'GET', '/status');
+    expect(requests[0]?.headers['content-type']).toBe('application/json');
+    expect(decode(requests[0]?.body)).toBe('{"a":1}');
+    expect(requests[1]?.headers['content-type']).toMatch(/^multipart\/form-data; boundary=/);
+    expect(requests[2]?.headers).toEqual({});
+  });
+
+  test.each([
+    ['json', { a: 1 }],
+    ['text', '{"a":1}'],
+    ['arrayBuffer', new TextEncoder().encode('{"a":1}').buffer]
+  ] as const)('parseAs %s', async (parseAs, data) => {
+    mockFetch(() => json({ a: 1 }));
+    expect((await sendRequest(base, 'GET', '/status', { parseAs })).data).toEqual(data);
+  });
+
+  test('parseAs stream returns the body as is', async () => {
+    mockFetch(() => json({ a: 1 }));
+    const { data } = await sendRequest(base, 'GET', '/status', { parseAs: 'stream' });
+    expect(data).toBeInstanceOf(ReadableStream);
+  });
+
+  test('204 and Content-Length 0 give no data and no error', async () => {
+    mockFetch((request) =>
+      pathOf(request) === '/status' ? new Response(null, { status: 204 }) : new Response('', { status: 500, headers: { 'Content-Length': '0' } })
+    );
+    expect(await sendRequest(base, 'GET', '/status')).toMatchObject({ data: undefined, response: { status: 204 } });
+    expect(await sendRequest(base, 'GET', '/version')).toMatchObject({ error: undefined, response: { status: 500 } });
+  });
+
+  test('error body is JSON when it parses, text otherwise', async () => {
+    mockFetch((request) => (pathOf(request) === '/status' ? text('{"error":"bad"}', { status: 500 }) : text('oops', { status: 500 })));
+    expect((await sendRequest(base, 'GET', '/status')).error).toEqual({ error: 'bad' });
+    expect((await sendRequest(base, 'GET', '/version')).error).toBe('oops');
+  });
+
+  test('a request without a body has no body key', async () => {
+    // The device firmware sends a present but undefined `body` as the text "undefined".
+    mockFetch();
+    await sendRequest(base, 'GET', '/status');
+    await sendRequest(base, 'POST', '/display/draw', { body: drawBody });
+    const inits = vi.mocked(fetch).mock.calls.map(([, init]) => init as RequestInit);
+    expect('body' in inits[0]!).toBe(false);
+    expect(inits[1]?.body).toBe(JSON.stringify(drawBody));
+  });
+
+  test('init.signal is used unless the core passes its own', async () => {
+    mockFetch((request) => hang(request.signal));
+    const controller = new AbortController();
+    const pending = sendRequest(base, 'GET', '/status', { signal: controller.signal });
+    controller.abort();
+    await expect(pending).rejects.toMatchObject({ name: 'AbortError' });
+  });
+
+  test('apiClient.request is the same as the method shortcuts', async () => {
+    const { requests } = mockFetch();
+    const { apiClient } = new BusyBarClient();
+    const result = await apiClient.request('POST', '/display/draw', { body: drawBody });
+    expect(result.data).toEqual({ result: 'OK' });
+    expect(requests.map((r) => `${r.method} ${pathOf(r)}`)).toEqual(['POST /display/draw']);
   });
 });
 
