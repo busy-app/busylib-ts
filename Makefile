@@ -2,6 +2,7 @@
 
 # --- API Generation ---
 OPENAPI_TS := ./node_modules/.bin/openapi-typescript
+PRETTIER := ./node_modules/.bin/prettier
 generate-api:
 	@echo "Removing /api from openapi.yaml..."
 	@sed 's|/api||g' openapi.yaml > openapi.tmp.yaml
@@ -9,6 +10,7 @@ generate-api:
 
 	@echo "Generating TypeScript types..."
 	@$(OPENAPI_TS) openapi.yaml --default-non-nullable false -o src/Global/API.ts
+	@$(PRETTIER) --log-level warn --write src/Global/API.ts
 
 	@echo "Writing the spec version..."
 	@version=$$(sed -n 's/^  version: *"*\([^"]*\)"*$$/\1/p' openapi.yaml | head -1); \
