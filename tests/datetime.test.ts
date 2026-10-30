@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { formatDayOfMonth, formatMonth, formatTime, formatWeekday } from 'Utils/index';
+import { formatDayOfMonth, formatMonth, formatTime, formatWeekday } from 'Utils/datetime';
 
 // Local time, as the functions read it: Wednesday, 8 July 2026.
 const at = (hours: number, minutes = 5, seconds = 3) => new Date(2026, 6, 8, hours, minutes, seconds);
