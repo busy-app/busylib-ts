@@ -2,7 +2,17 @@
 import { BusyBarClient } from 'BusyBar/client/BusyBarClient';
 import { bindMethods } from 'BusyBar/bindMethods';
 import { accountInfoGet, accountStateGet, accountBackendGet, accountBackendSet, accountUnlink, accountLink } from 'BusyBar/scopes/account/functions';
-import { appsStage, appsInstall, appsRemove, appsList, appsSettingsGet, appsSettingsSet, appsSettingsReset } from 'BusyBar/scopes/apps/functions';
+import {
+  appsStage,
+  appsInstall,
+  appsRemove,
+  appsList,
+  appsLaunch,
+  appsQuit,
+  appsSettingsGet,
+  appsSettingsSet,
+  appsSettingsReset
+} from 'BusyBar/scopes/apps/functions';
 import { assetsUpload, assetsDelete } from 'BusyBar/scopes/assets/functions';
 import { audioPlay, audioStop, audioVolumeGet, audioVolumeSet } from 'BusyBar/scopes/audio/functions';
 import { bleEnable, bleDisable, bleUnpair, bleStatusGet } from 'BusyBar/scopes/ble/functions';
@@ -47,6 +57,7 @@ import type { ApiClient, ApiSemver, BusyBarConfig, RequestOptions } from 'BusyBa
 import type { AccountBackendSetParams } from 'BusyBar/scopes/account/types';
 import type {
   AppsInstallParams,
+  AppsLaunchParams,
   AppsRemoveParams,
   AppsSettingsGetParams,
   AppsSettingsResetParams,
@@ -272,6 +283,32 @@ export class BusyBar {
    */
   appsList(options?: RequestOptions) {
     return appsList(this.clientInstance, options);
+  }
+
+  /**
+   * Launch an installed JavaScript application by its id. Fails if a higher-priority application is already running.
+   *
+   * @param {AppsLaunchParams} params - Parameters for the launch.
+   *   @param {AppsLaunchParams['app_id']} params.app_id - JavaScript application id.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
+   * @returns {Promise<SuccessResponse>} A promise that resolves when the application is launched.
+   */
+  appsLaunch(params: AppsLaunchParams, options?: RequestOptions) {
+    return appsLaunch(this.clientInstance, params, options);
+  }
+
+  /**
+   * Quit the running JavaScript application. Fails if no application is running.
+   *
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
+   * @returns {Promise<SuccessResponse>} A promise that resolves when the application has quit.
+   */
+  appsQuit(options?: RequestOptions) {
+    return appsQuit(this.clientInstance, options);
   }
 
   /**

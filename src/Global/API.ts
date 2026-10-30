@@ -148,6 +148,46 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/apps/launch': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Launch an installed JavaScript application
+     * @description Launches an installed JavaScript application by its id
+     */
+    post: operations['launchApp'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/apps/quit': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Quit from a running JavaScript application
+     * @description Quits from a running JavaScript application, if there is one
+     */
+    post: operations['quitApp'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/apps': {
     parameters: {
       query?: never;
@@ -1774,6 +1814,11 @@ export interface components {
        */
       version: string;
       /**
+       * @description Minimum required HTTP API version
+       * @example 1.0.0
+       */
+      api_version: string;
+      /**
        * @description Application author
        * @example Erika Mustermann
        */
@@ -2988,6 +3033,15 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
+      /** @description API version required by the application is not compatible with the firmware. */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Application package too large. */
       413: {
         headers: {
@@ -3043,6 +3097,102 @@ export interface operations {
       };
     };
   };
+  launchApp: {
+    parameters: {
+      query: {
+        app_id: components['schemas']['AppId'];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Application launched successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+      /** @description Missing or invalid application id */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description App with given ID was not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description A higher-priority application is already running */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Failed to launch the application */
+      503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  quitApp: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Exited from the application successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+      /** @description Application is not running */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Failed to quit from the application */
+      503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
   removeApp: {
     parameters: {
       query: {
@@ -3074,6 +3224,16 @@ export interface operations {
       };
       /** @description App with given ID was not found */
       404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Failed to quit from the application that needs to be uninstalled.
+       *      */
+      503: {
         headers: {
           [name: string]: unknown;
         };
@@ -3123,7 +3283,7 @@ export interface operations {
           'application/json': components['schemas']['AppSettingsDocument'];
         };
       };
-      /** @description Invalid application identifier */
+      /** @description Invalid app_id parameter value */
       400: {
         headers: {
           [name: string]: unknown;
@@ -3132,7 +3292,16 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
-      /** @description Unknown application or no settings */
+      /** @description Requested application id does not match running application id */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Unknown or invalid application, or no settings */
       404: {
         headers: {
           [name: string]: unknown;
@@ -3185,7 +3354,7 @@ export interface operations {
           'application/json': components['schemas']['SuccessResponse'];
         };
       };
-      /** @description Invalid application identifier or document */
+      /** @description Invalid app_id parameter value or invalid document */
       400: {
         headers: {
           [name: string]: unknown;
@@ -3194,7 +3363,7 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
-      /** @description Unknown application or no settings */
+      /** @description Unknown or invalid application, or no settings */
       404: {
         headers: {
           [name: string]: unknown;
@@ -3243,7 +3412,7 @@ export interface operations {
           'application/json': components['schemas']['SuccessResponse'];
         };
       };
-      /** @description Invalid application identifier */
+      /** @description Invalid app_id parameter value */
       400: {
         headers: {
           [name: string]: unknown;
@@ -3252,7 +3421,7 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
-      /** @description Unknown application or no settings */
+      /** @description Unknown or invalid application, or no settings */
       404: {
         headers: {
           [name: string]: unknown;

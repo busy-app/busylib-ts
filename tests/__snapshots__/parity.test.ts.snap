@@ -1269,6 +1269,183 @@ exports[`scenarios > appsInstall 1`] = `
 }
 `;
 
+exports[`scenarios > appsLaunch 1`] = `
+{
+  "405": {
+    "apiSemver": "2.0.0",
+    "outcome": {
+      "data": {
+        "result": "OK",
+      },
+    },
+    "requests": [
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+        },
+        "method": "GET",
+        "url": "https://api.busy.app/busybar/version",
+      },
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+          "x-api-sem-ver": "1.0.0",
+          "x-api-token": "1234",
+        },
+        "method": "POST",
+        "url": "https://api.busy.app/busybar/apps/launch?app_id=app",
+      },
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+        },
+        "method": "GET",
+        "url": "https://api.busy.app/busybar/version",
+      },
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+          "x-api-sem-ver": "2.0.0",
+          "x-api-token": "1234",
+        },
+        "method": "POST",
+        "url": "https://api.busy.app/busybar/apps/launch?app_id=app",
+      },
+    ],
+  },
+  "JSON error": {
+    "apiSemver": "1.0.0",
+    "outcome": {
+      "error": {
+        "body": {
+          "error": "bad",
+        },
+        "message": "bad",
+        "name": "Error",
+        "status": 500,
+        "statusText": "Internal Server Error",
+      },
+    },
+    "requests": [
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+        },
+        "method": "GET",
+        "url": "https://api.busy.app/busybar/version",
+      },
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+          "x-api-sem-ver": "1.0.0",
+          "x-api-token": "1234",
+        },
+        "method": "POST",
+        "url": "https://api.busy.app/busybar/apps/launch?app_id=app",
+      },
+    ],
+  },
+  "aborted": {
+    "apiSemver": "1.0.0",
+    "outcome": {
+      "error": {
+        "body": undefined,
+        "message": "Request was aborted",
+        "name": "AbortError",
+        "status": undefined,
+        "statusText": undefined,
+      },
+    },
+    "requests": [
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+        },
+        "method": "GET",
+        "url": "https://api.busy.app/busybar/version",
+      },
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+          "x-api-sem-ver": "1.0.0",
+          "x-api-token": "1234",
+        },
+        "method": "POST",
+        "url": "https://api.busy.app/busybar/apps/launch?app_id=app",
+      },
+    ],
+  },
+  "ok": {
+    "apiSemver": "1.0.0",
+    "outcome": {
+      "data": {
+        "result": "OK",
+      },
+    },
+    "requests": [
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+        },
+        "method": "GET",
+        "url": "https://api.busy.app/busybar/version",
+      },
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+          "x-api-sem-ver": "1.0.0",
+          "x-api-token": "1234",
+        },
+        "method": "POST",
+        "url": "https://api.busy.app/busybar/apps/launch?app_id=app",
+      },
+    ],
+  },
+  "text error": {
+    "apiSemver": "1.0.0",
+    "outcome": {
+      "error": {
+        "body": "oops",
+        "message": "oops",
+        "name": "Error",
+        "status": 500,
+        "statusText": "Internal Server Error",
+      },
+    },
+    "requests": [
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+        },
+        "method": "GET",
+        "url": "https://api.busy.app/busybar/version",
+      },
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+          "x-api-sem-ver": "1.0.0",
+          "x-api-token": "1234",
+        },
+        "method": "POST",
+        "url": "https://api.busy.app/busybar/apps/launch?app_id=app",
+      },
+    ],
+  },
+}
+`;
+
 exports[`scenarios > appsList 1`] = `
 {
   "405": {
@@ -1440,6 +1617,183 @@ exports[`scenarios > appsList 1`] = `
         },
         "method": "GET",
         "url": "https://api.busy.app/busybar/apps/list",
+      },
+    ],
+  },
+}
+`;
+
+exports[`scenarios > appsQuit 1`] = `
+{
+  "405": {
+    "apiSemver": "2.0.0",
+    "outcome": {
+      "data": {
+        "result": "OK",
+      },
+    },
+    "requests": [
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+        },
+        "method": "GET",
+        "url": "https://api.busy.app/busybar/version",
+      },
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+          "x-api-sem-ver": "1.0.0",
+          "x-api-token": "1234",
+        },
+        "method": "POST",
+        "url": "https://api.busy.app/busybar/apps/quit",
+      },
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+        },
+        "method": "GET",
+        "url": "https://api.busy.app/busybar/version",
+      },
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+          "x-api-sem-ver": "2.0.0",
+          "x-api-token": "1234",
+        },
+        "method": "POST",
+        "url": "https://api.busy.app/busybar/apps/quit",
+      },
+    ],
+  },
+  "JSON error": {
+    "apiSemver": "1.0.0",
+    "outcome": {
+      "error": {
+        "body": {
+          "error": "bad",
+        },
+        "message": "bad",
+        "name": "Error",
+        "status": 500,
+        "statusText": "Internal Server Error",
+      },
+    },
+    "requests": [
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+        },
+        "method": "GET",
+        "url": "https://api.busy.app/busybar/version",
+      },
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+          "x-api-sem-ver": "1.0.0",
+          "x-api-token": "1234",
+        },
+        "method": "POST",
+        "url": "https://api.busy.app/busybar/apps/quit",
+      },
+    ],
+  },
+  "aborted": {
+    "apiSemver": "1.0.0",
+    "outcome": {
+      "error": {
+        "body": undefined,
+        "message": "Request was aborted",
+        "name": "AbortError",
+        "status": undefined,
+        "statusText": undefined,
+      },
+    },
+    "requests": [
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+        },
+        "method": "GET",
+        "url": "https://api.busy.app/busybar/version",
+      },
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+          "x-api-sem-ver": "1.0.0",
+          "x-api-token": "1234",
+        },
+        "method": "POST",
+        "url": "https://api.busy.app/busybar/apps/quit",
+      },
+    ],
+  },
+  "ok": {
+    "apiSemver": "1.0.0",
+    "outcome": {
+      "data": {
+        "result": "OK",
+      },
+    },
+    "requests": [
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+        },
+        "method": "GET",
+        "url": "https://api.busy.app/busybar/version",
+      },
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+          "x-api-sem-ver": "1.0.0",
+          "x-api-token": "1234",
+        },
+        "method": "POST",
+        "url": "https://api.busy.app/busybar/apps/quit",
+      },
+    ],
+  },
+  "text error": {
+    "apiSemver": "1.0.0",
+    "outcome": {
+      "error": {
+        "body": "oops",
+        "message": "oops",
+        "name": "Error",
+        "status": 500,
+        "statusText": "Internal Server Error",
+      },
+    },
+    "requests": [
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+        },
+        "method": "GET",
+        "url": "https://api.busy.app/busybar/version",
+      },
+      {
+        "body": undefined,
+        "headers": {
+          "authorization": "Bearer token",
+          "x-api-sem-ver": "1.0.0",
+          "x-api-token": "1234",
+        },
+        "method": "POST",
+        "url": "https://api.busy.app/busybar/apps/quit",
       },
     ],
   },

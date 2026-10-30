@@ -54,6 +54,8 @@ const cases: Case[] = [
   { method: 'appsInstall', endpoint: 'POST /apps/install', call: (bar, o) => bar.appsInstall({ install_key: 42 }, o) },
   { method: 'appsRemove', endpoint: 'DELETE /apps', call: (bar, o) => bar.appsRemove({ app_id: 'app' }, o) },
   { method: 'appsList', endpoint: 'GET /apps/list', call: (bar, o) => bar.appsList(o) },
+  { method: 'appsLaunch', endpoint: 'POST /apps/launch', call: (bar, o) => bar.appsLaunch({ app_id: 'app' }, o) },
+  { method: 'appsQuit', endpoint: 'POST /apps/quit', call: (bar, o) => bar.appsQuit(o) },
   { method: 'appsSettingsGet', endpoint: 'GET /apps/settings', call: (bar, o) => bar.appsSettingsGet({ app_id: 'app' }, o) },
   {
     method: 'appsSettingsSet',
@@ -317,7 +319,7 @@ describe('cases', () => {
   test('cover every BusyBar method', () => {
     const fixed = ['constructor', 'client', 'addr', 'apiSemver', 'apiClient', 'setToken', 'setHTTPAccessPassword'];
     const methods = Object.getOwnPropertyNames(BusyBar.prototype).filter((name) => !fixed.includes(name));
-    expect(methods).toHaveLength(78);
+    expect(methods).toHaveLength(80);
     expect([...new Set(cases.map((c) => c.method))].sort()).toEqual(methods.sort());
   });
 

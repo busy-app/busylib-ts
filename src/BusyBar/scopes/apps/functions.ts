@@ -5,6 +5,7 @@ import type {
   AppSettingsDocument,
   AppStageResult,
   AppsInstallParams,
+  AppsLaunchParams,
   AppsRemoveParams,
   AppsSettingsGetParams,
   AppsSettingsResetParams,
@@ -95,6 +96,43 @@ export async function appsRemove<C extends RequestClient>(client: C, params: App
  */
 export async function appsList<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<AppListResult> {
   return client.GET('/apps/list', options);
+}
+
+/**
+ * Launch an installed JavaScript application by its id. Fails if a higher-priority application is already running.
+ *
+ * @param {RequestClient} client - BUSY Bar client.
+ * @param {AppsLaunchParams} params - Parameters for the launch.
+ *   @param {AppsLaunchParams['app_id']} params.app_id - JavaScript application id.
+ * @param {RequestOptions} [options] - Optional request options.
+ *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+ *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
+ * @returns {Promise<SuccessResponse>} A promise that resolves when the application is launched.
+ */
+export async function appsLaunch<C extends RequestClient>(client: C, params: AppsLaunchParams, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
+  const { app_id } = params;
+
+  return client.POST('/apps/launch', {
+    params: {
+      query: {
+        app_id
+      }
+    },
+    ...options
+  });
+}
+
+/**
+ * Quit the running JavaScript application. Fails if no application is running.
+ *
+ * @param {RequestClient} client - BUSY Bar client.
+ * @param {RequestOptions} [options] - Optional request options.
+ *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+ *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
+ * @returns {Promise<SuccessResponse>} A promise that resolves when the application has quit.
+ */
+export async function appsQuit<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
+  return client.POST('/apps/quit', options);
 }
 
 /**
