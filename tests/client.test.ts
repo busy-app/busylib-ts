@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { BusyBar, BusyBarAppClient, BusyBarClient, type BusyBarConfig } from 'BusyBar/index';
 import { resolveAddress } from 'BusyBar/client/config';
-import { bodySerializer } from 'BusyBar/client/body';
 import { toFetchError } from 'BusyBar/client/errors';
 import { sendRequest } from 'BusyBar/client/transport';
 import { API_SEMVER, decode, defaultHandler, hang, json, mockFetch, pathOf, stubDeviceFetch, text, type Handler } from './tools/fetch';
@@ -418,27 +417,29 @@ describe('getters', () => {
   });
 });
 
-describe('bodySerializer', () => {
+describe('request body', () => {
+  const base = 'http://10.0.4.20/api/';
+  const octetStream = { 'Content-Type': 'application/octet-stream' };
+
   test.each([
-    ['FormData', new FormData()],
-    ['Blob', new Blob(['a'])],
-    ['File', new File(['a'], 'a.txt')],
-    ['ArrayBuffer', new ArrayBuffer(2)],
-    ['Uint8Array', new Uint8Array([1, 2])],
-    ['Buffer', Buffer.from('a')]
-  ])('%s is sent as is', (_, body) => {
-    expect(bodySerializer(body)).toBe(body);
+    ['Blob', new Blob(['ab'])],
+    ['File', new File(['ab'], 'a.txt')],
+    ['ArrayBuffer', new TextEncoder().encode('ab').buffer],
+    ['Uint8Array', new TextEncoder().encode('ab')],
+    ['Buffer', Buffer.from('ab')],
+    ['string', 'ab']
+  ])('%s with application/octet-stream is sent as is', async (_, body) => {
+    const { requests } = mockFetch();
+    await sendRequest(base, 'POST', '/storage/write', { body, headers: octetStream });
+    expect(decode(requests[0]?.body)).toBe('ab');
   });
 
-  test('objects are sent as JSON', () => {
-    expect(bodySerializer({ a: 1 })).toBe('{"a":1}');
-    expect(bodySerializer({ a: 1 }, { 'Content-Type': 'application/json' })).toBe('{"a":1}');
-  });
-
-  test('x-www-form-urlencoded', () => {
-    const contentType = 'application/x-www-form-urlencoded';
-    expect(bodySerializer({ a: '1', b: '2' }, { 'Content-Type': contentType })).toBe('a=1&b=2');
-    expect(bodySerializer({ a: '1' }, new Headers({ 'content-type': contentType }))).toBe('a=1');
-    expect(bodySerializer('a=1', { 'content-type': contentType })).toBe('a=1');
+  test('anything else is sent as JSON', async () => {
+    const { requests } = mockFetch();
+    const bare = Object.assign(Object.create(null) as object, { a: 1 });
+    for (const body of [{ a: 1 }, [1, 2], 'ab', 3, null, bare]) {
+      await sendRequest(base, 'POST', '/display/draw', { body });
+    }
+    expect(requests.map((r) => decode(r.body))).toEqual(['{"a":1}', '[1,2]', '"ab"', '3', 'null', '{"a":1}']);
   });
 });
