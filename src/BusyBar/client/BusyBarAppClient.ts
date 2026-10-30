@@ -1,4 +1,4 @@
-import { DEFAULT_TIMEOUT, resolveAddress } from './config';
+import { DEFAULT_TIMEOUT } from './config';
 import { toFetchError } from './errors';
 import { withTimeout } from './signal';
 import { sendRequest, type SendInit } from './transport';
@@ -19,11 +19,13 @@ export class BusyBarAppClient implements RequestClient {
    * Creates a client for the device the app runs on.
    *
    * @param {BusyBarAppConfig} [config] - Client configuration.
-   * @param {BusyBarAppConfig['addr']} [config.addr] - Device address, `localhost` (the device the app runs on) if not provided.
+   * @param {BusyBarAppConfig['addr']} [config.addr] - Device host or origin, e.g. `10.0.4.20` or `http://10.0.4.20`, `localhost` (the device the app runs on) if not provided. Taken as is: a host without a protocol gets `http://`, nothing else is checked.
    * @param {BusyBarAppConfig['timeout']} [config.timeout] - Default timeout for all requests in milliseconds, `3000` if not provided; can be overridden per request. The firmware cannot cancel a request, so a timeout rejects the promise while the request itself runs to the end.
    */
   constructor(config?: BusyBarAppConfig) {
-    this.baseUrl = resolveAddress({ addr: config?.addr ?? 'localhost' }).baseUrl;
+    // No resolveAddress: an app talks to a device, never to the proxy, and its bundle should not carry the address checks of BusyBarClient.
+    const addr = config?.addr ?? 'localhost';
+    this.baseUrl = `${/^https?:\/\//i.test(addr) ? addr : `http://${addr}`}/api/`;
     this.timeout = config?.timeout ?? DEFAULT_TIMEOUT;
   }
 

@@ -213,7 +213,7 @@ await displayDraw(client, {
 });
 ```
 
-`BusyBarAppClient` works with every standalone function and has the same `GET`, `POST`, `PUT`, `DELETE` and `request` for [direct requests](#direct-requests). It takes `addr` (`localhost` by default) and `timeout` (3000ms by default, `0` disables it).
+`BusyBarAppClient` works with every standalone function and has the same `GET`, `POST`, `PUT`, `DELETE` and `request` for [direct requests](#direct-requests). It takes `addr` (a host or an origin, `localhost` by default, used as is: unlike `BusyBarClient`, it does not know the BUSY proxy) and `timeout` (3000ms by default, `0` disables it).
 
 `BusyBarClient` works on the device too, but it asks for `/version` before the first request and runs the full pipeline for every request, which shows in how fast the display responds.
 
