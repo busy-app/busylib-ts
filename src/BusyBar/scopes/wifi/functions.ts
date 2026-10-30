@@ -1,4 +1,5 @@
-import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient } from 'BusyBar/client/types';
+import type { RequestOptionsFor } from 'BusyBar/client/types.internal';
 import type { WifiConnectParams, WifiNetworkResponse, WifiStatusResponse } from 'BusyBar/scopes/wifi/types';
 import type { SuccessResponse } from 'BusyBar/types';
 
@@ -11,7 +12,7 @@ import type { SuccessResponse } from 'BusyBar/types';
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<WifiStatusResponse>} A promise that resolves to the Wi-Fi status.
  */
-export async function wifiStatusGet(client: RequestClient, options?: RequestOptions): Promise<WifiStatusResponse> {
+export async function wifiStatusGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<WifiStatusResponse> {
   return client.GET('/wifi/status', options);
 }
 
@@ -29,7 +30,7 @@ export async function wifiStatusGet(client: RequestClient, options?: RequestOpti
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful connection initiation.
  */
-export async function wifiConnect(client: RequestClient, params: WifiConnectParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function wifiConnect<C extends RequestClient>(client: C, params: WifiConnectParams, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   const { ssid, password, security, ip_config } = params;
 
   return client.POST('/wifi/connect', {
@@ -52,7 +53,7 @@ export async function wifiConnect(client: RequestClient, params: WifiConnectPara
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful disconnection.
  */
-export async function wifiDisconnect(client: RequestClient, options?: RequestOptions): Promise<SuccessResponse> {
+export async function wifiDisconnect<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   return client.POST('/wifi/disconnect', options);
 }
 
@@ -65,6 +66,6 @@ export async function wifiDisconnect(client: RequestClient, options?: RequestOpt
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<WifiNetworkResponse>} A promise that resolves to a list of available networks.
  */
-export async function wifiNetworksGet(client: RequestClient, options?: RequestOptions): Promise<WifiNetworkResponse> {
+export async function wifiNetworksGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<WifiNetworkResponse> {
   return client.GET('/wifi/networks', options);
 }

@@ -1,30 +1,29 @@
-import { DEFAULT_TIMEOUT, resolveAddress } from './config';
 import { toFetchError } from './errors';
-import { withTimeout } from './signal';
-import { sendRequest, type SendInit } from './transport';
+import { sendRequest, type SendInit, type TransportResult } from './transport';
 import type { BusyBarAppConfig, HttpMethod, InitParam, PathsWithMethod, RequestClient, RequestInitFor, RequestOptions, ResponseData } from './types';
+import type { RequestOptionsFor } from './types.internal';
 
 type ClientInit = SendInit & RequestOptions;
 
 /**
- * Client for apps that run on the BUSY Bar itself: requests go to the device's own HTTP API with only a timeout and errors on top. An app needs no authentication (requests from the device itself are always allowed), no API version negotiation (the firmware checks the app's `api_version` when installing and launching it) and no proxy; this keeps every request as light as the bare `fetch`.
+ * Client for apps that run on the BUSY Bar itself: requests go to the device's own HTTP API with only errors on top. An app needs no authentication (requests from the device itself are always allowed), no API version negotiation (the firmware checks the app's `api_version` when installing and launching it) and no proxy; this keeps every request as light as the bare `fetch`. It has no timeout either: the firmware cannot cancel a request, and it fails one itself when no data comes for too long.
  *
  * @class
  */
 export class BusyBarAppClient implements RequestClient {
   private readonly baseUrl: string;
-  private readonly timeout: number;
+  private warned = false;
 
   /**
    * Creates a client for the device the app runs on.
    *
    * @param {BusyBarAppConfig} [config] - Client configuration.
-   * @param {BusyBarAppConfig['addr']} [config.addr] - Device address, `localhost` (the device the app runs on) if not provided.
-   * @param {BusyBarAppConfig['timeout']} [config.timeout] - Default timeout for all requests in milliseconds, `3000` if not provided; can be overridden per request. The firmware cannot cancel a request, so a timeout rejects the promise while the request itself runs to the end.
+   * @param {BusyBarAppConfig['addr']} [config.addr] - Device host or origin, e.g. `10.0.4.20` or `http://10.0.4.20`, `localhost` (the device the app runs on) if not provided. Taken as is: a host without a protocol gets `http://`, nothing else is checked.
    */
   constructor(config?: BusyBarAppConfig) {
-    this.baseUrl = resolveAddress({ addr: config?.addr ?? 'localhost' }).baseUrl;
-    this.timeout = config?.timeout ?? DEFAULT_TIMEOUT;
+    // No resolveAddress: an app talks to a device, never to the proxy, and its bundle should not carry the address checks of BusyBarClient.
+    const addr = config?.addr ?? 'localhost';
+    this.baseUrl = `${/^https?:\/\//i.test(addr) ? addr : `http://${addr}`}/api/`;
   }
 
   /**
@@ -32,13 +31,13 @@ export class BusyBarAppClient implements RequestClient {
    *
    * @param {HttpMethod} method - HTTP method.
    * @param {string} path - Endpoint path from the API schema, e.g. `/status`.
-   * @param {object} [init] - Transport init (`params`, `body`, `headers`, `parseAs`) plus `timeout`.
+   * @param {object} [init] - Transport init (`params`, `body`, `headers`, `parseAs`).
    * @returns {Promise} Response data; a non-2xx response is thrown as `FetchError`.
    */
   request<M extends HttpMethod, P extends PathsWithMethod<M>, I extends RequestInitFor<M, P>>(
     method: M,
     path: P,
-    ...init: InitParam<I>
+    ...init: InitParam<I, RequestOptionsFor<BusyBarAppClient>>
   ): Promise<ResponseData<M, P, I>> {
     return this.send(method, path, init[0] as ClientInit | undefined) as Promise<ResponseData<M, P, I>>;
   }
@@ -47,10 +46,13 @@ export class BusyBarAppClient implements RequestClient {
    * Sends a typed GET request.
    *
    * @param {string} path - Endpoint path from the API schema, e.g. `/status`.
-   * @param {object} [init] - Transport init (`params`, `headers`, `parseAs`) plus `timeout`.
+   * @param {object} [init] - Transport init (`params`, `headers`, `parseAs`).
    * @returns {Promise} Response data; a non-2xx response is thrown as `FetchError`.
    */
-  GET<P extends PathsWithMethod<'GET'>, I extends RequestInitFor<'GET', P>>(path: P, ...init: InitParam<I>): Promise<ResponseData<'GET', P, I>> {
+  GET<P extends PathsWithMethod<'GET'>, I extends RequestInitFor<'GET', P>>(
+    path: P,
+    ...init: InitParam<I, RequestOptionsFor<BusyBarAppClient>>
+  ): Promise<ResponseData<'GET', P, I>> {
     return this.send('GET', path, init[0] as ClientInit | undefined) as Promise<ResponseData<'GET', P, I>>;
   }
 
@@ -58,10 +60,13 @@ export class BusyBarAppClient implements RequestClient {
    * Sends a typed POST request.
    *
    * @param {string} path - Endpoint path from the API schema, e.g. `/display/draw`.
-   * @param {object} [init] - Transport init (`params`, `body`, `headers`, `parseAs`) plus `timeout`.
+   * @param {object} [init] - Transport init (`params`, `body`, `headers`, `parseAs`).
    * @returns {Promise} Response data; a non-2xx response is thrown as `FetchError`.
    */
-  POST<P extends PathsWithMethod<'POST'>, I extends RequestInitFor<'POST', P>>(path: P, ...init: InitParam<I>): Promise<ResponseData<'POST', P, I>> {
+  POST<P extends PathsWithMethod<'POST'>, I extends RequestInitFor<'POST', P>>(
+    path: P,
+    ...init: InitParam<I, RequestOptionsFor<BusyBarAppClient>>
+  ): Promise<ResponseData<'POST', P, I>> {
     return this.send('POST', path, init[0] as ClientInit | undefined) as Promise<ResponseData<'POST', P, I>>;
   }
 
@@ -69,10 +74,13 @@ export class BusyBarAppClient implements RequestClient {
    * Sends a typed PUT request.
    *
    * @param {string} path - Endpoint path from the API schema, e.g. `/busy/snapshot`.
-   * @param {object} [init] - Transport init (`params`, `body`, `headers`, `parseAs`) plus `timeout`.
+   * @param {object} [init] - Transport init (`params`, `body`, `headers`, `parseAs`).
    * @returns {Promise} Response data; a non-2xx response is thrown as `FetchError`.
    */
-  PUT<P extends PathsWithMethod<'PUT'>, I extends RequestInitFor<'PUT', P>>(path: P, ...init: InitParam<I>): Promise<ResponseData<'PUT', P, I>> {
+  PUT<P extends PathsWithMethod<'PUT'>, I extends RequestInitFor<'PUT', P>>(
+    path: P,
+    ...init: InitParam<I, RequestOptionsFor<BusyBarAppClient>>
+  ): Promise<ResponseData<'PUT', P, I>> {
     return this.send('PUT', path, init[0] as ClientInit | undefined) as Promise<ResponseData<'PUT', P, I>>;
   }
 
@@ -80,16 +88,29 @@ export class BusyBarAppClient implements RequestClient {
    * Sends a typed DELETE request.
    *
    * @param {string} path - Endpoint path from the API schema, e.g. `/display/draw`.
-   * @param {object} [init] - Transport init (`params`, `body`, `headers`, `parseAs`) plus `timeout`.
+   * @param {object} [init] - Transport init (`params`, `body`, `headers`, `parseAs`).
    * @returns {Promise} Response data; a non-2xx response is thrown as `FetchError`.
    */
-  DELETE<P extends PathsWithMethod<'DELETE'>, I extends RequestInitFor<'DELETE', P>>(path: P, ...init: InitParam<I>): Promise<ResponseData<'DELETE', P, I>> {
+  DELETE<P extends PathsWithMethod<'DELETE'>, I extends RequestInitFor<'DELETE', P>>(
+    path: P,
+    ...init: InitParam<I, RequestOptionsFor<BusyBarAppClient>>
+  ): Promise<ResponseData<'DELETE', P, I>> {
     return this.send('DELETE', path, init[0] as ClientInit | undefined) as Promise<ResponseData<'DELETE', P, I>>;
   }
 
-  // The transport reads only its own fields of `init`, so `timeout` is left in it; `signal` goes to fetch as is, the device firmware ignores it.
+  // `timeout` and `signal` only get a warning, once per client: the types reject them, and a JavaScript app that passes them keeps running.
   private async send(method: HttpMethod, path: string, init: ClientInit | undefined): Promise<unknown> {
-    const result = await withTimeout(sendRequest(this.baseUrl, method, path, init), init?.timeout ?? this.timeout);
+    if (!this.warned && (init?.timeout !== undefined || init?.signal !== undefined)) {
+      this.warned = true;
+      console.warn('BusyBarAppClient ignores timeout and signal: the BUSY Bar firmware cannot cancel a request');
+    }
+
+    let result: TransportResult;
+    try {
+      result = await sendRequest(this.baseUrl, method, path, init);
+    } catch (error) {
+      throw toError(error);
+    }
 
     if (!result.response.ok) {
       throw toFetchError(result.response, result.error);
@@ -97,4 +118,9 @@ export class BusyBarAppClient implements RequestClient {
 
     return result.data;
   }
+}
+
+// The firmware rejects a failed fetch or body read with a bare string, such as "Inactivity timeout" when no data comes for too long; it becomes an Error, named TimeoutError for the timeout, as with BusyBarClient.
+function toError(error: unknown): unknown {
+  return typeof error === 'string' ? Object.assign(new Error(error), error === 'Inactivity timeout' ? { name: 'TimeoutError' } : undefined) : error;
 }

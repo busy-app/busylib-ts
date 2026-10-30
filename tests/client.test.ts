@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
-import { BusyBar, BusyBarAppClient, BusyBarClient, type BusyBarConfig } from 'BusyBar/index';
+import { BusyBar, BusyBarAppClient, BusyBarClient, storageRead, type BusyBarConfig } from 'BusyBar/index';
 import { resolveAddress } from 'BusyBar/client/config';
-import { bodySerializer } from 'BusyBar/client/body';
 import { toFetchError } from 'BusyBar/client/errors';
 import { sendRequest } from 'BusyBar/client/transport';
 import { API_SEMVER, decode, defaultHandler, hang, json, mockFetch, pathOf, stubDeviceFetch, text, type Handler } from './tools/fetch';
@@ -383,29 +382,39 @@ describe('BusyBarAppClient', () => {
     });
   });
 
-  test('timeout rejects with TimeoutError, as on the device: no AbortController and a fetch that ignores the signal', async () => {
-    stubDeviceFetch();
-    await expect(new BusyBarAppClient({ timeout: 20 }).GET('/status')).rejects.toMatchObject({ name: 'TimeoutError', message: 'Request timed out after 20ms' });
-    await expect(new BusyBarAppClient().GET('/status', { timeout: 10 })).rejects.toMatchObject({
-      name: 'TimeoutError',
-      message: 'Request timed out after 10ms'
-    });
-  });
-
-  test('timeout 0 sets no timer', async () => {
-    mockFetch();
+  test('timeout and signal are ignored with a warning, once per client', async () => {
+    const { requests } = mockFetch();
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const set = vi.spyOn(globalThis, 'setTimeout');
-    await new BusyBarAppClient({ timeout: 0 }).GET('/status');
+    const client = new BusyBarAppClient();
+    await client.GET('/status', { timeout: 10 } as never);
+    await client.GET('/status', { signal: AbortSignal.timeout(10) } as never);
+    expect(requests).toHaveLength(2);
+    expect(warn.mock.calls).toEqual([['BusyBarAppClient ignores timeout and signal: the BUSY Bar firmware cannot cancel a request']]);
     expect(set).not.toHaveBeenCalled();
+    warn.mockRestore();
     set.mockRestore();
   });
 
-  test('the timer of an answered request is cleared', async () => {
-    mockFetch();
-    const clear = vi.spyOn(globalThis, 'clearTimeout');
-    await new BusyBarAppClient({ timeout: 1000 }).GET('/status');
-    expect(clear).toHaveBeenCalledTimes(1);
-    clear.mockRestore();
+  test('a function without options does not warn', async () => {
+    mockFetch(() => new Response('a'));
+    const warn = vi.spyOn(console, 'warn');
+    // storageRead passes `timeout: undefined` and `signal: undefined`.
+    await storageRead(new BusyBarAppClient(), { path: '/ext/a' });
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
+  test('a firmware rejection, a bare string, becomes an Error, named TimeoutError for the inactivity timeout', async () => {
+    vi.stubGlobal('fetch', () => Promise.reject('Inactivity timeout'));
+    const timeout = await new BusyBarAppClient().GET('/status').catch((error: unknown) => error);
+    expect(timeout).toBeInstanceOf(Error);
+    expect(timeout).toMatchObject({ name: 'TimeoutError', message: 'Inactivity timeout' });
+
+    vi.stubGlobal('fetch', () => Promise.reject('Failed to connect to server'));
+    const failed = await new BusyBarAppClient().GET('/status').catch((error: unknown) => error);
+    expect(failed).toBeInstanceOf(Error);
+    expect(failed).toMatchObject({ name: 'Error', message: 'Failed to connect to server' });
   });
 });
 
@@ -418,27 +427,29 @@ describe('getters', () => {
   });
 });
 
-describe('bodySerializer', () => {
+describe('request body', () => {
+  const base = 'http://10.0.4.20/api/';
+  const octetStream = { 'Content-Type': 'application/octet-stream' };
+
   test.each([
-    ['FormData', new FormData()],
-    ['Blob', new Blob(['a'])],
-    ['File', new File(['a'], 'a.txt')],
-    ['ArrayBuffer', new ArrayBuffer(2)],
-    ['Uint8Array', new Uint8Array([1, 2])],
-    ['Buffer', Buffer.from('a')]
-  ])('%s is sent as is', (_, body) => {
-    expect(bodySerializer(body)).toBe(body);
+    ['Blob', new Blob(['ab'])],
+    ['File', new File(['ab'], 'a.txt')],
+    ['ArrayBuffer', new TextEncoder().encode('ab').buffer],
+    ['Uint8Array', new TextEncoder().encode('ab')],
+    ['Buffer', Buffer.from('ab')],
+    ['string', 'ab']
+  ])('%s with application/octet-stream is sent as is', async (_, body) => {
+    const { requests } = mockFetch();
+    await sendRequest(base, 'POST', '/storage/write', { body, headers: octetStream });
+    expect(decode(requests[0]?.body)).toBe('ab');
   });
 
-  test('objects are sent as JSON', () => {
-    expect(bodySerializer({ a: 1 })).toBe('{"a":1}');
-    expect(bodySerializer({ a: 1 }, { 'Content-Type': 'application/json' })).toBe('{"a":1}');
-  });
-
-  test('x-www-form-urlencoded', () => {
-    const contentType = 'application/x-www-form-urlencoded';
-    expect(bodySerializer({ a: '1', b: '2' }, { 'Content-Type': contentType })).toBe('a=1&b=2');
-    expect(bodySerializer({ a: '1' }, new Headers({ 'content-type': contentType }))).toBe('a=1');
-    expect(bodySerializer('a=1', { 'content-type': contentType })).toBe('a=1');
+  test('anything else is sent as JSON', async () => {
+    const { requests } = mockFetch();
+    const bare = Object.assign(Object.create(null) as object, { a: 1 });
+    for (const body of [{ a: 1 }, [1, 2], 'ab', 3, null, bare]) {
+      await sendRequest(base, 'POST', '/display/draw', { body });
+    }
+    expect(requests.map((r) => decode(r.body))).toEqual(['{"a":1}', '[1,2]', '"ab"', '3', 'null', '{"a":1}']);
   });
 });

@@ -1,5 +1,5 @@
 // BusyBar class generator: src/BusyBar/scopes/*/functions.ts + BusyBar.template.ts  →  src/BusyBar/BusyBar.generated.ts
-// Every exported function becomes a method with the same parameters minus `client`, the name with a capital letter and the same JSDoc minus `@param client`; the fixed part of the class comes from the template.
+// Every exported function becomes a method with the same name, the same parameters minus `client` and the same JSDoc minus `@param client`; the fixed part of the class comes from the template. A function is generic over its client, `<C extends RequestClient>(client: C, …)`, and a method's client is always a BusyBarClient: the method drops `C` and takes `RequestOptionsFor<C, O>` as `O`.
 // Usage:
 //   pnpm busybar:build   # generate
 //   pnpm busybar:check   # verify it's up to date (CI)
@@ -66,6 +66,24 @@ function referencedTypes(node, names = new Set()) {
   return names;
 }
 
+/** The node's text for a BusyBarClient: `RequestOptionsFor<C, O>` becomes `O`, `RequestOptionsFor<C>` becomes `RequestOptions`, which `defaulted` reports. */
+function forBusyBarClient(node) {
+  const start = node.getStart();
+  const replacements = [];
+  const visit = (child) => {
+    if (ts.isTypeReferenceNode(child) && ts.isIdentifier(child.typeName) && child.typeName.text === 'RequestOptionsFor') {
+      replacements.push([child.getStart() - start, child.getEnd() - start, child.typeArguments?.[1]?.getText()]);
+      return;
+    }
+    ts.forEachChild(child, visit);
+  };
+  visit(node);
+
+  let text = node.getText();
+  for (const [from, to, type] of replacements.reverse()) text = text.slice(0, from) + (type ?? 'RequestOptions') + text.slice(to);
+  return { text, defaulted: replacements.some(([, , type]) => type === undefined) };
+}
+
 /** The function's JSDoc with the `@param client` line removed, as lines without the leading indentation. */
 function methodDoc(fn, sourceFile, file) {
   const text = sourceFile.getFullText();
@@ -96,26 +114,32 @@ function readScope(scope) {
       fail(file, fn, `${name}: must be async, so validation rejects the promise instead of throwing`);
 
     const [client, ...params] = fn.parameters;
-    if (!client || client.name.getText() !== 'client' || client.type?.getText() !== 'RequestClient')
-      fail(file, fn, `${name}: the first parameter must be "client: RequestClient"`);
+    const [clientType, ...typeParams] = fn.typeParameters ?? [];
+    if (!client || client.name.getText() !== 'client' || client.type?.getText() !== 'C' || clientType?.getText() !== 'C extends RequestClient')
+      fail(file, fn, `${name}: must be generic over the client, "${name}<C extends RequestClient>(client: C, …)"`);
     for (const param of params) {
       if (!ts.isIdentifier(param.name)) fail(file, param, `${name}: destructured parameters are not supported, take the object and destructure it in the body`);
     }
 
-    const typeParams = fn.typeParameters ?? [];
-    const ownTypes = new Set(typeParams.map((p) => p.name.text));
+    const ownTypes = new Set([clientType, ...typeParams].map((p) => p.name.text));
     const usedTypes = new Set();
     for (const node of [...typeParams, ...params]) {
       for (const type of referencedTypes(node)) if (!ownTypes.has(type)) usedTypes.add(type);
+    }
+    const typeParamTexts = typeParams.map(forBusyBarClient);
+    const paramTexts = params.map(forBusyBarClient);
+    usedTypes.delete('RequestOptionsFor');
+    if ([...typeParamTexts, ...paramTexts].some((p) => p.defaulted)) {
+      usedTypes.add('RequestOptions');
+      imports.set('RequestOptions', 'BusyBar/client/types');
     }
 
     methods.push({
       scope,
       functionName: name,
-      methodName: name[0].toUpperCase() + name.slice(1),
       doc: methodDoc(fn, sourceFile, file),
-      typeParams: typeParams.map((p) => p.getText()),
-      params: params.map((p) => p.getText()),
+      typeParams: typeParamTexts.map((p) => p.text),
+      params: paramTexts.map((p) => p.text),
       args: params.map((p) => p.name.text),
       // Global types (Promise, Blob) are not imported anywhere and stay as they are.
       types: [...usedTypes].filter((type) => imports.has(type)).map((type) => [type, imports.get(type)])
@@ -175,10 +199,11 @@ function renderImports(methods, templateTypes) {
   return [...functionImports, ...typeImportLines].join('\n');
 }
 
-function renderMethod({ doc, methodName, functionName, typeParams, params, args }) {
+// The method and the imported function share the name: a method name is a property, so `return displayDraw(…)` in it calls the import.
+function renderMethod({ doc, functionName, typeParams, params, args }) {
   const generics = typeParams.length ? `<${typeParams.join(', ')}>` : '';
   const call = ['this.clientInstance', ...args].join(', ');
-  return `${doc.join('\n')}\n${methodName}${generics}(${params.join(', ')}) {\n  return ${functionName}(${call});\n}`;
+  return `${doc.join('\n')}\n${functionName}${generics}(${params.join(', ')}) {\n  return ${functionName}(${call});\n}`;
 }
 
 function render(methods, template) {
@@ -192,7 +217,7 @@ async function generate() {
   const scopes = existsSync(scopesDir) ? readdirSync(scopesDir).sort() : [];
   const methods = scopes.flatMap(readScope);
 
-  const names = methods.map((m) => m.methodName);
+  const names = methods.map((m) => m.functionName);
   const duplicate = names.find((name, i) => names.indexOf(name) !== i);
   if (duplicate) throw new ConventionError(`${duplicate}: defined in more than one scope`);
 

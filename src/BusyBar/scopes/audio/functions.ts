@@ -1,4 +1,5 @@
-import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient } from 'BusyBar/client/types';
+import type { RequestOptionsFor } from 'BusyBar/client/types.internal';
 import type { AudioPlayParams, AudioVolumeInfo, AudioVolumeParams } from 'BusyBar/scopes/audio/types';
 import type { SuccessResponse } from 'BusyBar/types';
 
@@ -15,7 +16,7 @@ import type { SuccessResponse } from 'BusyBar/types';
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful play command.
  */
-export async function audioPlay(client: RequestClient, params: AudioPlayParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function audioPlay<C extends RequestClient>(client: C, params: AudioPlayParams, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   const { application_name } = params;
   const pathOrStock = 'path' in params ? { path: params.path } : { stock_path: params.stock_path };
 
@@ -37,7 +38,7 @@ export async function audioPlay(client: RequestClient, params: AudioPlayParams, 
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful stop command.
  */
-export async function audioStop(client: RequestClient, options?: RequestOptions): Promise<SuccessResponse> {
+export async function audioStop<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   return client.DELETE('/audio/play', options);
 }
 
@@ -50,7 +51,7 @@ export async function audioStop(client: RequestClient, options?: RequestOptions)
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<AudioVolumeInfo>} A promise that resolves to the audio volume information.
  */
-export async function audioVolumeGet(client: RequestClient, options?: RequestOptions): Promise<AudioVolumeInfo> {
+export async function audioVolumeGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<AudioVolumeInfo> {
   return client.GET('/audio/volume', options);
 }
 
@@ -65,7 +66,7 @@ export async function audioVolumeGet(client: RequestClient, options?: RequestOpt
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function audioVolumeSet(client: RequestClient, params: AudioVolumeParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function audioVolumeSet<C extends RequestClient>(client: C, params: AudioVolumeParams, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   const { volume, silent } = params;
 
   if (typeof volume !== 'number' || volume < 0 || volume > 100) {

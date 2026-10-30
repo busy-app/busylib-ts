@@ -1,4 +1,5 @@
-import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient } from 'BusyBar/client/types';
+import type { RequestOptionsFor } from 'BusyBar/client/types.internal';
 import type { BleStatusResponse } from 'BusyBar/scopes/ble/types';
 import type { SuccessResponse } from 'BusyBar/types';
 
@@ -11,7 +12,7 @@ import type { SuccessResponse } from 'BusyBar/types';
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function bleEnable(client: RequestClient, options?: RequestOptions): Promise<SuccessResponse> {
+export async function bleEnable<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   return client.POST('/ble/enable', options);
 }
 
@@ -24,7 +25,7 @@ export async function bleEnable(client: RequestClient, options?: RequestOptions)
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function bleDisable(client: RequestClient, options?: RequestOptions): Promise<SuccessResponse> {
+export async function bleDisable<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   return client.POST('/ble/disable', options);
 }
 
@@ -37,7 +38,7 @@ export async function bleDisable(client: RequestClient, options?: RequestOptions
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function bleUnpair(client: RequestClient, options?: RequestOptions): Promise<SuccessResponse> {
+export async function bleUnpair<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   return client.DELETE('/ble/pairing', options);
 }
 
@@ -50,6 +51,6 @@ export async function bleUnpair(client: RequestClient, options?: RequestOptions)
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<BleStatusResponse>} A promise that resolves to the BLE status.
  */
-export async function bleStatusGet(client: RequestClient, options?: RequestOptions): Promise<BleStatusResponse> {
+export async function bleStatusGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<BleStatusResponse> {
   return client.GET('/ble/status', options);
 }

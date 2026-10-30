@@ -4,7 +4,7 @@
 
 import { MAPS } from '#font-maps';
 
-/** Fonts available in DisplayDraw. */
+/** Fonts available in displayDraw. */
 export type DeviceFont = 'tiny' | 'small' | 'normal' | 'condensed' | 'bold' | 'large' | 'extra_large' | 'global' | 'superscript';
 
 /** One font as stored in maps/<font>.json. */

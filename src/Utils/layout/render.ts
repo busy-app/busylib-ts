@@ -1,4 +1,4 @@
-// Placement: measured tree → flat elements[] for DisplayDraw. Coordinates are absolute from the screen's top-left, and elements keep the default align.
+// Placement: measured tree → flat elements[] for displayDraw. Coordinates are absolute from the screen's top-left, and elements keep the default align.
 
 import type { DisplayDrawParams } from 'BusyBar/scopes/display/types';
 import { measure, type Measured } from 'Utils/layout/measure';
@@ -139,7 +139,7 @@ function place(m: Measured, baseX: number, baseY: number, display: 'front' | 'ba
 }
 
 /**
- * Turns a leaf into a DisplayDraw element, dropping layout-only fields. A rectangle's width/height are element fields and stay.
+ * Turns a leaf into a displayDraw element, dropping layout-only fields. A rectangle's width/height are element fields and stay.
  *
  * Copied key by key into one object: spreading and then deleting builds two and reshapes both.
  */
@@ -168,7 +168,7 @@ function toElement(node: Node, x: number, y: number, display: 'front' | 'back'):
   return out as Element;
 }
 
-/** Lays out the tree and returns the elements for DisplayDraw. */
+/** Lays out the tree and returns the elements for displayDraw. */
 export function render(root: Node, options: FrameOptions = {}): Element[] {
   const display = options.display ?? 'front';
   const measured = measure(root);

@@ -1,4 +1,3 @@
-import { bodySerializer } from './body';
 import type { ApiClient, HttpMethod } from './types';
 import type { ParseAs } from './types.internal';
 
@@ -93,17 +92,26 @@ export async function sendRequest(
   return { error, response };
 }
 
-// A plain object or array sent as JSON, the usual body, skips the checks for binary bodies in bodySerializer; the result is the same.
+// The usual body, a plain object or array, goes to JSON first. A body fetch takes itself goes as it is: binary data, form data, or a string sent as something other than JSON. Anything else is JSON.
 function serialize(body: unknown, headers: Record<string, string>): BodyInit {
-  if (
-    headers['content-type'] === 'application/json' &&
-    typeof body === 'object' &&
-    body !== null &&
-    (Array.isArray(body) || Object.getPrototypeOf(body) === Object.prototype)
-  ) {
+  if (typeof body === 'object' && body !== null && (Array.isArray(body) || Object.getPrototypeOf(body) === Object.prototype)) {
     return JSON.stringify(body);
   }
-  return bodySerializer(body, headers) as BodyInit;
+  if (isRawBody(body) || (typeof body === 'string' && !headers['content-type']?.includes('json'))) {
+    return body as BodyInit;
+  }
+  return JSON.stringify(body);
+}
+
+// The device firmware has no Blob, FormData or URLSearchParams, hence the typeof checks; Buffer and Uint8Array are ArrayBuffer views.
+function isRawBody(body: unknown): boolean {
+  return (
+    body instanceof ArrayBuffer ||
+    ArrayBuffer.isView(body) ||
+    (typeof Blob !== 'undefined' && body instanceof Blob) ||
+    (typeof FormData !== 'undefined' && body instanceof FormData) ||
+    (typeof URLSearchParams !== 'undefined' && body instanceof URLSearchParams)
+  );
 }
 
 // Header names are lowercased so the same header from several sources ends up once; `null` drops a header and an array sends several values.

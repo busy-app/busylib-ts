@@ -1,4 +1,5 @@
-import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient } from 'BusyBar/client/types';
+import type { RequestOptionsFor } from 'BusyBar/client/types.internal';
 import type {
   AutoUpdateSettings,
   UpdateAutoUpdateParams,
@@ -21,7 +22,11 @@ import type { SuccessResponse } from 'BusyBar/types';
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves when upload is complete.
  */
-export async function updateFromFile(client: RequestClient, params: UpdateFromFileParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function updateFromFile<C extends RequestClient>(
+  client: C,
+  params: UpdateFromFileParams,
+  options?: RequestOptionsFor<C>
+): Promise<SuccessResponse> {
   const { file } = params;
 
   return client.POST('/update', {
@@ -42,7 +47,7 @@ export async function updateFromFile(client: RequestClient, params: UpdateFromFi
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves to the update check result.
  */
-export async function updateCheck(client: RequestClient, options?: RequestOptions): Promise<SuccessResponse> {
+export async function updateCheck<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   return client.POST('/update/check', options);
 }
 
@@ -55,7 +60,7 @@ export async function updateCheck(client: RequestClient, options?: RequestOption
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<UpdateStatus>} A promise that resolves to the update status.
  */
-export async function updateStatusGet(client: RequestClient, options?: RequestOptions): Promise<UpdateStatus> {
+export async function updateStatusGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<UpdateStatus> {
   return client.GET('/update/status', options);
 }
 
@@ -70,7 +75,11 @@ export async function updateStatusGet(client: RequestClient, options?: RequestOp
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<UpdateChangelog>} A promise that resolves to the changelog content.
  */
-export async function updateChangelogGet(client: RequestClient, params: UpdateChangelogParams, options?: RequestOptions): Promise<UpdateChangelog> {
+export async function updateChangelogGet<C extends RequestClient>(
+  client: C,
+  params: UpdateChangelogParams,
+  options?: RequestOptionsFor<C>
+): Promise<UpdateChangelog> {
   const { version } = params;
 
   return client.GET('/update/changelog', {
@@ -94,7 +103,7 @@ export async function updateChangelogGet(client: RequestClient, params: UpdateCh
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful initiation.
  */
-export async function updateInstall(client: RequestClient, params: UpdateInstallParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function updateInstall<C extends RequestClient>(client: C, params: UpdateInstallParams, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   const { version } = params;
 
   return client.POST('/update/install', {
@@ -116,7 +125,7 @@ export async function updateInstall(client: RequestClient, params: UpdateInstall
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful abort.
  */
-export async function updateAbort(client: RequestClient, options?: RequestOptions): Promise<SuccessResponse> {
+export async function updateAbort<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   return client.POST('/update/abort_download', options);
 }
 
@@ -129,7 +138,7 @@ export async function updateAbort(client: RequestClient, options?: RequestOption
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<AutoUpdateSettings>} A promise that resolves to the current auto-update settings.
  */
-export async function updateAutoUpdateGet(client: RequestClient, options?: RequestOptions): Promise<AutoUpdateSettings> {
+export async function updateAutoUpdateGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<AutoUpdateSettings> {
   return client.GET('/update/autoupdate', options);
 }
 
@@ -146,7 +155,11 @@ export async function updateAutoUpdateGet(client: RequestClient, options?: Reque
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful update of settings.
  */
-export async function updateAutoUpdateSet(client: RequestClient, params: UpdateAutoUpdateParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function updateAutoUpdateSet<C extends RequestClient>(
+  client: C,
+  params: UpdateAutoUpdateParams,
+  options?: RequestOptionsFor<C>
+): Promise<SuccessResponse> {
   const { is_enabled, interval_start, interval_end } = params;
 
   return client.POST('/update/autoupdate', {

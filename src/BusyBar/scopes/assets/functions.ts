@@ -1,4 +1,5 @@
-import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient } from 'BusyBar/client/types';
+import type { RequestOptionsFor } from 'BusyBar/client/types.internal';
 import type { AssetsDeleteParams, AssetsUploadParams } from 'BusyBar/scopes/assets/types';
 import type { SuccessResponse } from 'BusyBar/types';
 
@@ -15,7 +16,7 @@ import type { SuccessResponse } from 'BusyBar/types';
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} Result of the upload operation.
  */
-export async function assetsUpload(client: RequestClient, params: AssetsUploadParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function assetsUpload<C extends RequestClient>(client: C, params: AssetsUploadParams, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   const { application_name, file, data } = params;
 
   return client.POST('/assets/upload', {
@@ -44,7 +45,7 @@ export async function assetsUpload(client: RequestClient, params: AssetsUploadPa
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} Result of the delete operation.
  */
-export async function assetsDelete(client: RequestClient, params: AssetsDeleteParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function assetsDelete<C extends RequestClient>(client: C, params: AssetsDeleteParams, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   const { application_name } = params;
 
   return client.DELETE('/assets/upload', {

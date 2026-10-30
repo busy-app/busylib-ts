@@ -26,7 +26,8 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable", "WebWorker"],
     "resolveJsonModule": true,
 
-    "useDefineForClassFields": true,
+    // Fields become assignments in the constructor: dist carries no ES2022 field declarations, which an app built for es2020 would turn into _defineProperty helpers.
+    "useDefineForClassFields": false,
     "esModuleInterop": true,
     "importHelpers": true,
     "skipLibCheck": true,

@@ -8,12 +8,12 @@ export type StorageFileElement = components['schemas']['StorageFileElement'];
 export type StorageDirElement = components['schemas']['StorageDirElement'];
 export type StorageReadResponse = ArrayBuffer | Blob;
 export type StorageStatus = components['schemas']['StorageStatus'];
-export type StorageWriteQuery = operations['writeStorageFile']['parameters']['query'];
-export type StorageReadQuery = operations['readStorageFile']['parameters']['query'];
-export type StorageListQuery = operations['listStorageFiles']['parameters']['query'];
-export type StorageRemoveQuery = operations['removeStorageFile']['parameters']['query'];
-export type StorageCreateDirQuery = operations['createStorageDir']['parameters']['query'];
-export type StorageRenameQuery = operations['RenameStorageFile']['parameters']['query'];
+type StorageWriteQuery = operations['writeStorageFile']['parameters']['query'];
+type StorageReadQuery = operations['readStorageFile']['parameters']['query'];
+type StorageListQuery = operations['listStorageFiles']['parameters']['query'];
+type StorageRemoveQuery = operations['removeStorageFile']['parameters']['query'];
+type StorageCreateDirQuery = operations['createStorageDir']['parameters']['query'];
+type StorageRenameQuery = operations['RenameStorageFile']['parameters']['query'];
 
 export interface StorageUploadFileParams extends StorageWriteQuery {
   file: BusyFile;

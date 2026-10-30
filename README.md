@@ -37,7 +37,7 @@ npm i @busy-app/busy-lib
 
 ## BUSY Bar HTTP API
 
-`BusyBar` is a single class that talks to the BUSY Bar over HTTP - a typed wrapper around the [HTTP API](https://docs.busy.app/bar/dev/http-api). It aggregates every namespace - `System*`, `Display*`, `Audio*`, `Wifi*`, `Storage*`, `Settings*`, `Ble*`, `Input*`, `SmartHome*`, `Account*`, `Apps*`, `Assets*`, `Busy*`, `Time*`, `Update*` - so everything can be called from one instance. All methods are async and return typed results.
+`BusyBar` is a single class that talks to the BUSY Bar over HTTP - a typed wrapper around the [HTTP API](https://docs.busy.app/bar/dev/http-api). It aggregates every namespace - `system*`, `display*`, `audio*`, `wifi*`, `storage*`, `settings*`, `ble*`, `input*`, `smartHome*`, `account*`, `apps*`, `assets*`, `busy*`, `time*`, `update*` - so everything can be called from one instance. All methods are async and return typed results.
 
 Every method is also exported as a standalone function, so a bundle can include only the requests it makes - see [Tree-shakable functions](#tree-shakable-functions).
 
@@ -50,7 +50,7 @@ const bar = new BusyBar({
   addr: '10.0.4.20' // the BUSY Bar's IP address
 });
 
-const status = await bar.SystemStatusGet();
+const status = await bar.systemStatusGet();
 ```
 
 Since every call is a network request to a physical device, any method may reject. What you catch depends on the error:
@@ -68,7 +68,7 @@ Methods that take an API payload accept it as the first argument, followed by an
 const controller = new AbortController();
 
 try {
-  await bar.SettingsNameSet(
+  await bar.settingsNameSet(
     {
       name: 'My BUSY Bar' // the API payload
     },
@@ -132,7 +132,7 @@ bar.setHTTPAccessPassword('<new-password>'); // change at runtime
 
 ### Tree-shakable functions
 
-`new BusyBar()` brings every method into the bundle, because bundlers cannot drop unused methods of a class. When size matters, use a client with standalone functions instead: each `BusyBar` method has a corresponding camelCase function (`DisplayDraw` → `displayDraw`) that takes the client as its first argument, and the bundle includes only the functions you import.
+`new BusyBar()` brings every method into the bundle, because bundlers cannot drop unused methods of a class. When size matters, use a client with standalone functions instead: each `BusyBar` method has a function of the same name (`bar.displayDraw` → `displayDraw`) that takes the client as its first argument, and the bundle includes only the functions you import.
 
 ```ts
 import { BusyBarClient, displayClear, displayDraw } from '@busy-app/busy-lib';
@@ -141,7 +141,7 @@ const client = new BusyBarClient({
   addr: '10.0.4.20'
 });
 
-await displayClear(client); // same as bar.DisplayClear()
+await displayClear(client); // same as bar.displayClear()
 await displayDraw(client, {
   application_name: 'my_app',
   elements: [{
@@ -171,8 +171,8 @@ await displayDraw(bar.client, { application_name: 'my_app', elements: [] });
 `BusyBar` methods are bound to their instance, so they keep working when destructured or passed as callbacks:
 
 ```ts
-const { DisplayClear } = bar;
-await DisplayClear();
+const { displayClear } = bar;
+await displayClear();
 ```
 
 ### Direct requests
@@ -182,7 +182,7 @@ Every endpoint has a method, but a request can also be sent by its path with the
 ```ts
 const controller = new AbortController();
 
-// the frame as the device sends it, without the decoding DisplayScreenFrameGet does
+// the frame as the device sends it, without the decoding displayScreenFrameGet does
 const frame = await bar.client.GET('/screen', {
   params: { query: { display: 0 } },
   parseAs: 'blob',
@@ -195,7 +195,7 @@ await bar.client.request('GET', '/status', { signal: controller.signal });
 
 ### Apps on the BUSY Bar
 
-An app that runs on the BUSY Bar talks to the device it runs on, and most of what `BusyBarClient` does is not needed there: requests from the device itself are always allowed, the firmware checks the app's `api_version` when installing and launching it, and there is no proxy. Use `BusyBarAppClient` instead - it adds only a timeout and `FetchError` on top of `fetch`, with no authentication headers and no API version negotiation. Apps run in JerryScript, where every layer of JS adds to the time of each request, so a lighter client makes the display respond faster.
+An app that runs on the BUSY Bar talks to the device it runs on, and most of what `BusyBarClient` does is not needed there: requests from the device itself are always allowed, the firmware checks the app's `api_version` when installing and launching it, and there is no proxy. Use `BusyBarAppClient` instead - it adds only `FetchError` on top of `fetch`, with no authentication headers and no API version negotiation. Apps run in JerryScript, where every layer of JS adds to the time of each request, so a lighter client makes the display respond faster.
 
 ```ts
 import { BusyBarAppClient, displayDraw } from '@busy-app/busy-lib';
@@ -213,18 +213,29 @@ await displayDraw(client, {
 });
 ```
 
-`BusyBarAppClient` works with every standalone function and has the same `GET`, `POST`, `PUT`, `DELETE` and `request` for [direct requests](#direct-requests). It takes `addr` (`localhost` by default) and `timeout` (3000ms by default, `0` disables it).
+`BusyBarAppClient` works with every standalone function and has the same `GET`, `POST`, `PUT`, `DELETE` and `request` for [direct requests](#direct-requests). It takes `addr` (a host or an origin, `localhost` by default, used as is: unlike `BusyBarClient`, it does not know the BUSY proxy).
+
+It takes no `timeout` or `signal`: the firmware cannot cancel a request, so a timeout would only reject the promise while the request kept running and holding memory. With this client, the functions and direct requests do not accept them in TypeScript; JavaScript that passes them gets a warning in the device log, once per client, and the app keeps running without them. The firmware fails a request itself when no data comes for too long, with an `Error` named `TimeoutError`; other network failures are an `Error` with the firmware's message.
+
+```ts
+// TypeScript error: a request from an app cannot be cancelled
+await displayDraw(client, params, { timeout: 1000 });
+```
 
 `BusyBarClient` works on the device too, but it asks for `/version` before the first request and runs the full pipeline for every request, which shows in how fast the display responds.
 
-Firmware limits, for any client:
+Firmware limits for `BusyBarClient` on the device:
 
 - **A timeout does not cancel the request.** The firmware cannot abort a request, so a timeout only rejects the promise, and the request itself runs to the end. The rejection is an `Error` with `name === 'TimeoutError'`, not a `DOMException` - it is a stub in the firmware
 - **`signal` has no effect.** `AbortController` is a stub in the firmware, and its `fetch` ignores `signal`
 
+### API version
+
+`API_SEMVER` is the version of the BUSY Bar HTTP API spec the library is written for. A device reports its own version as `api_semver` from `/version`, and `bar.apiSemver` holds it after the first request. A device with another version may have endpoints the library has no methods for, or lack some that it has.
+
 ### Pitfalls
 
-- **Protocol is auto-added.** `addr` defaults to `http://`, except the BUSY proxy host, which defaults to `https://`. Specify the protocol explicitly to override
+- **Protocol is auto-added.** An `addr` without a protocol gets `http://`, except the BUSY proxy host, which gets `https://` from `BusyBar` and `BusyBarClient`; `BusyBarAppClient` does not know the proxy and always adds `http://`. Specify the protocol explicitly to override
 
 ---
 
@@ -331,7 +342,7 @@ errorCallback: (err) => {
 frame comes from:
 
 - **From a live `StateStream`** - already RGBA. The worker decodes and converts each frame for you, so you render it directly
-- **From an HTTP `DisplayScreenFrameGet`** - defaults to BGR; set the optional `format` to `'rgba'`
+- **From an HTTP `displayScreenFrameGet`** - defaults to BGR; set the optional `format` to `'rgba'`
 
 The renderer knows nothing about the device - it just draws a pixel grid. Any `Uint8Array` / `Uint8ClampedArray` of `width × height × 4` bytes works, whether it came from the device, a file, or one you built yourself:
 

@@ -11,9 +11,9 @@ export type RectangleElement = components['schemas']['RectangleElement'];
 export type XpmBitmapElement = components['schemas']['XpmBitmapElement'];
 export type DisplayBrightnessInfo = components['schemas']['DisplayBrightnessInfo'];
 export type ScreenResponse = components['schemas']['ScreenResponse'];
-export type ClearDisplayQuery = NonNullable<operations['clearDisplay']['parameters']['query']>;
-export type DeletionParameters = components['schemas']['DeletionParameters'];
-export type ScreenQuery = paths['/screen']['get']['parameters']['query'];
+type ClearDisplayQuery = NonNullable<operations['clearDisplay']['parameters']['query']>;
+type DeletionParameters = components['schemas']['DeletionParameters'];
+type ScreenQuery = paths['/screen']['get']['parameters']['query'];
 
 export interface DisplayDrawParams extends DisplayElements {}
 

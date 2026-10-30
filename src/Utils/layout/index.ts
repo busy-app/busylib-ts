@@ -1,4 +1,4 @@
-// Screen layout: Row / Column / Stack → elements[] for DisplayDraw.
+// Screen layout: Row / Column / Stack → elements[] for displayDraw.
 //
 //     render(
 //       row({ justify: 'center', align: 'baseline', gap: 1 }, [

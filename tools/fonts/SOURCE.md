@@ -12,4 +12,4 @@ pnpm fonts:build
 
 Commit the regenerated maps alongside the fonts — `pnpm fonts:check` fails when a map no longer matches its `.font`.
 
-Only the fonts DisplayDraw can reach are kept; `busy_regular_14` is left out because the API does not expose it.
+Only the fonts displayDraw can reach are kept; `busy_regular_14` is left out because the API does not expose it.

@@ -11,7 +11,6 @@ export type BusyBarConfig = {
 
 export type BusyBarAppConfig = {
   addr?: string;
-  timeout?: number;
 };
 
 export interface RequestOptions {
@@ -44,9 +43,9 @@ export type RequestInitFor<M extends HttpMethod, P extends PathsWithMethod<M>> =
   RequiredKeys<TransportInit<Operation<M, P>>> extends never ? TransportInit<Operation<M, P>> | undefined : TransportInit<Operation<M, P>>;
 
 /**
- * The init parameter is optional only when the endpoint has no required `params` or `body`.
+ * The init parameter is optional only when the endpoint has no required `params` or `body`; `O` is the request options the client takes next to it.
  */
-export type InitParam<I> = RequiredKeys<I> extends never ? [init?: I & RequestOptions] : [init: I & RequestOptions];
+export type InitParam<I, O = RequestOptions> = RequiredKeys<I> extends never ? [init?: I & O] : [init: I & O];
 
 /**
  * Successful response data for the given method and path, typed by the schema and `parseAs`.

@@ -17,7 +17,7 @@ const fontsDir = resolve(root, 'tools/fonts')
 const outDir = resolve(root, 'src/Utils/font/maps')
 
 /**
- * DisplayDraw font names → firmware files. Source: api_display.c (font_names/font_paths) + font_registry/fonts.h. Fonts unreachable through the API are omitted.
+ * displayDraw font names → firmware files. Source: api_display.c (font_names/font_paths) + font_registry/fonts.h. Fonts unreachable through the API are omitted.
  */
 const DEVICE_FONTS = {
   tiny: 'busy_tiny',

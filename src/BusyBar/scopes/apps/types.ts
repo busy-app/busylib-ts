@@ -6,9 +6,10 @@ export type AppInfo = components['schemas']['AppInfo'];
 export type AppListResult = components['schemas']['AppListResult'];
 export type AppStageResult = components['schemas']['AppStageResult'];
 export type AppSettingsDocument = components['schemas']['AppSettingsDocument'];
-export type AppsInstallQuery = operations['installApp']['parameters']['query'];
-export type AppsRemoveQuery = operations['removeApp']['parameters']['query'];
-export type AppsSettingsQuery = operations['getAppSettings']['parameters']['query'];
+type AppsInstallQuery = operations['installApp']['parameters']['query'];
+type AppsRemoveQuery = operations['removeApp']['parameters']['query'];
+type AppsLaunchQuery = operations['launchApp']['parameters']['query'];
+type AppsSettingsQuery = operations['getAppSettings']['parameters']['query'];
 
 export interface AppsStageParams {
   file: BusyFile;
@@ -17,6 +18,8 @@ export interface AppsStageParams {
 export interface AppsInstallParams extends AppsInstallQuery {}
 
 export interface AppsRemoveParams extends AppsRemoveQuery {}
+
+export interface AppsLaunchParams extends AppsLaunchQuery {}
 
 export interface AppsSettingsGetParams extends AppsSettingsQuery {}
 
