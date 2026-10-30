@@ -1,8 +1,8 @@
-// Layout tree types. The tree exists only in TS; the engine flattens it into DisplayDraw's elements[]. Leaf fields come from busy-lib and pass through, minus x/y/align, plus sizes where needed.
+// Layout tree types. The tree exists only in TS; the engine flattens it into displayDraw's elements[]. Leaf fields come from busy-lib and pass through, minus x/y/align, plus sizes where needed.
 
 import type { DisplayDrawParams } from 'BusyBar/scopes/display/types';
 
-// The discriminated union lives in the DisplayDraw params, not in DisplayElement.
+// The discriminated union lives in the displayDraw params, not in DisplayElement.
 type Element = NonNullable<DisplayDrawParams['elements']>[number];
 
 type ByType<T extends Element['type']> = Extract<Element, { type: T }>;
@@ -16,7 +16,7 @@ type Computed = 'x' | 'y' | 'align';
 /** Required in busy-lib's types, but defaulted by the schema. */
 type Defaulted = 'display' | 'color' | 'opacity' | 'fill' | 'fill_colors' | 'border_width' | 'border_color';
 
-/** A DisplayDraw leaf without computed fields and with defaults optional. */
+/** A displayDraw leaf without computed fields and with defaults optional. */
 type Leaf<T> = T extends unknown ? Optional<Omit<T, Computed>, Defaulted> : never;
 
 /** A size the engine can't measure itself. Distributive to preserve unions. */
@@ -40,7 +40,7 @@ export type XpmBitmapNode = WithSize<Leaf<ByType<'xpmbitmap'>>>;
 /** Countdown. Explicit size: the text is rendered by the firmware. */
 export type CountdownNode = WithSize<Leaf<ByType<'countdown'>>>;
 
-/** A leaf: what becomes a DisplayDraw element. */
+/** A leaf: what becomes a displayDraw element. */
 export type LeafNode = Offset & (TextNode | ImageNode | AnimationNode | RectangleNode | CountdownNode | XpmBitmapNode);
 
 /** Manual offset from where the container placed the node. */

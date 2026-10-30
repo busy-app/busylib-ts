@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`scenarios > AccountBackendGet 1`] = `
+exports[`scenarios > accountBackendGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -177,7 +177,7 @@ exports[`scenarios > AccountBackendGet 1`] = `
 }
 `;
 
-exports[`scenarios > AccountBackendSet 1`] = `
+exports[`scenarios > accountBackendSet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -384,7 +384,7 @@ exports[`scenarios > AccountBackendSet 1`] = `
 }
 `;
 
-exports[`scenarios > AccountInfoGet 1`] = `
+exports[`scenarios > accountInfoGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -561,7 +561,7 @@ exports[`scenarios > AccountInfoGet 1`] = `
 }
 `;
 
-exports[`scenarios > AccountLink 1`] = `
+exports[`scenarios > accountLink 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -738,7 +738,7 @@ exports[`scenarios > AccountLink 1`] = `
 }
 `;
 
-exports[`scenarios > AccountStateGet 1`] = `
+exports[`scenarios > accountStateGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -915,7 +915,7 @@ exports[`scenarios > AccountStateGet 1`] = `
 }
 `;
 
-exports[`scenarios > AccountUnlink 1`] = `
+exports[`scenarios > accountUnlink 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -1092,7 +1092,7 @@ exports[`scenarios > AccountUnlink 1`] = `
 }
 `;
 
-exports[`scenarios > AppsInstall 1`] = `
+exports[`scenarios > appsInstall 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -1269,7 +1269,7 @@ exports[`scenarios > AppsInstall 1`] = `
 }
 `;
 
-exports[`scenarios > AppsList 1`] = `
+exports[`scenarios > appsList 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -1446,7 +1446,7 @@ exports[`scenarios > AppsList 1`] = `
 }
 `;
 
-exports[`scenarios > AppsRemove 1`] = `
+exports[`scenarios > appsRemove 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -1623,7 +1623,7 @@ exports[`scenarios > AppsRemove 1`] = `
 }
 `;
 
-exports[`scenarios > AppsSettingsGet 1`] = `
+exports[`scenarios > appsSettingsGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -1800,7 +1800,7 @@ exports[`scenarios > AppsSettingsGet 1`] = `
 }
 `;
 
-exports[`scenarios > AppsSettingsReset 1`] = `
+exports[`scenarios > appsSettingsReset 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -1977,7 +1977,7 @@ exports[`scenarios > AppsSettingsReset 1`] = `
 }
 `;
 
-exports[`scenarios > AppsSettingsSet 1`] = `
+exports[`scenarios > appsSettingsSet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -2190,7 +2190,7 @@ exports[`scenarios > AppsSettingsSet 1`] = `
 }
 `;
 
-exports[`scenarios > AppsStage (ArrayBuffer) 1`] = `
+exports[`scenarios > appsStage (ArrayBuffer) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -2373,7 +2373,7 @@ exports[`scenarios > AppsStage (ArrayBuffer) 1`] = `
 }
 `;
 
-exports[`scenarios > AppsStage (Blob) 1`] = `
+exports[`scenarios > appsStage (Blob) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -2556,7 +2556,7 @@ exports[`scenarios > AppsStage (Blob) 1`] = `
 }
 `;
 
-exports[`scenarios > AppsStage (Buffer) 1`] = `
+exports[`scenarios > appsStage (Buffer) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -2739,7 +2739,7 @@ exports[`scenarios > AppsStage (Buffer) 1`] = `
 }
 `;
 
-exports[`scenarios > AppsStage (Uint8Array) 1`] = `
+exports[`scenarios > appsStage (Uint8Array) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -2922,7 +2922,7 @@ exports[`scenarios > AppsStage (Uint8Array) 1`] = `
 }
 `;
 
-exports[`scenarios > AssetsDelete 1`] = `
+exports[`scenarios > assetsDelete 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -3099,7 +3099,7 @@ exports[`scenarios > AssetsDelete 1`] = `
 }
 `;
 
-exports[`scenarios > AssetsUpload 1`] = `
+exports[`scenarios > assetsUpload 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -3282,7 +3282,7 @@ exports[`scenarios > AssetsUpload 1`] = `
 }
 `;
 
-exports[`scenarios > AudioPlay (path) 1`] = `
+exports[`scenarios > audioPlay (path) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -3483,7 +3483,7 @@ exports[`scenarios > AudioPlay (path) 1`] = `
 }
 `;
 
-exports[`scenarios > AudioPlay (stock) 1`] = `
+exports[`scenarios > audioPlay (stock) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -3684,7 +3684,7 @@ exports[`scenarios > AudioPlay (stock) 1`] = `
 }
 `;
 
-exports[`scenarios > AudioStop 1`] = `
+exports[`scenarios > audioStop 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -3861,7 +3861,7 @@ exports[`scenarios > AudioStop 1`] = `
 }
 `;
 
-exports[`scenarios > AudioVolumeGet 1`] = `
+exports[`scenarios > audioVolumeGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -4038,7 +4038,7 @@ exports[`scenarios > AudioVolumeGet 1`] = `
 }
 `;
 
-exports[`scenarios > AudioVolumeSet 1`] = `
+exports[`scenarios > audioVolumeSet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -4215,7 +4215,7 @@ exports[`scenarios > AudioVolumeSet 1`] = `
 }
 `;
 
-exports[`scenarios > BleDisable 1`] = `
+exports[`scenarios > bleDisable 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -4392,7 +4392,7 @@ exports[`scenarios > BleDisable 1`] = `
 }
 `;
 
-exports[`scenarios > BleEnable 1`] = `
+exports[`scenarios > bleEnable 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -4569,7 +4569,7 @@ exports[`scenarios > BleEnable 1`] = `
 }
 `;
 
-exports[`scenarios > BleStatusGet 1`] = `
+exports[`scenarios > bleStatusGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -4746,7 +4746,7 @@ exports[`scenarios > BleStatusGet 1`] = `
 }
 `;
 
-exports[`scenarios > BleUnpair 1`] = `
+exports[`scenarios > bleUnpair 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -4923,7 +4923,7 @@ exports[`scenarios > BleUnpair 1`] = `
 }
 `;
 
-exports[`scenarios > BusyProfileGet 1`] = `
+exports[`scenarios > busyProfileGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -5100,7 +5100,7 @@ exports[`scenarios > BusyProfileGet 1`] = `
 }
 `;
 
-exports[`scenarios > BusyProfileSet 1`] = `
+exports[`scenarios > busyProfileSet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -5367,7 +5367,7 @@ exports[`scenarios > BusyProfileSet 1`] = `
 }
 `;
 
-exports[`scenarios > BusySnapshotGet 1`] = `
+exports[`scenarios > busySnapshotGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -5544,7 +5544,7 @@ exports[`scenarios > BusySnapshotGet 1`] = `
 }
 `;
 
-exports[`scenarios > BusySnapshotSet 1`] = `
+exports[`scenarios > busySnapshotSet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -5787,7 +5787,7 @@ exports[`scenarios > BusySnapshotSet 1`] = `
 }
 `;
 
-exports[`scenarios > DisplayBrightnessGet 1`] = `
+exports[`scenarios > displayBrightnessGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -5964,7 +5964,7 @@ exports[`scenarios > DisplayBrightnessGet 1`] = `
 }
 `;
 
-exports[`scenarios > DisplayBrightnessSet (auto) 1`] = `
+exports[`scenarios > displayBrightnessSet (auto) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -6141,7 +6141,7 @@ exports[`scenarios > DisplayBrightnessSet (auto) 1`] = `
 }
 `;
 
-exports[`scenarios > DisplayBrightnessSet 1`] = `
+exports[`scenarios > displayBrightnessSet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -6318,7 +6318,7 @@ exports[`scenarios > DisplayBrightnessSet 1`] = `
 }
 `;
 
-exports[`scenarios > DisplayClear (params) 1`] = `
+exports[`scenarios > displayClear (params) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -6513,7 +6513,7 @@ exports[`scenarios > DisplayClear (params) 1`] = `
 }
 `;
 
-exports[`scenarios > DisplayClear 1`] = `
+exports[`scenarios > displayClear 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -6696,7 +6696,7 @@ exports[`scenarios > DisplayClear 1`] = `
 }
 `;
 
-exports[`scenarios > DisplayDraw (priority) 1`] = `
+exports[`scenarios > displayDraw (priority) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -6963,7 +6963,7 @@ exports[`scenarios > DisplayDraw (priority) 1`] = `
 }
 `;
 
-exports[`scenarios > DisplayDraw 1`] = `
+exports[`scenarios > displayDraw 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -7230,7 +7230,7 @@ exports[`scenarios > DisplayDraw 1`] = `
 }
 `;
 
-exports[`scenarios > DisplayScreenFrameGet (binary front) 1`] = `
+exports[`scenarios > displayScreenFrameGet (binary front) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -7407,7 +7407,7 @@ exports[`scenarios > DisplayScreenFrameGet (binary front) 1`] = `
 }
 `;
 
-exports[`scenarios > DisplayScreenFrameGet (rgba back) 1`] = `
+exports[`scenarios > displayScreenFrameGet (rgba back) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -7584,7 +7584,7 @@ exports[`scenarios > DisplayScreenFrameGet (rgba back) 1`] = `
 }
 `;
 
-exports[`scenarios > DisplayScreenFrameGet (rgba front) 1`] = `
+exports[`scenarios > displayScreenFrameGet (rgba front) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -7761,7 +7761,7 @@ exports[`scenarios > DisplayScreenFrameGet (rgba front) 1`] = `
 }
 `;
 
-exports[`scenarios > DisplayScreenFrameGet 1`] = `
+exports[`scenarios > displayScreenFrameGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -7938,7 +7938,7 @@ exports[`scenarios > DisplayScreenFrameGet 1`] = `
 }
 `;
 
-exports[`scenarios > InputSend 1`] = `
+exports[`scenarios > inputSend 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -8115,7 +8115,7 @@ exports[`scenarios > InputSend 1`] = `
 }
 `;
 
-exports[`scenarios > SettingsAccessGet 1`] = `
+exports[`scenarios > settingsAccessGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -8292,7 +8292,7 @@ exports[`scenarios > SettingsAccessGet 1`] = `
 }
 `;
 
-exports[`scenarios > SettingsAccessSet (key applies to next requests) 1`] = `
+exports[`scenarios > settingsAccessSet (key applies to next requests) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -8489,7 +8489,7 @@ exports[`scenarios > SettingsAccessSet (key applies to next requests) 1`] = `
 }
 `;
 
-exports[`scenarios > SettingsAccessSet 1`] = `
+exports[`scenarios > settingsAccessSet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -8666,7 +8666,7 @@ exports[`scenarios > SettingsAccessSet 1`] = `
 }
 `;
 
-exports[`scenarios > SettingsAccessTokenCreate 1`] = `
+exports[`scenarios > settingsAccessTokenCreate 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -8861,7 +8861,7 @@ exports[`scenarios > SettingsAccessTokenCreate 1`] = `
 }
 `;
 
-exports[`scenarios > SettingsAccessTokenRevoke 1`] = `
+exports[`scenarios > settingsAccessTokenRevoke 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -9038,7 +9038,7 @@ exports[`scenarios > SettingsAccessTokenRevoke 1`] = `
 }
 `;
 
-exports[`scenarios > SettingsAccessTokensDelete 1`] = `
+exports[`scenarios > settingsAccessTokensDelete 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -9215,7 +9215,7 @@ exports[`scenarios > SettingsAccessTokensDelete 1`] = `
 }
 `;
 
-exports[`scenarios > SettingsAccessTokensGet 1`] = `
+exports[`scenarios > settingsAccessTokensGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -9392,7 +9392,7 @@ exports[`scenarios > SettingsAccessTokensGet 1`] = `
 }
 `;
 
-exports[`scenarios > SettingsNameGet 1`] = `
+exports[`scenarios > settingsNameGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -9569,7 +9569,7 @@ exports[`scenarios > SettingsNameGet 1`] = `
 }
 `;
 
-exports[`scenarios > SettingsNameSet 1`] = `
+exports[`scenarios > settingsNameSet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -9764,7 +9764,7 @@ exports[`scenarios > SettingsNameSet 1`] = `
 }
 `;
 
-exports[`scenarios > SmartHomeErase 1`] = `
+exports[`scenarios > smartHomeErase 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -9941,7 +9941,7 @@ exports[`scenarios > SmartHomeErase 1`] = `
 }
 `;
 
-exports[`scenarios > SmartHomePair 1`] = `
+exports[`scenarios > smartHomePair 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -10118,7 +10118,7 @@ exports[`scenarios > SmartHomePair 1`] = `
 }
 `;
 
-exports[`scenarios > SmartHomePairingGet 1`] = `
+exports[`scenarios > smartHomePairingGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -10295,7 +10295,7 @@ exports[`scenarios > SmartHomePairingGet 1`] = `
 }
 `;
 
-exports[`scenarios > SmartHomeSwitchStateGet 1`] = `
+exports[`scenarios > smartHomeSwitchStateGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -10472,7 +10472,7 @@ exports[`scenarios > SmartHomeSwitchStateGet 1`] = `
 }
 `;
 
-exports[`scenarios > SmartHomeSwitchStateSet 1`] = `
+exports[`scenarios > smartHomeSwitchStateSet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -10673,7 +10673,7 @@ exports[`scenarios > SmartHomeSwitchStateSet 1`] = `
 }
 `;
 
-exports[`scenarios > StorageListGet 1`] = `
+exports[`scenarios > storageListGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -10850,7 +10850,7 @@ exports[`scenarios > StorageListGet 1`] = `
 }
 `;
 
-exports[`scenarios > StorageMkdir 1`] = `
+exports[`scenarios > storageMkdir 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -11027,7 +11027,7 @@ exports[`scenarios > StorageMkdir 1`] = `
 }
 `;
 
-exports[`scenarios > StorageRead (array buffer) 1`] = `
+exports[`scenarios > storageRead (array buffer) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -11204,7 +11204,7 @@ exports[`scenarios > StorageRead (array buffer) 1`] = `
 }
 `;
 
-exports[`scenarios > StorageRead 1`] = `
+exports[`scenarios > storageRead 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -11381,7 +11381,7 @@ exports[`scenarios > StorageRead 1`] = `
 }
 `;
 
-exports[`scenarios > StorageRemove 1`] = `
+exports[`scenarios > storageRemove 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -11558,7 +11558,7 @@ exports[`scenarios > StorageRemove 1`] = `
 }
 `;
 
-exports[`scenarios > StorageRename 1`] = `
+exports[`scenarios > storageRename 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -11735,7 +11735,7 @@ exports[`scenarios > StorageRename 1`] = `
 }
 `;
 
-exports[`scenarios > StorageStatusGet 1`] = `
+exports[`scenarios > storageStatusGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -11912,7 +11912,7 @@ exports[`scenarios > StorageStatusGet 1`] = `
 }
 `;
 
-exports[`scenarios > StorageWrite 1`] = `
+exports[`scenarios > storageWrite 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -12095,7 +12095,7 @@ exports[`scenarios > StorageWrite 1`] = `
 }
 `;
 
-exports[`scenarios > SystemInfoGet 1`] = `
+exports[`scenarios > systemInfoGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -12272,7 +12272,7 @@ exports[`scenarios > SystemInfoGet 1`] = `
 }
 `;
 
-exports[`scenarios > SystemLogDump (params) 1`] = `
+exports[`scenarios > systemLogDump (params) 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -12449,7 +12449,7 @@ exports[`scenarios > SystemLogDump (params) 1`] = `
 }
 `;
 
-exports[`scenarios > SystemLogDump 1`] = `
+exports[`scenarios > systemLogDump 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -12626,7 +12626,7 @@ exports[`scenarios > SystemLogDump 1`] = `
 }
 `;
 
-exports[`scenarios > SystemStatusDeviceGet 1`] = `
+exports[`scenarios > systemStatusDeviceGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -12803,7 +12803,7 @@ exports[`scenarios > SystemStatusDeviceGet 1`] = `
 }
 `;
 
-exports[`scenarios > SystemStatusFirmwareGet 1`] = `
+exports[`scenarios > systemStatusFirmwareGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -12980,7 +12980,7 @@ exports[`scenarios > SystemStatusFirmwareGet 1`] = `
 }
 `;
 
-exports[`scenarios > SystemStatusGet 1`] = `
+exports[`scenarios > systemStatusGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -13157,7 +13157,7 @@ exports[`scenarios > SystemStatusGet 1`] = `
 }
 `;
 
-exports[`scenarios > SystemStatusPowerGet 1`] = `
+exports[`scenarios > systemStatusPowerGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -13334,7 +13334,7 @@ exports[`scenarios > SystemStatusPowerGet 1`] = `
 }
 `;
 
-exports[`scenarios > SystemTransportGet 1`] = `
+exports[`scenarios > systemTransportGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -13511,7 +13511,7 @@ exports[`scenarios > SystemTransportGet 1`] = `
 }
 `;
 
-exports[`scenarios > TimeGet 1`] = `
+exports[`scenarios > timeGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -13688,7 +13688,7 @@ exports[`scenarios > TimeGet 1`] = `
 }
 `;
 
-exports[`scenarios > TimeTimestampSet 1`] = `
+exports[`scenarios > timeTimestampSet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -13865,7 +13865,7 @@ exports[`scenarios > TimeTimestampSet 1`] = `
 }
 `;
 
-exports[`scenarios > TimeTimezoneGet 1`] = `
+exports[`scenarios > timeTimezoneGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -14042,7 +14042,7 @@ exports[`scenarios > TimeTimezoneGet 1`] = `
 }
 `;
 
-exports[`scenarios > TimeTimezoneSet 1`] = `
+exports[`scenarios > timeTimezoneSet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -14219,7 +14219,7 @@ exports[`scenarios > TimeTimezoneSet 1`] = `
 }
 `;
 
-exports[`scenarios > TimeTzListGet 1`] = `
+exports[`scenarios > timeTzListGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -14396,7 +14396,7 @@ exports[`scenarios > TimeTzListGet 1`] = `
 }
 `;
 
-exports[`scenarios > UpdateAbort 1`] = `
+exports[`scenarios > updateAbort 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -14573,7 +14573,7 @@ exports[`scenarios > UpdateAbort 1`] = `
 }
 `;
 
-exports[`scenarios > UpdateAutoUpdateGet 1`] = `
+exports[`scenarios > updateAutoUpdateGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -14750,7 +14750,7 @@ exports[`scenarios > UpdateAutoUpdateGet 1`] = `
 }
 `;
 
-exports[`scenarios > UpdateAutoUpdateSet 1`] = `
+exports[`scenarios > updateAutoUpdateSet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -14957,7 +14957,7 @@ exports[`scenarios > UpdateAutoUpdateSet 1`] = `
 }
 `;
 
-exports[`scenarios > UpdateChangelogGet 1`] = `
+exports[`scenarios > updateChangelogGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -15134,7 +15134,7 @@ exports[`scenarios > UpdateChangelogGet 1`] = `
 }
 `;
 
-exports[`scenarios > UpdateCheck 1`] = `
+exports[`scenarios > updateCheck 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -15311,7 +15311,7 @@ exports[`scenarios > UpdateCheck 1`] = `
 }
 `;
 
-exports[`scenarios > UpdateFromFile 1`] = `
+exports[`scenarios > updateFromFile 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -15494,7 +15494,7 @@ exports[`scenarios > UpdateFromFile 1`] = `
 }
 `;
 
-exports[`scenarios > UpdateInstall 1`] = `
+exports[`scenarios > updateInstall 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -15671,7 +15671,7 @@ exports[`scenarios > UpdateInstall 1`] = `
 }
 `;
 
-exports[`scenarios > UpdateStatusGet 1`] = `
+exports[`scenarios > updateStatusGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -15848,7 +15848,7 @@ exports[`scenarios > UpdateStatusGet 1`] = `
 }
 `;
 
-exports[`scenarios > WifiConnect 1`] = `
+exports[`scenarios > wifiConnect 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -16073,7 +16073,7 @@ exports[`scenarios > WifiConnect 1`] = `
 }
 `;
 
-exports[`scenarios > WifiDisconnect 1`] = `
+exports[`scenarios > wifiDisconnect 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -16250,7 +16250,7 @@ exports[`scenarios > WifiDisconnect 1`] = `
 }
 `;
 
-exports[`scenarios > WifiNetworksGet 1`] = `
+exports[`scenarios > wifiNetworksGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",
@@ -16427,7 +16427,7 @@ exports[`scenarios > WifiNetworksGet 1`] = `
 }
 `;
 
-exports[`scenarios > WifiStatusGet 1`] = `
+exports[`scenarios > wifiStatusGet 1`] = `
 {
   "405": {
     "apiSemver": "2.0.0",

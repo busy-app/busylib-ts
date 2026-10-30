@@ -37,7 +37,7 @@ npm i @busy-app/busy-lib
 
 ## BUSY Bar HTTP API
 
-`BusyBar` is a single class that talks to the BUSY Bar over HTTP - a typed wrapper around the [HTTP API](https://docs.busy.app/bar/dev/http-api). It aggregates every namespace - `System*`, `Display*`, `Audio*`, `Wifi*`, `Storage*`, `Settings*`, `Ble*`, `Input*`, `SmartHome*`, `Account*`, `Apps*`, `Assets*`, `Busy*`, `Time*`, `Update*` - so everything can be called from one instance. All methods are async and return typed results.
+`BusyBar` is a single class that talks to the BUSY Bar over HTTP - a typed wrapper around the [HTTP API](https://docs.busy.app/bar/dev/http-api). It aggregates every namespace - `system*`, `display*`, `audio*`, `wifi*`, `storage*`, `settings*`, `ble*`, `input*`, `smartHome*`, `account*`, `apps*`, `assets*`, `busy*`, `time*`, `update*` - so everything can be called from one instance. All methods are async and return typed results.
 
 Every method is also exported as a standalone function, so a bundle can include only the requests it makes - see [Tree-shakable functions](#tree-shakable-functions).
 
@@ -50,7 +50,7 @@ const bar = new BusyBar({
   addr: '10.0.4.20' // the BUSY Bar's IP address
 });
 
-const status = await bar.SystemStatusGet();
+const status = await bar.systemStatusGet();
 ```
 
 Since every call is a network request to a physical device, any method may reject. What you catch depends on the error:
@@ -68,7 +68,7 @@ Methods that take an API payload accept it as the first argument, followed by an
 const controller = new AbortController();
 
 try {
-  await bar.SettingsNameSet(
+  await bar.settingsNameSet(
     {
       name: 'My BUSY Bar' // the API payload
     },
@@ -132,7 +132,7 @@ bar.setHTTPAccessPassword('<new-password>'); // change at runtime
 
 ### Tree-shakable functions
 
-`new BusyBar()` brings every method into the bundle, because bundlers cannot drop unused methods of a class. When size matters, use a client with standalone functions instead: each `BusyBar` method has a corresponding camelCase function (`DisplayDraw` → `displayDraw`) that takes the client as its first argument, and the bundle includes only the functions you import.
+`new BusyBar()` brings every method into the bundle, because bundlers cannot drop unused methods of a class. When size matters, use a client with standalone functions instead: each `BusyBar` method has a function of the same name (`bar.displayDraw` → `displayDraw`) that takes the client as its first argument, and the bundle includes only the functions you import.
 
 ```ts
 import { BusyBarClient, displayClear, displayDraw } from '@busy-app/busy-lib';
@@ -141,7 +141,7 @@ const client = new BusyBarClient({
   addr: '10.0.4.20'
 });
 
-await displayClear(client); // same as bar.DisplayClear()
+await displayClear(client); // same as bar.displayClear()
 await displayDraw(client, {
   application_name: 'my_app',
   elements: [{
@@ -171,8 +171,8 @@ await displayDraw(bar.client, { application_name: 'my_app', elements: [] });
 `BusyBar` methods are bound to their instance, so they keep working when destructured or passed as callbacks:
 
 ```ts
-const { DisplayClear } = bar;
-await DisplayClear();
+const { displayClear } = bar;
+await displayClear();
 ```
 
 ### Direct requests
@@ -182,7 +182,7 @@ Every endpoint has a method, but a request can also be sent by its path with the
 ```ts
 const controller = new AbortController();
 
-// the frame as the device sends it, without the decoding DisplayScreenFrameGet does
+// the frame as the device sends it, without the decoding displayScreenFrameGet does
 const frame = await bar.client.GET('/screen', {
   params: { query: { display: 0 } },
   parseAs: 'blob',
@@ -331,7 +331,7 @@ errorCallback: (err) => {
 frame comes from:
 
 - **From a live `StateStream`** - already RGBA. The worker decodes and converts each frame for you, so you render it directly
-- **From an HTTP `DisplayScreenFrameGet`** - defaults to BGR; set the optional `format` to `'rgba'`
+- **From an HTTP `displayScreenFrameGet`** - defaults to BGR; set the optional `format` to `'rgba'`
 
 The renderer knows nothing about the device - it just draws a pixel grid. Any `Uint8Array` / `Uint8ClampedArray` of `width × height × 4` bytes works, whether it came from the device, a file, or one you built yourself:
 

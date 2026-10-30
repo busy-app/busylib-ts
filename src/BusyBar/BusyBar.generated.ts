@@ -152,7 +152,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<AccountInfo>} A promise that resolves to the account information.
    */
-  AccountInfoGet(options?: RequestOptions) {
+  accountInfoGet(options?: RequestOptions) {
     return accountInfoGet(this.clientInstance, options);
   }
 
@@ -164,7 +164,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<AccountStatus>} A promise that resolves to the account state.
    */
-  AccountStateGet(options?: RequestOptions) {
+  accountStateGet(options?: RequestOptions) {
     return accountStateGet(this.clientInstance, options);
   }
 
@@ -176,7 +176,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<AccountBackend>} A promise that resolves to the MQTT backend configuration.
    */
-  AccountBackendGet(options?: RequestOptions) {
+  accountBackendGet(options?: RequestOptions) {
     return accountBackendGet(this.clientInstance, options);
   }
 
@@ -192,7 +192,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  AccountBackendSet(params: AccountBackendSetParams, options?: RequestOptions) {
+  accountBackendSet(params: AccountBackendSetParams, options?: RequestOptions) {
     return accountBackendSet(this.clientInstance, params, options);
   }
 
@@ -204,7 +204,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful unlinking.
    */
-  AccountUnlink(options?: RequestOptions) {
+  accountUnlink(options?: RequestOptions) {
     return accountUnlink(this.clientInstance, options);
   }
 
@@ -216,7 +216,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<AccountLink>} A promise that resolves to the link information (e.g., PIN).
    */
-  AccountLink(options?: RequestOptions) {
+  accountLink(options?: RequestOptions) {
     return accountLink(this.clientInstance, options);
   }
 
@@ -230,12 +230,12 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<AppStageResult>} A promise that resolves to the staging result, including the installation key and staged application info.
    */
-  AppsStage(params: AppsStageParams, options?: RequestOptions) {
+  appsStage(params: AppsStageParams, options?: RequestOptions) {
     return appsStage(this.clientInstance, params, options);
   }
 
   /**
-   * Install a staged JavaScript application using the installation key returned by AppsStage.
+   * Install a staged JavaScript application using the installation key returned by appsStage.
    *
    * @param {AppsInstallParams} params - Parameters for the installation.
    *   @param {AppsInstallParams['install_key']} params.install_key - Single-use installation key.
@@ -244,7 +244,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves when the application is installed.
    */
-  AppsInstall(params: AppsInstallParams, options?: RequestOptions) {
+  appsInstall(params: AppsInstallParams, options?: RequestOptions) {
     return appsInstall(this.clientInstance, params, options);
   }
 
@@ -258,7 +258,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves when the application is removed.
    */
-  AppsRemove(params: AppsRemoveParams, options?: RequestOptions) {
+  appsRemove(params: AppsRemoveParams, options?: RequestOptions) {
     return appsRemove(this.clientInstance, params, options);
   }
 
@@ -270,7 +270,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<AppListResult>} A promise that resolves to the list of installed applications.
    */
-  AppsList(options?: RequestOptions) {
+  appsList(options?: RequestOptions) {
     return appsList(this.clientInstance, options);
   }
 
@@ -284,7 +284,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<AppSettingsDocument>} A promise that resolves to the settings document.
    */
-  AppsSettingsGet(params: AppsSettingsGetParams, options?: RequestOptions) {
+  appsSettingsGet(params: AppsSettingsGetParams, options?: RequestOptions) {
     return appsSettingsGet(this.clientInstance, params, options);
   }
 
@@ -299,7 +299,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves when the settings are stored.
    */
-  AppsSettingsSet(params: AppsSettingsSetParams, options?: RequestOptions) {
+  appsSettingsSet(params: AppsSettingsSetParams, options?: RequestOptions) {
     return appsSettingsSet(this.clientInstance, params, options);
   }
 
@@ -313,7 +313,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves when the settings are reset.
    */
-  AppsSettingsReset(params: AppsSettingsResetParams, options?: RequestOptions) {
+  appsSettingsReset(params: AppsSettingsResetParams, options?: RequestOptions) {
     return appsSettingsReset(this.clientInstance, params, options);
   }
 
@@ -329,7 +329,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} Result of the upload operation.
    */
-  AssetsUpload(params: AssetsUploadParams, options?: RequestOptions) {
+  assetsUpload(params: AssetsUploadParams, options?: RequestOptions) {
     return assetsUpload(this.clientInstance, params, options);
   }
 
@@ -343,7 +343,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} Result of the delete operation.
    */
-  AssetsDelete(params: AssetsDeleteParams, options?: RequestOptions) {
+  assetsDelete(params: AssetsDeleteParams, options?: RequestOptions) {
     return assetsDelete(this.clientInstance, params, options);
   }
 
@@ -359,7 +359,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful play command.
    */
-  AudioPlay(params: AudioPlayParams, options?: RequestOptions) {
+  audioPlay(params: AudioPlayParams, options?: RequestOptions) {
     return audioPlay(this.clientInstance, params, options);
   }
 
@@ -371,7 +371,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful stop command.
    */
-  AudioStop(options?: RequestOptions) {
+  audioStop(options?: RequestOptions) {
     return audioStop(this.clientInstance, options);
   }
 
@@ -383,7 +383,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<AudioVolumeInfo>} A promise that resolves to the audio volume information.
    */
-  AudioVolumeGet(options?: RequestOptions) {
+  audioVolumeGet(options?: RequestOptions) {
     return audioVolumeGet(this.clientInstance, options);
   }
 
@@ -397,7 +397,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  AudioVolumeSet(params: AudioVolumeParams, options?: RequestOptions) {
+  audioVolumeSet(params: AudioVolumeParams, options?: RequestOptions) {
     return audioVolumeSet(this.clientInstance, params, options);
   }
 
@@ -409,7 +409,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  BleEnable(options?: RequestOptions) {
+  bleEnable(options?: RequestOptions) {
     return bleEnable(this.clientInstance, options);
   }
 
@@ -421,7 +421,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  BleDisable(options?: RequestOptions) {
+  bleDisable(options?: RequestOptions) {
     return bleDisable(this.clientInstance, options);
   }
 
@@ -433,7 +433,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  BleUnpair(options?: RequestOptions) {
+  bleUnpair(options?: RequestOptions) {
     return bleUnpair(this.clientInstance, options);
   }
 
@@ -445,7 +445,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<BleStatusResponse>} A promise that resolves to the BLE status.
    */
-  BleStatusGet(options?: RequestOptions) {
+  bleStatusGet(options?: RequestOptions) {
     return bleStatusGet(this.clientInstance, options);
   }
 
@@ -459,7 +459,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<BusySnapshot>} Current BUSY timer snapshot.
    */
-  BusySnapshotGet(options?: RequestOptions) {
+  busySnapshotGet(options?: RequestOptions) {
     return busySnapshotGet(this.clientInstance, options);
   }
 
@@ -476,7 +476,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successfully set snapshot.
    */
-  BusySnapshotSet(params: BusySnapshotSetParams, options?: RequestOptions) {
+  busySnapshotSet(params: BusySnapshotSetParams, options?: RequestOptions) {
     return busySnapshotSet(this.clientInstance, params, options);
   }
 
@@ -492,7 +492,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<BusyProfile>} BUSY timer profile for the given slot.
    */
-  BusyProfileGet(params: BusyProfileGetParams, options?: RequestOptions) {
+  busyProfileGet(params: BusyProfileGetParams, options?: RequestOptions) {
     return busyProfileGet(this.clientInstance, params, options);
   }
 
@@ -508,7 +508,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successfully set profile.
    */
-  BusyProfileSet(params: BusyProfileSetParams, options?: RequestOptions) {
+  busyProfileSet(params: BusyProfileSetParams, options?: RequestOptions) {
     return busyProfileSet(this.clientInstance, params, options);
   }
 
@@ -524,7 +524,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful draw command.
    */
-  DisplayDraw(params: DisplayDrawParams, options?: RequestOptions) {
+  displayDraw(params: DisplayDrawParams, options?: RequestOptions) {
     return displayDraw(this.clientInstance, params, options);
   }
 
@@ -539,7 +539,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful clear command.
    */
-  DisplayClear(params?: DisplayClearParams, options?: RequestOptions) {
+  displayClear(params?: DisplayClearParams, options?: RequestOptions) {
     return displayClear(this.clientInstance, params, options);
   }
 
@@ -556,7 +556,7 @@ export class BusyBar {
    * @returns {Promise<Blob>} A promise that resolves to the screen frame as a Blob.
    * @returns {Promise<ArrayBuffer>} A promise that resolves to the screen frame as an ArrayBuffer when dataType is 'arrayBuffer'.
    */
-  DisplayScreenFrameGet<T extends ScreenFrameGetOptions | undefined>(params: ScreenFrameGetParams, options?: T) {
+  displayScreenFrameGet<T extends ScreenFrameGetOptions | undefined>(params: ScreenFrameGetParams, options?: T) {
     return displayScreenFrameGet(this.clientInstance, params, options);
   }
 
@@ -568,7 +568,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<DisplayBrightnessInfo>} A promise that resolves to the brightness information.
    */
-  DisplayBrightnessGet(options?: RequestOptions) {
+  displayBrightnessGet(options?: RequestOptions) {
     return displayBrightnessGet(this.clientInstance, options);
   }
 
@@ -582,7 +582,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  DisplayBrightnessSet(params: DisplayBrightnessParams, options?: RequestOptions) {
+  displayBrightnessSet(params: DisplayBrightnessParams, options?: RequestOptions) {
     return displayBrightnessSet(this.clientInstance, params, options);
   }
 
@@ -596,7 +596,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  InputSend(params: InputKeyParams, options?: RequestOptions) {
+  inputSend(params: InputKeyParams, options?: RequestOptions) {
     return inputSend(this.clientInstance, params, options);
   }
 
@@ -608,7 +608,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<HttpAccessInfo>} A promise that resolves to the access configuration.
    */
-  SettingsAccessGet(options?: RequestOptions) {
+  settingsAccessGet(options?: RequestOptions) {
     return settingsAccessGet(this.clientInstance, options);
   }
 
@@ -623,7 +623,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  SettingsAccessSet(params: HttpAccessParams, options?: RequestOptions) {
+  settingsAccessSet(params: HttpAccessParams, options?: RequestOptions) {
     return settingsAccessSet(this.clientInstance, params, options);
   }
 
@@ -635,7 +635,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<NameInfo>} A promise that resolves to the device name.
    */
-  SettingsNameGet(options?: RequestOptions) {
+  settingsNameGet(options?: RequestOptions) {
     return settingsNameGet(this.clientInstance, options);
   }
 
@@ -649,7 +649,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  SettingsNameSet(params: NameParams, options?: RequestOptions) {
+  settingsNameSet(params: NameParams, options?: RequestOptions) {
     return settingsNameSet(this.clientInstance, params, options);
   }
 
@@ -664,7 +664,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<AccessTokensInfo>} A promise that resolves to the list of access tokens.
    */
-  SettingsAccessTokensGet(options?: RequestOptions) {
+  settingsAccessTokensGet(options?: RequestOptions) {
     return settingsAccessTokensGet(this.clientInstance, options);
   }
 
@@ -680,7 +680,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<AccessToken>} A promise that resolves to the created token.
    */
-  SettingsAccessTokenCreate(params: AccessTokenCreateParams, options?: RequestOptions) {
+  settingsAccessTokenCreate(params: AccessTokenCreateParams, options?: RequestOptions) {
     return settingsAccessTokenCreate(this.clientInstance, params, options);
   }
 
@@ -692,7 +692,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  SettingsAccessTokensDelete(options?: RequestOptions) {
+  settingsAccessTokensDelete(options?: RequestOptions) {
     return settingsAccessTokensDelete(this.clientInstance, options);
   }
 
@@ -706,7 +706,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  SettingsAccessTokenRevoke(params: AccessTokenRevokeParams, options?: RequestOptions) {
+  settingsAccessTokenRevoke(params: AccessTokenRevokeParams, options?: RequestOptions) {
     return settingsAccessTokenRevoke(this.clientInstance, params, options);
   }
 
@@ -718,7 +718,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SmartHomePairingInfo>} A promise that resolves to the pairing info.
    */
-  SmartHomePairingGet(options?: RequestOptions) {
+  smartHomePairingGet(options?: RequestOptions) {
     return smartHomePairingGet(this.clientInstance, options);
   }
 
@@ -730,7 +730,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SmartHomePairingPayload>} A promise that resolves to the pairing payload.
    */
-  SmartHomePair(options?: RequestOptions) {
+  smartHomePair(options?: RequestOptions) {
     return smartHomePair(this.clientInstance, options);
   }
 
@@ -742,7 +742,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  SmartHomeErase(options?: RequestOptions) {
+  smartHomeErase(options?: RequestOptions) {
     return smartHomeErase(this.clientInstance, options);
   }
 
@@ -754,7 +754,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SmartHomeSwitchState>} A promise that resolves to the switch state.
    */
-  SmartHomeSwitchStateGet(options?: RequestOptions) {
+  smartHomeSwitchStateGet(options?: RequestOptions) {
     return smartHomeSwitchStateGet(this.clientInstance, options);
   }
 
@@ -767,7 +767,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  SmartHomeSwitchStateSet(params: SmartHomeSwitchStateParams, options?: RequestOptions) {
+  smartHomeSwitchStateSet(params: SmartHomeSwitchStateParams, options?: RequestOptions) {
     return smartHomeSwitchStateSet(this.clientInstance, params, options);
   }
 
@@ -783,7 +783,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful upload.
    */
-  StorageWrite(params: StorageUploadFileParams, options?: RequestOptions) {
+  storageWrite(params: StorageUploadFileParams, options?: RequestOptions) {
     return storageWrite(this.clientInstance, params, options);
   }
 
@@ -798,7 +798,7 @@ export class BusyBar {
    *   @param {StorageDownloadFileOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<StorageReadResponse>} A promise that resolves to the file content (Blob or ArrayBuffer).
    */
-  StorageRead(params: StorageDownloadFileParams, options?: StorageDownloadFileOptions) {
+  storageRead(params: StorageDownloadFileParams, options?: StorageDownloadFileOptions) {
     return storageRead(this.clientInstance, params, options);
   }
 
@@ -812,7 +812,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<StorageList>} A promise that resolves to a list of files and directories.
    */
-  StorageListGet(params: StorageReadDirectoryParams, options?: RequestOptions) {
+  storageListGet(params: StorageReadDirectoryParams, options?: RequestOptions) {
     return storageListGet(this.clientInstance, params, options);
   }
 
@@ -826,7 +826,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful removal.
    */
-  StorageRemove(params: StorageRemoveParams, options?: RequestOptions) {
+  storageRemove(params: StorageRemoveParams, options?: RequestOptions) {
     return storageRemove(this.clientInstance, params, options);
   }
 
@@ -840,7 +840,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful creation.
    */
-  StorageMkdir(params: StorageCreateDirectoryParams, options?: RequestOptions) {
+  storageMkdir(params: StorageCreateDirectoryParams, options?: RequestOptions) {
     return storageMkdir(this.clientInstance, params, options);
   }
 
@@ -852,7 +852,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<StorageStatus>} A promise that resolves to the storage status.
    */
-  StorageStatusGet(options?: RequestOptions) {
+  storageStatusGet(options?: RequestOptions) {
     return storageStatusGet(this.clientInstance, options);
   }
 
@@ -867,7 +867,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful rename.
    */
-  StorageRename(params: StorageRenameParams, options?: RequestOptions) {
+  storageRename(params: StorageRenameParams, options?: RequestOptions) {
     return storageRename(this.clientInstance, params, options);
   }
 
@@ -879,7 +879,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<VersionInfo>} A promise that resolves to an object containing the `api_semver` string.
    */
-  SystemVersionGet(options?: RequestOptions) {
+  systemVersionGet(options?: RequestOptions) {
     return systemVersionGet(this.clientInstance, options);
   }
 
@@ -891,7 +891,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<Status>} Current status of the device.
    */
-  SystemStatusGet(options?: RequestOptions) {
+  systemStatusGet(options?: RequestOptions) {
     return systemStatusGet(this.clientInstance, options);
   }
 
@@ -903,7 +903,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<StatusSystem>} Current system status.
    */
-  SystemInfoGet(options?: RequestOptions) {
+  systemInfoGet(options?: RequestOptions) {
     return systemInfoGet(this.clientInstance, options);
   }
 
@@ -915,7 +915,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<StatusPower>} Current power status.
    */
-  SystemStatusPowerGet(options?: RequestOptions) {
+  systemStatusPowerGet(options?: RequestOptions) {
     return systemStatusPowerGet(this.clientInstance, options);
   }
 
@@ -927,7 +927,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<StatusDevice>} Current device status.
    */
-  SystemStatusDeviceGet(options?: RequestOptions) {
+  systemStatusDeviceGet(options?: RequestOptions) {
     return systemStatusDeviceGet(this.clientInstance, options);
   }
 
@@ -939,7 +939,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<StatusFirmware>} Current firmware status.
    */
-  SystemStatusFirmwareGet(options?: RequestOptions) {
+  systemStatusFirmwareGet(options?: RequestOptions) {
     return systemStatusFirmwareGet(this.clientInstance, options);
   }
 
@@ -951,7 +951,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<NetworkInterfaceInfo>} Current transport info (usb/wifi).
    */
-  SystemTransportGet(options?: RequestOptions) {
+  systemTransportGet(options?: RequestOptions) {
     return systemTransportGet(this.clientInstance, options);
   }
 
@@ -965,7 +965,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<LogDumpResponse>} A promise that resolves to the result and the full path to the written log file.
    */
-  SystemLogDump(params?: LogDumpParams, options?: RequestOptions) {
+  systemLogDump(params?: LogDumpParams, options?: RequestOptions) {
     return systemLogDump(this.clientInstance, params, options);
   }
 
@@ -977,7 +977,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<TimestampInfo>} A promise that resolves to the timestamp information.
    */
-  TimeGet(options?: RequestOptions) {
+  timeGet(options?: RequestOptions) {
     return timeGet(this.clientInstance, options);
   }
 
@@ -991,7 +991,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  TimeTimestampSet(params: TimeTimestampParams, options?: RequestOptions) {
+  timeTimestampSet(params: TimeTimestampParams, options?: RequestOptions) {
     return timeTimestampSet(this.clientInstance, params, options);
   }
 
@@ -1003,7 +1003,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<TimezoneInfo>} A promise that resolves to the timezone information.
    */
-  TimeTimezoneGet(options?: RequestOptions) {
+  timeTimezoneGet(options?: RequestOptions) {
     return timeTimezoneGet(this.clientInstance, options);
   }
 
@@ -1017,7 +1017,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on success.
    */
-  TimeTimezoneSet(params: TimeTimezoneParams, options?: RequestOptions) {
+  timeTimezoneSet(params: TimeTimezoneParams, options?: RequestOptions) {
     return timeTimezoneSet(this.clientInstance, params, options);
   }
 
@@ -1029,7 +1029,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<TimezoneList>} A promise that resolves to a list of timezone items.
    */
-  TimeTzListGet(options?: RequestOptions) {
+  timeTzListGet(options?: RequestOptions) {
     return timeTzListGet(this.clientInstance, options);
   }
 
@@ -1043,7 +1043,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves when upload is complete.
    */
-  UpdateFromFile(params: UpdateFromFileParams, options?: RequestOptions) {
+  updateFromFile(params: UpdateFromFileParams, options?: RequestOptions) {
     return updateFromFile(this.clientInstance, params, options);
   }
 
@@ -1055,7 +1055,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves to the update check result.
    */
-  UpdateCheck(options?: RequestOptions) {
+  updateCheck(options?: RequestOptions) {
     return updateCheck(this.clientInstance, options);
   }
 
@@ -1067,7 +1067,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<UpdateStatus>} A promise that resolves to the update status.
    */
-  UpdateStatusGet(options?: RequestOptions) {
+  updateStatusGet(options?: RequestOptions) {
     return updateStatusGet(this.clientInstance, options);
   }
 
@@ -1081,7 +1081,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<UpdateChangelog>} A promise that resolves to the changelog content.
    */
-  UpdateChangelogGet(params: UpdateChangelogParams, options?: RequestOptions) {
+  updateChangelogGet(params: UpdateChangelogParams, options?: RequestOptions) {
     return updateChangelogGet(this.clientInstance, params, options);
   }
 
@@ -1095,7 +1095,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful initiation.
    */
-  UpdateInstall(params: UpdateInstallParams, options?: RequestOptions) {
+  updateInstall(params: UpdateInstallParams, options?: RequestOptions) {
     return updateInstall(this.clientInstance, params, options);
   }
 
@@ -1107,7 +1107,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful abort.
    */
-  UpdateAbort(options?: RequestOptions) {
+  updateAbort(options?: RequestOptions) {
     return updateAbort(this.clientInstance, options);
   }
 
@@ -1119,7 +1119,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<AutoUpdateSettings>} A promise that resolves to the current auto-update settings.
    */
-  UpdateAutoUpdateGet(options?: RequestOptions) {
+  updateAutoUpdateGet(options?: RequestOptions) {
     return updateAutoUpdateGet(this.clientInstance, options);
   }
 
@@ -1135,7 +1135,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful update of settings.
    */
-  UpdateAutoUpdateSet(params: UpdateAutoUpdateParams, options?: RequestOptions) {
+  updateAutoUpdateSet(params: UpdateAutoUpdateParams, options?: RequestOptions) {
     return updateAutoUpdateSet(this.clientInstance, params, options);
   }
 
@@ -1147,7 +1147,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<WifiStatusResponse>} A promise that resolves to the Wi-Fi status.
    */
-  WifiStatusGet(options?: RequestOptions) {
+  wifiStatusGet(options?: RequestOptions) {
     return wifiStatusGet(this.clientInstance, options);
   }
 
@@ -1164,7 +1164,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful connection initiation.
    */
-  WifiConnect(params: WifiConnectParams, options?: RequestOptions) {
+  wifiConnect(params: WifiConnectParams, options?: RequestOptions) {
     return wifiConnect(this.clientInstance, params, options);
   }
 
@@ -1176,7 +1176,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<SuccessResponse>} A promise that resolves on successful disconnection.
    */
-  WifiDisconnect(options?: RequestOptions) {
+  wifiDisconnect(options?: RequestOptions) {
     return wifiDisconnect(this.clientInstance, options);
   }
 
@@ -1188,7 +1188,7 @@ export class BusyBar {
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
    * @returns {Promise<WifiNetworkResponse>} A promise that resolves to a list of available networks.
    */
-  WifiNetworksGet(options?: RequestOptions) {
+  wifiNetworksGet(options?: RequestOptions) {
     return wifiNetworksGet(this.clientInstance, options);
   }
 }

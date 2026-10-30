@@ -36,7 +36,7 @@ export async function appsStage(client: RequestClient, params: AppsStageParams, 
 }
 
 /**
- * Install a staged JavaScript application using the installation key returned by AppsStage.
+ * Install a staged JavaScript application using the installation key returned by appsStage.
  *
  * @param {RequestClient} client - BUSY Bar client.
  * @param {AppsInstallParams} params - Parameters for the installation.

@@ -6,7 +6,7 @@
 //     │          19 Sep  │ │
 //     └──────────────────┴─┘
 //
-// Returns DisplayDraw elements rather than a layout tree: the geometry follows from the width, the line step and the side the scrollbar is on, so there is nothing to lay out.
+// Returns displayDraw elements rather than a layout tree: the geometry follows from the width, the line step and the side the scrollbar is on, so there is nothing to lay out.
 
 import type { DisplayDrawParams } from 'BusyBar/scopes/display/types';
 import { capBox, type DeviceFont } from 'Utils/font';
@@ -79,7 +79,7 @@ function thumbBox(total: number, visible: number, selected: number, track: numbe
  * Builds the list.
  *
  * @param props - What the list holds and how it is drawn.
- * @returns The elements for DisplayDraw, in drawing order.
+ * @returns The elements for displayDraw, in drawing order.
  */
 export function list(props: ListProps): Element[] {
   const {

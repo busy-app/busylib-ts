@@ -1,5 +1,5 @@
 // BusyBar class generator: src/BusyBar/scopes/*/functions.ts + BusyBar.template.ts  →  src/BusyBar/BusyBar.generated.ts
-// Every exported function becomes a method with the same parameters minus `client`, the name with a capital letter and the same JSDoc minus `@param client`; the fixed part of the class comes from the template.
+// Every exported function becomes a method with the same name, the same parameters minus `client` and the same JSDoc minus `@param client`; the fixed part of the class comes from the template.
 // Usage:
 //   pnpm busybar:build   # generate
 //   pnpm busybar:check   # verify it's up to date (CI)
@@ -112,7 +112,6 @@ function readScope(scope) {
     methods.push({
       scope,
       functionName: name,
-      methodName: name[0].toUpperCase() + name.slice(1),
       doc: methodDoc(fn, sourceFile, file),
       typeParams: typeParams.map((p) => p.getText()),
       params: params.map((p) => p.getText()),
@@ -175,10 +174,11 @@ function renderImports(methods, templateTypes) {
   return [...functionImports, ...typeImportLines].join('\n');
 }
 
-function renderMethod({ doc, methodName, functionName, typeParams, params, args }) {
+// The method and the imported function share the name: a method name is a property, so `return displayDraw(…)` in it calls the import.
+function renderMethod({ doc, functionName, typeParams, params, args }) {
   const generics = typeParams.length ? `<${typeParams.join(', ')}>` : '';
   const call = ['this.clientInstance', ...args].join(', ');
-  return `${doc.join('\n')}\n${methodName}${generics}(${params.join(', ')}) {\n  return ${functionName}(${call});\n}`;
+  return `${doc.join('\n')}\n${functionName}${generics}(${params.join(', ')}) {\n  return ${functionName}(${call});\n}`;
 }
 
 function render(methods, template) {
@@ -192,7 +192,7 @@ async function generate() {
   const scopes = existsSync(scopesDir) ? readdirSync(scopesDir).sort() : [];
   const methods = scopes.flatMap(readScope);
 
-  const names = methods.map((m) => m.methodName);
+  const names = methods.map((m) => m.functionName);
   const duplicate = names.find((name, i) => names.indexOf(name) !== i);
   if (duplicate) throw new ConventionError(`${duplicate}: defined in more than one scope`);
 

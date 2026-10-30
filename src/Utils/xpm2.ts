@@ -1,4 +1,4 @@
-// XPM2 generator for the xpmbitmap element in DisplayDraw.
+// XPM2 generator for the xpmbitmap element in displayDraw.
 //
 // XPM2 is plain text: a signature, a header line, palette lines and pixel lines, all newline-separated. That string is what the element's `data` field takes.
 //

@@ -35,184 +35,184 @@ const drawParams = {
 
 const cases: Case[] = [
   // account
-  { method: 'AccountInfoGet', endpoint: 'GET /account/info', call: (bar, o) => bar.AccountInfoGet(o) },
-  { method: 'AccountStateGet', endpoint: 'GET /account/status', call: (bar, o) => bar.AccountStateGet(o) },
-  { method: 'AccountBackendGet', endpoint: 'GET /account/backend', call: (bar, o) => bar.AccountBackendGet(o) },
+  { method: 'accountInfoGet', endpoint: 'GET /account/info', call: (bar, o) => bar.accountInfoGet(o) },
+  { method: 'accountStateGet', endpoint: 'GET /account/status', call: (bar, o) => bar.accountStateGet(o) },
+  { method: 'accountBackendGet', endpoint: 'GET /account/backend', call: (bar, o) => bar.accountBackendGet(o) },
   {
-    method: 'AccountBackendSet',
+    method: 'accountBackendSet',
     endpoint: 'PUT /account/backend',
-    call: (bar, o) => bar.AccountBackendSet({ server_url: 'https://example.com', client_cert_type: 'default', ignore_server_cert: false }, o)
+    call: (bar, o) => bar.accountBackendSet({ server_url: 'https://example.com', client_cert_type: 'default', ignore_server_cert: false }, o)
   },
-  { method: 'AccountUnlink', endpoint: 'DELETE /account', call: (bar, o) => bar.AccountUnlink(o) },
-  { method: 'AccountLink', endpoint: 'POST /account/link', call: (bar, o) => bar.AccountLink(o) },
+  { method: 'accountUnlink', endpoint: 'DELETE /account', call: (bar, o) => bar.accountUnlink(o) },
+  { method: 'accountLink', endpoint: 'POST /account/link', call: (bar, o) => bar.accountLink(o) },
 
   // apps
-  { method: 'AppsStage', variant: 'Uint8Array', endpoint: 'POST /apps/stage', call: (bar, o) => bar.AppsStage({ file }, o) },
-  { method: 'AppsStage', variant: 'Blob', endpoint: 'POST /apps/stage', call: (bar, o) => bar.AppsStage({ file: new Blob([file]) }, o) },
-  { method: 'AppsStage', variant: 'ArrayBuffer', endpoint: 'POST /apps/stage', call: (bar, o) => bar.AppsStage({ file: file.slice().buffer }, o) },
-  { method: 'AppsStage', variant: 'Buffer', endpoint: 'POST /apps/stage', call: (bar, o) => bar.AppsStage({ file: Buffer.from(file) }, o) },
-  { method: 'AppsInstall', endpoint: 'POST /apps/install', call: (bar, o) => bar.AppsInstall({ install_key: 42 }, o) },
-  { method: 'AppsRemove', endpoint: 'DELETE /apps', call: (bar, o) => bar.AppsRemove({ app_id: 'app' }, o) },
-  { method: 'AppsList', endpoint: 'GET /apps/list', call: (bar, o) => bar.AppsList(o) },
-  { method: 'AppsSettingsGet', endpoint: 'GET /apps/settings', call: (bar, o) => bar.AppsSettingsGet({ app_id: 'app' }, o) },
+  { method: 'appsStage', variant: 'Uint8Array', endpoint: 'POST /apps/stage', call: (bar, o) => bar.appsStage({ file }, o) },
+  { method: 'appsStage', variant: 'Blob', endpoint: 'POST /apps/stage', call: (bar, o) => bar.appsStage({ file: new Blob([file]) }, o) },
+  { method: 'appsStage', variant: 'ArrayBuffer', endpoint: 'POST /apps/stage', call: (bar, o) => bar.appsStage({ file: file.slice().buffer }, o) },
+  { method: 'appsStage', variant: 'Buffer', endpoint: 'POST /apps/stage', call: (bar, o) => bar.appsStage({ file: Buffer.from(file) }, o) },
+  { method: 'appsInstall', endpoint: 'POST /apps/install', call: (bar, o) => bar.appsInstall({ install_key: 42 }, o) },
+  { method: 'appsRemove', endpoint: 'DELETE /apps', call: (bar, o) => bar.appsRemove({ app_id: 'app' }, o) },
+  { method: 'appsList', endpoint: 'GET /apps/list', call: (bar, o) => bar.appsList(o) },
+  { method: 'appsSettingsGet', endpoint: 'GET /apps/settings', call: (bar, o) => bar.appsSettingsGet({ app_id: 'app' }, o) },
   {
-    method: 'AppsSettingsSet',
+    method: 'appsSettingsSet',
     endpoint: 'PUT /apps/settings',
-    call: (bar, o) => bar.AppsSettingsSet({ app_id: 'app', settings: { version: 1, values: { city: 'Berlin' } } }, o)
+    call: (bar, o) => bar.appsSettingsSet({ app_id: 'app', settings: { version: 1, values: { city: 'Berlin' } } }, o)
   },
-  { method: 'AppsSettingsReset', endpoint: 'DELETE /apps/settings', call: (bar, o) => bar.AppsSettingsReset({ app_id: 'app' }, o) },
+  { method: 'appsSettingsReset', endpoint: 'DELETE /apps/settings', call: (bar, o) => bar.appsSettingsReset({ app_id: 'app' }, o) },
 
   // assets
-  { method: 'AssetsUpload', endpoint: 'POST /assets/upload', call: (bar, o) => bar.AssetsUpload({ application_name: 'app', file: 'a.png', data: file }, o) },
-  { method: 'AssetsDelete', endpoint: 'DELETE /assets/upload', call: (bar, o) => bar.AssetsDelete({ application_name: 'app' }, o) },
+  { method: 'assetsUpload', endpoint: 'POST /assets/upload', call: (bar, o) => bar.assetsUpload({ application_name: 'app', file: 'a.png', data: file }, o) },
+  { method: 'assetsDelete', endpoint: 'DELETE /assets/upload', call: (bar, o) => bar.assetsDelete({ application_name: 'app' }, o) },
 
   // audio
-  { method: 'AudioPlay', variant: 'path', endpoint: 'POST /audio/play', call: (bar, o) => bar.AudioPlay({ application_name: 'app', path: 'a.snd' }, o) },
-  { method: 'AudioPlay', variant: 'stock', endpoint: 'POST /audio/play', call: (bar, o) => bar.AudioPlay({ application_name: 'app', stock_path: 'beep' }, o) },
-  { method: 'AudioStop', endpoint: 'DELETE /audio/play', call: (bar, o) => bar.AudioStop(o) },
-  { method: 'AudioVolumeGet', endpoint: 'GET /audio/volume', call: (bar, o) => bar.AudioVolumeGet(o) },
-  { method: 'AudioVolumeSet', endpoint: 'POST /audio/volume', call: (bar, o) => bar.AudioVolumeSet({ volume: 50 }, o) },
-  { method: 'AudioVolumeSet', variant: 'out of range', endpoint: null, call: (bar, o) => bar.AudioVolumeSet({ volume: 101 }, o) },
+  { method: 'audioPlay', variant: 'path', endpoint: 'POST /audio/play', call: (bar, o) => bar.audioPlay({ application_name: 'app', path: 'a.snd' }, o) },
+  { method: 'audioPlay', variant: 'stock', endpoint: 'POST /audio/play', call: (bar, o) => bar.audioPlay({ application_name: 'app', stock_path: 'beep' }, o) },
+  { method: 'audioStop', endpoint: 'DELETE /audio/play', call: (bar, o) => bar.audioStop(o) },
+  { method: 'audioVolumeGet', endpoint: 'GET /audio/volume', call: (bar, o) => bar.audioVolumeGet(o) },
+  { method: 'audioVolumeSet', endpoint: 'POST /audio/volume', call: (bar, o) => bar.audioVolumeSet({ volume: 50 }, o) },
+  { method: 'audioVolumeSet', variant: 'out of range', endpoint: null, call: (bar, o) => bar.audioVolumeSet({ volume: 101 }, o) },
 
   // ble
-  { method: 'BleEnable', endpoint: 'POST /ble/enable', call: (bar, o) => bar.BleEnable(o) },
-  { method: 'BleDisable', endpoint: 'POST /ble/disable', call: (bar, o) => bar.BleDisable(o) },
-  { method: 'BleUnpair', endpoint: 'DELETE /ble/pairing', call: (bar, o) => bar.BleUnpair(o) },
-  { method: 'BleStatusGet', endpoint: 'GET /ble/status', call: (bar, o) => bar.BleStatusGet(o) },
+  { method: 'bleEnable', endpoint: 'POST /ble/enable', call: (bar, o) => bar.bleEnable(o) },
+  { method: 'bleDisable', endpoint: 'POST /ble/disable', call: (bar, o) => bar.bleDisable(o) },
+  { method: 'bleUnpair', endpoint: 'DELETE /ble/pairing', call: (bar, o) => bar.bleUnpair(o) },
+  { method: 'bleStatusGet', endpoint: 'GET /ble/status', call: (bar, o) => bar.bleStatusGet(o) },
 
   // busy
-  { method: 'BusySnapshotGet', endpoint: 'GET /busy/snapshot', call: (bar, o) => bar.BusySnapshotGet(o) },
+  { method: 'busySnapshotGet', endpoint: 'GET /busy/snapshot', call: (bar, o) => bar.busySnapshotGet(o) },
   {
-    method: 'BusySnapshotSet',
+    method: 'busySnapshotSet',
     endpoint: 'PUT /busy/snapshot',
-    call: (bar, o) => bar.BusySnapshotSet({ snapshot: { type: 'NOT_STARTED', busy_bar_settings: busyBarSettings }, snapshot_timestamp_ms: 0 }, o)
+    call: (bar, o) => bar.busySnapshotSet({ snapshot: { type: 'NOT_STARTED', busy_bar_settings: busyBarSettings }, snapshot_timestamp_ms: 0 }, o)
   },
-  { method: 'BusyProfileGet', endpoint: 'GET /busy/profiles/{slot}', call: (bar, o) => bar.BusyProfileGet({ slot: 'busy' }, o) },
+  { method: 'busyProfileGet', endpoint: 'GET /busy/profiles/{slot}', call: (bar, o) => bar.busyProfileGet({ slot: 'busy' }, o) },
   {
-    method: 'BusyProfileSet',
+    method: 'busyProfileSet',
     endpoint: 'PUT /busy/profiles/{slot}',
-    call: (bar, o) => bar.BusyProfileSet({ slot: 'busy', ...busyProfile }, o)
+    call: (bar, o) => bar.busyProfileSet({ slot: 'busy', ...busyProfile }, o)
   },
 
   // display
-  { method: 'DisplayDraw', endpoint: 'POST /display/draw', call: (bar, o) => bar.DisplayDraw(drawParams, o) },
-  { method: 'DisplayDraw', variant: 'priority', endpoint: 'POST /display/draw', call: (bar, o) => bar.DisplayDraw({ ...drawParams, priority: 90 }, o) },
-  { method: 'DisplayClear', endpoint: 'DELETE /display/draw', call: (bar, o) => bar.DisplayClear(undefined, o) },
-  { method: 'DisplayClear', variant: 'params', endpoint: 'DELETE /display/draw', call: (bar, o) => bar.DisplayClear({ application_name: 'app' }, o) },
-  { method: 'DisplayScreenFrameGet', endpoint: 'GET /screen', call: (bar, o) => bar.DisplayScreenFrameGet({ display: Display.FRONT }, o) },
+  { method: 'displayDraw', endpoint: 'POST /display/draw', call: (bar, o) => bar.displayDraw(drawParams, o) },
+  { method: 'displayDraw', variant: 'priority', endpoint: 'POST /display/draw', call: (bar, o) => bar.displayDraw({ ...drawParams, priority: 90 }, o) },
+  { method: 'displayClear', endpoint: 'DELETE /display/draw', call: (bar, o) => bar.displayClear(undefined, o) },
+  { method: 'displayClear', variant: 'params', endpoint: 'DELETE /display/draw', call: (bar, o) => bar.displayClear({ application_name: 'app' }, o) },
+  { method: 'displayScreenFrameGet', endpoint: 'GET /screen', call: (bar, o) => bar.displayScreenFrameGet({ display: Display.FRONT }, o) },
   {
-    method: 'DisplayScreenFrameGet',
+    method: 'displayScreenFrameGet',
     variant: 'binary front',
     endpoint: 'GET /screen',
-    call: (bar, o) => bar.DisplayScreenFrameGet({ display: Display.FRONT }, { ...o, dataType: 'binary' })
+    call: (bar, o) => bar.displayScreenFrameGet({ display: Display.FRONT }, { ...o, dataType: 'binary' })
   },
   {
-    method: 'DisplayScreenFrameGet',
+    method: 'displayScreenFrameGet',
     variant: 'rgba front',
     endpoint: 'GET /screen',
-    call: (bar, o) => bar.DisplayScreenFrameGet({ display: Display.FRONT }, { ...o, dataType: 'binary', format: 'rgba' })
+    call: (bar, o) => bar.displayScreenFrameGet({ display: Display.FRONT }, { ...o, dataType: 'binary', format: 'rgba' })
   },
   {
-    method: 'DisplayScreenFrameGet',
+    method: 'displayScreenFrameGet',
     variant: 'rgba back',
     endpoint: 'GET /screen',
-    call: (bar, o) => bar.DisplayScreenFrameGet({ display: Display.BACK }, { ...o, dataType: 'binary', format: 'rgba' })
+    call: (bar, o) => bar.displayScreenFrameGet({ display: Display.BACK }, { ...o, dataType: 'binary', format: 'rgba' })
   },
-  { method: 'DisplayBrightnessGet', endpoint: 'GET /display/brightness', call: (bar, o) => bar.DisplayBrightnessGet(o) },
-  { method: 'DisplayBrightnessSet', endpoint: 'POST /display/brightness', call: (bar, o) => bar.DisplayBrightnessSet({ value: 50 }, o) },
-  { method: 'DisplayBrightnessSet', variant: 'auto', endpoint: 'POST /display/brightness', call: (bar, o) => bar.DisplayBrightnessSet({ value: 'auto' }, o) },
-  { method: 'DisplayBrightnessSet', variant: 'out of range', endpoint: null, call: (bar, o) => bar.DisplayBrightnessSet({ value: 101 }, o) },
+  { method: 'displayBrightnessGet', endpoint: 'GET /display/brightness', call: (bar, o) => bar.displayBrightnessGet(o) },
+  { method: 'displayBrightnessSet', endpoint: 'POST /display/brightness', call: (bar, o) => bar.displayBrightnessSet({ value: 50 }, o) },
+  { method: 'displayBrightnessSet', variant: 'auto', endpoint: 'POST /display/brightness', call: (bar, o) => bar.displayBrightnessSet({ value: 'auto' }, o) },
+  { method: 'displayBrightnessSet', variant: 'out of range', endpoint: null, call: (bar, o) => bar.displayBrightnessSet({ value: 101 }, o) },
 
   // input
-  { method: 'InputSend', endpoint: 'POST /input', call: (bar, o) => bar.InputSend({ key: 'ok' }, o) },
+  { method: 'inputSend', endpoint: 'POST /input', call: (bar, o) => bar.inputSend({ key: 'ok' }, o) },
 
   // settings
-  { method: 'SettingsAccessGet', endpoint: 'GET /access', call: (bar, o) => bar.SettingsAccessGet(o) },
-  { method: 'SettingsAccessSet', endpoint: 'POST /access', call: (bar, o) => bar.SettingsAccessSet({ mode: 'disabled' }, o) },
+  { method: 'settingsAccessGet', endpoint: 'GET /access', call: (bar, o) => bar.settingsAccessGet(o) },
+  { method: 'settingsAccessSet', endpoint: 'POST /access', call: (bar, o) => bar.settingsAccessSet({ mode: 'disabled' }, o) },
   {
-    method: 'SettingsAccessSet',
+    method: 'settingsAccessSet',
     variant: 'key applies to next requests',
     endpoint: 'GET /status',
     call: async (bar, o) => {
-      await bar.SettingsAccessSet({ mode: 'key', key: '5678' }, o);
-      return bar.SystemStatusGet(o);
+      await bar.settingsAccessSet({ mode: 'key', key: '5678' }, o);
+      return bar.systemStatusGet(o);
     }
   },
-  { method: 'SettingsAccessSet', variant: 'invalid key', endpoint: null, call: (bar, o) => bar.SettingsAccessSet({ mode: 'key', key: 'abc' }, o) },
-  { method: 'SettingsNameGet', endpoint: 'GET /name', call: (bar, o) => bar.SettingsNameGet(o) },
-  { method: 'SettingsNameSet', endpoint: 'POST /name', call: (bar, o) => bar.SettingsNameSet({ name: 'Bar' }, o) },
-  { method: 'SettingsAccessTokensGet', endpoint: 'GET /access/tokens', call: (bar, o) => bar.SettingsAccessTokensGet(o) },
-  { method: 'SettingsAccessTokenCreate', endpoint: 'POST /access/tokens', call: (bar, o) => bar.SettingsAccessTokenCreate({ name: 'cli' }, o) },
-  { method: 'SettingsAccessTokensDelete', endpoint: 'DELETE /access/tokens', call: (bar, o) => bar.SettingsAccessTokensDelete(o) },
+  { method: 'settingsAccessSet', variant: 'invalid key', endpoint: null, call: (bar, o) => bar.settingsAccessSet({ mode: 'key', key: 'abc' }, o) },
+  { method: 'settingsNameGet', endpoint: 'GET /name', call: (bar, o) => bar.settingsNameGet(o) },
+  { method: 'settingsNameSet', endpoint: 'POST /name', call: (bar, o) => bar.settingsNameSet({ name: 'Bar' }, o) },
+  { method: 'settingsAccessTokensGet', endpoint: 'GET /access/tokens', call: (bar, o) => bar.settingsAccessTokensGet(o) },
+  { method: 'settingsAccessTokenCreate', endpoint: 'POST /access/tokens', call: (bar, o) => bar.settingsAccessTokenCreate({ name: 'cli' }, o) },
+  { method: 'settingsAccessTokensDelete', endpoint: 'DELETE /access/tokens', call: (bar, o) => bar.settingsAccessTokensDelete(o) },
   {
-    method: 'SettingsAccessTokenRevoke',
+    method: 'settingsAccessTokenRevoke',
     endpoint: 'DELETE /access/tokens/{short_id}',
-    call: (bar, o) => bar.SettingsAccessTokenRevoke({ short_id: 'abc' }, o)
+    call: (bar, o) => bar.settingsAccessTokenRevoke({ short_id: 'abc' }, o)
   },
 
   // smartHome
-  { method: 'SmartHomePairingGet', endpoint: 'GET /smart_home/pairing', call: (bar, o) => bar.SmartHomePairingGet(o) },
-  { method: 'SmartHomePair', endpoint: 'POST /smart_home/pairing', call: (bar, o) => bar.SmartHomePair(o) },
-  { method: 'SmartHomeErase', endpoint: 'DELETE /smart_home/pairing', call: (bar, o) => bar.SmartHomeErase(o) },
-  { method: 'SmartHomeSwitchStateGet', endpoint: 'GET /smart_home/switch', call: (bar, o) => bar.SmartHomeSwitchStateGet(o) },
-  { method: 'SmartHomeSwitchStateSet', endpoint: 'POST /smart_home/switch', call: (bar, o) => bar.SmartHomeSwitchStateSet({ state: true, startup: 'off' }, o) },
+  { method: 'smartHomePairingGet', endpoint: 'GET /smart_home/pairing', call: (bar, o) => bar.smartHomePairingGet(o) },
+  { method: 'smartHomePair', endpoint: 'POST /smart_home/pairing', call: (bar, o) => bar.smartHomePair(o) },
+  { method: 'smartHomeErase', endpoint: 'DELETE /smart_home/pairing', call: (bar, o) => bar.smartHomeErase(o) },
+  { method: 'smartHomeSwitchStateGet', endpoint: 'GET /smart_home/switch', call: (bar, o) => bar.smartHomeSwitchStateGet(o) },
+  { method: 'smartHomeSwitchStateSet', endpoint: 'POST /smart_home/switch', call: (bar, o) => bar.smartHomeSwitchStateSet({ state: true, startup: 'off' }, o) },
 
   // storage
-  { method: 'StorageWrite', endpoint: 'POST /storage/write', call: (bar, o) => bar.StorageWrite({ path: '/ext/a.bin', file }, o) },
-  { method: 'StorageRead', endpoint: 'GET /storage/read', call: (bar, o) => bar.StorageRead({ path: '/ext/a.bin' }, o) },
+  { method: 'storageWrite', endpoint: 'POST /storage/write', call: (bar, o) => bar.storageWrite({ path: '/ext/a.bin', file }, o) },
+  { method: 'storageRead', endpoint: 'GET /storage/read', call: (bar, o) => bar.storageRead({ path: '/ext/a.bin' }, o) },
   {
-    method: 'StorageRead',
+    method: 'storageRead',
     variant: 'array buffer',
     endpoint: 'GET /storage/read',
-    call: (bar, o) => bar.StorageRead({ path: '/ext/a.bin' }, { ...o, as_array_buffer: true })
+    call: (bar, o) => bar.storageRead({ path: '/ext/a.bin' }, { ...o, as_array_buffer: true })
   },
-  { method: 'StorageListGet', endpoint: 'GET /storage/list', call: (bar, o) => bar.StorageListGet({ path: '/ext' }, o) },
-  { method: 'StorageRemove', endpoint: 'DELETE /storage/remove', call: (bar, o) => bar.StorageRemove({ path: '/ext/a.bin' }, o) },
-  { method: 'StorageMkdir', endpoint: 'POST /storage/mkdir', call: (bar, o) => bar.StorageMkdir({ path: '/ext/dir' }, o) },
-  { method: 'StorageStatusGet', endpoint: 'GET /storage/status', call: (bar, o) => bar.StorageStatusGet(o) },
-  { method: 'StorageRename', endpoint: 'POST /storage/rename', call: (bar, o) => bar.StorageRename({ path: '/ext/a.bin', new_path: '/ext/b.bin' }, o) },
+  { method: 'storageListGet', endpoint: 'GET /storage/list', call: (bar, o) => bar.storageListGet({ path: '/ext' }, o) },
+  { method: 'storageRemove', endpoint: 'DELETE /storage/remove', call: (bar, o) => bar.storageRemove({ path: '/ext/a.bin' }, o) },
+  { method: 'storageMkdir', endpoint: 'POST /storage/mkdir', call: (bar, o) => bar.storageMkdir({ path: '/ext/dir' }, o) },
+  { method: 'storageStatusGet', endpoint: 'GET /storage/status', call: (bar, o) => bar.storageStatusGet(o) },
+  { method: 'storageRename', endpoint: 'POST /storage/rename', call: (bar, o) => bar.storageRename({ path: '/ext/a.bin', new_path: '/ext/b.bin' }, o) },
 
   // system
-  { method: 'SystemVersionGet', endpoint: 'GET /version', call: (bar, o) => bar.SystemVersionGet(o) },
-  { method: 'SystemStatusGet', endpoint: 'GET /status', call: (bar, o) => bar.SystemStatusGet(o) },
-  { method: 'SystemInfoGet', endpoint: 'GET /status/system', call: (bar, o) => bar.SystemInfoGet(o) },
-  { method: 'SystemStatusPowerGet', endpoint: 'GET /status/power', call: (bar, o) => bar.SystemStatusPowerGet(o) },
-  { method: 'SystemStatusDeviceGet', endpoint: 'GET /status/device', call: (bar, o) => bar.SystemStatusDeviceGet(o) },
-  { method: 'SystemStatusFirmwareGet', endpoint: 'GET /status/firmware', call: (bar, o) => bar.SystemStatusFirmwareGet(o) },
-  { method: 'SystemTransportGet', endpoint: 'GET /transport', call: (bar, o) => bar.SystemTransportGet(o) },
-  { method: 'SystemLogDump', endpoint: 'POST /log_dump', call: (bar, o) => bar.SystemLogDump(undefined, o) },
-  { method: 'SystemLogDump', variant: 'params', endpoint: 'POST /log_dump', call: (bar, o) => bar.SystemLogDump({ filename: 'log.txt' }, o) },
+  { method: 'systemVersionGet', endpoint: 'GET /version', call: (bar, o) => bar.systemVersionGet(o) },
+  { method: 'systemStatusGet', endpoint: 'GET /status', call: (bar, o) => bar.systemStatusGet(o) },
+  { method: 'systemInfoGet', endpoint: 'GET /status/system', call: (bar, o) => bar.systemInfoGet(o) },
+  { method: 'systemStatusPowerGet', endpoint: 'GET /status/power', call: (bar, o) => bar.systemStatusPowerGet(o) },
+  { method: 'systemStatusDeviceGet', endpoint: 'GET /status/device', call: (bar, o) => bar.systemStatusDeviceGet(o) },
+  { method: 'systemStatusFirmwareGet', endpoint: 'GET /status/firmware', call: (bar, o) => bar.systemStatusFirmwareGet(o) },
+  { method: 'systemTransportGet', endpoint: 'GET /transport', call: (bar, o) => bar.systemTransportGet(o) },
+  { method: 'systemLogDump', endpoint: 'POST /log_dump', call: (bar, o) => bar.systemLogDump(undefined, o) },
+  { method: 'systemLogDump', variant: 'params', endpoint: 'POST /log_dump', call: (bar, o) => bar.systemLogDump({ filename: 'log.txt' }, o) },
 
   // time
-  { method: 'TimeGet', endpoint: 'GET /time', call: (bar, o) => bar.TimeGet(o) },
-  { method: 'TimeTimestampSet', endpoint: 'POST /time/timestamp', call: (bar, o) => bar.TimeTimestampSet({ timestamp: '2026-01-01T00:00:00' }, o) },
-  { method: 'TimeTimezoneGet', endpoint: 'GET /time/timezone', call: (bar, o) => bar.TimeTimezoneGet(o) },
-  { method: 'TimeTimezoneSet', endpoint: 'POST /time/timezone', call: (bar, o) => bar.TimeTimezoneSet({ timezone: 'Europe/Berlin' }, o) },
-  { method: 'TimeTzListGet', endpoint: 'GET /time/tzlist', call: (bar, o) => bar.TimeTzListGet(o) },
+  { method: 'timeGet', endpoint: 'GET /time', call: (bar, o) => bar.timeGet(o) },
+  { method: 'timeTimestampSet', endpoint: 'POST /time/timestamp', call: (bar, o) => bar.timeTimestampSet({ timestamp: '2026-01-01T00:00:00' }, o) },
+  { method: 'timeTimezoneGet', endpoint: 'GET /time/timezone', call: (bar, o) => bar.timeTimezoneGet(o) },
+  { method: 'timeTimezoneSet', endpoint: 'POST /time/timezone', call: (bar, o) => bar.timeTimezoneSet({ timezone: 'Europe/Berlin' }, o) },
+  { method: 'timeTzListGet', endpoint: 'GET /time/tzlist', call: (bar, o) => bar.timeTzListGet(o) },
 
   // update
-  { method: 'UpdateFromFile', endpoint: 'POST /update', call: (bar, o) => bar.UpdateFromFile({ file }, o) },
-  { method: 'UpdateCheck', endpoint: 'POST /update/check', call: (bar, o) => bar.UpdateCheck(o) },
-  { method: 'UpdateStatusGet', endpoint: 'GET /update/status', call: (bar, o) => bar.UpdateStatusGet(o) },
-  { method: 'UpdateChangelogGet', endpoint: 'GET /update/changelog', call: (bar, o) => bar.UpdateChangelogGet({ version: '1.0.0' }, o) },
-  { method: 'UpdateInstall', endpoint: 'POST /update/install', call: (bar, o) => bar.UpdateInstall({ version: '1.0.0' }, o) },
-  { method: 'UpdateAbort', endpoint: 'POST /update/abort_download', call: (bar, o) => bar.UpdateAbort(o) },
-  { method: 'UpdateAutoUpdateGet', endpoint: 'GET /update/autoupdate', call: (bar, o) => bar.UpdateAutoUpdateGet(o) },
+  { method: 'updateFromFile', endpoint: 'POST /update', call: (bar, o) => bar.updateFromFile({ file }, o) },
+  { method: 'updateCheck', endpoint: 'POST /update/check', call: (bar, o) => bar.updateCheck(o) },
+  { method: 'updateStatusGet', endpoint: 'GET /update/status', call: (bar, o) => bar.updateStatusGet(o) },
+  { method: 'updateChangelogGet', endpoint: 'GET /update/changelog', call: (bar, o) => bar.updateChangelogGet({ version: '1.0.0' }, o) },
+  { method: 'updateInstall', endpoint: 'POST /update/install', call: (bar, o) => bar.updateInstall({ version: '1.0.0' }, o) },
+  { method: 'updateAbort', endpoint: 'POST /update/abort_download', call: (bar, o) => bar.updateAbort(o) },
+  { method: 'updateAutoUpdateGet', endpoint: 'GET /update/autoupdate', call: (bar, o) => bar.updateAutoUpdateGet(o) },
   {
-    method: 'UpdateAutoUpdateSet',
+    method: 'updateAutoUpdateSet',
     endpoint: 'POST /update/autoupdate',
-    call: (bar, o) => bar.UpdateAutoUpdateSet({ is_enabled: true, interval_start: '01:00', interval_end: '05:00' }, o)
+    call: (bar, o) => bar.updateAutoUpdateSet({ is_enabled: true, interval_start: '01:00', interval_end: '05:00' }, o)
   },
 
   // wifi
-  { method: 'WifiStatusGet', endpoint: 'GET /wifi/status', call: (bar, o) => bar.WifiStatusGet(o) },
+  { method: 'wifiStatusGet', endpoint: 'GET /wifi/status', call: (bar, o) => bar.wifiStatusGet(o) },
   {
-    method: 'WifiConnect',
+    method: 'wifiConnect',
     endpoint: 'POST /wifi/connect',
-    call: (bar, o) => bar.WifiConnect({ ssid: 'home', password: 'secret', security: 'WPA2', ip_config: { ip_method: 'dhcp' } }, o)
+    call: (bar, o) => bar.wifiConnect({ ssid: 'home', password: 'secret', security: 'WPA2', ip_config: { ip_method: 'dhcp' } }, o)
   },
-  { method: 'WifiDisconnect', endpoint: 'POST /wifi/disconnect', call: (bar, o) => bar.WifiDisconnect(o) },
-  { method: 'WifiNetworksGet', endpoint: 'GET /wifi/networks', call: (bar, o) => bar.WifiNetworksGet(o) }
+  { method: 'wifiDisconnect', endpoint: 'POST /wifi/disconnect', call: (bar, o) => bar.wifiDisconnect(o) },
+  { method: 'wifiNetworksGet', endpoint: 'GET /wifi/networks', call: (bar, o) => bar.wifiNetworksGet(o) }
 ];
 
 interface Scenario {
@@ -286,9 +286,7 @@ function appBar(): BusyBar {
     string,
     (...args: unknown[]) => unknown
   ][];
-  return Object.fromEntries(
-    functions.map(([name, fn]) => [name[0]!.toUpperCase() + name.slice(1), (...args: unknown[]) => fn(client, ...args)])
-  ) as unknown as BusyBar;
+  return Object.fromEntries(functions.map(([name, fn]) => [name, (...args: unknown[]) => fn(client, ...args)])) as unknown as BusyBar;
 }
 
 async function run(testCase: Case, scenario: Scenario, create: () => BusyBar = () => new BusyBar(config)): Promise<Run> {
@@ -341,7 +339,7 @@ describe('cases', () => {
 });
 
 describe('scenarios', () => {
-  const sendingCases = cases.filter((c) => c.endpoint !== null && c.method !== 'SystemVersionGet');
+  const sendingCases = cases.filter((c) => c.endpoint !== null && c.method !== 'systemVersionGet');
 
   test.each(sendingCases.map((c) => [caseName(c), c] as const))('%s', async (_, testCase) => {
     // Sequential: each run replaces the global fetch.
