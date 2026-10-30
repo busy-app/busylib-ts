@@ -229,6 +229,10 @@ Firmware limits for `BusyBarClient` on the device:
 - **A timeout does not cancel the request.** The firmware cannot abort a request, so a timeout only rejects the promise, and the request itself runs to the end. The rejection is an `Error` with `name === 'TimeoutError'`, not a `DOMException` - it is a stub in the firmware
 - **`signal` has no effect.** `AbortController` is a stub in the firmware, and its `fetch` ignores `signal`
 
+### API version
+
+`API_SEMVER` is the version of the BUSY Bar HTTP API spec the library is written for. A device reports its own version as `api_semver` from `/version`, and `bar.apiSemver` holds it after the first request. A device with another version may have endpoints the library has no methods for, or lack some that it has.
+
 ### Pitfalls
 
 - **Protocol is auto-added.** An `addr` without a protocol gets `http://`, except the BUSY proxy host, which gets `https://` from `BusyBar` and `BusyBarClient`; `BusyBarAppClient` does not know the proxy and always adds `http://`. Specify the protocol explicitly to override

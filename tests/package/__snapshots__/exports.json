@@ -1,5 +1,6 @@
 {
   "js": [
+    "API_SEMVER",
     "AuthStatus",
     "BSB_Error",
     "BSB_Frame",
@@ -123,6 +124,7 @@
   ],
   "dts": {
     "values": [
+      "API_SEMVER",
       "AuthStatus",
       "BSB_Error",
       "BSB_Frame",
