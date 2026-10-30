@@ -1,4 +1,5 @@
-import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient } from 'BusyBar/client/types';
+import type { RequestOptionsFor } from 'BusyBar/client/types.internal';
 import type {
   AccessToken,
   AccessTokenCreateParams,
@@ -20,7 +21,7 @@ import type { SuccessResponse } from 'BusyBar/types';
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<HttpAccessInfo>} A promise that resolves to the access configuration.
  */
-export async function settingsAccessGet(client: RequestClient, options?: RequestOptions): Promise<HttpAccessInfo> {
+export async function settingsAccessGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<HttpAccessInfo> {
   return client.GET('/access', options);
 }
 
@@ -36,7 +37,11 @@ export async function settingsAccessGet(client: RequestClient, options?: Request
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function settingsAccessSet(client: RequestClient, params: HttpAccessParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function settingsAccessSet<C extends RequestClient>(
+  client: C,
+  params: HttpAccessParams,
+  options?: RequestOptionsFor<C>
+): Promise<SuccessResponse> {
   const { mode, key } = params;
   const keyValue = key ?? '';
 
@@ -71,7 +76,7 @@ export async function settingsAccessSet(client: RequestClient, params: HttpAcces
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<NameInfo>} A promise that resolves to the device name.
  */
-export async function settingsNameGet(client: RequestClient, options?: RequestOptions): Promise<NameInfo> {
+export async function settingsNameGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<NameInfo> {
   return client.GET('/name', options);
 }
 
@@ -86,7 +91,7 @@ export async function settingsNameGet(client: RequestClient, options?: RequestOp
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function settingsNameSet(client: RequestClient, params: NameParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function settingsNameSet<C extends RequestClient>(client: C, params: NameParams, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   const { name } = params;
 
   return client.POST('/name', {
@@ -109,7 +114,7 @@ export async function settingsNameSet(client: RequestClient, params: NameParams,
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<AccessTokensInfo>} A promise that resolves to the list of access tokens.
  */
-export async function settingsAccessTokensGet(client: RequestClient, options?: RequestOptions): Promise<AccessTokensInfo> {
+export async function settingsAccessTokensGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<AccessTokensInfo> {
   return client.GET('/access/tokens', options);
 }
 
@@ -126,7 +131,11 @@ export async function settingsAccessTokensGet(client: RequestClient, options?: R
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<AccessToken>} A promise that resolves to the created token.
  */
-export async function settingsAccessTokenCreate(client: RequestClient, params: AccessTokenCreateParams, options?: RequestOptions): Promise<AccessToken> {
+export async function settingsAccessTokenCreate<C extends RequestClient>(
+  client: C,
+  params: AccessTokenCreateParams,
+  options?: RequestOptionsFor<C>
+): Promise<AccessToken> {
   const { name } = params;
 
   return client.POST('/access/tokens', {
@@ -146,7 +155,7 @@ export async function settingsAccessTokenCreate(client: RequestClient, params: A
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function settingsAccessTokensDelete(client: RequestClient, options?: RequestOptions): Promise<SuccessResponse> {
+export async function settingsAccessTokensDelete<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   return client.DELETE('/access/tokens', options);
 }
 
@@ -161,7 +170,11 @@ export async function settingsAccessTokensDelete(client: RequestClient, options?
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function settingsAccessTokenRevoke(client: RequestClient, params: AccessTokenRevokeParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function settingsAccessTokenRevoke<C extends RequestClient>(
+  client: C,
+  params: AccessTokenRevokeParams,
+  options?: RequestOptionsFor<C>
+): Promise<SuccessResponse> {
   const { short_id: shortId } = params;
 
   return client.DELETE('/access/tokens/{short_id}', {

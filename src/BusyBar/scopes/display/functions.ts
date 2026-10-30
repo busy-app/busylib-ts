@@ -1,6 +1,7 @@
 import { Display } from 'Global/types';
 import { blobToUint8Array, bgrToRgba, getDisplayDimensions, convertL4toRGBA } from 'Global/utils/frameData';
-import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient } from 'BusyBar/client/types';
+import type { RequestOptionsFor } from 'BusyBar/client/types.internal';
 import type { SuccessResponse } from 'BusyBar/types';
 import type {
   DisplayBrightnessInfo,
@@ -25,7 +26,7 @@ import type {
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful draw command.
  */
-export async function displayDraw(client: RequestClient, params: DisplayDrawParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function displayDraw<C extends RequestClient>(client: C, params: DisplayDrawParams, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   return client.POST('/display/draw', {
     body: {
       ...params,
@@ -47,7 +48,7 @@ export async function displayDraw(client: RequestClient, params: DisplayDrawPara
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful clear command.
  */
-export async function displayClear(client: RequestClient, params?: DisplayClearParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function displayClear<C extends RequestClient>(client: C, params?: DisplayClearParams, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   return client.DELETE('/display/draw', {
     body: params ?? {},
     ...options
@@ -68,8 +69,8 @@ export async function displayClear(client: RequestClient, params?: DisplayClearP
  * @returns {Promise<Blob>} A promise that resolves to the screen frame as a Blob.
  * @returns {Promise<ArrayBuffer>} A promise that resolves to the screen frame as an ArrayBuffer when dataType is 'arrayBuffer'.
  */
-export async function displayScreenFrameGet<T extends ScreenFrameGetOptions | undefined>(
-  client: RequestClient,
+export async function displayScreenFrameGet<C extends RequestClient, T extends RequestOptionsFor<C, ScreenFrameGetOptions> | undefined>(
+  client: C,
   params: ScreenFrameGetParams,
   options?: T
 ): Promise<ScreenFrameGetResult<T>> {
@@ -118,7 +119,7 @@ export async function displayScreenFrameGet<T extends ScreenFrameGetOptions | un
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<DisplayBrightnessInfo>} A promise that resolves to the brightness information.
  */
-export async function displayBrightnessGet(client: RequestClient, options?: RequestOptions): Promise<DisplayBrightnessInfo> {
+export async function displayBrightnessGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<DisplayBrightnessInfo> {
   return client.GET('/display/brightness', options);
 }
 
@@ -133,7 +134,11 @@ export async function displayBrightnessGet(client: RequestClient, options?: Requ
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function displayBrightnessSet(client: RequestClient, params: DisplayBrightnessParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function displayBrightnessSet<C extends RequestClient>(
+  client: C,
+  params: DisplayBrightnessParams,
+  options?: RequestOptionsFor<C>
+): Promise<SuccessResponse> {
   const { value } = params;
 
   type Brightness = number | 'auto';

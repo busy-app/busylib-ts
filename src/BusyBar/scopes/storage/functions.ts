@@ -1,4 +1,5 @@
-import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient } from 'BusyBar/client/types';
+import type { RequestOptionsFor } from 'BusyBar/client/types.internal';
 import type {
   StorageCreateDirectoryParams,
   StorageDownloadFileOptions,
@@ -26,7 +27,11 @@ import type { SuccessResponse } from 'BusyBar/types';
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful upload.
  */
-export async function storageWrite(client: RequestClient, params: StorageUploadFileParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function storageWrite<C extends RequestClient>(
+  client: C,
+  params: StorageUploadFileParams,
+  options?: RequestOptionsFor<C>
+): Promise<SuccessResponse> {
   const { file, ...query } = params;
 
   return client.POST('/storage/write', {
@@ -53,10 +58,10 @@ export async function storageWrite(client: RequestClient, params: StorageUploadF
  *   @param {StorageDownloadFileOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<StorageReadResponse>} A promise that resolves to the file content (Blob or ArrayBuffer).
  */
-export async function storageRead(
-  client: RequestClient,
+export async function storageRead<C extends RequestClient>(
+  client: C,
   params: StorageDownloadFileParams,
-  options?: StorageDownloadFileOptions
+  options?: RequestOptionsFor<C, StorageDownloadFileOptions>
 ): Promise<StorageReadResponse> {
   const { path } = params;
 
@@ -83,7 +88,11 @@ export async function storageRead(
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<StorageList>} A promise that resolves to a list of files and directories.
  */
-export async function storageListGet(client: RequestClient, params: StorageReadDirectoryParams, options?: RequestOptions): Promise<StorageList> {
+export async function storageListGet<C extends RequestClient>(
+  client: C,
+  params: StorageReadDirectoryParams,
+  options?: RequestOptionsFor<C>
+): Promise<StorageList> {
   const { path } = params;
 
   return client.GET('/storage/list', {
@@ -107,7 +116,7 @@ export async function storageListGet(client: RequestClient, params: StorageReadD
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful removal.
  */
-export async function storageRemove(client: RequestClient, params: StorageRemoveParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function storageRemove<C extends RequestClient>(client: C, params: StorageRemoveParams, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   const { path } = params;
 
   return client.DELETE('/storage/remove', {
@@ -131,7 +140,11 @@ export async function storageRemove(client: RequestClient, params: StorageRemove
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful creation.
  */
-export async function storageMkdir(client: RequestClient, params: StorageCreateDirectoryParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function storageMkdir<C extends RequestClient>(
+  client: C,
+  params: StorageCreateDirectoryParams,
+  options?: RequestOptionsFor<C>
+): Promise<SuccessResponse> {
   const { path } = params;
 
   return client.POST('/storage/mkdir', {
@@ -153,7 +166,7 @@ export async function storageMkdir(client: RequestClient, params: StorageCreateD
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<StorageStatus>} A promise that resolves to the storage status.
  */
-export async function storageStatusGet(client: RequestClient, options?: RequestOptions): Promise<StorageStatus> {
+export async function storageStatusGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<StorageStatus> {
   return client.GET('/storage/status', options);
 }
 
@@ -169,7 +182,7 @@ export async function storageStatusGet(client: RequestClient, options?: RequestO
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful rename.
  */
-export async function storageRename(client: RequestClient, params: StorageRenameParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function storageRename<C extends RequestClient>(client: C, params: StorageRenameParams, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   const { path, new_path } = params;
 
   return client.POST('/storage/rename', {

@@ -1,4 +1,5 @@
-import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient } from 'BusyBar/client/types';
+import type { RequestOptionsFor } from 'BusyBar/client/types.internal';
 import type {
   LogDumpParams,
   LogDumpResponse,
@@ -20,7 +21,7 @@ import type {
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<VersionInfo>} A promise that resolves to an object containing the `api_semver` string.
  */
-export async function systemVersionGet(client: RequestClient, options?: RequestOptions): Promise<VersionInfo> {
+export async function systemVersionGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<VersionInfo> {
   return client.GET('/version', options);
 }
 
@@ -33,7 +34,7 @@ export async function systemVersionGet(client: RequestClient, options?: RequestO
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<Status>} Current status of the device.
  */
-export async function systemStatusGet(client: RequestClient, options?: RequestOptions): Promise<Status> {
+export async function systemStatusGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<Status> {
   return client.GET('/status', options);
 }
 
@@ -46,7 +47,7 @@ export async function systemStatusGet(client: RequestClient, options?: RequestOp
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<StatusSystem>} Current system status.
  */
-export async function systemInfoGet(client: RequestClient, options?: RequestOptions): Promise<StatusSystem> {
+export async function systemInfoGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<StatusSystem> {
   return client.GET('/status/system', options);
 }
 
@@ -59,7 +60,7 @@ export async function systemInfoGet(client: RequestClient, options?: RequestOpti
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<StatusPower>} Current power status.
  */
-export async function systemStatusPowerGet(client: RequestClient, options?: RequestOptions): Promise<StatusPower> {
+export async function systemStatusPowerGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<StatusPower> {
   return client.GET('/status/power', options);
 }
 
@@ -72,7 +73,7 @@ export async function systemStatusPowerGet(client: RequestClient, options?: Requ
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<StatusDevice>} Current device status.
  */
-export async function systemStatusDeviceGet(client: RequestClient, options?: RequestOptions): Promise<StatusDevice> {
+export async function systemStatusDeviceGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<StatusDevice> {
   return client.GET('/status/device', options);
 }
 
@@ -85,7 +86,7 @@ export async function systemStatusDeviceGet(client: RequestClient, options?: Req
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<StatusFirmware>} Current firmware status.
  */
-export async function systemStatusFirmwareGet(client: RequestClient, options?: RequestOptions): Promise<StatusFirmware> {
+export async function systemStatusFirmwareGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<StatusFirmware> {
   return client.GET('/status/firmware', options);
 }
 
@@ -98,7 +99,7 @@ export async function systemStatusFirmwareGet(client: RequestClient, options?: R
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<NetworkInterfaceInfo>} Current transport info (usb/wifi).
  */
-export async function systemTransportGet(client: RequestClient, options?: RequestOptions): Promise<NetworkInterfaceInfo> {
+export async function systemTransportGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<NetworkInterfaceInfo> {
   return client.GET('/transport', options);
 }
 
@@ -113,7 +114,7 @@ export async function systemTransportGet(client: RequestClient, options?: Reques
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<LogDumpResponse>} A promise that resolves to the result and the full path to the written log file.
  */
-export async function systemLogDump(client: RequestClient, params?: LogDumpParams, options?: RequestOptions): Promise<LogDumpResponse> {
+export async function systemLogDump<C extends RequestClient>(client: C, params?: LogDumpParams, options?: RequestOptionsFor<C>): Promise<LogDumpResponse> {
   return client.POST('/log_dump', {
     params: {
       query: {

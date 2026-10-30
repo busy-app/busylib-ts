@@ -1,8 +1,14 @@
 // Types used only inside the library; the public ones live in types.ts.
 import type { paths } from 'Global/API';
-import type { HttpMethod, PathsWithMethod, ResponseData } from './types';
+import type { BusyBarAppClient } from './BusyBarAppClient';
+import type { HttpMethod, PathsWithMethod, RequestOptions, ResponseData } from './types';
 
 export type ApiKey = string;
+
+/**
+ * Request options a function takes with the given client: `O` as is, or `O` without `timeout` and `signal` for `BusyBarAppClient`, as the device firmware cannot cancel a request.
+ */
+export type RequestOptionsFor<C, O extends RequestOptions = RequestOptions> = C extends BusyBarAppClient ? O & { timeout?: never; signal?: never } : O;
 
 export type RequiredKeys<T> = { [K in keyof T]-?: {} extends Pick<T, K> ? never : K }[keyof T];
 

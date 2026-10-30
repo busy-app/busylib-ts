@@ -1,4 +1,5 @@
-import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient } from 'BusyBar/client/types';
+import type { RequestOptionsFor } from 'BusyBar/client/types.internal';
 import type {
   AppListResult,
   AppSettingsDocument,
@@ -23,7 +24,7 @@ import type { SuccessResponse } from 'BusyBar/types';
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<AppStageResult>} A promise that resolves to the staging result, including the installation key and staged application info.
  */
-export async function appsStage(client: RequestClient, params: AppsStageParams, options?: RequestOptions): Promise<AppStageResult> {
+export async function appsStage<C extends RequestClient>(client: C, params: AppsStageParams, options?: RequestOptionsFor<C>): Promise<AppStageResult> {
   const { file } = params;
 
   return client.POST('/apps/stage', {
@@ -46,7 +47,7 @@ export async function appsStage(client: RequestClient, params: AppsStageParams, 
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves when the application is installed.
  */
-export async function appsInstall(client: RequestClient, params: AppsInstallParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function appsInstall<C extends RequestClient>(client: C, params: AppsInstallParams, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   const { install_key } = params;
 
   return client.POST('/apps/install', {
@@ -70,7 +71,7 @@ export async function appsInstall(client: RequestClient, params: AppsInstallPara
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves when the application is removed.
  */
-export async function appsRemove(client: RequestClient, params: AppsRemoveParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function appsRemove<C extends RequestClient>(client: C, params: AppsRemoveParams, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   const { app_id } = params;
 
   return client.DELETE('/apps', {
@@ -92,7 +93,7 @@ export async function appsRemove(client: RequestClient, params: AppsRemoveParams
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<AppListResult>} A promise that resolves to the list of installed applications.
  */
-export async function appsList(client: RequestClient, options?: RequestOptions): Promise<AppListResult> {
+export async function appsList<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<AppListResult> {
   return client.GET('/apps/list', options);
 }
 
@@ -107,7 +108,11 @@ export async function appsList(client: RequestClient, options?: RequestOptions):
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<AppSettingsDocument>} A promise that resolves to the settings document.
  */
-export async function appsSettingsGet(client: RequestClient, params: AppsSettingsGetParams, options?: RequestOptions): Promise<AppSettingsDocument> {
+export async function appsSettingsGet<C extends RequestClient>(
+  client: C,
+  params: AppsSettingsGetParams,
+  options?: RequestOptionsFor<C>
+): Promise<AppSettingsDocument> {
   const { app_id } = params;
 
   return client.GET('/apps/settings', {
@@ -132,7 +137,11 @@ export async function appsSettingsGet(client: RequestClient, params: AppsSetting
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves when the settings are stored.
  */
-export async function appsSettingsSet(client: RequestClient, params: AppsSettingsSetParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function appsSettingsSet<C extends RequestClient>(
+  client: C,
+  params: AppsSettingsSetParams,
+  options?: RequestOptionsFor<C>
+): Promise<SuccessResponse> {
   const { app_id, settings } = params;
 
   return client.PUT('/apps/settings', {
@@ -157,7 +166,11 @@ export async function appsSettingsSet(client: RequestClient, params: AppsSetting
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves when the settings are reset.
  */
-export async function appsSettingsReset(client: RequestClient, params: AppsSettingsResetParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function appsSettingsReset<C extends RequestClient>(
+  client: C,
+  params: AppsSettingsResetParams,
+  options?: RequestOptionsFor<C>
+): Promise<SuccessResponse> {
   const { app_id } = params;
 
   return client.DELETE('/apps/settings', {

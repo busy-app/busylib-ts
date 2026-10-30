@@ -1,4 +1,5 @@
-import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient } from 'BusyBar/client/types';
+import type { RequestOptionsFor } from 'BusyBar/client/types.internal';
 import type { TimeTimestampParams, TimeTimezoneParams, TimestampInfo, TimezoneInfo, TimezoneList } from 'BusyBar/scopes/time/types';
 import type { SuccessResponse } from 'BusyBar/types';
 
@@ -11,7 +12,7 @@ import type { SuccessResponse } from 'BusyBar/types';
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<TimestampInfo>} A promise that resolves to the timestamp information.
  */
-export async function timeGet(client: RequestClient, options?: RequestOptions): Promise<TimestampInfo> {
+export async function timeGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<TimestampInfo> {
   return client.GET('/time', options);
 }
 
@@ -26,7 +27,11 @@ export async function timeGet(client: RequestClient, options?: RequestOptions): 
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function timeTimestampSet(client: RequestClient, params: TimeTimestampParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function timeTimestampSet<C extends RequestClient>(
+  client: C,
+  params: TimeTimestampParams,
+  options?: RequestOptionsFor<C>
+): Promise<SuccessResponse> {
   const { timestamp } = params;
 
   return client.POST('/time/timestamp', {
@@ -46,7 +51,7 @@ export async function timeTimestampSet(client: RequestClient, params: TimeTimest
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<TimezoneInfo>} A promise that resolves to the timezone information.
  */
-export async function timeTimezoneGet(client: RequestClient, options?: RequestOptions): Promise<TimezoneInfo> {
+export async function timeTimezoneGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<TimezoneInfo> {
   return client.GET('/time/timezone', options);
 }
 
@@ -61,7 +66,11 @@ export async function timeTimezoneGet(client: RequestClient, options?: RequestOp
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function timeTimezoneSet(client: RequestClient, params: TimeTimezoneParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function timeTimezoneSet<C extends RequestClient>(
+  client: C,
+  params: TimeTimezoneParams,
+  options?: RequestOptionsFor<C>
+): Promise<SuccessResponse> {
   const { timezone } = params;
 
   return client.POST('/time/timezone', {
@@ -81,6 +90,6 @@ export async function timeTimezoneSet(client: RequestClient, params: TimeTimezon
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<TimezoneList>} A promise that resolves to a list of timezone items.
  */
-export async function timeTzListGet(client: RequestClient, options?: RequestOptions): Promise<TimezoneList> {
+export async function timeTzListGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<TimezoneList> {
   return client.GET('/time/tzlist', options);
 }

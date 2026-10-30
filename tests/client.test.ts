@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
-import { BusyBar, BusyBarAppClient, BusyBarClient, type BusyBarConfig } from 'BusyBar/index';
+import { BusyBar, BusyBarAppClient, BusyBarClient, storageRead, type BusyBarConfig } from 'BusyBar/index';
 import { resolveAddress } from 'BusyBar/client/config';
 import { toFetchError } from 'BusyBar/client/errors';
 import { sendRequest } from 'BusyBar/client/transport';
@@ -382,29 +382,39 @@ describe('BusyBarAppClient', () => {
     });
   });
 
-  test('timeout rejects with TimeoutError, as on the device: no AbortController and a fetch that ignores the signal', async () => {
-    stubDeviceFetch();
-    await expect(new BusyBarAppClient({ timeout: 20 }).GET('/status')).rejects.toMatchObject({ name: 'TimeoutError', message: 'Request timed out after 20ms' });
-    await expect(new BusyBarAppClient().GET('/status', { timeout: 10 })).rejects.toMatchObject({
-      name: 'TimeoutError',
-      message: 'Request timed out after 10ms'
-    });
-  });
-
-  test('timeout 0 sets no timer', async () => {
-    mockFetch();
+  test('timeout and signal are ignored with a warning, once per client', async () => {
+    const { requests } = mockFetch();
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const set = vi.spyOn(globalThis, 'setTimeout');
-    await new BusyBarAppClient({ timeout: 0 }).GET('/status');
+    const client = new BusyBarAppClient();
+    await client.GET('/status', { timeout: 10 } as never);
+    await client.GET('/status', { signal: AbortSignal.timeout(10) } as never);
+    expect(requests).toHaveLength(2);
+    expect(warn.mock.calls).toEqual([['BusyBarAppClient ignores timeout and signal: the BUSY Bar firmware cannot cancel a request']]);
     expect(set).not.toHaveBeenCalled();
+    warn.mockRestore();
     set.mockRestore();
   });
 
-  test('the timer of an answered request is cleared', async () => {
-    mockFetch();
-    const clear = vi.spyOn(globalThis, 'clearTimeout');
-    await new BusyBarAppClient({ timeout: 1000 }).GET('/status');
-    expect(clear).toHaveBeenCalledTimes(1);
-    clear.mockRestore();
+  test('a function without options does not warn', async () => {
+    mockFetch(() => new Response('a'));
+    const warn = vi.spyOn(console, 'warn');
+    // storageRead passes `timeout: undefined` and `signal: undefined`.
+    await storageRead(new BusyBarAppClient(), { path: '/ext/a' });
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
+  test('a firmware rejection, a bare string, becomes an Error, named TimeoutError for the inactivity timeout', async () => {
+    vi.stubGlobal('fetch', () => Promise.reject('Inactivity timeout'));
+    const timeout = await new BusyBarAppClient().GET('/status').catch((error: unknown) => error);
+    expect(timeout).toBeInstanceOf(Error);
+    expect(timeout).toMatchObject({ name: 'TimeoutError', message: 'Inactivity timeout' });
+
+    vi.stubGlobal('fetch', () => Promise.reject('Failed to connect to server'));
+    const failed = await new BusyBarAppClient().GET('/status').catch((error: unknown) => error);
+    expect(failed).toBeInstanceOf(Error);
+    expect(failed).toMatchObject({ name: 'Error', message: 'Failed to connect to server' });
   });
 });
 

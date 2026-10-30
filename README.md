@@ -195,7 +195,7 @@ await bar.client.request('GET', '/status', { signal: controller.signal });
 
 ### Apps on the BUSY Bar
 
-An app that runs on the BUSY Bar talks to the device it runs on, and most of what `BusyBarClient` does is not needed there: requests from the device itself are always allowed, the firmware checks the app's `api_version` when installing and launching it, and there is no proxy. Use `BusyBarAppClient` instead - it adds only a timeout and `FetchError` on top of `fetch`, with no authentication headers and no API version negotiation. Apps run in JerryScript, where every layer of JS adds to the time of each request, so a lighter client makes the display respond faster.
+An app that runs on the BUSY Bar talks to the device it runs on, and most of what `BusyBarClient` does is not needed there: requests from the device itself are always allowed, the firmware checks the app's `api_version` when installing and launching it, and there is no proxy. Use `BusyBarAppClient` instead - it adds only `FetchError` on top of `fetch`, with no authentication headers and no API version negotiation. Apps run in JerryScript, where every layer of JS adds to the time of each request, so a lighter client makes the display respond faster.
 
 ```ts
 import { BusyBarAppClient, displayDraw } from '@busy-app/busy-lib';
@@ -213,18 +213,25 @@ await displayDraw(client, {
 });
 ```
 
-`BusyBarAppClient` works with every standalone function and has the same `GET`, `POST`, `PUT`, `DELETE` and `request` for [direct requests](#direct-requests). It takes `addr` (a host or an origin, `localhost` by default, used as is: unlike `BusyBarClient`, it does not know the BUSY proxy) and `timeout` (3000ms by default, `0` disables it).
+`BusyBarAppClient` works with every standalone function and has the same `GET`, `POST`, `PUT`, `DELETE` and `request` for [direct requests](#direct-requests). It takes `addr` (a host or an origin, `localhost` by default, used as is: unlike `BusyBarClient`, it does not know the BUSY proxy).
+
+It takes no `timeout` or `signal`: the firmware cannot cancel a request, so a timeout would only reject the promise while the request kept running and holding memory. With this client, the functions and direct requests do not accept them in TypeScript; JavaScript that passes them gets a warning in the device log, once per client, and the app keeps running without them. The firmware fails a request itself when no data comes for too long, with an `Error` named `TimeoutError`; other network failures are an `Error` with the firmware's message.
+
+```ts
+// TypeScript error: a request from an app cannot be cancelled
+await displayDraw(client, params, { timeout: 1000 });
+```
 
 `BusyBarClient` works on the device too, but it asks for `/version` before the first request and runs the full pipeline for every request, which shows in how fast the display responds.
 
-Firmware limits, for any client:
+Firmware limits for `BusyBarClient` on the device:
 
 - **A timeout does not cancel the request.** The firmware cannot abort a request, so a timeout only rejects the promise, and the request itself runs to the end. The rejection is an `Error` with `name === 'TimeoutError'`, not a `DOMException` - it is a stub in the firmware
 - **`signal` has no effect.** `AbortController` is a stub in the firmware, and its `fetch` ignores `signal`
 
 ### Pitfalls
 
-- **Protocol is auto-added.** `addr` defaults to `http://`, except the BUSY proxy host, which defaults to `https://`. Specify the protocol explicitly to override
+- **Protocol is auto-added.** An `addr` without a protocol gets `http://`, except the BUSY proxy host, which gets `https://` from `BusyBar` and `BusyBarClient`; `BusyBarAppClient` does not know the proxy and always adds `http://`. Specify the protocol explicitly to override
 
 ---
 

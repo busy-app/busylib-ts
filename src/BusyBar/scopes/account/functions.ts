@@ -1,4 +1,5 @@
-import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient } from 'BusyBar/client/types';
+import type { RequestOptionsFor } from 'BusyBar/client/types.internal';
 import type { AccountBackend, AccountBackendSetParams, AccountInfo, AccountLink, AccountStatus } from 'BusyBar/scopes/account/types';
 import type { SuccessResponse } from 'BusyBar/types';
 
@@ -11,7 +12,7 @@ import type { SuccessResponse } from 'BusyBar/types';
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<AccountInfo>} A promise that resolves to the account information.
  */
-export async function accountInfoGet(client: RequestClient, options?: RequestOptions): Promise<AccountInfo> {
+export async function accountInfoGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<AccountInfo> {
   return client.GET('/account/info', options);
 }
 
@@ -24,7 +25,7 @@ export async function accountInfoGet(client: RequestClient, options?: RequestOpt
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<AccountStatus>} A promise that resolves to the account state.
  */
-export async function accountStateGet(client: RequestClient, options?: RequestOptions): Promise<AccountStatus> {
+export async function accountStateGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<AccountStatus> {
   return client.GET('/account/status', options);
 }
 
@@ -37,7 +38,7 @@ export async function accountStateGet(client: RequestClient, options?: RequestOp
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<AccountBackend>} A promise that resolves to the MQTT backend configuration.
  */
-export async function accountBackendGet(client: RequestClient, options?: RequestOptions): Promise<AccountBackend> {
+export async function accountBackendGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<AccountBackend> {
   return client.GET('/account/backend', options);
 }
 
@@ -54,7 +55,11 @@ export async function accountBackendGet(client: RequestClient, options?: Request
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on success.
  */
-export async function accountBackendSet(client: RequestClient, params: AccountBackendSetParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function accountBackendSet<C extends RequestClient>(
+  client: C,
+  params: AccountBackendSetParams,
+  options?: RequestOptionsFor<C>
+): Promise<SuccessResponse> {
   const { server_url, client_cert_type, ignore_server_cert } = params;
 
   return client.PUT('/account/backend', {
@@ -76,7 +81,7 @@ export async function accountBackendSet(client: RequestClient, params: AccountBa
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successful unlinking.
  */
-export async function accountUnlink(client: RequestClient, options?: RequestOptions): Promise<SuccessResponse> {
+export async function accountUnlink<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<SuccessResponse> {
   return client.DELETE('/account', options);
 }
 
@@ -89,6 +94,6 @@ export async function accountUnlink(client: RequestClient, options?: RequestOpti
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<AccountLink>} A promise that resolves to the link information (e.g., PIN).
  */
-export async function accountLink(client: RequestClient, options?: RequestOptions): Promise<AccountLink> {
+export async function accountLink<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<AccountLink> {
   return client.POST('/account/link', options);
 }

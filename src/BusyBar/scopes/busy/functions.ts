@@ -1,4 +1,5 @@
-import type { RequestClient, RequestOptions } from 'BusyBar/client/types';
+import type { RequestClient } from 'BusyBar/client/types';
+import type { RequestOptionsFor } from 'BusyBar/client/types.internal';
 import type { BusyProfile, BusyProfileGetParams, BusyProfileSetParams, BusySnapshot, BusySnapshotSetParams } from 'BusyBar/scopes/busy/types';
 import type { SuccessResponse } from 'BusyBar/types';
 
@@ -13,7 +14,7 @@ import type { SuccessResponse } from 'BusyBar/types';
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<BusySnapshot>} Current BUSY timer snapshot.
  */
-export async function busySnapshotGet(client: RequestClient, options?: RequestOptions): Promise<BusySnapshot> {
+export async function busySnapshotGet<C extends RequestClient>(client: C, options?: RequestOptionsFor<C>): Promise<BusySnapshot> {
   return client.GET('/busy/snapshot', options);
 }
 
@@ -31,7 +32,11 @@ export async function busySnapshotGet(client: RequestClient, options?: RequestOp
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successfully set snapshot.
  */
-export async function busySnapshotSet(client: RequestClient, params: BusySnapshotSetParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function busySnapshotSet<C extends RequestClient>(
+  client: C,
+  params: BusySnapshotSetParams,
+  options?: RequestOptionsFor<C>
+): Promise<SuccessResponse> {
   return client.PUT('/busy/snapshot', {
     body: params,
     ...options
@@ -51,7 +56,7 @@ export async function busySnapshotSet(client: RequestClient, params: BusySnapsho
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<BusyProfile>} BUSY timer profile for the given slot.
  */
-export async function busyProfileGet(client: RequestClient, params: BusyProfileGetParams, options?: RequestOptions): Promise<BusyProfile> {
+export async function busyProfileGet<C extends RequestClient>(client: C, params: BusyProfileGetParams, options?: RequestOptionsFor<C>): Promise<BusyProfile> {
   const { slot } = params;
 
   return client.GET('/busy/profiles/{slot}', {
@@ -75,7 +80,11 @@ export async function busyProfileGet(client: RequestClient, params: BusyProfileG
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
  * @returns {Promise<SuccessResponse>} A promise that resolves on successfully set profile.
  */
-export async function busyProfileSet(client: RequestClient, params: BusyProfileSetParams, options?: RequestOptions): Promise<SuccessResponse> {
+export async function busyProfileSet<C extends RequestClient>(
+  client: C,
+  params: BusyProfileSetParams,
+  options?: RequestOptionsFor<C>
+): Promise<SuccessResponse> {
   const { slot, ...body } = params;
 
   return client.PUT('/busy/profiles/{slot}', {

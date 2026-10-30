@@ -53,7 +53,7 @@ globalThis.run = async () => {
     code: `import { BusyBarAppClient } from '@busy-app/busy-lib';
 globalThis.client = new BusyBarAppClient();`,
     endpoints: [],
-    limit: { min: 3_100, gzip: 1_440 }
+    limit: { min: 3_020, gzip: 1_430 }
   },
   {
     name: 'BusyBarAppClient + displayDraw',
@@ -61,7 +61,7 @@ globalThis.client = new BusyBarAppClient();`,
 const client = new BusyBarAppClient();
 globalThis.run = () => ${drawCall};`,
     endpoints: ['POST /display/draw'],
-    limit: { min: 3_250, gzip: 1_520 }
+    limit: { min: 3_180, gzip: 1_510 }
   },
   {
     name: 'weather on BusyBarAppClient',
@@ -73,7 +73,7 @@ globalThis.run = async () => {
   await ${drawCall};
 };`,
     endpoints: ['DELETE /display/draw', 'GET /apps/settings', 'POST /display/draw'],
-    limit: { min: 3_500, gzip: 1_600 }
+    limit: { min: 3_440, gzip: 1_590 }
   },
   {
     name: 'BusyBar',
