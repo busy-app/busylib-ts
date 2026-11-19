@@ -10,6 +10,8 @@ import type {
   ConvertedBle,
   ConvertedUpdateState,
   ConvertedCheckState,
+  ConvertedAppQueueState,
+  ConvertedAppQueueEvent,
   ConvertedStateUpdate,
   ConvertedState
 } from './types';
@@ -21,7 +23,8 @@ import {
   convertIpMethod,
   convertIpProtocol,
   convertMatterCommissioningStatus,
-  convertBleServiceStatus
+  convertBleServiceStatus,
+  convertAppQueueError
 } from './state';
 import { convertUpdateEvent, convertUpdateAction, convertUpdateStatus, convertCheckError, convertCheckEvent } from './update';
 
@@ -84,6 +87,26 @@ export function convertBle(ble: BSB_State.Ble.Ble | null | undefined): Converted
   };
 }
 
+export function convertAppQueueState(state: BSB_State.AppQueueState | null | undefined): ConvertedAppQueueState | null {
+  if (state == null) return null;
+  return {
+    ...state
+  };
+}
+
+export function convertAppQueueEvent(event: BSB_State.AppQueueEvent | null | undefined): ConvertedAppQueueEvent | null {
+  if (event == null) return null;
+  return {
+    result:
+      event.result == null
+        ? event.result
+        : {
+            ...event.result,
+            error: convertAppQueueError(event.result.error)
+          }
+  };
+}
+
 export function convertUpdateState(updateState: BSB_Update.UpdateState | null | undefined): ConvertedUpdateState | null {
   if (updateState == null) return null;
   return {
@@ -119,7 +142,9 @@ export function convertStateUpdate(update: BSB_State.StateUpdate): ConvertedStat
     matter: convertMatter(update.matter),
     ble: convertBle(update.ble),
     updateState: convertUpdateState(update.updateState),
-    updateCheck: convertCheckState(update.updateCheck)
+    updateCheck: convertCheckState(update.updateCheck),
+    appQueueState: convertAppQueueState(update.appQueueState),
+    appQueueEvent: convertAppQueueEvent(update.appQueueEvent)
   }) as ConvertedStateUpdate;
 }
 

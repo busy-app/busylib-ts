@@ -1,5 +1,5 @@
 import type { BSB_State, BSB_Update, BSB_Input, BSB_Timer, BSB_Frame, BSB_Error } from 'StateStream/types/schema';
-import type { BatteryStatus, WifiConnectionStatus, MatterCommissioningStatus, BleServiceStatus } from './state';
+import type { AppQueueError, BatteryStatus, WifiConnectionStatus, MatterCommissioningStatus, BleServiceStatus } from './state';
 import type { components } from 'Global/API';
 type WifiSecurityMethod = components['schemas']['WifiSecurityMethod'];
 type WifiIpMethod = components['schemas']['WifiIpMethod'];
@@ -38,6 +38,18 @@ export interface ConvertedMatter {
     | null;
 }
 
+export interface ConvertedAppQueueState {
+  detail?: BSB_State.AppQueueOperationDetail | null;
+}
+
+export interface ConvertedAppQueueOperationResult extends Omit<BSB_State.AppQueueOperationResult, 'error'> {
+  error: AppQueueError | null;
+}
+
+export interface ConvertedAppQueueEvent {
+  result?: ConvertedAppQueueOperationResult | null;
+}
+
 export interface ConvertedBle {
   status: BleServiceStatus | null;
   remoteAddress?: string | null;
@@ -71,6 +83,8 @@ export interface ConvertedStateUpdate {
   ble?: ConvertedBle | null;
   autoUpdateState?: BSB_Update.AutoUpdateState | null;
   timerProfiles?: BSB_Timer.Profiles | null;
+  appQueueState?: ConvertedAppQueueState | null;
+  appQueueEvent?: ConvertedAppQueueEvent | null;
 }
 
 export interface ConvertedState {

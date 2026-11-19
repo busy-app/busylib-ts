@@ -6,6 +6,20 @@ export type BatteryStatus = components['schemas']['StatusPower']['state'];
 export type WifiConnectionStatus = components['schemas']['StatusResponse']['state'];
 export type MatterCommissioningStatus = NonNullable<NonNullable<components['schemas']['SmartHomePairingInfo']['latest_pairing_status']>['value']>;
 export type BleServiceStatus = components['schemas']['BleStatusResponse']['status'];
+export type AppQueueError =
+  | 'ok'
+  | 'download'
+  | 'unpack'
+  | 'manifest'
+  | 'api_version'
+  | 'storage'
+  | 'timeout'
+  | 'not_found'
+  | 'queue_full'
+  | 'cancelled'
+  | 'app_running'
+  | 'parameter'
+  | 'internal';
 
 type WifiSecurityMethod = components['schemas']['WifiSecurityMethod'];
 type WifiIpMethod = components['schemas']['WifiIpMethod'];
@@ -52,6 +66,22 @@ const MATTER_STATUS_MAP: Record<BSB_State.MatterCommissioningStatus, MatterCommi
   [BSB_State.MatterCommissioningStatus.FAILED]: 'failed'
 };
 
+const APP_QUEUE_ERROR_MAP: Record<BSB_State.AppQueueError, AppQueueError> = {
+  [BSB_State.AppQueueError.OK]: 'ok',
+  [BSB_State.AppQueueError.DOWNLOAD]: 'download',
+  [BSB_State.AppQueueError.UNPACK]: 'unpack',
+  [BSB_State.AppQueueError.MANIFEST]: 'manifest',
+  [BSB_State.AppQueueError.API_VERSION]: 'api_version',
+  [BSB_State.AppQueueError.STORAGE]: 'storage',
+  [BSB_State.AppQueueError.TIMEOUT]: 'timeout',
+  [BSB_State.AppQueueError.NOT_FOUND]: 'not_found',
+  [BSB_State.AppQueueError.QUEUE_FULL]: 'queue_full',
+  [BSB_State.AppQueueError.CANCELLED]: 'cancelled',
+  [BSB_State.AppQueueError.APP_RUNNING]: 'app_running',
+  [BSB_State.AppQueueError.PARAMETER]: 'parameter',
+  [BSB_State.AppQueueError.INTERNAL]: 'internal'
+};
+
 const BLE_STATUS_MAP: Record<BSB_State.Ble.ServiceStatus, BleServiceStatus> = {
   [BSB_State.Ble.ServiceStatus.RESET]: 'reset',
   [BSB_State.Ble.ServiceStatus.INITIALIZATION]: 'initialization',
@@ -88,4 +118,8 @@ export function convertMatterCommissioningStatus(value: BSB_State.MatterCommissi
 
 export function convertBleServiceStatus(value: BSB_State.Ble.ServiceStatus | null | undefined): BleServiceStatus | null {
   return convertEnum(BLE_STATUS_MAP, value);
+}
+
+export function convertAppQueueError(value: BSB_State.AppQueueError | null | undefined): AppQueueError | null {
+  return convertEnum(APP_QUEUE_ERROR_MAP, value);
 }

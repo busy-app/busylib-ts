@@ -47,6 +47,12 @@ export namespace BSB_State {
 
     /** StateUpdate timerProfiles */
     timerProfiles?: BSB_Timer.Profiles | null;
+
+    /** StateUpdate appQueueState */
+    appQueueState?: BSB_State.AppQueueState | null;
+
+    /** StateUpdate appQueueEvent */
+    appQueueEvent?: BSB_State.AppQueueEvent | null;
   }
 
   /** Properties of a State. */
@@ -59,6 +65,56 @@ export namespace BSB_State {
 
     /** State error */
     error?: BSB_Error.Error | null;
+  }
+
+  /** AppQueueError enum. */
+  export enum AppQueueError {
+    OK = 0,
+    DOWNLOAD = 1,
+    UNPACK = 2,
+    MANIFEST = 3,
+    API_VERSION = 4,
+    STORAGE = 5,
+    TIMEOUT = 6,
+    NOT_FOUND = 7,
+    QUEUE_FULL = 8,
+    CANCELLED = 9,
+    APP_RUNNING = 10,
+    PARAMETER = 11,
+    INTERNAL = 12
+  }
+
+  /** Properties of an AppQueueOperationDetail. */
+  export interface AppQueueOperationDetail {
+    /** AppQueueOperationDetail itemId */
+    itemId?: number | null;
+
+    /** AppQueueOperationDetail step */
+    step?: string | null;
+
+    /** AppQueueOperationDetail progress */
+    progress?: number | null;
+  }
+
+  /** Properties of an AppQueueOperationResult. */
+  export interface AppQueueOperationResult {
+    /** AppQueueOperationResult itemId */
+    itemId?: number | null;
+
+    /** AppQueueOperationResult error */
+    error?: BSB_State.AppQueueError | null;
+  }
+
+  /** Properties of an AppQueueState. */
+  export interface AppQueueState {
+    /** AppQueueState detail */
+    detail?: BSB_State.AppQueueOperationDetail | null;
+  }
+
+  /** Properties of an AppQueueEvent. */
+  export interface AppQueueEvent {
+    /** AppQueueEvent result */
+    result?: BSB_State.AppQueueOperationResult | null;
   }
 
   /** Properties of a DeviceName. */

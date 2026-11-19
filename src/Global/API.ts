@@ -258,6 +258,53 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/apps/queue': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get the app queue contents
+     * @description Get the current status of the app management queue.
+     *
+     */
+    get: operations['getAppQueue'];
+    put?: never;
+    /**
+     * Add operation(s) to the app queue
+     * @description Add specified operations to the app management queue.
+     *
+     */
+    post: operations['addToAppQueue'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/apps/queue/cancel': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Cancel operation or clear the app queue
+     * @description Cancel a queued operation by its queue ID, or clear the entire queue.
+     *
+     */
+    post: operations['cancelAppQueue'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/assets/upload': {
     parameters: {
       query?: never;
@@ -1778,9 +1825,19 @@ export interface components {
     };
     /**
      * @description JavaScript application id
-     * @example app.author.example_app
+     * @example com.author.example-app
      */
     AppId: string;
+    /**
+     * Format: url
+     * @example https://author.com/apps/example-app.tar.gz
+     */
+    AppUrl: string;
+    /**
+     * @description Version in SemVer (x.y.z) format
+     * @example 1.2.3
+     */
+    AppVersion: string;
     AppStageResult: {
       /**
        * @description Operation result
@@ -1857,6 +1914,73 @@ export interface components {
       values: {
         [key: string]: unknown;
       };
+    };
+    /** @description Numeric identifier of the item in the queue. Starts at 0 for the first queue operation after reset and wraps back to 0 on overflow.
+     *      */
+    AppQueueItemId: number;
+    /** @enum {string} */
+    AppQueueOperationType: 'install' | 'remove';
+    AppQueueOperation: {
+      type: components['schemas']['AppQueueOperationType'];
+      version?: components['schemas']['AppVersion'];
+    };
+    /**
+     * @description Status of the queued operation
+     * @enum {string}
+     */
+    AppQueueStatus: 'pending' | 'in_progress';
+    /**
+     * @description Error message if item failed to be enqueued
+     * @enum {string}
+     */
+    AppQueueError: 'timeout' | 'queue_full' | 'skipped';
+    /** @description Additional status of the ongoing operation */
+    AppQueueDetail: {
+      /** @example unpacking */
+      step: string;
+      /** @example 34 */
+      progress?: number;
+    };
+    /** @description Single item of the app operation queue */
+    AppQueueItem: {
+      item_id: components['schemas']['AppQueueItemId'];
+      app_id: components['schemas']['AppId'];
+      operation: components['schemas']['AppQueueOperation'];
+      status: components['schemas']['AppQueueStatus'];
+      detail?: components['schemas']['AppQueueDetail'];
+    };
+    AppQueueRequestOperation: {
+      type: components['schemas']['AppQueueOperationType'];
+      url?: components['schemas']['AppUrl'];
+      version?: components['schemas']['AppVersion'];
+    };
+    /** @description Single item to be sent as an app operation queue command */
+    AppQueueRequestItem: {
+      app_id: components['schemas']['AppId'];
+      operation: components['schemas']['AppQueueRequestOperation'];
+    };
+    /** @description Single item of the app operation queue response */
+    AppQueueResponseItem: {
+      app_id?: components['schemas']['AppId'];
+      operation?: components['schemas']['AppQueueOperation'];
+      item_id?: components['schemas']['AppQueueItemId'];
+      error?: components['schemas']['AppQueueError'];
+    } & (unknown | unknown);
+    AppQueueGetResponse: {
+      result: components['schemas']['AppQueueItem'][];
+    };
+    AppQueueAddRequest: {
+      operations: components['schemas']['AppQueueRequestItem'][];
+    };
+    AppQueueAddResponse: {
+      result: components['schemas']['AppQueueResponseItem'][];
+    };
+    AppQueueCancelRequest: {
+      item_id: components['schemas']['AppQueueItemId'];
+    };
+    AppQueueClearRequest: {
+      /** @constant */
+      all: true;
     };
     /** @example my_app */
     ApplicationName: string;
@@ -3135,7 +3259,10 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
-      /** @description A higher-priority application is already running */
+      /** @description Application conflict. Possible causes:
+       *     - API version required by the application is not compatible with the firmware.
+       *     - A higher-priority application is already running.
+       *      */
       409: {
         headers: {
           [name: string]: unknown;
@@ -3231,9 +3358,38 @@ export interface operations {
           'application/json': components['schemas']['Error'];
         };
       };
-      /** @description Failed to quit from the application that needs to be uninstalled.
+      /** @description Queued operations are present */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Unknown internal error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Internal error. Possible causes:
+       *     - Failed to quit from the application that needs to be uninstalled.
+       *     - Installer system service is not responding.
        *      */
       503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Filesystem error */
+      508: {
         headers: {
           [name: string]: unknown;
         };
@@ -3450,6 +3606,153 @@ export interface operations {
       };
     };
   };
+  getAppQueue: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Got status successfully.
+       *      */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AppQueueGetResponse'];
+        };
+      };
+      /** @description Unknown internal error has occurred.
+       *      */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /** @example {
+           *       "error": "Internal Error"
+           *     } */
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Operation is taking too long.
+       *      */
+      503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /** @example {
+           *       "error": "Operation Timeout"
+           *     } */
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  addToAppQueue: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AppQueueAddRequest'];
+      };
+    };
+    responses: {
+      /** @description Enqueue results */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AppQueueAddResponse'];
+        };
+      };
+      /** @description Failed to parse request or invalid value */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /** @example {
+           *       "error": "Bad Request"
+           *     } */
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  cancelAppQueue: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AppQueueCancelRequest'] | components['schemas']['AppQueueClearRequest'];
+      };
+    };
+    responses: {
+      /** @description Item(s) removed from queue or entire queue cleared.
+       *      */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponse'];
+        };
+      };
+      /** @description Item with requested ID is not found.
+       *      */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /** @example {
+           *       "error": "Not Found"
+           *     } */
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Unknown internal error has occurred.
+       *      */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /** @example {
+           *       "error": "Internal Error"
+           *     } */
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Operation is taking too long.
+       *      */
+      503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /** @example {
+           *       "error": "Operation Timeout"
+           *     } */
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
   uploadAssetWithAppId: {
     parameters: {
       query: {
@@ -3619,6 +3922,15 @@ export interface operations {
       };
       /** @description Invalid deletion data */
       400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Display is held by a higher-priority application; nothing was cleared */
+      409: {
         headers: {
           [name: string]: unknown;
         };

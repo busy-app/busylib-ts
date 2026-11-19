@@ -63,6 +63,21 @@ const cases: Case[] = [
     call: (bar, o) => bar.appsSettingsSet({ app_id: 'app', settings: { version: 1, values: { city: 'Berlin' } } }, o)
   },
   { method: 'appsSettingsReset', endpoint: 'DELETE /apps/settings', call: (bar, o) => bar.appsSettingsReset({ app_id: 'app' }, o) },
+  { method: 'appsQueueGet', endpoint: 'GET /apps/queue', call: (bar, o) => bar.appsQueueGet(o) },
+  {
+    method: 'appsQueueAdd',
+    endpoint: 'POST /apps/queue',
+    call: (bar, o) =>
+      bar.appsQueueAdd({ operations: [{ app_id: 'app', operation: { type: 'install', url: 'https://example.com/app.tgz', version: '1.0.0' } }] }, o)
+  },
+  {
+    method: 'appsQueueAdd',
+    variant: 'remove',
+    endpoint: 'POST /apps/queue',
+    call: (bar, o) => bar.appsQueueAdd({ operations: [{ app_id: 'app', operation: { type: 'remove' } }] }, o)
+  },
+  { method: 'appsQueueCancel', endpoint: 'POST /apps/queue/cancel', call: (bar, o) => bar.appsQueueCancel({ item_id: 42 }, o) },
+  { method: 'appsQueueCancel', variant: 'all', endpoint: 'POST /apps/queue/cancel', call: (bar, o) => bar.appsQueueCancel({ all: true }, o) },
 
   // assets
   { method: 'assetsUpload', endpoint: 'POST /assets/upload', call: (bar, o) => bar.assetsUpload({ application_name: 'app', file: 'a.png', data: file }, o) },
@@ -319,7 +334,7 @@ describe('cases', () => {
   test('cover every BusyBar method', () => {
     const fixed = ['constructor', 'client', 'addr', 'apiSemver', 'apiClient', 'setToken', 'setHTTPAccessPassword'];
     const methods = Object.getOwnPropertyNames(BusyBar.prototype).filter((name) => !fixed.includes(name));
-    expect(methods).toHaveLength(80);
+    expect(methods).toHaveLength(83);
     expect([...new Set(cases.map((c) => c.method))].sort()).toEqual(methods.sort());
   });
 

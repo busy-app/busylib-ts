@@ -11,7 +11,10 @@ import {
   appsQuit,
   appsSettingsGet,
   appsSettingsSet,
-  appsSettingsReset
+  appsSettingsReset,
+  appsQueueGet,
+  appsQueueAdd,
+  appsQueueCancel
 } from 'BusyBar/scopes/apps/functions';
 import { assetsUpload, assetsDelete } from 'BusyBar/scopes/assets/functions';
 import { audioPlay, audioStop, audioVolumeGet, audioVolumeSet } from 'BusyBar/scopes/audio/functions';
@@ -58,6 +61,8 @@ import type { AccountBackendSetParams } from 'BusyBar/scopes/account/types';
 import type {
   AppsInstallParams,
   AppsLaunchParams,
+  AppsQueueAddParams,
+  AppsQueueCancelParams,
   AppsRemoveParams,
   AppsSettingsGetParams,
   AppsSettingsResetParams,
@@ -352,6 +357,47 @@ export class BusyBar {
    */
   appsSettingsReset(params: AppsSettingsResetParams, options?: RequestOptions) {
     return appsSettingsReset(this.clientInstance, params, options);
+  }
+
+  /**
+   * Get the current state of the application operation queue. Operations that already finished are not included: completion results are reported only through the state stream.
+   *
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
+   * @returns {Promise<AppQueueGetResult>} A promise that resolves to the queue contents, oldest first, with the operation in progress reported as `in_progress`.
+   */
+  appsQueueGet(options?: RequestOptions) {
+    return appsQueueGet(this.clientInstance, options);
+  }
+
+  /**
+   * Add one or more operations to the application operation queue. Each operation is validated and queued independently; installation also needs the URL of an application package.
+   *
+   * @param {AppsQueueAddParams} params - Parameters for the queue operation.
+   *   @param {AppsQueueAddParams['operations']} params.operations - Operations to add to the queue, at most 100 per request.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
+   * @returns {Promise<AppQueueAddResult>} A promise that resolves to the enqueue result for every requested operation: the queue item id when it was accepted, or the reason it was rejected.
+   */
+  appsQueueAdd(params: AppsQueueAddParams, options?: RequestOptions) {
+    return appsQueueAdd(this.clientInstance, params, options);
+  }
+
+  /**
+   * Cancel a queued application operation by its queue id, or cancel the whole queue at once. An operation that already started cannot be cancelled; actual cancellation is reported through the state stream.
+   *
+   * @param {AppsQueueCancelParams} params - Parameters for the cancellation: `{ item_id }` for a single operation or `{ all: true }` for the whole queue.
+   *   @param {AppsQueueCancelParams['item_id']} [params.item_id] - Queue item id to cancel.
+   *   @param {AppsQueueCancelParams['all']} [params.all] - Set to `true` to clear the whole queue.
+   * @param {RequestOptions} [options] - Optional request options.
+   *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
+   *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
+   * @returns {Promise<SuccessResponse>} A promise that resolves when the cancellation request is accepted.
+   */
+  appsQueueCancel(params: AppsQueueCancelParams, options?: RequestOptions) {
+    return appsQueueCancel(this.clientInstance, params, options);
   }
 
   /**

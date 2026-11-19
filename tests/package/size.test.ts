@@ -79,7 +79,7 @@ globalThis.run = async () => {
     name: 'BusyBar',
     code: `import { BusyBar } from '@busy-app/busy-lib';
 globalThis.bar = new BusyBar();`,
-    endpoints: 80,
+    endpoints: 83,
     limit: { min: 19_500, gzip: 5_400 }
   }
 ];

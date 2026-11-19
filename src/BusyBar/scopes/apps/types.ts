@@ -28,3 +28,31 @@ export interface AppsSettingsSetParams extends AppsSettingsQuery {
 }
 
 export interface AppsSettingsResetParams extends AppsSettingsQuery {}
+
+export type AppQueueItemId = components['schemas']['AppQueueItemId'];
+export type AppQueueOperationType = components['schemas']['AppQueueOperationType'];
+export type AppQueueOperation = components['schemas']['AppQueueOperation'];
+export type AppQueueStatus = components['schemas']['AppQueueStatus'];
+export type AppQueueEnqueueError = components['schemas']['AppQueueError'];
+export type AppQueueDetail = components['schemas']['AppQueueDetail'];
+export type AppQueueItem = components['schemas']['AppQueueItem'];
+export type AppQueueRequestOperation = components['schemas']['AppQueueRequestOperation'];
+export type AppQueueRequestItem = components['schemas']['AppQueueRequestItem'];
+export type AppQueueGetResult = components['schemas']['AppQueueGetResponse'];
+
+/**
+ * Result of adding one operation to the queue: the item id when the operation was accepted, or the reason it was rejected.
+ */
+export type AppQueueAddResultItem =
+  | (Pick<AppQueueRequestItem, 'app_id'> & { operation: AppQueueOperation; item_id: AppQueueItemId; error?: never })
+  | (Pick<AppQueueRequestItem, 'app_id'> & { operation: AppQueueOperation; error: AppQueueEnqueueError; item_id?: never });
+
+export interface AppQueueAddResult {
+  result: AppQueueAddResultItem[];
+}
+
+export interface AppsQueueAddParams {
+  operations: AppQueueRequestItem[];
+}
+
+export type AppsQueueCancelParams = components['schemas']['AppQueueCancelRequest'] | components['schemas']['AppQueueClearRequest'];

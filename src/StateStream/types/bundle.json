@@ -20,14 +20,17 @@
                 "timer",
                 "ble",
                 "autoUpdateState",
-                "timerProfiles"
+                "timerProfiles",
+                "appQueueState",
+                "appQueueEvent"
               ]
             }
           },
           "fields": {
             "deviceName": {
               "type": "BSB_State.DeviceName",
-              "id": 1
+              "id": 1,
+              "protoName": "device_name"
             },
             "power": {
               "type": "BSB_State.Power",
@@ -39,7 +42,8 @@
             },
             "audioVolume": {
               "type": "BSB_State.AudioVolume",
-              "id": 4
+              "id": 4,
+              "protoName": "audio_volume"
             },
             "wifi": {
               "type": "BSB_State.Wifi",
@@ -47,11 +51,13 @@
             },
             "updateState": {
               "type": "BSB_Update.UpdateState",
-              "id": 6
+              "id": 6,
+              "protoName": "update_state"
             },
             "updateCheck": {
               "type": "BSB_Update.CheckState",
-              "id": 7
+              "id": 7,
+              "protoName": "update_check"
             },
             "timezone": {
               "type": "BSB_State.Timezone",
@@ -79,11 +85,23 @@
             },
             "autoUpdateState": {
               "type": "BSB_Update.AutoUpdateState",
-              "id": 14
+              "id": 14,
+              "protoName": "auto_update_state"
             },
             "timerProfiles": {
               "type": "BSB_Timer.Profiles",
-              "id": 15
+              "id": 15,
+              "protoName": "timer_profiles"
+            },
+            "appQueueState": {
+              "type": "BSB_State.AppQueueState",
+              "id": 16,
+              "protoName": "app_queue_state"
+            },
+            "appQueueEvent": {
+              "type": "BSB_State.AppQueueEvent",
+              "id": 17,
+              "protoName": "app_queue_event"
             }
           }
         },
@@ -109,6 +127,87 @@
               "options": {
                 "proto3_optional": true
               }
+            }
+          }
+        },
+        "AppQueueError": {
+          "values": {
+            "OK": 0,
+            "DOWNLOAD": 1,
+            "UNPACK": 2,
+            "MANIFEST": 3,
+            "API_VERSION": 4,
+            "STORAGE": 5,
+            "TIMEOUT": 6,
+            "NOT_FOUND": 7,
+            "QUEUE_FULL": 8,
+            "CANCELLED": 9,
+            "APP_RUNNING": 10,
+            "PARAMETER": 11,
+            "INTERNAL": 12
+          }
+        },
+        "AppQueueOperationDetail": {
+          "oneofs": {
+            "_progress": {
+              "oneof": ["progress"]
+            }
+          },
+          "fields": {
+            "itemId": {
+              "type": "uint32",
+              "id": 1,
+              "protoName": "item_id"
+            },
+            "step": {
+              "type": "string",
+              "id": 2
+            },
+            "progress": {
+              "type": "uint32",
+              "id": 3,
+              "options": {
+                "proto3_optional": true
+              }
+            }
+          }
+        },
+        "AppQueueOperationResult": {
+          "fields": {
+            "itemId": {
+              "type": "uint32",
+              "id": 1,
+              "protoName": "item_id"
+            },
+            "error": {
+              "type": "AppQueueError",
+              "id": 2
+            }
+          }
+        },
+        "AppQueueState": {
+          "oneofs": {
+            "value": {
+              "oneof": ["detail"]
+            }
+          },
+          "fields": {
+            "detail": {
+              "type": "AppQueueOperationDetail",
+              "id": 1
+            }
+          }
+        },
+        "AppQueueEvent": {
+          "oneofs": {
+            "value": {
+              "oneof": ["result"]
+            }
+          },
+          "fields": {
+            "result": {
+              "type": "AppQueueOperationResult",
+              "id": 1
             }
           }
         },
@@ -148,7 +247,8 @@
             },
             "actualBrightness": {
               "type": "uint32",
-              "id": 3
+              "id": 3,
+              "protoName": "actual_brightness"
             }
           }
         },
@@ -166,23 +266,28 @@
           "fields": {
             "batteryStatus": {
               "type": "BatteryStatus",
-              "id": 1
+              "id": 1,
+              "protoName": "battery_status"
             },
             "batteryChargePercent": {
               "type": "uint32",
-              "id": 2
+              "id": 2,
+              "protoName": "battery_charge_percent"
             },
             "batteryVoltageMv": {
               "type": "uint32",
-              "id": 3
+              "id": 3,
+              "protoName": "battery_voltage_mv"
             },
             "batteryCurrentMa": {
               "type": "sint32",
-              "id": 4
+              "id": 4,
+              "protoName": "battery_current_ma"
             },
             "usbVoltageMv": {
               "type": "uint32",
-              "id": 5
+              "id": 5,
+              "protoName": "usb_voltage_mv"
             }
           }
         },
@@ -323,7 +428,8 @@
             "ipAddresses": {
               "rule": "repeated",
               "type": "IpAddress",
-              "id": 4
+              "id": 4,
+              "protoName": "ip_addresses"
             }
           }
         },
@@ -367,7 +473,8 @@
           "fields": {
             "fabricCount": {
               "type": "uint32",
-              "id": 1
+              "id": 1,
+              "protoName": "fabric_count"
             },
             "state": {
               "type": "MatterCommissioningState",
@@ -402,6 +509,7 @@
                 "remoteAddress": {
                   "type": "string",
                   "id": 2,
+                  "protoName": "remote_address",
                   "options": {
                     "proto3_optional": true
                   }
@@ -589,7 +697,8 @@
             },
             "pixelFormat": {
               "type": "PixelFormat",
-              "id": 5
+              "id": 5,
+              "protoName": "pixel_format"
             },
             "data": {
               "type": "bytes",
@@ -715,15 +824,18 @@
           "fields": {
             "buttonEvent": {
               "type": "ButtonEvent",
-              "id": 1
+              "id": 1,
+              "protoName": "button_event"
             },
             "switchEvent": {
               "type": "SwitchEvent",
-              "id": 2
+              "id": 2,
+              "protoName": "switch_event"
             },
             "encoderEvent": {
               "type": "EncoderEvent",
-              "id": 3
+              "id": 3,
+              "protoName": "encoder_event"
             }
           }
         }
