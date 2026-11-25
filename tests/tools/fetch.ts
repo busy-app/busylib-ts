@@ -29,12 +29,12 @@ export function defaultHandler(request: Request): Response {
 }
 
 /**
- * Endpoint path of a request without the `/api` or `/busybar` prefix, e.g. `/version`.
+ * Endpoint path of a request without the address path and the `/api` or `/busybar` prefix, e.g. `/version` for `/device/api/version`.
  * @param {Request | RecordedRequest} request - The request to read the path from.
  * @returns {string} The endpoint path.
  */
 export function pathOf(request: Request | RecordedRequest): string {
-  return new URL(request.url).pathname.replace(/^\/(api|busybar)/, '');
+  return new URL(request.url).pathname.replace(/^.*?\/(api|busybar)(?=\/)/, '');
 }
 
 export function decode(body: Uint8Array | undefined): string | undefined {

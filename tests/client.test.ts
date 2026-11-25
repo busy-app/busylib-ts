@@ -19,8 +19,18 @@ describe('resolveAddress', () => {
     ['token only', { token: 't' }, 'https://api.busy.app', 'https://api.busy.app/busybar/'],
     ['address without protocol', { addr: '192.168.0.10' }, 'http://192.168.0.10', 'http://192.168.0.10/api/'],
     ['address with spaces', { addr: '  192.168.0.10  ' }, 'http://192.168.0.10', 'http://192.168.0.10/api/'],
-    ['address with path', { addr: 'http://192.168.0.10/some/path/' }, 'http://192.168.0.10', 'http://192.168.0.10/api/'],
+    ['address with path', { addr: 'http://192.168.0.10/some/path/' }, 'http://192.168.0.10/some/path', 'http://192.168.0.10/some/path/api/'],
+    ['address with query and hash', { addr: 'http://192.168.0.10/?a=1#h' }, 'http://192.168.0.10', 'http://192.168.0.10/api/'],
+    ['default device', { addr: '10.0.4.20' }, 'http://10.0.4.20', 'http://10.0.4.20/api/'],
+    ['cloud proxy with path', { addr: 'https://cloud.busy.app/device', token: 't' }, 'https://cloud.busy.app/device', 'https://cloud.busy.app/device/api/'],
+    [
+      'cloud proxy with trailing slash',
+      { addr: 'https://cloud.busy.app/device/', token: 't' },
+      'https://cloud.busy.app/device',
+      'https://cloud.busy.app/device/api/'
+    ],
     ['https device', { addr: 'https://bar.local' }, 'https://bar.local', 'https://bar.local/api/'],
+    ['proxy with explicit https', { addr: 'https://api.busy.app', token: 't' }, 'https://api.busy.app', 'https://api.busy.app/busybar/'],
     ['proxy without protocol', { addr: 'api.busy.app', token: 't' }, 'https://api.busy.app', 'https://api.busy.app/busybar/'],
     ['proxy with prefix', { addr: 'api.dev.busy.app/busybar/', token: 't' }, 'https://api.dev.busy.app', 'https://api.dev.busy.app/busybar/'],
     ['proxy with explicit http', { addr: 'http://api.busy.app', token: 't' }, 'http://api.busy.app', 'http://api.busy.app/busybar/']
@@ -41,6 +51,12 @@ describe('resolveAddress', () => {
     const { requests } = mockFetch();
     await new BusyBarClient({ addr: 'api.busy.app', token: 't' }).GET('/status');
     expect(requests.map((r) => r.url)).toEqual(['https://api.busy.app/busybar/version', 'https://api.busy.app/busybar/status']);
+  });
+
+  test('requests keep the path of the address', async () => {
+    const { requests } = mockFetch();
+    await new BusyBarClient({ addr: 'https://cloud.busy.app/device/', token: 't' }).GET('/status');
+    expect(requests.map((r) => r.url)).toEqual(['https://cloud.busy.app/device/api/version', 'https://cloud.busy.app/device/api/status']);
   });
 });
 
