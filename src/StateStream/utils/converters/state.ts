@@ -6,7 +6,10 @@ export type BatteryStatus = components['schemas']['StatusPower']['state'];
 export type WifiConnectionStatus = components['schemas']['StatusResponse']['state'];
 export type MatterCommissioningStatus = NonNullable<NonNullable<components['schemas']['SmartHomePairingInfo']['latest_pairing_status']>['value']>;
 export type BleServiceStatus = components['schemas']['BleStatusResponse']['status'];
-export type AppQueueError =
+/**
+ * Result of an operation from the app queue reported by the state stream: `'ok'` on success, otherwise the reason it failed. Not to be confused with `AppQueueEnqueueError`, the reason an operation was not added to the queue.
+ */
+export type AppQueueResultError =
   | 'ok'
   | 'download'
   | 'unpack'
@@ -66,7 +69,7 @@ const MATTER_STATUS_MAP: Record<BSB_State.MatterCommissioningStatus, MatterCommi
   [BSB_State.MatterCommissioningStatus.FAILED]: 'failed'
 };
 
-const APP_QUEUE_ERROR_MAP: Record<BSB_State.AppQueueError, AppQueueError> = {
+const APP_QUEUE_ERROR_MAP: Record<BSB_State.AppQueueError, AppQueueResultError> = {
   [BSB_State.AppQueueError.OK]: 'ok',
   [BSB_State.AppQueueError.DOWNLOAD]: 'download',
   [BSB_State.AppQueueError.UNPACK]: 'unpack',
@@ -120,6 +123,6 @@ export function convertBleServiceStatus(value: BSB_State.Ble.ServiceStatus | nul
   return convertEnum(BLE_STATUS_MAP, value);
 }
 
-export function convertAppQueueError(value: BSB_State.AppQueueError | null | undefined): AppQueueError | null {
+export function convertAppQueueError(value: BSB_State.AppQueueError | null | undefined): AppQueueResultError | null {
   return convertEnum(APP_QUEUE_ERROR_MAP, value);
 }

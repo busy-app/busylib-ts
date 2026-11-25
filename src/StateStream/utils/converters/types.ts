@@ -1,6 +1,7 @@
 import type { BSB_State, BSB_Update, BSB_Input, BSB_Timer, BSB_Frame, BSB_Error } from 'StateStream/types/schema';
-import type { AppQueueError, BatteryStatus, WifiConnectionStatus, MatterCommissioningStatus, BleServiceStatus } from './state';
+import type { AppQueueResultError, BatteryStatus, WifiConnectionStatus, MatterCommissioningStatus, BleServiceStatus } from './state';
 import type { components } from 'Global/API';
+import type { AppQueueStep } from 'BusyBar/scopes/apps/types';
 type WifiSecurityMethod = components['schemas']['WifiSecurityMethod'];
 type WifiIpMethod = components['schemas']['WifiIpMethod'];
 type WifiIpType = components['schemas']['WifiIpType'];
@@ -39,11 +40,11 @@ export interface ConvertedMatter {
 }
 
 export interface ConvertedAppQueueState {
-  detail?: BSB_State.AppQueueOperationDetail | null;
+  detail?: (Omit<BSB_State.AppQueueOperationDetail, 'step'> & { step?: AppQueueStep | null }) | null;
 }
 
 export interface ConvertedAppQueueOperationResult extends Omit<BSB_State.AppQueueOperationResult, 'error'> {
-  error: AppQueueError | null;
+  error: AppQueueResultError | null;
 }
 
 export interface ConvertedAppQueueEvent {

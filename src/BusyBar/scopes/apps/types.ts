@@ -34,7 +34,13 @@ export type AppQueueOperationType = components['schemas']['AppQueueOperationType
 export type AppQueueOperation = components['schemas']['AppQueueOperation'];
 export type AppQueueStatus = components['schemas']['AppQueueStatus'];
 export type AppQueueEnqueueError = components['schemas']['AppQueueError'];
-export type AppQueueDetail = components['schemas']['AppQueueDetail'];
+
+/**
+ * Name of the current step of the operation in progress: the known steps are listed for autocompletion, while any other string the firmware sends is accepted too.
+ */
+export type AppQueueStep = 'starting' | 'downloading' | 'unpacking' | 'installing' | 'removing' | (string & {});
+
+export type AppQueueDetail = Omit<components['schemas']['AppQueueDetail'], 'step'> & { step: AppQueueStep };
 export type AppQueueItem = components['schemas']['AppQueueItem'];
 export type AppQueueGetResult = components['schemas']['AppQueueGetResponse'];
 
