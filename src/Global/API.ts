@@ -3712,6 +3712,18 @@ export interface operations {
           'application/json': components['schemas']['SuccessResponse'];
         };
       };
+      /** @description Failed to parse request or invalid value */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /** @example {
+           *       "error": "Bad Request"
+           *     } */
+          'application/json': components['schemas']['Error'];
+        };
+      };
       /** @description Item with requested ID is not found.
        *      */
       404: {
