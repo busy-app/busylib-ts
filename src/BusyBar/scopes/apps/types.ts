@@ -36,9 +36,18 @@ export type AppQueueStatus = components['schemas']['AppQueueStatus'];
 export type AppQueueEnqueueError = components['schemas']['AppQueueError'];
 export type AppQueueDetail = components['schemas']['AppQueueDetail'];
 export type AppQueueItem = components['schemas']['AppQueueItem'];
-export type AppQueueRequestOperation = components['schemas']['AppQueueRequestOperation'];
-export type AppQueueRequestItem = components['schemas']['AppQueueRequestItem'];
 export type AppQueueGetResult = components['schemas']['AppQueueGetResponse'];
+
+type AppQueueRequestOperationSchema = components['schemas']['AppQueueRequestOperation'];
+
+/**
+ * Operation to add to the queue: installation needs the URL of an application package, removal does not. The schema states this with `if`/`then`, which the generated types cannot express.
+ */
+export type AppQueueRequestOperation =
+  | (Omit<AppQueueRequestOperationSchema, 'type' | 'url'> & Required<Pick<AppQueueRequestOperationSchema, 'url'>> & { type: 'install' })
+  | (Omit<AppQueueRequestOperationSchema, 'type'> & { type: 'remove' });
+
+export type AppQueueRequestItem = Omit<components['schemas']['AppQueueRequestItem'], 'operation'> & { operation: AppQueueRequestOperation };
 
 /**
  * Result of adding one operation to the queue: the item id when the operation was accepted, or the reason it was rejected.
