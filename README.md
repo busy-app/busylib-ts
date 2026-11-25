@@ -1,7 +1,7 @@
 <picture>
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/busy-app/busylib-ts/dev/.github/assets/light_theme_banner.png">
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/busy-app/busylib-ts/dev/.github/assets/dark_theme_banner.png">
-  <img alt="busylib - a TypeScript library for interacting with the BUSY Bar" width="830" height="218" src="https://raw.githubusercontent.com/busy-app/busylib-ts/dev/.github/assets/light_theme_banner.png">
+  <img alt="busylib - a TypeScript library for interacting with the BUSY Bar" width="830" src="https://raw.githubusercontent.com/busy-app/busylib-ts/dev/.github/assets/light_theme_banner.png">
 </picture>
 
 # busylib

@@ -35,7 +35,7 @@ export class BusyBar {
   }
 
   /**
-   * Device host address.
+   * Device or proxy address with its path, if any.
    * @type {string}
    */
   get addr(): string {
