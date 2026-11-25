@@ -31,7 +31,7 @@ export async function settingsAccessGet<C extends RequestClient>(client: C, opti
  * @param {RequestClient} client - BUSY Bar client.
  * @param {HttpAccessParams} params - Access parameters:
  *   @param {HttpAccessParams['mode']} params.mode - Enable/disable access.
- *   @param {HttpAccessParams['key']} [params.key] - Access key (4-10 digits).
+ *   @param {HttpAccessParams['key']} [params.key] - Access key (4-32 letters or digits).
  * @param {RequestOptions} [options] - Optional request options.
  *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
  *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
@@ -45,8 +45,8 @@ export async function settingsAccessSet<C extends RequestClient>(
   const { mode, key } = params;
   const keyValue = key ?? '';
 
-  if (String(keyValue).trim() && !/^\d{4,10}$/.test(String(keyValue))) {
-    throw new Error('Key must be a string of 4 to 10 digits');
+  if (String(keyValue).trim() && !/^[A-Za-z0-9]{4,32}$/.test(String(keyValue))) {
+    throw new Error('Key must be a string of 4 to 32 letters or digits');
   }
 
   const result = await client.POST('/access', {

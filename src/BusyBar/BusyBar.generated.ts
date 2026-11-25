@@ -654,7 +654,7 @@ export class BusyBar {
    *
    * @param {HttpAccessParams} params - Access parameters:
    *   @param {HttpAccessParams['mode']} params.mode - Enable/disable access.
-   *   @param {HttpAccessParams['key']} [params.key] - Access key (4-10 digits).
+   *   @param {HttpAccessParams['key']} [params.key] - Access key (4-32 letters or digits).
    * @param {RequestOptions} [options] - Optional request options.
    *   @param {RequestOptions['timeout']} [options.timeout] - Request timeout in milliseconds.
    *   @param {RequestOptions['signal']} [options.signal] - AbortSignal to cancel the request.
