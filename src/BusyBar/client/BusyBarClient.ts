@@ -57,7 +57,7 @@ export class BusyBarClient implements RequestClient {
   }
 
   /**
-   * Device host address.
+   * Device or proxy address with its path, if any.
    * @type {string}
    */
   get addr(): string {
